@@ -1,6 +1,6 @@
-// Motorsport Hub v8.5.1 — Formula Drift Japan module
+// Motorsport Hub v8.5.3 — Formula Drift Japan module
 (async()=>{
-const V='8.5.1',K='fdj';
+const V='8.5.3',K='fdj';
 const S={label:'FDJ',accent:'#FF7A00',url:'https://formulad.jp/'};
 const C={bg:'#06080B',text:'#F7F9FB',muted:'#B9C2CC',dim:'#8D98A4',good:'#58DA8A',warn:'#FFB84D'};
 const fm=FileManager.local(),DOC=fm.documentsDirectory(),CACHE=fm.joinPath(DOC,'motorsport-data-v85-fdj.json');
@@ -17,7 +17,11 @@ const CAL=[
  ['第5戦 奥伊吹','2026-09-05T09:00:00+09:00','グランスノー奥伊吹',true],
  ['第6戦 岡山','2026-10-03T09:00:00+09:00','岡山国際サーキット',true]
 ];
-const HERO='https://commons.wikimedia.org/wiki/Special:Redirect/file/Drift%20Car%20in%20Motion%20at%20Muscle%20on%20the%20Wheel%20Annual%20Show%2C%20Port%20Harcourt%2C%20Rivers%2002.jpg?width=960';
+// CC0 / public-domain dedication. Source: Wikimedia Commons, File:Toyota Supra Drift Car.jpg
+const HERO_URLS=[
+ 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Toyota_Supra_Drift_Car.jpg/960px-Toyota_Supra_Drift_Car.jpg',
+ 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Toyota%20Supra%20Drift%20Car.jpg?width=960'
+];
 const col=(h,a=1)=>new Color(h,a),clone=o=>JSON.parse(JSON.stringify(o)),num=v=>{const m=String(v||'').replace(/,/g,'').match(/-?\d+(?:\.\d+)?/);return m?Number(m[0]):NaN};
 const clean=s=>String(s||'').replace(/<script[\s\S]*?<\/script>/gi,' ').replace(/<style[\s\S]*?<\/style>/gi,' ').replace(/<[^>]+>/g,' ').replace(/&nbsp;|&#160;/gi,' ').replace(/&amp;/gi,'&').replace(/\s+/g,' ').trim();
 function rows(h){const out=[];for(const tr of String(h||'').match(/<tr\b[\s\S]*?<\/tr>/gi)||[]){const a=[];let m,re=/<t[dh]\b[^>]*>([\s\S]*?)<\/t[dh]>/gi;while((m=re.exec(tr)))a.push(clean(m[1]));if(a.length)out.push(a)}return out}
@@ -25,7 +29,7 @@ async function txt(url){const r=new Request(url);r.timeoutInterval=9;r.headers={
 function nextEvent(d){const now=Date.now();for(const e of CAL){if(Date.parse(e[1])>now-6*3600000)return{...d,race:e[0],date:e[1],circuit:e[2],timeTbd:!!e[3]}}return d}
 function save(d){try{fm.writeString(CACHE,JSON.stringify(d))}catch(_){} }
 function cache(){try{return fm.fileExists(CACHE)?JSON.parse(fm.readString(CACHE)):null}catch(_){return null}}
-function latinName(s){let x=String(s||'').trim().replace(/RYUMARYUMA/i,'RYUMA');const m=x.match(/^[A-Z0-9 .'-]+/i);return (m?.[0]||x).trim()}
+function latinName(s){let x=String(s||'').trim().replace(/\bRYUMA(?:\s+RYUMA)+\b/ig,'RYUMA');const m=x.match(/^[A-Z0-9 .'-]+/i);return (m?.[0]||x).trim()}
 async function update(d){
  const h=await txt('https://formulad.jp/2026-fdj-standings/'),a=[];
  for(const c of rows(h)){
@@ -40,8 +44,23 @@ async function update(d){
 async function load(){const base=nextEvent(clone(SNAP));try{const d=await update(base);save(d);return{d,cached:false}}catch(e){return{d:nextEvent(cache()||base),cached:true}}}
 function smooth(t){return t*t*(3-2*t)}
 function cover(img,W,H,focus=.54,shift=0){const iw=img.size.width||1,ih=img.size.height||1,s=Math.max(W/iw,H/ih),dw=iw*s,dh=ih*s;return new Rect(-(dw-W)*focus+shift,-(dh-H)*.5,dw,dh)}
-async function hero(){const small=(config.widgetFamily||'medium')==='small',p=fm.joinPath(DOC,`motorsport-hero-v851-${small?'small':'medium'}-fdj.jpg`);if(fm.fileExists(p)){try{return fm.readImage(p)}catch(_){} }
- try{const r=new Request(HERO);r.timeoutInterval=10;r.headers={'User-Agent':'Mozilla/5.0'};const img=await r.loadImage(),W=small?360:690,H=small?360:320,ctx=new DrawContext();ctx.size=new Size(W,H);ctx.opaque=true;ctx.respectScreenScale=false;ctx.setFillColor(col(C.bg));ctx.fillRect(new Rect(0,0,W,H));ctx.drawImageInRect(img,cover(img,W,H,.55,small?26:64));ctx.setFillColor(col('#030609',.20));ctx.fillRect(new Rect(0,0,W,H));for(let x=0;x<W;x+=2){const t=x/(W-1),a=.84*(1-smooth(t))+.06;ctx.setFillColor(col('#030609',a));ctx.fillRect(new Rect(x,0,3,H))}const bs=H*.67,bh=H-bs;for(let i=0;i<48;i++){const y=bs+i*(bh/48),t=i/47,a=.02+.25*t*t;ctx.setFillColor(col('#020407',a));ctx.fillRect(new Rect(0,y,W,bh/48+1))}ctx.setFillColor(col(S.accent,.9));ctx.fillRect(new Rect(0,0,W,3));const out=ctx.getImage();try{fm.writeImage(p,out)}catch(_){}return out}catch(_){return null}}
+async function hero(){
+ const small=(config.widgetFamily||'medium')==='small',p=fm.joinPath(DOC,`motorsport-hero-v853-${small?'small':'medium'}-fdj.jpg`);
+ if(fm.fileExists(p)){try{return fm.readImage(p)}catch(_){} }
+ try{
+  let img=null;
+  for(const u of HERO_URLS){try{const r=new Request(u);r.timeoutInterval=10;r.headers={'User-Agent':'Mozilla/5.0'};img=await r.loadImage();if(img)break}catch(_){}}
+  if(!img)return null;
+  const W=small?360:690,H=small?360:320,ctx=new DrawContext();ctx.size=new Size(W,H);ctx.opaque=true;ctx.respectScreenScale=false;
+  ctx.setFillColor(col(C.bg));ctx.fillRect(new Rect(0,0,W,H));
+  ctx.drawImageInRect(img,cover(img,W,H,.57,small?18:48));
+  ctx.setFillColor(col('#030609',.20));ctx.fillRect(new Rect(0,0,W,H));
+  for(let x=0;x<W;x+=2){const t=x/(W-1),a=.84*(1-smooth(t))+.06;ctx.setFillColor(col('#030609',a));ctx.fillRect(new Rect(x,0,3,H))}
+  const bs=H*.67,bh=H-bs;for(let i=0;i<48;i++){const y=bs+i*(bh/48),t=i/47,a=.02+.25*t*t;ctx.setFillColor(col('#020407',a));ctx.fillRect(new Rect(0,y,W,bh/48+1))}
+  ctx.setFillColor(col(S.accent,.9));ctx.fillRect(new Rect(0,0,W,3));
+  const out=ctx.getImage();try{fm.writeImage(p,out)}catch(_){}return out
+ }catch(_){return null}
+}
 function T(st,s,z,c,w='regular',n=1){const t=st.addText(String(s??''));t.font=w==='heavy'?Font.heavySystemFont(z):w==='bold'?Font.boldSystemFont(z):w==='semibold'?Font.semiboldSystemFont(z):Font.systemFont(z);t.textColor=c;t.lineLimit=n;t.minimumScaleFactor=.68;return t}
 function base(bg){const w=new ListWidget();if(bg)w.backgroundImage=bg;else{const g=new LinearGradient();g.colors=[col(S.accent,.16),col(C.bg)];g.locations=[0,1];w.backgroundGradient=g}w.url=S.url;return w}
 function pill(st,label,accent=false){const p=st.addStack();p.backgroundColor=accent?col(S.accent,.20):col('#000000',.32);p.cornerRadius=8;p.setPadding(3,7,3,7);T(p,label,accent?9.6:9.1,accent?col(S.accent):col(C.muted),'heavy');return p}
