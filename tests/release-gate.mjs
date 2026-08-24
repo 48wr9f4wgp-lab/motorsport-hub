@@ -23,13 +23,14 @@ const files={
  d1:read('d1gp-reliability-v890.js'),
  d1base:read('d1gp-widget.js'),
  superformula:read('superformula-widget.js'),
+ indycar:read('indycar-widget.js'),
  attribution:read('ATTRIBUTION.md'),
  boundary:read('tests/boundary-gate.mjs'),
 };
 
 for(const [name,src] of Object.entries(files))if(!['attribution','boundary'].includes(name))parse(name,src);
 
-for(const token of ['F1','WEC','WRC','SUPERGT','MOTOGP','FDJ','D1GP','SUPERFORMULA'])
+for(const token of ['F1','WEC','WRC','SUPERGT','MOTOGP','FDJ','D1GP','SUPERFORMULA','INDYCAR'])
  assert(files.router.includes(token),`router missing category ${token}`);
 
 for(const marker of ['Motorsport Hub','module router','v8.6.0',"'FDJ'",'motorsport-core-v841.js','motorsport-hq-core.js','fdj-widget.js','Script.complete()'])
@@ -38,10 +39,11 @@ for(const marker of ['Motorsport Hub','module router','v8.6.0',"'FDJ'",'motorspo
 assert(files.router.includes('motorsport-reliability-v896.js'),'router lost v8.9.6 stable reliability path');
 assert(files.router.includes('d1gp-reliability-v890.js'),'router lost D1GP reliability wrapper');
 assert(files.router.includes('superformula-widget.js'),'router is not using SUPER FORMULA module');
+assert(files.router.includes('indycar-widget.js'),'router is not using INDYCAR module');
 assert(files.router.includes('motorsport-diagnostics-v890.js'),'router lost QA diagnostics');
 assert(files.router.includes("'QA'"),'router missing QA selector');
 assert(files.diagnostics.includes('QA diagnostics'),'QA diagnostics marker missing');
-for(const token of ['F1','WEC','WRC','MotoGP','SUPER GT','FDJ','D1GP','SUPER FORMULA'])
+for(const token of ['F1','WEC','WRC','MotoGP','SUPER GT','FDJ','D1GP','SUPER FORMULA','INDYCAR'])
  assert(files.diagnostics.includes(token),`QA diagnostics missing ${token}`);
 
 assert(files.reliability.includes('F1_PARTIAL'),'F1 atomic refresh guard missing');
@@ -74,9 +76,18 @@ for(const token of ['第9・10戦 富士','第11・12戦 鈴鹿','2026-10-11T18:
 assert(files.superformula.includes('Igor%20Fraga%20Super%20Formula%20Round%205%20Suzuka%20Post-Race%202026.jpg'),'SUPER FORMULA verified hero missing');
 assert(files.boundary.includes('SUPER FORMULA: retain Fuji during double-header weekend'),'SUPER FORMULA weekend boundary coverage missing');
 
-for(const token of ['Eustace Bagge','TTTNIS','Liauzh','MarcelX42','Rowan Harrison','Tokumeigakarinoaoshima','BWard 1997','CC0 1.0 Universal','CC BY 4.0','CC BY-SA 4.0','CC BY-SA 2.0'])
+// INDYCAR expansion gate.
+assert(files.indycar.includes('INDYCAR module'),'INDYCAR module marker missing');
+assert(files.indycar.includes('https://www.indycar.com/standings/'),'INDYCAR official standings source missing');
+for(const token of ['Milwaukee Race 1','Milwaukee Race 2','Laguna Seca Finale','Alex Palou','Kyle Kirkwood','Christian Lundgaard'])
+ assert(files.indycar.includes(token),`INDYCAR configuration missing: ${token}`);
+assert(files.indycar.includes('Alex%20Palou%20%2854686833932%29.jpg'),'INDYCAR verified hero missing');
+assert(files.boundary.includes('INDYCAR: advance to Race 2 after Race 1 hold'),'INDYCAR Milwaukee boundary coverage missing');
+
+for(const token of ['Eustace Bagge','TTTNIS','Liauzh','MarcelX42','Rowan Harrison','Tokumeigakarinoaoshima','BWard 1997','Ben Goyette','CC0 1.0 Universal','CC BY 4.0','CC BY-SA 4.0','CC BY-SA 2.0'])
  assert(files.attribution.includes(token),`attribution audit missing: ${token}`);
 assert(files.attribution.includes('SUPER FORMULA v9.0.0 hero licensing: **PASS**'),'SUPER FORMULA attribution gate is not closed');
+assert(files.attribution.includes('INDYCAR v9.1.0 hero licensing: **PASS**'),'INDYCAR attribution gate is not closed');
 assert(!files.attribution.includes('RELEASE BLOCKER FOR PUBLIC DISTRIBUTION'),'stale release blocker remains');
 assert(files.boundary.includes('Motorsport Hub boundary gate: PASS'),'boundary gate file missing PASS marker');
 
