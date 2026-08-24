@@ -1,5 +1,43 @@
 # Changelog
 
+## v9.0.0 — SUPER FORMULA expansion build
+
+### Category expansion
+- Added **SUPER FORMULA** as the eighth Motorsport Hub category.
+- New Widget Parameter: `SUPERFORMULA` (`SF` alias also accepted).
+- Existing seven-category v8.9.6 reliability/visual path is preserved; SUPER FORMULA runs as an isolated dedicated module.
+
+### Data / calendar
+- Official standings source: `https://superformula.net/sf2/race2026/standings`.
+- Added the complete configured 2026 event-weekend calendar through Rd.11/12 Suzuka.
+- Current fallback standings snapshot:
+  - 太田 格之進 — 95 pts
+  - 岩佐 歩夢 — 44.5 pts
+  - イゴール・オオムラ・フラガ — 39 pts
+- Current next-event fallback: 第9・10戦 富士, 2026/10/9–11.
+- Uses explicit weekend start/end boundaries so double-header events do not switch to the next round midway through the weekend.
+
+### Visuals
+- Added dedicated Small and Medium layouts matching the accepted Motorsport Hub visual language.
+- Hero: `Igor Fraga Super Formula Round 5 Suzuka Post-Race 2026.jpg`.
+- Author: **BWard 1997**.
+- License: **CC BY 4.0**; exact Commons file page verified.
+- New hero cache namespace prevents cross-category image reuse.
+
+### QA / release gates
+- QA diagnostics expanded from 7 to **8** data routes.
+- `tests/boundary-gate.mjs` now checks SUPER FORMULA double-header weekend retention and season-final transition.
+- `tests/release-gate.mjs` now syntax-checks and validates the SUPER FORMULA module, router, official standings source, calendar, hero and attribution record.
+
+### Status
+- Code / repository integration: implemented.
+- Licensing gate: PASS.
+- **iPhone Small/Medium visual + live-parser QA: pending.**
+- v8.9.6 remains the last fully device-reviewed Release Candidate until this new category passes real-device QA.
+- No public deployment, Store submission or release action performed.
+
+---
+
 ## v8.9.6 — Release Candidate
 
 ### Licensing / hero assets
