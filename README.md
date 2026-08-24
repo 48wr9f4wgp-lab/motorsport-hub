@@ -3,12 +3,13 @@
 iPhone home-screen motorsport widget for Scriptable.
 
 ## Current build
-- Expansion build: **v9.2.0**
+- Expansion build: **v9.3.0**
 - Stable seven-category baseline: **v8.9.6 Release Candidate**
-- Current categories: **10**
+- Current categories: **11**
 - SUPER FORMULA v9.0.0: **LOCKED / iPhone QA PASS**
 - INDYCAR v9.1.0: **LOCKED / iPhone QA PASS**
-- NASCAR Cup v9.2.0: **implemented; 10/10 route + Small/Medium iPhone QA pending**
+- NASCAR Cup v9.2.0: **LOCKED / direct live-widget + Small/Medium iPhone QA PASS**
+- GT World Challenge Europe v9.3.0: **implemented; 11/11 route + Small/Medium iPhone QA pending**
 - Public release/deployment: **not performed**; explicit owner approval is required before any public release action.
 
 ## Categories / Widget Parameter
@@ -22,11 +23,12 @@ iPhone home-screen motorsport widget for Scriptable.
 - `SUPERFORMULA` — SUPER FORMULA (`SF` alias)
 - `INDYCAR` — NTT INDYCAR SERIES (`INDY` alias)
 - `NASCAR` — NASCAR Cup Series (`CUP` / `NASCAR CUP` aliases)
+- `GTWCEU` — GT World Challenge Europe (`GTWC` / `GTWC EUROPE` aliases)
 
-The same Scriptable loader is used for every category. Set the category in the widget's **Parameter** field; no loader repaste is required for v9.2.0.
+The same Scriptable loader is used for every category. Set the category in the widget's **Parameter** field; no loader repaste is required for v9.3.0.
 
 ## Architecture
-Scriptable contains only the short loader. The loader fetches `main/motorsport-hub.js`, which routes to isolated category/reliability modules. The accepted baseline path remains unchanged; SUPER FORMULA, INDYCAR and NASCAR run in dedicated modules so expansion work does not rewrite the existing visual lock.
+Scriptable contains only the short loader. The loader fetches `main/motorsport-hub.js`, which routes to isolated category/reliability modules. The accepted baseline path remains unchanged; SUPER FORMULA, INDYCAR, NASCAR and GTWC Europe run in dedicated modules so expansion work does not rewrite the existing visual lock.
 
 Network failure falls back only to validated local module/data caches; invalid modules are not silently accepted.
 
@@ -35,7 +37,7 @@ Network failure falls back only to validated local module/data caches; invalid m
 - Medium: next event / countdown / TOP 3 / PTS
 
 ## QA diagnostics
-Run `Motorsport Hub` directly in Scriptable and choose **QA診断**. v9.2.0 checks all **10** current data routes without replacing the home-screen widget configuration.
+Run `Motorsport Hub` directly in Scriptable and choose **QA診断**. v9.3.0 checks all **11** current data routes without replacing the home-screen widget configuration.
 
 ## Reliability rules
 - F1 rejects partial schedule/standings refreshes.
@@ -43,26 +45,35 @@ Run `Motorsport Hub` directly in Scriptable and choose **QA診断**. v9.2.0 chec
 - WEC / SUPER GT / MotoGP include explicit active-event hold windows so they do not advance at the scheduled start instant.
 - SUPER FORMULA uses explicit event-weekend start/end windows.
 - INDYCAR uses explicit active-race windows, including the Milwaukee double-header transition.
-- NASCAR uses the official NASCAR public CDN `points-feed.json` for Cup standings and six-hour race windows for event transition safety.
+- NASCAR uses the official NASCAR public CDN `points-feed.json` and six-hour race windows.
+- GTWC Europe uses the official overall-driver standings page. Drivers sharing the same championship position/car are grouped into one row, and the exact Nürburgring main-race window is used before switching to later event-weekend windows.
 - Unknown future leaders should still display rank/points even when optional local vehicle/team metadata is missing.
 - Current 2026 Toyota WEC naming is `TR010 Hybrid / TOYOTA RACING`.
 
 ## SUPER FORMULA v9.0.0
 - Official standings: `https://superformula.net/sf2/race2026/standings`
-- 2026 calendar encoded through Rd.11/12 Suzuka.
 - iPhone route + Small/Medium visual QA: **PASS / LOCKED**.
 
 ## INDYCAR v9.1.0
 - Official standings: `https://www.indycar.com/standings/`
-- Remaining 2026 events: Milwaukee Race 1 / Milwaukee Race 2 / Laguna Seca finale.
-- iPhone 9/9 route QA + Small/Medium visual QA: **PASS / LOCKED**.
+- iPhone 9/9 route + Small/Medium visual QA: **PASS / LOCKED**.
 
 ## NASCAR Cup v9.2.0
 - Official standings JSON: `https://cf.nascar.com/cacher/2026/1/points-feed.json`
-- Remaining 2026 calendar encoded from Daytona through the Homestead-Miami championship.
-- Current fallback standings after New Hampshire: Denny Hamlin 1001 / Ryan Blaney 924 / Ty Gibbs 880.
-- Current next event at build time: Daytona, 2026-08-29 19:30 ET.
-- Hero: Denny Hamlin No.11 Toyota at Las Vegas 2025 — TaurusEmerald / CC BY-SA 4.0.
+- Remaining calendar encoded from Daytona through Homestead-Miami.
+- iPhone Small/Medium QA at 2026-08-25 00:03 JST: **PASS**; Medium rendered fresh standings without `更新待ち`, confirming the direct NASCAR live parser path succeeded on-device.
+- A standalone 10/10 diagnostics screenshot was not captured before the v9.3.0 expansion; this is not recorded as having occurred.
+- Status: **LOCKED**.
+
+## GT World Challenge Europe v9.3.0
+- Official overall standings: `https://www.gt-world-challenge-europe.com/standings?filter_standing_type=0_0_drivers`
+- Current next event: Nürburgring Endurance Cup, Main Race 2026-08-30 15:00 CEST (3 hours).
+- Remaining configured events: Zandvoort / Barcelona / Portimão finale.
+- Current fallback TOP3 grouped by shared championship position/car:
+  - Lucas Auer / Maro Engel — 114.5
+  - Ricardo Feller / Bastian Buus — 77
+  - Kelvin Van Der Linde / Charles Weerts — 74
+- Hero: No.48 Mercedes-AMG GT3 EVO at Nürburgring 2024 — Lukas Raich / CC BY-SA 4.0.
 - Device QA: **pending**.
 
 ## Asset / licensing status
@@ -77,4 +88,4 @@ See:
 - `tests/boundary-gate.mjs`
 
 ## Release control
-SUPER FORMULA and INDYCAR are locked after device QA. v9.2.0 must pass NASCAR 10/10 route and Small/Medium iPhone QA before the ten-category expansion can be locked. No public deployment, Store submission, publication or other external release action should occur without explicit owner approval.
+SUPER FORMULA, INDYCAR and NASCAR are locked after device QA. v9.3.0 must pass GTWC Europe 11/11 route and Small/Medium iPhone QA before the eleven-category expansion can be locked. No public deployment, Store submission, publication or other external release action should occur without explicit owner approval.
