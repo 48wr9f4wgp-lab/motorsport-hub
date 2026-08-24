@@ -14,6 +14,7 @@ const files={
  reliability892:read('motorsport-reliability-v892.js'),
  reliability894:read('motorsport-reliability-v894.js'),
  reliability895:read('motorsport-reliability-v895.js'),
+ reliability896:read('motorsport-reliability-v896.js'),
  diagnostics:read('motorsport-diagnostics-v890.js'),
  visual:read('motorsport-universal-v871.js'),
  core:read('motorsport-core-v841.js'),
@@ -33,7 +34,7 @@ for(const token of ['F1','WEC','WRC','SUPERGT','MOTOGP','FDJ','D1GP'])
 for(const marker of ['Motorsport Hub','module router','v8.6.0',"'FDJ'",'motorsport-core-v841.js','motorsport-hq-core.js','fdj-widget.js','Script.complete()'])
  assert(files.router.includes(marker),`loader-v4 compatibility marker missing: ${marker}`);
 
-assert(files.router.includes('motorsport-reliability-v895.js'),'router is not using v8.9.5 boundary guard');
+assert(files.router.includes('motorsport-reliability-v896.js'),'router is not using v8.9.6 verified-hero reliability guard');
 assert(files.router.includes('d1gp-reliability-v890.js'),'router lost D1GP reliability wrapper');
 assert(files.router.includes('motorsport-diagnostics-v890.js'),'router lost QA diagnostics');
 assert(files.router.includes("'QA'"),'router missing QA selector');
@@ -56,14 +57,17 @@ assert(files.reliability892.includes("s||'GT500'"),'SUPER GT non-empty secondary
 assert(files.reliability894.includes('TR010 Hybrid')&&files.reliability894.includes('TOYOTA RACING'),'official 2026 WEC Toyota naming guard missing');
 assert(files.reliability895.includes("selected==='WEC'?10:8"),'WEC/SUPER GT event hold guard missing');
 assert(files.reliability895.includes('hold=4*3600000'),'MotoGP event hold guard missing');
+assert(files.reliability896.includes('Osaka%20Auto%20Messe%202025'),'verified SUPER GT CC0 hero replacement missing');
+assert(files.reliability896.includes('motorsport-hero-v896-'),'SUPER GT hero cache-bust missing');
 assert(files.visual.includes('Final Visual Polish'),'v8.7.1 visual lock source missing');
 assert(files.fdj.includes('formulad.jp/2026-fdj-standings'),'FDJ live standings source missing');
 assert(files.d1base.includes('d1gp.co.jp'),'D1GP live source missing');
 assert(files.d1.includes('King%20of%20Europe'),'D1GP action hero missing');
 
-for(const token of ['Eustace Bagge','TTTNIS','Liauzh','MarcelX42','Rowan Harrison','CC0 1.0 Universal','CC BY 4.0','CC BY-SA 4.0','CC BY-SA 2.0'])
+for(const token of ['Eustace Bagge','TTTNIS','Liauzh','MarcelX42','Rowan Harrison','Tokumeigakarinoaoshima','CC0 1.0 Universal','CC BY 4.0','CC BY-SA 4.0','CC BY-SA 2.0'])
  assert(files.attribution.includes(token),`attribution audit missing: ${token}`);
-assert(files.attribution.includes('SUPER GT — RELEASE BLOCKER FOR PUBLIC DISTRIBUTION'),'SUPER GT public-release legal gate not recorded');
+assert(files.attribution.includes('former SUPER GT public-distribution blocker is **closed in v8.9.6**'),'SUPER GT attribution gate is not closed');
+assert(!files.attribution.includes('RELEASE BLOCKER FOR PUBLIC DISTRIBUTION'),'stale SUPER GT release blocker remains');
 assert(files.boundary.includes('Motorsport Hub boundary gate: PASS'),'boundary gate file missing PASS marker');
 
 console.log('Motorsport Hub release gate: PASS');
