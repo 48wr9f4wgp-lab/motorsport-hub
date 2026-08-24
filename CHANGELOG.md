@@ -1,29 +1,44 @@
 # Changelog
 
-## v9.1.0 — INDYCAR expansion build
+## v9.2.0 — NASCAR Cup expansion build
 
 ### Category expansion
-- Added **INDYCAR** as the ninth Motorsport Hub category.
-- New Widget Parameter: `INDYCAR` (`INDY` alias also accepted).
-- Existing v8.9.6 seven-category path and the locked SUPER FORMULA v9.0.0 module remain isolated.
+- Added **NASCAR Cup Series** as the tenth Motorsport Hub category.
+- New Widget Parameter: `NASCAR` (`CUP` and `NASCAR CUP` aliases accepted).
+- Existing nine device-reviewed category paths remain isolated.
 
 ### Data / calendar
-- Official standings source: `https://www.indycar.com/standings/`.
-- Remaining 2026 calendar configured for Milwaukee Race 1, Milwaukee Race 2 and Laguna Seca finale.
-- Current fallback standings: Alex Palou 553 / Kyle Kirkwood 462 / Christian Lundgaard 443.
-- Explicit race end windows prevent the Milwaukee double-header from switching races early.
+- Primary standings source: official NASCAR public CDN `https://cf.nascar.com/cacher/2026/1/points-feed.json`.
+- Current fallback standings after New Hampshire: Denny Hamlin 1001 / Ryan Blaney 924 / Ty Gibbs 880.
+- Remaining 2026 Cup calendar encoded from Daytona through the Homestead-Miami championship.
+- Six-hour race windows prevent the widget from advancing immediately at the scheduled start or during normal red-flag delays.
 
 ### Visuals / licensing
-- Added dedicated Small and Medium INDYCAR layouts.
-- Hero: `Alex Palou (54686833932).jpg`, action at Laguna Seca.
-- Author: **Ben Goyette**.
+- Added dedicated Small and Medium NASCAR layouts.
+- Hero: `Denny Hamlin 11 Las Vegas 2025.jpg`.
+- Author: **TaurusEmerald**.
 - License: **CC BY-SA 4.0**; exact Commons file page verified.
 
 ### QA / release gates
-- QA diagnostics expanded from 8 to **9** routes.
-- Boundary gate now covers Milwaukee Race 1 → Race 2 → Laguna Seca transitions.
-- Release gate validates the INDYCAR module, official source, calendar, hero and attribution.
-- **INDYCAR device QA pending.**
+- QA diagnostics expanded from 9 to **10** routes.
+- Boundary gate covers Daytona active-race retention and Daytona → Darlington transition.
+- Release gate validates the NASCAR module, official JSON source, calendar, hero and attribution.
+- **NASCAR 10/10 route + Small/Medium device QA pending.**
+
+---
+
+## v9.1.0 — INDYCAR expansion build
+
+### Category expansion
+- Added **INDYCAR** as the ninth Motorsport Hub category (`INDYCAR`, alias `INDY`).
+- Official standings source: `https://www.indycar.com/standings/`.
+- Remaining calendar: Milwaukee Race 1 / Milwaukee Race 2 / Laguna Seca finale.
+- Hero: Ben Goyette / CC BY-SA 4.0.
+
+### QA status
+- iPhone route QA: **9/9 LIVE PASS** on 2026-08-24.
+- iPhone Small/Medium visual QA: **PASS**.
+- INDYCAR is **LOCKED**.
 
 ---
 
@@ -37,7 +52,7 @@
 
 ### QA status
 - iPhone route QA: **8/8 LIVE PASS**.
-- iPhone Small/Medium visual QA: **PASS** on 2026-08-24.
+- iPhone Small/Medium visual QA: **PASS**.
 - SUPER FORMULA is **LOCKED**.
 
 ---
