@@ -1,7 +1,7 @@
-// Motorsport Hub v8.2 — Professional Visual Pass / GitHub hosted / Scriptable
+// Motorsport Hub v8.3.1 — Professional Visual Pass / GitHub hosted / Scriptable
 // Widget Parameter: F1 / WEC / WRC / SUPERGT / MOTOGP
 (async()=>{
-const V='8.2.0';
+const V='8.3.1';
 const MAP={F1:'f1',WEC:'wec',WRC:'wrc',SUPERGT:'supergt',MOTOGP:'motogp'};
 const labels=['F1','WEC','WRC','SUPER GT','MotoGP'],params=['F1','WEC','WRC','SUPERGT','MOTOGP'];
 const norm=v=>String(v||'').trim().toUpperCase().replace(/[\s_-]+/g,'');
@@ -43,7 +43,7 @@ const META={
 
 const HERO={
   f1:{
-    MERCEDES:{url:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/2025_Japan_GP_-_Mercedes_-_W16_-_Thursday.jpg/960px-2025_Japan_GP_-_Mercedes_-_W16_-_Thursday.jpg',focus:.46,shift:38},
+    MERCEDES:{urls:['https://commons.wikimedia.org/wiki/Special:Redirect/file/Andrea_Kimi_Antonelli_2025_Italian_Grand_Prix_FP3.jpg?width=960','https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/2025_Japan_GP_-_Mercedes_-_W16_-_Thursday.jpg/960px-2025_Japan_GP_-_Mercedes_-_W16_-_Thursday.jpg'],focus:.46,shift:82},
     FERRARI:{url:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/2025_Japan_GP_-_Ferrari_-_SF-25_-_Thursday.jpg/960px-2025_Japan_GP_-_Ferrari_-_SF-25_-_Thursday.jpg',focus:.56,shift:30},
     MCLAREN:{url:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/2025_Japan_GP_-_McLaren_-_MCL39_-_Thursday.jpg/960px-2025_Japan_GP_-_McLaren_-_MCL39_-_Thursday.jpg',focus:.56,shift:30}
   },
@@ -52,7 +52,7 @@ const HERO={
     FERRARI:{url:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Ferrari_499P_%282025%29_%2855079052197%29.jpg/960px-Ferrari_499P_%282025%29_%2855079052197%29.jpg',focus:.48,shift:64}
   },
   wrc:{
-    TOYOTA:{url:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/2025_Toyota_GR_Yaris_Rally_1_Ogier_%28cropped%29.jpg/645px-2025_Toyota_GR_Yaris_Rally_1_Ogier_%28cropped%29.jpg',focus:.55,shift:36}
+    TOYOTA:{urls:['https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/2025_Toyota_GR_Yaris_Rally_1_Katsuta.jpg/960px-2025_Toyota_GR_Yaris_Rally_1_Katsuta.jpg','https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/2025_Toyota_GR_Yaris_Rally_1_Ogier_%28cropped%29.jpg/645px-2025_Toyota_GR_Yaris_Rally_1_Ogier_%28cropped%29.jpg'],focus:.52,shift:82}
   },
   motogp:{
     APRILIA:{url:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/MotoGP_2025_Malaysian_Grand_Prix_-_Aprilia_Racing_-_Marco_Bezzecchi.jpg/960px-MotoGP_2025_Malaysian_Grand_Prix_-_Aprilia_Racing_-_Marco_Bezzecchi.jpg',focus:.55,shift:30},
@@ -68,7 +68,7 @@ const clone=o=>JSON.parse(JSON.stringify(o)),col=(h,a=1)=>new Color(h,a),num=v=>
 const clean=s=>String(s||'').replace(/<script[\s\S]*?<\/script>/gi,' ').replace(/<style[\s\S]*?<\/style>/gi,' ').replace(/<[^>]+>/g,' ').replace(/&nbsp;|&#160;/gi,' ').replace(/&amp;/gi,'&').replace(/\s+/g,' ').trim();
 function rows(h){const out=[];for(const tr of String(h||'').match(/<tr\b[\s\S]*?<\/tr>/gi)||[]){const a=[];let m,re=/<t[dh]\b[^>]*>([\s\S]*?)<\/t[dh]>/gi;while((m=re.exec(tr)))a.push(clean(m[1]));if(a.length)out.push(a)}return out}
 async function txt(url){const r=new Request(url);r.timeoutInterval=9;r.headers={'User-Agent':'Mozilla/5.0'};return await r.loadString()}
-async function json(url){const r=new Request(url);r.timeoutInterval=9;r.headers={'User-Agent':'MotorsportHub/8.2'};return await r.loadJSON()}
+async function json(url){const r=new Request(url);r.timeoutInterval=9;r.headers={'User-Agent':'MotorsportHub/8.3.1'};return await r.loadJSON()}
 function calendar(d){const c=CAL[K];if(!c)return d;const now=Date.now();for(const e of c){const t=Date.parse(e[1]);if(t>now)return{...d,race:e[0],date:e[1],circuit:e[2],timeTbd:!!e[3]}}return d}
 function save(d){try{fm.writeString(CACHE,JSON.stringify(d))}catch(_){} }
 function cache(){try{return fm.fileExists(CACHE)?JSON.parse(fm.readString(CACHE)):null}catch(_){return null}}
@@ -88,11 +88,13 @@ async function hero(d){
   const maker=String(d?.ranking?.[0]?.maker||'').toUpperCase();
   const preset=HERO[K]?.[maker]||Object.values(HERO[K]||{})[0];
   if(!preset)return null;
-  const p=fm.joinPath(DOC,`motorsport-hero-v82-${K}-${maker}.jpg`);
+  const p=fm.joinPath(DOC,`motorsport-hero-v831-${K}-${maker}.jpg`);
   if(fm.fileExists(p)){try{return fm.readImage(p)}catch(_){} }
   try{
-    const r=new Request(preset.url);r.timeoutInterval=10;r.headers={'User-Agent':'Mozilla/5.0'};
-    const img=await r.loadImage(),W=690,H=320,ctx=new DrawContext();ctx.size=new Size(W,H);ctx.opaque=true;ctx.respectScreenScale=false;
+    let img=null;
+    for(const u of (preset.urls||[preset.url])){if(!u)continue;try{const r=new Request(u);r.timeoutInterval=10;r.headers={'User-Agent':'Mozilla/5.0'};img=await r.loadImage();if(img)break}catch(_){}}
+    if(!img)return null;
+    const W=690,H=320,ctx=new DrawContext();ctx.size=new Size(W,H);ctx.opaque=true;ctx.respectScreenScale=false;
     ctx.setFillColor(col(C.bg));ctx.fillRect(new Rect(0,0,W,H));
     ctx.drawImageInRect(img,coverRect(img,preset.focus??.5,preset.shift??0));
     ctx.setFillColor(col('#030609',.18));ctx.fillRect(new Rect(0,0,W,H));
@@ -114,24 +116,24 @@ function countdown(d){const q=new Date(d.date)-Date.now();if(q<=0&&q>-4*3600000)
 function sub(r){if(K==='wec')return`${r.machine||''}  ｜  ${r.team||''}`;if(K==='f1')return`${r.maker||''}  ｜  ${r.team||''}`;return`${r.maker||''} · ${r.machine||''}  ｜  ${r.team||''}`}
 function base(bg){const w=new ListWidget();if(bg)w.backgroundImage=bg;else{const g=new LinearGradient();g.colors=[col(S.accent,.16),col(C.bg,1)];g.locations=[0,1];w.backgroundGradient=g}w.url=S.url;w.setPadding(9,12,8,12);return w}
 function pill(st,label,accent=false){const p=st.addStack();p.backgroundColor=accent?col(S.accent,.18):col('#000000',.32);p.cornerRadius=8;p.setPadding(3,7,3,7);T(p,label,accent?9.6:9.1,accent?col(S.accent):col(C.muted),'heavy');return p}
-function rightLabel(st,label,size=8,color=col(C.dim),weight='bold'){const box=st.addStack();box.size=new Size(42,0);const t=T(box,label,size,color,weight);t.rightAlignText();return box}
+function rightLabel(st,label,size=8,color=col(C.dim),weight='bold'){const box=st.addStack();box.size=new Size(38,0);const t=T(box,label,size,color,weight);t.rightAlignText();return box}
 
 function medium(d,cached,bg){
   const w=base(bg),ci=countdown(d);
-  const top=w.addStack();top.layoutHorizontally();top.centerAlignContent();pill(top,S.label,true);top.addSpacer(6);T(top,'次戦',8,col(C.dim),'bold');top.addSpacer();if(cached)T(top,'● 更新待ち',7.5,col(C.warn),'bold');
+  const top=w.addStack();top.layoutHorizontally();top.centerAlignContent();pill(top,S.label,true);top.addSpacer(6);T(top,'次戦',8,col(C.dim),'bold');top.addSpacer();if(cached)T(top,'• 更新待ち',6.8,col(C.warn,.78),'semibold');
   w.addSpacer(3);
   T(w,rn(d.race||'次戦取得中'),20.6,col(C.text),'heavy',1);
   w.addSpacer(1);
   const info=w.addStack();info.layoutHorizontally();info.centerAlignContent();T(info,dateText(d),10.7,col(C.muted),'semibold');if(d.circuit){info.addSpacer(5);T(info,`｜ ${cn(d.circuit)}`,9.6,col(C.dim),'semibold')}info.addSpacer();const cp=info.addStack();cp.backgroundColor=ci.live?col(C.good,.19):col('#000000',.27);cp.cornerRadius=9;cp.setPadding(3,7,3,7);T(cp,ci.label,16.2,ci.live?col(C.good):col(C.text),'heavy');
   w.addSpacer(5);
-  const hh=w.addStack();hh.layoutHorizontally();T(hh,S.rank,8.2,col(C.muted),'bold');hh.addSpacer();rightLabel(hh,'PTS',7.3,col(C.dim),'bold');
+  const hh=w.addStack();hh.layoutHorizontally();T(hh,S.rank,8.2,col(C.muted),'bold');hh.addSpacer();rightLabel(hh,'PTS',7,col(C.dim),'semibold');
   w.addSpacer(2);
   const ranking=(d.ranking||[]).slice(0,3);
   for(let i=0;i<ranking.length;i++){
     const r=ranking[i],row=w.addStack();row.layoutHorizontally();row.centerAlignContent();
     const pos=row.addStack();pos.size=new Size(18,0);T(pos,String(r.pos),11.4,col(S.accent),'heavy');row.addSpacer(4);
     const nm=row.addStack();T(nm,r.name,K==='supergt'?12.1:13.1,col(C.text),'semibold');row.addSpacer();
-    const pts=row.addStack();pts.size=new Size(42,0);pts.backgroundColor=col('#000000',.22);pts.cornerRadius=6;pts.setPadding(1,4,1,4);const pt=T(pts,String(r.points||'').replace(' pts',''),10.7,col(C.text),'bold');pt.rightAlignText();
+    const pts=row.addStack();pts.size=new Size(38,0);pts.backgroundColor=col('#000000',.10);pts.cornerRadius=5;pts.setPadding(0,2,0,2);const pt=T(pts,String(r.points||'').replace(' pts',''),10.3,col(C.muted),'semibold');pt.rightAlignText();
     const sr=w.addStack();sr.layoutHorizontally();sr.addSpacer(22);T(sr,sub(r),8.6,col(C.dim),'semibold');
     if(i<ranking.length-1)w.addSpacer(1);
   }
@@ -140,7 +142,7 @@ function medium(d,cached,bg){
 }
 
 function small(d,cached,bg){
-  const w=base(bg),ci=countdown(d),top=w.addStack();top.layoutHorizontally();pill(top,S.label,true);top.addSpacer();if(cached)T(top,'●',7.5,col(C.warn),'heavy');
+  const w=base(bg),ci=countdown(d),top=w.addStack();top.layoutHorizontally();pill(top,S.label,true);top.addSpacer();if(cached)T(top,'•',6.8,col(C.warn,.78),'semibold');
   w.addSpacer(6);T(w,rn(d.race||'次戦'),16.5,col(C.text),'heavy',2);w.addSpacer(4);T(w,dateText(d),8.9,col(C.muted),'semibold');w.addSpacer();
   const cp=w.addStack();cp.backgroundColor=ci.live?col(C.good,.19):col('#000000',.27);cp.cornerRadius=10;cp.setPadding(4,7,4,7);T(cp,ci.label,20,ci.live?col(C.good):col(C.text),'heavy');
   w.refreshAfterDate=new Date(Date.now()+15*60000);return w;
