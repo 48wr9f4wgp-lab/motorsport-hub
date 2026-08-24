@@ -1,12 +1,12 @@
 # Motorsport Hub — Release Candidate QA
 
 ## Candidate
-- Version: v8.9.3
+- Version: v8.9.4
 - Date: 2026-08-24 JST
 - Scope: Scriptable iPhone widget, Small / Medium, 7 motorsport categories
 
 ## Automated / static checks
-- Release gate script: PASS before final metadata-only correction
+- Release gate script: PASS before final 2026 WEC naming guard
 - Router syntax: PASS
 - Reliability wrapper syntax: PASS
 - D1GP reliability wrapper syntax: PASS
@@ -30,13 +30,13 @@ Notes:
 - This diagnostic verifies network reachability and first-pass parsing.
 
 ## Home-screen regression — iPhone
-Observed at 2026-08-24 21:38–21:51 JST.
+Observed at 2026-08-24 21:38–22:05 JST.
 
 PASS:
 - Small widgets: all 7 categories render with no blank/error state.
 - D1GP Medium: PASS.
 - FDJ Medium: PASS.
-- WEC Medium: PASS visually; Toyota metadata typo found and corrected in v8.9.3 (`TR010 Hybrid` → `GR010 Hybrid`, `TOYOTA RACING` → `TOYOTA GAZOO RACING`).
+- WEC Medium: PASS visually. 2026 official FIA WEC naming is **TR010 Hybrid / TOYOTA RACING**. A mistaken attempted correction to the pre-2026 GR010 / TOYOTA GAZOO Racing naming was identified and reverted in v8.9.4. The v8.9.4 naming guard normalizes the legacy HQ source to the official 2026 names at load time.
 - WRC Medium: PASS.
 - MotoGP Medium: PASS.
 - F1 Medium: PASS.
@@ -46,10 +46,9 @@ PASS:
 Universal readability system remains visually locked at v8.7.1. Reliability work after that version must not intentionally alter layout.
 
 ## Remaining RC gates
-1. One final WEC Medium refresh to confirm the metadata-only v8.9.3 correction appears on-device as `GR010 Hybrid ｜ TOYOTA GAZOO RACING`.
-2. Public-distribution legal gate: verify exact author/license for the currently selected SUPER GT Wikimedia Commons hero image, or replace it with an asset whose exact file-page license is verified before public distribution.
+1. Public-distribution legal gate: verify exact author/license for the currently selected SUPER GT Wikimedia Commons hero image, or replace it with an asset whose exact file-page license is verified before public distribution.
 
 ## RC decision
-Status: **TECHNICAL RC CANDIDATE — PRIVATE USE OK — NOT PUBLIC-RELEASE READY**
+Status: **TECHNICAL RC — PRIVATE USE PASS — NOT PUBLIC-RELEASE READY**
 
-Do not mark public-release ready until both remaining gates above are closed.
+Technical RC is accepted for private use. Do not mark public-release ready until the remaining licensing gate above is closed.
