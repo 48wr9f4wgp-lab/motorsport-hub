@@ -1,7 +1,7 @@
 # Motorsport Hub — Hero Image Attribution
 
-Last audited: 2026-08-24 JST
-Scope: current v9.2.0 expansion build / hero assets used by the Scriptable widget.
+Last audited: 2026-08-25 JST
+Scope: current v9.3.0 expansion build / hero assets used by the Scriptable widget.
 
 All hero images are cropped/resized and darkened for widget presentation. Where the source license requires attribution or ShareAlike, redistribution must preserve those obligations.
 
@@ -60,7 +60,6 @@ All hero images are cropped/resized and darkened for widget presentation. Where 
 - License: **CC0 1.0 Universal**
 - File page: https://commons.wikimedia.org/wiki/File:Osaka_Auto_Messe_2025_(1)_-_No.36_au_TOM%27S_GR_Supra_in_2024_SUPER_GT.jpg
 - Exact Commons file page directly verified during the v8.9.6 audit.
-- The image is cropped/resized/darkened for widget presentation. CC0 imposes no attribution requirement, but the source and author are retained here for provenance.
 
 ## SUPER FORMULA
 - **Igor Fraga Super Formula Round 5 Suzuka Post-Race 2026.jpg**
@@ -69,7 +68,6 @@ All hero images are cropped/resized and darkened for widget presentation. Where 
 - Author: **BWard 1997**
 - License: **CC BY 4.0 International**
 - File page: https://commons.wikimedia.org/wiki/File:Igor_Fraga_Super_Formula_Round_5_Suzuka_Post-Race_2026.jpg
-- Exact Commons file page directly verified for the v9.0.0 expansion.
 - Public redistribution requirement: credit BWard 1997, link the CC BY 4.0 license, and indicate that the image was cropped/resized/darkened.
 
 ## INDYCAR
@@ -79,7 +77,6 @@ All hero images are cropped/resized and darkened for widget presentation. Where 
 - Author: **Ben Goyette**
 - License: **CC BY-SA 4.0 International**
 - File page: https://commons.wikimedia.org/wiki/File:Alex_Palou_(54686833932).jpg
-- Exact Commons file page directly verified for the v9.1.0 expansion.
 - Public redistribution requirement: credit Ben Goyette, link the CC BY-SA 4.0 license, indicate that the image was cropped/resized/darkened, and preserve applicable ShareAlike obligations.
 
 ## NASCAR Cup Series
@@ -89,13 +86,23 @@ All hero images are cropped/resized and darkened for widget presentation. Where 
 - Author: **TaurusEmerald**
 - License: **CC BY-SA 4.0 International**
 - File page: https://commons.wikimedia.org/wiki/File:Denny_Hamlin_11_Las_Vegas_2025.jpg
-- Exact Commons file page directly verified for the v9.2.0 expansion.
 - Public redistribution requirement: credit TaurusEmerald, link the CC BY-SA 4.0 license, indicate that the image was cropped/resized/darkened, and preserve applicable ShareAlike obligations.
 
+## GT World Challenge Europe
+- **GT World Challenge Europe 2024 Nürburg Nr. 48 Auer, Engel, Morad (1).jpg**
+- Depiction: No.48 Mercedes-AMG GT3 EVO of Lucas Auer / Maro Engel / Daniel Morad at the 2024 Nürburgring GT World Challenge Europe event.
+- Source: Wikimedia Commons
+- Author: **Lukas Raich**
+- License: **CC BY-SA 4.0 International**
+- File page: https://commons.wikimedia.org/wiki/File:GT_World_Challenge_Europe_2024_N%C3%BCrburg_Nr._48_Auer,_Engel,_Morad_(1).jpg
+- Exact Commons file page directly verified for the v9.3.0 expansion.
+- Public redistribution requirement: credit Lukas Raich, link the CC BY-SA 4.0 license, indicate that the image was cropped/resized/darkened, and preserve applicable ShareAlike obligations.
+
 ## Audit decision
-- All ten current hero assets have an exact source/license record.
+- All eleven current hero assets have an exact source/license record.
 - The former SUPER GT public-distribution blocker remains closed.
 - SUPER FORMULA v9.0.0 hero licensing: **PASS**.
 - INDYCAR v9.1.0 hero licensing: **PASS**.
 - NASCAR v9.2.0 hero licensing: **PASS**.
+- GTWC Europe v9.3.0 hero licensing: **PASS**.
 - Licensing/attribution audit: **PASS for the current expansion build**.
