@@ -9,13 +9,17 @@
   - iPhone route QA at 2026-08-24 23:19 JST: 8/8 LIVE; SUPER FORMULA 409 ms.
   - iPhone Small/Medium visual QA at 2026-08-24 23:35 JST: **PASS**.
   - Live standings observed on-device: 太田格之進 105 / 岩佐歩夢 59.5 / 福住仁嶺 58.
-- INDYCAR (`INDYCAR` / alias `INDY`): **IMPLEMENTED / DEVICE QA PENDING**.
+- INDYCAR (`INDYCAR` / alias `INDY`): **LOCKED / PASS**.
   - Official 2026 standings/schedule source review: complete.
   - Hero licensing: Ben Goyette / CC BY-SA 4.0 — exact Commons page verified.
-  - Remaining calendar configured: Milwaukee Race 1 / Milwaukee Race 2 / Laguna Seca finale.
-  - Milwaukee double-header deterministic transition coverage added.
-  - QA diagnostics expanded to **9 routes**.
-- Pending gate for v9.1.0: **INDYCAR 9/9 live-route QA + Small/Medium iPhone visual QA**.
+  - Milwaukee double-header deterministic transition coverage: PASS.
+  - iPhone route QA at 2026-08-24 23:47 JST: **9/9 LIVE — PASS**; INDYCAR 1188 ms.
+  - iPhone Small/Medium visual QA at 2026-08-24 23:50 JST: **PASS**.
+  - Medium snapshot displayed correctly: Alex Palou 553 / Kyle Kirkwood 462 / Christian Lundgaard 443.
+
+## v9.2.0 expansion next gate
+- NASCAR Cup Series is the next category scheduled for integration.
+- Existing nine categories are device-reviewed and locked before NASCAR work begins.
 
 ---
 
@@ -73,5 +77,5 @@ Verified:
 ## RC decision
 - **v8.9.6 seven-category Release Candidate: PASS**
 - **SUPER FORMULA v9.0.0 expansion gate: PASS / LOCKED**
-- **v9.1.0 nine-category expansion: PENDING INDYCAR DEVICE QA ONLY**
+- **INDYCAR v9.1.0 expansion gate: PASS / LOCKED**
 - No public deployment, Store submission or release action has been performed; explicit owner approval is required before release.
