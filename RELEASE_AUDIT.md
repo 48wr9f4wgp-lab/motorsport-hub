@@ -1,46 +1,65 @@
 # Motorsport Hub — Release Audit
 
 ## Candidate
-- Current candidate: **v8.9.0 Reliability Pass**
+- Technical RC: **v8.9.5**
 - Visual baseline: **v8.7.1 Final Visual Polish** (locked)
 - Categories: F1 / WEC / WRC / SUPER GT / MotoGP / FDJ / D1GP
-- Scriptable loader: v4 (no repaste required for v8.9)
+- Scriptable loader: v4 (no repaste required)
+- Scope: iPhone / Scriptable / Small + Medium
 
-## Reliability changes in v8.9
-- F1 schedule + standings refresh is atomic. A partial network/API success is treated as stale and falls back to cache/snapshot with the existing update-waiting indicator.
-- WRC standings source is switched to the FIA static official standings page.
-- WRC remaining 2026 calendar includes Paraguay, Chile, Rally Italia Sardegna and Saudi Arabia.
-- MotoGP remaining 2026 calendar is complete through Valencia; unverified race-start clock times are explicitly treated as TBD.
-- WEC remaining 2026 calendar uses the current official COTA → Fuji → Barcelona → Monza sequence.
-- WEC standings no longer discard an unknown manufacturer merely because local metadata is absent.
-- SUPER GT calendar includes the Motegi finale.
-- SUPER GT standings no longer discard an unknown GT500 car number merely because local metadata is absent.
-- FDJ and D1GP retain their existing official standings sources and complete calendars.
+## Runtime QA completed
+- One-tap QA diagnostic on iPhone: **7/7 LIVE**.
+- Home-screen Small widgets: all seven categories rendered without blank/error state.
+- Medium regression: F1 / WEC / WRC / SUPER GT / MotoGP / FDJ / D1GP reviewed on-device.
+- SUPER GT machine/team subline regression was found and fixed in v8.9.2, then re-tested successfully.
+- WEC 2026 Toyota naming was re-verified after an incorrect attempted correction: official 2026 display is **TR010 Hybrid / TOYOTA RACING**. v8.9.4 guards that naming.
+- Readability, countdown, ranking and PTS presentation passed the reviewed home-screen pages.
 
-## Static QA performed
-- `motorsport-hub.js`: JavaScript syntax check passed.
-- `motorsport-reliability-v890.js`: JavaScript syntax check passed.
-- Loader-v4 compatibility markers are present in the v8.9 router.
-- All seven Widget Parameters are present in the router.
-- Reliability source contains the season-tail events and parser fallbacks expected by the release gate.
-- `tests/release-gate.mjs` is committed for repeatable repository-level static verification.
+## Reliability gates
+- F1 schedule + standings refresh is atomic; partial refresh is not accepted as fully fresh.
+- WRC uses the FIA static official standings route and holds the active rally through its multi-day window.
+- FDJ and D1GP hold the current event through their weekend window.
+- WEC / SUPER GT / MotoGP receive explicit event-boundary holds in v8.9.5 so the widget does not advance to the next round at the scheduled start instant.
+- WEC and SUPER GT preserve useful standings even when a future leader lacks local metadata.
+- Season-tail calendar coverage is present through each configured 2026 finale.
 
-## Runtime QA still required
-The Scriptable runtime cannot be fully executed in repository/static QA. Before Release Candidate is declared, verify on iPhone:
-1. F1 Medium + Small
-2. WEC Medium + Small
-3. WRC Medium + Small
-4. SUPER GT Medium + Small
-5. MotoGP Medium + Small
-6. FDJ Medium + Small
-7. D1GP Medium + Small
-8. Confirm `更新待ち` appears when a data source fails instead of silently presenting partial fresh data.
-9. Confirm no widget falls back to an old router/module after a network failure.
+## Deterministic boundary QA
+`tests/boundary-gate.mjs` covers:
+- WEC: pre-start / active race / end-of-hold / next-round transition
+- SUPER GT: same boundary sequence
+- MotoGP: same boundary sequence
+- WRC: four-day active-rally retention
+- FDJ / D1GP: weekend retention
+- F1: four-hour race-start retention window
 
-## Public-release legal gate
-- **SUPER GT hero image attribution is not yet fully resolved.** `ATTRIBUTION.md` intentionally keeps this as a release blocker until the exact Commons file-page author and license are verified and recorded.
-- Other credited/adapted hero assets must continue to satisfy their stated CC/CC0 terms when distributed.
+The deterministic boundary test was executed during the v8.9.5 audit and returned **PASS**.
+
+## Static release gate
+`tests/release-gate.mjs` now checks:
+- syntax for the router and reliability modules
+- seven category parameters + QA selector
+- Loader v4 compatibility markers
+- 2026 tail calendars
+- standings fallbacks
+- WRC / FDJ / D1GP / WEC / SUPER GT / MotoGP event-hold guards
+- 2026 WEC TR010 / TOYOTA RACING guard
+- visual-lock source
+- hero attribution audit markers
+
+## Hero asset legal audit
+Verified individually:
+- F1: CC BY 4.0 — Eustace Bagge
+- WRC: CC0 1.0 — TTTNIS
+- MotoGP: CC BY-SA 4.0 — Liauzh
+- WEC: CC BY-SA 4.0 — MarcelX42
+- FDJ: CC0 1.0
+- D1GP: CC BY-SA 2.0 — Rowan Harrison
+
+### Remaining public-release blocker
+**SUPER GT hero image exact author/license is not yet independently verified.**
+`ATTRIBUTION.md` records the exact file and the hard gate.
 
 ## Release decision
-- **Do not mark Release Candidate yet.**
-- v8.9 is ready for iPhone regression testing; RC follows only after the runtime checks above pass and the SUPER GT attribution gate is closed.
+- **TECHNICAL RC: PASS for private/personal use.**
+- **PUBLIC DISTRIBUTION: BLOCKED** until the SUPER GT hero attribution/license is verified or the hero is replaced with a fully verified asset.
+- No App Store/public deployment/release action has been performed.
