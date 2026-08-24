@@ -24,13 +24,14 @@ const files={
  d1base:read('d1gp-widget.js'),
  superformula:read('superformula-widget.js'),
  indycar:read('indycar-widget.js'),
+ nascar:read('nascar-widget.js'),
  attribution:read('ATTRIBUTION.md'),
  boundary:read('tests/boundary-gate.mjs'),
 };
 
 for(const [name,src] of Object.entries(files))if(!['attribution','boundary'].includes(name))parse(name,src);
 
-for(const token of ['F1','WEC','WRC','SUPERGT','MOTOGP','FDJ','D1GP','SUPERFORMULA','INDYCAR'])
+for(const token of ['F1','WEC','WRC','SUPERGT','MOTOGP','FDJ','D1GP','SUPERFORMULA','INDYCAR','NASCAR'])
  assert(files.router.includes(token),`router missing category ${token}`);
 
 for(const marker of ['Motorsport Hub','module router','v8.6.0',"'FDJ'",'motorsport-core-v841.js','motorsport-hq-core.js','fdj-widget.js','Script.complete()'])
@@ -40,11 +41,13 @@ assert(files.router.includes('motorsport-reliability-v896.js'),'router lost v8.9
 assert(files.router.includes('d1gp-reliability-v890.js'),'router lost D1GP reliability wrapper');
 assert(files.router.includes('superformula-widget.js'),'router is not using SUPER FORMULA module');
 assert(files.router.includes('indycar-widget.js'),'router is not using INDYCAR module');
+assert(files.router.includes('nascar-widget.js'),'router is not using NASCAR module');
 assert(files.router.includes('motorsport-diagnostics-v890.js'),'router lost QA diagnostics');
 assert(files.router.includes("'QA'"),'router missing QA selector');
 assert(files.diagnostics.includes('QA diagnostics'),'QA diagnostics marker missing');
-for(const token of ['F1','WEC','WRC','MotoGP','SUPER GT','FDJ','D1GP','SUPER FORMULA','INDYCAR'])
+for(const token of ['F1','WEC','WRC','MotoGP','SUPER GT','FDJ','D1GP','SUPER FORMULA','INDYCAR','NASCAR'])
  assert(files.diagnostics.includes(token),`QA diagnostics missing ${token}`);
+assert(files.diagnostics.includes('10/10 LIVE'),'QA diagnostics not expanded to ten routes');
 
 assert(files.reliability.includes('F1_PARTIAL'),'F1 atomic refresh guard missing');
 assert(files.reliability.includes('fia.com/events/world-rally-championship/season-2026/standings'),'FIA WRC standings source missing');
@@ -84,10 +87,19 @@ for(const token of ['Milwaukee Race 1','Milwaukee Race 2','Laguna Seca Finale','
 assert(files.indycar.includes('Alex%20Palou%20%2854686833932%29.jpg'),'INDYCAR verified hero missing');
 assert(files.boundary.includes('INDYCAR: advance to Race 2 after Race 1 hold'),'INDYCAR Milwaukee boundary coverage missing');
 
-for(const token of ['Eustace Bagge','TTTNIS','Liauzh','MarcelX42','Rowan Harrison','Tokumeigakarinoaoshima','BWard 1997','Ben Goyette','CC0 1.0 Universal','CC BY 4.0','CC BY-SA 4.0','CC BY-SA 2.0'])
+// NASCAR Cup expansion gate.
+assert(files.nascar.includes('NASCAR Cup Series module'),'NASCAR module marker missing');
+assert(files.nascar.includes('https://cf.nascar.com/cacher/2026/1/points-feed.json'),'NASCAR official points JSON source missing');
+for(const token of ['Daytona','Darlington','Talladega','Martinsville','Homestead-Miami Speedway','Denny Hamlin','Ryan Blaney','Ty Gibbs'])
+ assert(files.nascar.includes(token),`NASCAR configuration missing: ${token}`);
+assert(files.nascar.includes('Denny%20Hamlin%2011%20Las%20Vegas%202025.jpg'),'NASCAR verified hero missing');
+assert(files.boundary.includes('NASCAR: advance to Darlington after Daytona hold'),'NASCAR Daytona boundary coverage missing');
+
+for(const token of ['Eustace Bagge','TTTNIS','Liauzh','MarcelX42','Rowan Harrison','Tokumeigakarinoaoshima','BWard 1997','Ben Goyette','TaurusEmerald','CC0 1.0 Universal','CC BY 4.0','CC BY-SA 4.0','CC BY-SA 2.0'])
  assert(files.attribution.includes(token),`attribution audit missing: ${token}`);
 assert(files.attribution.includes('SUPER FORMULA v9.0.0 hero licensing: **PASS**'),'SUPER FORMULA attribution gate is not closed');
 assert(files.attribution.includes('INDYCAR v9.1.0 hero licensing: **PASS**'),'INDYCAR attribution gate is not closed');
+assert(files.attribution.includes('NASCAR v9.2.0 hero licensing: **PASS**'),'NASCAR attribution gate is not closed');
 assert(!files.attribution.includes('RELEASE BLOCKER FOR PUBLIC DISTRIBUTION'),'stale release blocker remains');
 assert(files.boundary.includes('Motorsport Hub boundary gate: PASS'),'boundary gate file missing PASS marker');
 
