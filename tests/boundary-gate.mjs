@@ -38,4 +38,16 @@ const f1StillCurrent=(raceStart,now)=>parse(raceStart)>now-4*ms.h;
 assert(f1StillCurrent('2026-09-06T13:00:00Z',parse('2026-09-06T15:00:00Z')),'F1: retain race shortly after start');
 assert(!f1StillCurrent('2026-09-06T13:00:00Z',parse('2026-09-06T18:00:00Z')),'F1: release race after four-hour window');
 
+// SUPER FORMULA uses explicit event-weekend end timestamps instead of a guessed race-duration hold.
+const SF=[
+ {name:'第9・10戦 富士',start:'2026-10-09T09:00:00+09:00',end:'2026-10-11T18:00:00+09:00'},
+ {name:'第11・12戦 鈴鹿',start:'2026-11-20T09:00:00+09:00',end:'2026-11-22T18:00:00+09:00'},
+];
+const pickRange=(events,now)=>events.find(e=>parse(e.end)>now)?.name||null;
+assert.equal(pickRange(SF,parse('2026-10-08T23:00:00+09:00')),'第9・10戦 富士','SUPER FORMULA: select upcoming Fuji weekend');
+assert.equal(pickRange(SF,parse('2026-10-10T15:00:00+09:00')),'第9・10戦 富士','SUPER FORMULA: retain Fuji during double-header weekend');
+assert.equal(pickRange(SF,parse('2026-10-11T17:59:00+09:00')),'第9・10戦 富士','SUPER FORMULA: retain Fuji until event-end boundary');
+assert.equal(pickRange(SF,parse('2026-10-11T18:01:00+09:00')),'第11・12戦 鈴鹿','SUPER FORMULA: advance to Suzuka after Fuji weekend');
+assert.equal(pickRange(SF,parse('2026-11-22T18:01:00+09:00')),null,'SUPER FORMULA: no phantom event after season finale');
+
 console.log('Motorsport Hub boundary gate: PASS');
