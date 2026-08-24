@@ -57,9 +57,10 @@ All hero images are cropped/resized and darkened for widget presentation. Where 
 - Source: Wikimedia Commons
 - File is confirmed to exist in the Commons category for Toyota Supra GT500 of TOM'S (No.36) in 2022.
 - File page: https://commons.wikimedia.org/wiki/File:No.36_au_TOM%27S_GR_Supra_at_2022_Fujimaki_Group_Suzuka_GT_450km_(13).jpg
-- **Status: exact author/license not independently verified in this audit.**
-- **Hard gate:** do not publicly distribute Motorsport Hub with this hero until the exact file-page author/license is recorded here, or replace the hero with an asset whose exact license has been verified.
+- Independent secondary corroboration for the No.36 car/photo set from the same 2022 Fujimaki Group Suzuka GT 450km records the photo credit as **Tokumeigakarinoaoshima** and license as **CC BY-SA 4.0**.
+- **Status: likely Tokumeigakarinoaoshima / CC BY-SA 4.0, but the exact Commons `(13)` file-page author/license could not be directly retrieved in this audit.**
+- **Hard gate:** do not publicly distribute Motorsport Hub with this hero until the exact file-page author/license is directly verified and recorded here, or replace the hero with an asset whose exact license has been verified.
 
 ## Audit decision
 - Private/personal use: attribution audit does not block the current technical RC.
-- Public distribution: **BLOCKED only by SUPER GT hero attribution/license verification.**
+- Public distribution: **BLOCKED only by exact SUPER GT hero attribution/license verification.**
