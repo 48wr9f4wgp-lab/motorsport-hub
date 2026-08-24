@@ -1,6 +1,6 @@
 # Motorsport Hub — Hero Image Attribution
 
-Motorsport Hub v8.6.1 uses the following Wikimedia Commons hero assets for the HQ pass.
+Motorsport Hub v8.8.0 uses the following Wikimedia Commons hero assets in the current visual system.
 
 ## Formula Drift Japan (FDJ)
 - **Nissan Silvia S14 Drift.jpg**
@@ -8,6 +8,14 @@ Motorsport Hub v8.6.1 uses the following Wikimedia Commons hero assets for the H
 - Author: crash71100
 - License: **CC0 1.0 Universal**
 - https://commons.wikimedia.org/wiki/File:Nissan_Silvia_S14_Drift.jpg
+
+## D1 GRAND PRIX (D1GP)
+- **Nissan Silvia S15 Driftworks.jpg**
+- Source: Wikimedia Commons
+- Author: Motoring Weapon R
+- License used: **CC BY-SA 4.0**
+- https://commons.wikimedia.org/wiki/File:Nissan_Silvia_S15_Driftworks.jpg
+- The image is cropped, resized and darkened for widget presentation.
 
 ## FIA World Endurance Championship (WEC)
 - **2024 6 Hours of Spa-Francorchamps Toyota Gazoo Racing Toyota GR010 Hybrid No.7 (DSC04523).jpg**
