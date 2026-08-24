@@ -2,11 +2,11 @@
 
 iPhone home-screen motorsport widget for Scriptable.
 
-## Technical RC
-- Current candidate: **v8.9.5**
+## Release Candidate
+- Current candidate: **v8.9.6**
 - Visual baseline: v8.7.1
-- Status: **private/personal-use Technical RC**
-- Public distribution: **not yet cleared**; see `ATTRIBUTION.md`
+- Status: **Release Candidate — technical and attribution gates closed**
+- Public release/deployment: **not performed**; explicit owner approval is still required before any public release action.
 
 ## Categories / Widget Parameter
 - `F1` — Formula 1
@@ -36,6 +36,10 @@ Run `Motorsport Hub` directly in Scriptable and choose **QA診断**. It checks t
 - Unknown future leaders should still display rank/points even when optional local vehicle metadata is missing.
 - Current 2026 Toyota WEC naming is `TR010 Hybrid / TOYOTA RACING`.
 
+## Asset / licensing status
+All current hero assets have source/license records in `ATTRIBUTION.md`.
+The SUPER GT hero was replaced in v8.9.6 with an exact-page verified **CC0 1.0** au TOM'S #36 image by Tokumeigakarinoaoshima, closing the previous public-distribution attribution blocker.
+
 ## Release gates
 See:
 - `RC_QA.md`
@@ -44,5 +48,5 @@ See:
 - `tests/release-gate.mjs`
 - `tests/boundary-gate.mjs`
 
-## Public distribution
-Do **not** publicly distribute the current build until the exact author/license for the selected SUPER GT hero is verified and recorded, or that hero is replaced with a fully verified asset.
+## Release control
+The repository is **RC-ready**, but no public deployment, Store submission, publication or other external release action should occur without explicit owner approval.
