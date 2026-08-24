@@ -1,4 +1,4 @@
-// Motorsport Hub v8.8.0 — module router
+// Motorsport Hub v8.8.1 — module router
 // Adds D1GP as the seventh category while preserving the v8.7.1 Universal Readability Pass for existing categories.
 // Loader v4 compatibility marker: v8.6.0 motorsport-core-v841.js motorsport-hq-core.js fdj-widget.js
 (async()=>{
@@ -16,7 +16,7 @@ if(!selected)selected='F1';
 
 const isD1=selected==='D1GP';
 const file=isD1?'d1gp-widget.js':'motorsport-universal-v871.js';
-const key=isD1?'d1gp-v880':'universal-v871';
+const key=isD1?'d1gp-v881':'universal-v871';
 const URL=`https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/main/${file}`;
 const fm=FileManager.local(),cache=fm.joinPath(fm.documentsDirectory(),`motorsport-hub-module-${key}.js`);
 const valid=s=>typeof s==='string'
@@ -34,8 +34,8 @@ async function fail(){
 
 let code='';
 try{
-  const r=new Request(`${URL}?v=880&t=${Date.now()}-${Math.random()}`);r.timeoutInterval=15;
-  r.headers={'Cache-Control':'no-cache, no-store, max-age=0, must-revalidate','Pragma':'no-cache','Expires':'0','User-Agent':'MotorsportHubRouter/8.8'};
+  const r=new Request(`${URL}?v=881&t=${Date.now()}-${Math.random()}`);r.timeoutInterval=15;
+  r.headers={'Cache-Control':'no-cache, no-store, max-age=0, must-revalidate','Pragma':'no-cache','Expires':'0','User-Agent':'MotorsportHubRouter/8.8.1'};
   code=await r.loadString();if(!valid(code))throw Error('invalid module');fm.writeString(cache,code);
 }catch(e){
   try{if(fm.fileExists(cache)){const c=fm.readString(cache);if(valid(c))code=c;else fm.remove(cache)}}catch(_){}
