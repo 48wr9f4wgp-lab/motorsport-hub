@@ -1,8 +1,8 @@
 # Motorsport Hub — Release Audit
 
 ## Candidate
-- Technical RC: **v8.9.5**
-- Visual baseline: **v8.7.1 Final Visual Polish** (locked)
+- Release Candidate: **v8.9.6**
+- Visual baseline: **v8.7.1 Final Visual Polish** (locked; SUPER GT hero asset replaced in v8.9.6)
 - Categories: F1 / WEC / WRC / SUPER GT / MotoGP / FDJ / D1GP
 - Scriptable loader: v4 (no repaste required)
 - Scope: iPhone / Scriptable / Small + Medium
@@ -19,7 +19,7 @@
 - F1 schedule + standings refresh is atomic; partial refresh is not accepted as fully fresh.
 - WRC uses the FIA static official standings route and holds the active rally through its multi-day window.
 - FDJ and D1GP hold the current event through their weekend window.
-- WEC / SUPER GT / MotoGP receive explicit event-boundary holds in v8.9.5 so the widget does not advance to the next round at the scheduled start instant.
+- WEC / SUPER GT / MotoGP receive explicit event-boundary holds so the widget does not advance to the next round at the scheduled start instant.
 - WEC and SUPER GT preserve useful standings even when a future leader lacks local metadata.
 - Season-tail calendar coverage is present through each configured 2026 finale.
 
@@ -32,17 +32,18 @@
 - FDJ / D1GP: weekend retention
 - F1: four-hour race-start retention window
 
-The deterministic boundary test was executed during the v8.9.5 audit and returned **PASS**.
+The deterministic boundary test returned **PASS** during the reliability audit.
 
 ## Static release gate
-`tests/release-gate.mjs` now checks:
+`tests/release-gate.mjs` checks:
 - syntax for the router and reliability modules
 - seven category parameters + QA selector
 - Loader v4 compatibility markers
 - 2026 tail calendars
 - standings fallbacks
-- WRC / FDJ / D1GP / WEC / SUPER GT / MotoGP event-hold guards
+- event-hold guards
 - 2026 WEC TR010 / TOYOTA RACING guard
+- verified SUPER GT hero replacement + cache bust
 - visual-lock source
 - hero attribution audit markers
 
@@ -54,12 +55,12 @@ Verified individually:
 - WEC: CC BY-SA 4.0 — MarcelX42
 - FDJ: CC0 1.0
 - D1GP: CC BY-SA 2.0 — Rowan Harrison
+- SUPER GT: **CC0 1.0 — Tokumeigakarinoaoshima** — exact Commons file page verified
 
-### Remaining public-release blocker
-**SUPER GT hero image exact author/license is not yet independently verified.**
-`ATTRIBUTION.md` records the exact file and the hard gate.
+The former SUPER GT legal blocker is **closed in v8.9.6** by replacing the unverified action hero with the exact-page verified CC0 au TOM'S #36 image.
 
 ## Release decision
-- **TECHNICAL RC: PASS for private/personal use.**
-- **PUBLIC DISTRIBUTION: BLOCKED** until the SUPER GT hero attribution/license is verified or the hero is replaced with a fully verified asset.
-- No App Store/public deployment/release action has been performed.
+- **RELEASE CANDIDATE: PASS.**
+- Technical, runtime-reviewed, boundary and hero-attribution gates are closed.
+- One on-device visual spot-check of the new SUPER GT hero is recommended before any public release action.
+- No App Store/public deployment/release action has been performed. Explicit owner approval is still required before any public release.
