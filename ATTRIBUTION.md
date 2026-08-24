@@ -1,7 +1,7 @@
 # Motorsport Hub — Hero Image Attribution
 
 Last audited: 2026-08-24 JST
-Scope: current v8.9.5 visual system / hero assets used by the Scriptable widget.
+Scope: current v8.9.6 visual system / hero assets used by the Scriptable widget.
 
 All hero images are cropped/resized and darkened for widget presentation. Where the source license requires attribution or ShareAlike, redistribution must preserve those obligations.
 
@@ -52,15 +52,17 @@ All hero images are cropped/resized and darkened for widget presentation. Where 
 - File page: https://commons.wikimedia.org/wiki/File:King_of_Europe_Round_3_Lydden_Hill_2014_(14356011899).jpg
 - Public redistribution requirement: attribution + license link + modification notice; adapted image remains subject to the applicable ShareAlike terms.
 
-## SUPER GT — RELEASE BLOCKER FOR PUBLIC DISTRIBUTION
-- **No.36 au TOM'S GR Supra at 2022 Fujimaki Group Suzuka GT 450km (13).jpg**
+## SUPER GT
+- **Osaka Auto Messe 2025 (1) - No.36 au TOM'S GR Supra in 2024 SUPER GT.jpg**
+- Depiction: No.36 au TOM'S GR Supra used in the 2024 SUPER GT season.
 - Source: Wikimedia Commons
-- File is confirmed to exist in the Commons category for Toyota Supra GT500 of TOM'S (No.36) in 2022.
-- File page: https://commons.wikimedia.org/wiki/File:No.36_au_TOM%27S_GR_Supra_at_2022_Fujimaki_Group_Suzuka_GT_450km_(13).jpg
-- Independent secondary corroboration for the No.36 car/photo set from the same 2022 Fujimaki Group Suzuka GT 450km records the photo credit as **Tokumeigakarinoaoshima** and license as **CC BY-SA 4.0**.
-- **Status: likely Tokumeigakarinoaoshima / CC BY-SA 4.0, but the exact Commons `(13)` file-page author/license could not be directly retrieved in this audit.**
-- **Hard gate:** do not publicly distribute Motorsport Hub with this hero until the exact file-page author/license is directly verified and recorded here, or replace the hero with an asset whose exact license has been verified.
+- Author: **Tokumeigakarinoaoshima**
+- License: **CC0 1.0 Universal**
+- File page: https://commons.wikimedia.org/wiki/File:Osaka_Auto_Messe_2025_(1)_-_No.36_au_TOM%27S_GR_Supra_in_2024_SUPER_GT.jpg
+- Exact Commons file page directly verified during the v8.9.6 audit.
+- The image is cropped/resized/darkened for widget presentation. CC0 imposes no attribution requirement, but the source and author are retained here for provenance.
 
 ## Audit decision
-- Private/personal use: attribution audit does not block the current technical RC.
-- Public distribution: **BLOCKED only by exact SUPER GT hero attribution/license verification.**
+- All current hero assets have an exact source/license record.
+- The former SUPER GT public-distribution blocker is **closed in v8.9.6** by replacing the unverified action hero with the exact-page verified CC0 au TOM'S asset.
+- Licensing/attribution audit: **PASS for Release Candidate**.
