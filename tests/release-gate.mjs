@@ -11,6 +11,7 @@ const files={
  loader:read('scriptable-loader.js'),
  router:read('motorsport-hub.js'),
  reliability:read('motorsport-reliability-v890.js'),
+ reliability892:read('motorsport-reliability-v892.js'),
  diagnostics:read('motorsport-diagnostics-v890.js'),
  visual:read('motorsport-universal-v871.js'),
  core:read('motorsport-core-v841.js'),
@@ -28,7 +29,7 @@ for(const token of ['F1','WEC','WRC','SUPERGT','MOTOGP','FDJ','D1GP'])
 for(const marker of ['Motorsport Hub','module router','v8.6.0',"'FDJ'",'motorsport-core-v841.js','motorsport-hq-core.js','fdj-widget.js','Script.complete()'])
  assert(files.router.includes(marker),`loader-v4 compatibility marker missing: ${marker}`);
 
-assert(files.router.includes('motorsport-reliability-v890.js'),'router is not using v8.9 reliability pass');
+assert(files.router.includes('motorsport-reliability-v892.js'),'router is not using v8.9.2 reliability hotfix');
 assert(files.router.includes('d1gp-reliability-v890.js'),'router lost D1GP reliability wrapper');
 assert(files.router.includes('motorsport-diagnostics-v890.js'),'router lost QA diagnostics');
 assert(files.router.includes("'QA'"),'router missing QA selector');
@@ -48,6 +49,8 @@ assert(files.reliability.includes('4*86400000'),'WRC multi-day hold missing');
 assert(files.reliability.includes('40*3600000'),'FDJ weekend hold missing');
 assert(files.d1.includes('40*3600000'),'D1GP weekend hold missing');
 assert(files.reliability.includes("label:'開催中'"),'multi-day in-event state missing');
+assert(files.reliability892.includes('/坪井|山下/'),'SUPER GT driver-name metadata fallback missing');
+assert(files.reliability892.includes("s||'GT500'"),'SUPER GT non-empty secondary-line fallback missing');
 assert(files.visual.includes('Final Visual Polish'),'v8.7.1 visual lock source missing');
 assert(files.fdj.includes('formulad.jp/2026-fdj-standings'),'FDJ live standings source missing');
 assert(files.d1base.includes('d1gp.co.jp'),'D1GP live source missing');
