@@ -1,7 +1,7 @@
 # Motorsport Hub — Hero Image Attribution
 
 Last audited: 2026-08-24 JST
-Scope: current v9.0.0 expansion build / hero assets used by the Scriptable widget.
+Scope: current v9.1.0 expansion build / hero assets used by the Scriptable widget.
 
 All hero images are cropped/resized and darkened for widget presentation. Where the source license requires attribution or ShareAlike, redistribution must preserve those obligations.
 
@@ -72,8 +72,19 @@ All hero images are cropped/resized and darkened for widget presentation. Where 
 - Exact Commons file page directly verified for the v9.0.0 expansion.
 - Public redistribution requirement: credit BWard 1997, link the CC BY 4.0 license, and indicate that the image was cropped/resized/darkened.
 
+## INDYCAR
+- **Alex Palou (54686833932).jpg**
+- Depiction: Alex Palou in the Corkscrew at WeatherTech Raceway Laguna Seca during the 2025 IndyCar Grand Prix of Monterey.
+- Source: Wikimedia Commons / Flickr
+- Author: **Ben Goyette**
+- License: **CC BY-SA 4.0 International**
+- File page: https://commons.wikimedia.org/wiki/File:Alex_Palou_(54686833932).jpg
+- Exact Commons file page directly verified for the v9.1.0 expansion.
+- Public redistribution requirement: credit Ben Goyette, link the CC BY-SA 4.0 license, indicate that the image was cropped/resized/darkened, and preserve applicable ShareAlike obligations.
+
 ## Audit decision
-- All eight current hero assets have an exact source/license record.
+- All nine current hero assets have an exact source/license record.
 - The former SUPER GT public-distribution blocker remains closed.
 - SUPER FORMULA v9.0.0 hero licensing: **PASS**.
+- INDYCAR v9.1.0 hero licensing: **PASS**.
 - Licensing/attribution audit: **PASS for the current expansion build**.
