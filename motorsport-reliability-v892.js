@@ -1,17 +1,21 @@
-// Motorsport Hub v8.9.2 — SUPER GT metadata hotfix
-// Wraps v8.9.0 Reliability Pass and restores GT500 machine/team sublines even when the source table omits/reshuffles car-number cells.
+// Motorsport Hub v8.9.3 — metadata corrections on top of v8.9.2
+// Keeps the SUPER GT metadata hotfix and corrects WEC Toyota machine/team naming before RC lock.
 (async()=>{
 const URL='https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/main/motorsport-reliability-v890.js';
 const fm=FileManager.local(),DOC=fm.documentsDirectory();
-const cache=fm.joinPath(DOC,'motorsport-reliability-source-v892.js');
+const cache=fm.joinPath(DOC,'motorsport-reliability-source-v893.js');
 const valid=s=>typeof s==='string'&&s.includes('Reliability Pass')&&s.includes('Script.complete()');
 let code='';
 try{
- const r=new Request(`${URL}?v=892&t=${Date.now()}-${Math.random()}`);r.timeoutInterval=15;
- r.headers={'Cache-Control':'no-cache, no-store, max-age=0, must-revalidate','Pragma':'no-cache','Expires':'0','User-Agent':'MotorsportHub/8.9.2'};
+ const r=new Request(`${URL}?v=893&t=${Date.now()}-${Math.random()}`);r.timeoutInterval=15;
+ r.headers={'Cache-Control':'no-cache, no-store, max-age=0, must-revalidate','Pragma':'no-cache','Expires':'0','User-Agent':'MotorsportHub/8.9.3'};
  code=await r.loadString();if(!valid(code))throw Error('invalid reliability source');fm.writeString(cache,code);
 }catch(e){try{if(fm.fileExists(cache)){const c=fm.readString(cache);if(valid(c))code=c;else fm.remove(cache)}}catch(_){}}
-if(!valid(code))throw Error('v8.9.2 reliability source unavailable');
+if(!valid(code))throw Error('v8.9.3 reliability source unavailable');
+
+// Correct Toyota WEC metadata everywhere it can be sourced from the frozen HQ module.
+code=String(code).split('TR010 Hybrid').join('GR010 Hybrid');
+code=String(code).split('TOYOTA RACING').join('TOYOTA GAZOO RACING');
 
 // v8.9.0 parsed the GT500 ranking correctly but could lose car/team metadata when the official table layout
 // did not expose the expected car-number cell. Resolve known current entries by number OR driver names,
