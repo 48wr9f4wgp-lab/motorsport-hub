@@ -1,7 +1,7 @@
-// Motorsport Hub v8.3.2 — Professional Visual Pass / GitHub hosted / Scriptable
+// Motorsport Hub v8.4.0 — Professional Visual Pass / GitHub hosted / Scriptable
 // Widget Parameter: F1 / WEC / WRC / SUPERGT / MOTOGP
 (async()=>{
-const V='8.3.2';
+const V='8.4.0';
 const MAP={F1:'f1',WEC:'wec',WRC:'wrc',SUPERGT:'supergt',MOTOGP:'motogp'};
 const labels=['F1','WEC','WRC','SUPER GT','MotoGP'],params=['F1','WEC','WRC','SUPERGT','MOTOGP'];
 const norm=v=>String(v||'').trim().toUpperCase().replace(/[\s_-]+/g,'');
@@ -68,7 +68,7 @@ const clone=o=>JSON.parse(JSON.stringify(o)),col=(h,a=1)=>new Color(h,a),num=v=>
 const clean=s=>String(s||'').replace(/<script[\s\S]*?<\/script>/gi,' ').replace(/<style[\s\S]*?<\/style>/gi,' ').replace(/<[^>]+>/g,' ').replace(/&nbsp;|&#160;/gi,' ').replace(/&amp;/gi,'&').replace(/\s+/g,' ').trim();
 function rows(h){const out=[];for(const tr of String(h||'').match(/<tr\b[\s\S]*?<\/tr>/gi)||[]){const a=[];let m,re=/<t[dh]\b[^>]*>([\s\S]*?)<\/t[dh]>/gi;while((m=re.exec(tr)))a.push(clean(m[1]));if(a.length)out.push(a)}return out}
 async function txt(url){const r=new Request(url);r.timeoutInterval=9;r.headers={'User-Agent':'Mozilla/5.0'};return await r.loadString()}
-async function json(url){const r=new Request(url);r.timeoutInterval=9;r.headers={'User-Agent':'MotorsportHub/8.3.2'};return await r.loadJSON()}
+async function json(url){const r=new Request(url);r.timeoutInterval=9;r.headers={'User-Agent':'MotorsportHub/8.4.0'};return await r.loadJSON()}
 function calendar(d){const c=CAL[K];if(!c)return d;const now=Date.now();for(const e of c){const t=Date.parse(e[1]);if(t>now)return{...d,race:e[0],date:e[1],circuit:e[2],timeTbd:!!e[3]}}return d}
 function save(d){try{fm.writeString(CACHE,JSON.stringify(d))}catch(_){} }
 function cache(){try{return fm.fileExists(CACHE)?JSON.parse(fm.readString(CACHE)):null}catch(_){return null}}
@@ -83,26 +83,29 @@ async function updateGT(d){const h=await txt('https://supergt.net/'),u=h.toUpper
 async function load(){const base=calendar(clone(SNAP[K]));try{let d=K==='f1'?await updateF1(base):K==='wec'?await updateWEC(base):K==='wrc'?await updateWRC(base):K==='motogp'?await updateMoto(base):await updateGT(base);save(d);return{d,cached:false}}catch(e){return{d:calendar(cache()||base),cached:true}}}
 
 function smoothstep(t){return t*t*(3-2*t)}
-function coverRect(img,focus=.5,shift=0){const W=690,H=320,iw=img.size.width||1,ih=img.size.height||1,scale=Math.max(W/iw,H/ih),dw=iw*scale,dh=ih*scale,x=-(dw-W)*focus+shift,y=-(dh-H)*.5;return new Rect(x,y,dw,dh)}
+function coverRect(img,focus=.5,shift=0,W=690,H=320){const iw=img.size.width||1,ih=img.size.height||1,scale=Math.max(W/iw,H/ih),dw=iw*scale,dh=ih*scale,x=-(dw-W)*focus+shift,y=-(dh-H)*.5;return new Rect(x,y,dw,dh)}
 async function hero(d){
   const maker=String(d?.ranking?.[0]?.maker||'').toUpperCase();
   const preset=HERO[K]?.[maker]||Object.values(HERO[K]||{})[0];
   if(!preset)return null;
-  const p=fm.joinPath(DOC,`motorsport-hero-v832-${K}-${maker}.jpg`);
+  const isSmall=F==='small';
+  const p=fm.joinPath(DOC,isSmall?`motorsport-hero-v840-small-${K}-${maker}.jpg`:`motorsport-hero-v832-${K}-${maker}.jpg`);
   if(fm.fileExists(p)){try{return fm.readImage(p)}catch(_){} }
   try{
     let img=null;
     for(const u of (preset.urls||[preset.url])){if(!u)continue;try{const r=new Request(u);r.timeoutInterval=10;r.headers={'User-Agent':'Mozilla/5.0'};img=await r.loadImage();if(img)break}catch(_){}}
     if(!img)return null;
-    const W=690,H=320,ctx=new DrawContext();ctx.size=new Size(W,H);ctx.opaque=true;ctx.respectScreenScale=false;
+    const W=isSmall?360:690,H=isSmall?360:320,ctx=new DrawContext();ctx.size=new Size(W,H);ctx.opaque=true;ctx.respectScreenScale=false;
     ctx.setFillColor(col(C.bg));ctx.fillRect(new Rect(0,0,W,H));
-    ctx.drawImageInRect(img,coverRect(img,preset.focus??.5,preset.shift??0));
+    const shift=(preset.shift??0)*(W/690);
+    ctx.drawImageInRect(img,coverRect(img,preset.focus??.5,shift,W,H));
     ctx.setFillColor(col('#030609',.18));ctx.fillRect(new Rect(0,0,W,H));
     const step=2;
     for(let x=0;x<W;x+=step){const t=x/(W-1),s=smoothstep(Math.min(1,Math.max(0,t))),a=.82*(1-s)+.06;ctx.setFillColor(col('#030609',a));ctx.fillRect(new Rect(x,0,step+1,H))}
-    const vSteps=56;
-    for(let i=0;i<vSteps;i++){const y=218+i*(102/vSteps),t=i/(vSteps-1),a=.015+.25*t*t;ctx.setFillColor(col('#020407',a));ctx.fillRect(new Rect(0,y,W,102/vSteps+1))}
-    for(let x=560;x<W;x+=2){const t=(x-560)/(W-560),a=.02+.14*smoothstep(t);ctx.setFillColor(col('#020407',a));ctx.fillRect(new Rect(x,0,3,H))}
+    const bottomStart=H*.68,bottomH=H-bottomStart,vSteps=56;
+    for(let i=0;i<vSteps;i++){const y=bottomStart+i*(bottomH/vSteps),t=i/(vSteps-1),a=.015+.25*t*t;ctx.setFillColor(col('#020407',a));ctx.fillRect(new Rect(0,y,W,bottomH/vSteps+1))}
+    const rightStart=W*.81;
+    for(let x=rightStart;x<W;x+=2){const t=(x-rightStart)/(W-rightStart),a=.02+.14*smoothstep(t);ctx.setFillColor(col('#020407',a));ctx.fillRect(new Rect(x,0,3,H))}
     ctx.setFillColor(col(S.accent,.88));ctx.fillRect(new Rect(0,0,W,3));
     const out=ctx.getImage();try{fm.writeImage(p,out)}catch(_){}return out;
   }catch(_){return null}
@@ -142,9 +145,17 @@ function medium(d,cached,bg){
 }
 
 function small(d,cached,bg){
-  const w=base(bg),ci=countdown(d),top=w.addStack();top.layoutHorizontally();pill(top,S.label,true);top.addSpacer();if(cached)T(top,'•',6.8,col(C.warn,.78),'semibold');
-  w.addSpacer(6);T(w,rn(d.race||'次戦'),16.5,col(C.text),'heavy',2);w.addSpacer(4);T(w,dateText(d),8.9,col(C.muted),'semibold');w.addSpacer();
-  const cp=w.addStack();cp.backgroundColor=ci.live?col(C.good,.19):col('#000000',.27);cp.cornerRadius=10;cp.setPadding(4,7,4,7);T(cp,ci.label,20,ci.live?col(C.good):col(C.text),'heavy');
+  const w=base(bg),ci=countdown(d);w.setPadding(10,11,9,11);
+  const top=w.addStack();top.layoutHorizontally();top.centerAlignContent();pill(top,S.label,true);top.addSpacer(4);T(top,'次戦',7.2,col(C.dim),'semibold');top.addSpacer();
+  const cp=top.addStack();cp.backgroundColor=ci.live?col(C.good,.20):col('#000000',.32);cp.cornerRadius=8;cp.setPadding(2,6,2,6);T(cp,ci.label,11.8,ci.live?col(C.good):col(C.text),'heavy');
+  w.addSpacer(7);
+  T(w,rn(d.race||'次戦'),18.5,col(C.text),'heavy',2);
+  w.addSpacer(3);
+  T(w,dateText(d),9.8,col(C.muted),'semibold',1);
+  w.addSpacer();
+  const foot=w.addStack();foot.layoutHorizontally();foot.centerAlignContent();
+  if(d.circuit){const loc=foot.addStack();loc.backgroundColor=col('#000000',.28);loc.cornerRadius=7;loc.setPadding(2,5,2,5);T(loc,cn(d.circuit),8.2,col(C.muted),'semibold',1)}
+  foot.addSpacer();if(cached)T(foot,'• 更新待ち',6.4,col(C.warn,.72),'semibold');
   w.refreshAfterDate=new Date(Date.now()+15*60000);return w;
 }
 
