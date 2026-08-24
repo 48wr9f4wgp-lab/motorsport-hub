@@ -1,5 +1,5 @@
-// Motorsport Hub v8.6.1 — module router (v8.6.0 architecture)
-// F1 / WRC / MotoGP remain on frozen v8.4.1 core. WEC uses motorsport-hq-core.js. SUPER GT uses a v8.6.1 au TOM'S HQ override. FDJ remains isolated.
+// Motorsport Hub v8.6.2 — module router (v8.6.0 architecture)
+// F1 / WRC / MotoGP remain on frozen v8.4.1 core. WEC / SUPER GT use the v8.6.2 HQ readability wrapper. FDJ remains isolated.
 (async()=>{
 const labels=['F1','WEC','WRC','SUPER GT','MotoGP','FDJ'];
 const params=['F1','WEC','WRC','SUPERGT','MOTOGP','FDJ'];
@@ -18,8 +18,7 @@ const isSGT=selected==='SUPERGT';
 const isHQ=isWEC||isSGT;
 let file,key;
 if(isFDJ){file='fdj-widget.js';key='fdj-v854'}
-else if(isWEC){file='motorsport-hq-core.js';key='hq-wec-v860'}
-else if(isSGT){file='supergt-hq-v861.js';key='supergt-v861'}
+else if(isHQ){file='motorsport-hq-v862.js';key=`hq-${selected.toLowerCase()}-v862`}
 else{file='motorsport-core-v841.js';key='core-v841'}
 
 const URL=`https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/main/${file}`;
@@ -36,7 +35,7 @@ async function fail(){
 
 let code='';
 try{
-  const r=new Request(`${URL}?v=861&t=${Date.now()}-${Math.random()}`);r.timeoutInterval=12;
+  const r=new Request(`${URL}?v=862&t=${Date.now()}-${Math.random()}`);r.timeoutInterval=12;
   r.headers={'Cache-Control':'no-cache, no-store, max-age=0','Pragma':'no-cache'};
   code=await r.loadString();if(!valid(code))throw Error('invalid module');fm.writeString(cache,code);
 }catch(e){
