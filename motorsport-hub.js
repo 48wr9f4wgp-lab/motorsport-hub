@@ -1,4 +1,4 @@
-// Motorsport Hub v9.0.0 — 8-category expansion router
+// Motorsport Hub v9.0.0 — module router / 8-category expansion
 // Adds SUPER FORMULA while preserving the v8.9.6 seven-category RC path and Loader v4 compatibility.
 // Loader v4 compatibility marker: v8.6.0 motorsport-core-v841.js motorsport-hq-core.js fdj-widget.js
 (async()=>{
