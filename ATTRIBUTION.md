@@ -1,6 +1,6 @@
 # Motorsport Hub — Hero Image Attribution
 
-Motorsport Hub v8.8.1 uses the following Wikimedia Commons hero assets in the current visual system.
+Motorsport Hub v8.8.2 uses the following Wikimedia Commons hero assets in the current visual system.
 
 ## Formula Drift Japan (FDJ)
 - **DRIFT-0ae1a2ba-2d7b-4d51-b082-b698f2fbb2f1.jpg**
@@ -11,12 +11,13 @@ Motorsport Hub v8.8.1 uses the following Wikimedia Commons hero assets in the cu
 - The image is cropped, resized and darkened for widget presentation.
 
 ## D1 GRAND PRIX (D1GP)
-- **Nissan Silvia S14 Drift.jpg**
+- **King of Europe Round 3 Lydden Hill 2014 (14356011899).jpg**
+- Depiction: Nissan Silvia S14 drifting under counter-steer at Lydden Hill
 - Source: Wikimedia Commons / Flickr
-- Author: crash71100
-- License: **CC0 1.0 Universal**
-- https://commons.wikimedia.org/wiki/File:Nissan_Silvia_S14_Drift.jpg
-- The image is cropped, resized and darkened for widget presentation.
+- Author: **Rowan Harrison**
+- License: **CC BY-SA 2.0 Generic**
+- https://commons.wikimedia.org/wiki/File:King_of_Europe_Round_3_Lydden_Hill_2014_(14356011899).jpg
+- The image is cropped, resized and darkened for widget presentation; the adapted image remains subject to the applicable CC BY-SA terms.
 
 ## FIA World Endurance Championship (WEC)
 - **2024 6 Hours of Spa-Francorchamps Toyota Gazoo Racing Toyota GR010 Hybrid No.7 (DSC04523).jpg**
