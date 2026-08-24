@@ -1,5 +1,33 @@
 # Changelog
 
+## v8.9.6 — Release Candidate
+
+### Licensing / hero assets
+- Closed the final public-distribution attribution blocker.
+- Replaced the previously unverified SUPER GT action hero with:
+  - `Osaka Auto Messe 2025 (1) - No.36 au TOM'S GR Supra in 2024 SUPER GT.jpg`
+  - Author: **Tokumeigakarinoaoshima**
+  - License: **CC0 1.0 Universal**
+  - Exact Wikimedia Commons file page directly verified.
+- Added a fresh SUPER GT hero cache key so devices do not keep the old unverified image.
+
+### Reliability
+- v8.9.5 event-boundary guards remain active.
+- Official 2026 WEC naming guard remains active: `TR010 Hybrid / TOYOTA RACING`.
+- SUPER GT machine/team metadata fallback remains active.
+
+### QA / release gates
+- Router moved to `motorsport-reliability-v896.js`.
+- `tests/release-gate.mjs` updated to require the verified SUPER GT CC0 asset and reject the stale public-release blocker.
+- `ATTRIBUTION.md`, `RC_QA.md`, `RELEASE_AUDIT.md`, and `README.md` updated to v8.9.6.
+
+### Release status
+- **Release Candidate: PASS.**
+- Technical, runtime-reviewed, boundary and hero-attribution gates are closed.
+- No public deployment, Store submission or release action performed. Explicit owner approval is still required before public release.
+
+---
+
 ## v8.9.5 — Technical Release Candidate
 
 ### Reliability
@@ -25,20 +53,14 @@
 - Home-screen Small regression: all seven categories passed.
 - Medium regression reviewed across F1 / WEC / WRC / SUPER GT / MotoGP / FDJ / D1GP.
 - Added deterministic `tests/boundary-gate.mjs`; boundary simulation passed during the v8.9.5 audit.
-- Updated `tests/release-gate.mjs` for v8.9.5 reliability and attribution requirements.
 
 ### Visuals
 - No intentional layout changes after the v8.7.1 visual lock.
 - Universal readability / PTS / countdown treatment remains frozen.
 
-### Licensing
-- Verified hero attribution/license metadata for F1, WRC, MotoGP, WEC, FDJ and D1GP.
-- SUPER GT hero exact author/license remains unresolved and is a hard blocker for public distribution.
-
-### Release status
-- **Technical RC: PASS for private/personal use.**
-- **Public distribution: BLOCKED pending SUPER GT hero attribution/license verification or replacement.**
-- No public deployment, Store submission, or release action performed.
+### Release status at v8.9.5
+- Technical RC passed for private/personal use.
+- Public distribution remained blocked by the then-unverified SUPER GT hero; this was resolved in v8.9.6.
 
 ---
 
