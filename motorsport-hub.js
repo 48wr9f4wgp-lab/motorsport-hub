@@ -1,10 +1,10 @@
-// Motorsport Hub v8.5.2 — module router
-// Existing categories remain frozen on v8.4.1 core; FDJ is isolated in its own module.
+// Motorsport Hub v8.5.5 — module router / HQ hero pass
+// Existing category logic remains frozen; HQ rendering is injected only for FDJ / WEC / SUPER GT.
 (async()=>{
-const MARKERS={F1:'f1',WEC:'wec',MOTOGP:'motogp'};
 const labels=['F1','WEC','WRC','SUPER GT','MotoGP','FDJ'];
 const params=['F1','WEC','WRC','SUPERGT','MOTOGP','FDJ'];
 const norm=v=>String(v||'').trim().toUpperCase().replace(/[\s_-]+/g,'');
+const rep=(s,a,b)=>String(s).split(a).join(b);
 let selected=norm(args.widgetParameter);
 
 if(!config.runsInWidget&&!params.includes(selected)){
@@ -20,6 +20,7 @@ if(!config.runsInWidget&&!params.includes(selected)){
 if(!selected)selected='F1';
 
 const isFDJ=selected==='FDJ'||selected==='FORMULADRIFTJAPAN';
+const isHQCore=selected==='WEC'||selected==='SUPERGT';
 const key=isFDJ?'fdj':'core-v841';
 const file=isFDJ?'fdj-widget.js':'motorsport-core-v841.js';
 const URL=`https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/main/${file}`;
@@ -36,7 +37,9 @@ async function fail(){
 
 let code='';
 try{
-  const r=new Request(`${URL}?t=${Date.now()}`);r.timeoutInterval=10;code=await r.loadString();
+  const r=new Request(`${URL}?t=${Date.now()}-${Math.random()}`);r.timeoutInterval=12;
+  r.headers={'Cache-Control':'no-cache, no-store, max-age=0','Pragma':'no-cache'};
+  code=await r.loadString();
   if(!valid(code))throw Error('invalid module');
   fm.writeString(cache,code);
 }catch(e){
@@ -44,11 +47,34 @@ try{
 }
 if(!valid(code)){await fail();return}
 
-// The legacy v8.4.1 core owns its old five-item preview picker.
-// When this router already chose a category, inject that selection so the legacy picker is skipped.
+// Legacy core: inject router-selected category so its old picker is skipped.
 if(!isFDJ){
   globalThis.__MH_WIDGET_PARAMETER=selected;
   code=code.replace('let mode=norm(args.widgetParameter);','let mode=norm(globalThis.__MH_WIDGET_PARAMETER||args.widgetParameter);');
+}
+
+// v8.5.5 HQ pass. Keep layout/data logic untouched and upgrade only the image pipeline.
+if(isHQCore){
+  code=rep(code,'/960px-','/1920px-');
+  code=rep(code,'?width=960','?width=1920');
+  code=rep(code,'motorsport-hero-v840-small-','motorsport-hero-v855-small-');
+  code=rep(code,'motorsport-hero-v832-','motorsport-hero-v855-medium-');
+  code=rep(code,'const W=isSmall?360:690,H=isSmall?360:320','const W=isSmall?720:1380,H=isSmall?720:640');
+  code=rep(code,"ctx.setFillColor(col('#030609',.18))","ctx.setFillColor(col('#030609',.11))");
+  code=rep(code,'a=.82*(1-s)+.06','a=.76*(1-s)+.04');
+  code=rep(code,'a=.015+.25*t*t','a=.012+.19*t*t');
+  code=rep(code,'a=.02+.14*smoothstep(t)','a=.015+.10*smoothstep(t)');
+}
+
+if(isFDJ){
+  code=rep(code,"const V='8.5.4'","const V='8.5.5'");
+  code=rep(code,'?width=1280','?width=1920');
+  code=rep(code,'?width=960','?width=1600');
+  code=rep(code,'motorsport-hero-v854-','motorsport-hero-v855-');
+  code=rep(code,'const W=small?360:690,H=small?360:320','const W=small?720:1380,H=small?720:640');
+  code=rep(code,"ctx.setFillColor(col('#030609',.15))","ctx.setFillColor(col('#030609',.10))");
+  code=rep(code,'a=.82*(1-smooth(t))+.04','a=.76*(1-smooth(t))+.035');
+  code=rep(code,'a=.015+.22*t*t','a=.012+.18*t*t');
 }
 
 try{await eval(code)}catch(e){await fail()}
