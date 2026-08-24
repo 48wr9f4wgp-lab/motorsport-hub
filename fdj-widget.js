@@ -1,6 +1,6 @@
-// Motorsport Hub v8.5.0 — Formula Drift Japan module
+// Motorsport Hub v8.5.1 — Formula Drift Japan module
 (async()=>{
-const V='8.5.0',K='fdj';
+const V='8.5.1',K='fdj';
 const S={label:'FDJ',accent:'#FF7A00',url:'https://formulad.jp/'};
 const C={bg:'#06080B',text:'#F7F9FB',muted:'#B9C2CC',dim:'#8D98A4',good:'#58DA8A',warn:'#FFB84D'};
 const fm=FileManager.local(),DOC=fm.documentsDirectory(),CACHE=fm.joinPath(DOC,'motorsport-data-v85-fdj.json');
@@ -17,7 +17,7 @@ const CAL=[
  ['第5戦 奥伊吹','2026-09-05T09:00:00+09:00','グランスノー奥伊吹',true],
  ['第6戦 岡山','2026-10-03T09:00:00+09:00','岡山国際サーキット',true]
 ];
-const HERO='https://commons.wikimedia.org/wiki/Special:Redirect/file/Osaka%20Auto%20Messe%202025%20(199)%20-%20No.21%20KAZAMA%20AUTO%20IS500%20F%20SPORT%20Perfiormance%EF%BC%8FDRIFT%20in%202024%20FORMULA%20DRIFT%20JAPAN.jpg?width=960';
+const HERO='https://commons.wikimedia.org/wiki/Special:Redirect/file/Drift%20Car%20in%20Motion%20at%20Muscle%20on%20the%20Wheel%20Annual%20Show%2C%20Port%20Harcourt%2C%20Rivers%2002.jpg?width=960';
 const col=(h,a=1)=>new Color(h,a),clone=o=>JSON.parse(JSON.stringify(o)),num=v=>{const m=String(v||'').replace(/,/g,'').match(/-?\d+(?:\.\d+)?/);return m?Number(m[0]):NaN};
 const clean=s=>String(s||'').replace(/<script[\s\S]*?<\/script>/gi,' ').replace(/<style[\s\S]*?<\/style>/gi,' ').replace(/<[^>]+>/g,' ').replace(/&nbsp;|&#160;/gi,' ').replace(/&amp;/gi,'&').replace(/\s+/g,' ').trim();
 function rows(h){const out=[];for(const tr of String(h||'').match(/<tr\b[\s\S]*?<\/tr>/gi)||[]){const a=[];let m,re=/<t[dh]\b[^>]*>([\s\S]*?)<\/t[dh]>/gi;while((m=re.exec(tr)))a.push(clean(m[1]));if(a.length)out.push(a)}return out}
@@ -40,7 +40,7 @@ async function update(d){
 async function load(){const base=nextEvent(clone(SNAP));try{const d=await update(base);save(d);return{d,cached:false}}catch(e){return{d:nextEvent(cache()||base),cached:true}}}
 function smooth(t){return t*t*(3-2*t)}
 function cover(img,W,H,focus=.54,shift=0){const iw=img.size.width||1,ih=img.size.height||1,s=Math.max(W/iw,H/ih),dw=iw*s,dh=ih*s;return new Rect(-(dw-W)*focus+shift,-(dh-H)*.5,dw,dh)}
-async function hero(){const small=(config.widgetFamily||'medium')==='small',p=fm.joinPath(DOC,`motorsport-hero-v850-${small?'small':'medium'}-fdj.jpg`);if(fm.fileExists(p)){try{return fm.readImage(p)}catch(_){} }
+async function hero(){const small=(config.widgetFamily||'medium')==='small',p=fm.joinPath(DOC,`motorsport-hero-v851-${small?'small':'medium'}-fdj.jpg`);if(fm.fileExists(p)){try{return fm.readImage(p)}catch(_){} }
  try{const r=new Request(HERO);r.timeoutInterval=10;r.headers={'User-Agent':'Mozilla/5.0'};const img=await r.loadImage(),W=small?360:690,H=small?360:320,ctx=new DrawContext();ctx.size=new Size(W,H);ctx.opaque=true;ctx.respectScreenScale=false;ctx.setFillColor(col(C.bg));ctx.fillRect(new Rect(0,0,W,H));ctx.drawImageInRect(img,cover(img,W,H,.55,small?26:64));ctx.setFillColor(col('#030609',.20));ctx.fillRect(new Rect(0,0,W,H));for(let x=0;x<W;x+=2){const t=x/(W-1),a=.84*(1-smooth(t))+.06;ctx.setFillColor(col('#030609',a));ctx.fillRect(new Rect(x,0,3,H))}const bs=H*.67,bh=H-bs;for(let i=0;i<48;i++){const y=bs+i*(bh/48),t=i/47,a=.02+.25*t*t;ctx.setFillColor(col('#020407',a));ctx.fillRect(new Rect(0,y,W,bh/48+1))}ctx.setFillColor(col(S.accent,.9));ctx.fillRect(new Rect(0,0,W,3));const out=ctx.getImage();try{fm.writeImage(p,out)}catch(_){}return out}catch(_){return null}}
 function T(st,s,z,c,w='regular',n=1){const t=st.addText(String(s??''));t.font=w==='heavy'?Font.heavySystemFont(z):w==='bold'?Font.boldSystemFont(z):w==='semibold'?Font.semiboldSystemFont(z):Font.systemFont(z);t.textColor=c;t.lineLimit=n;t.minimumScaleFactor=.68;return t}
 function base(bg){const w=new ListWidget();if(bg)w.backgroundImage=bg;else{const g=new LinearGradient();g.colors=[col(S.accent,.16),col(C.bg)];g.locations=[0,1];w.backgroundGradient=g}w.url=S.url;return w}
