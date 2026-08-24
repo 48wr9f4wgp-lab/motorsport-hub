@@ -1,15 +1,17 @@
-// Motorsport Hub loader v3 — paste into Scriptable once.
+// Motorsport Hub loader v4 — paste into Scriptable once.
 (async()=>{
   const URL='https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/main/motorsport-hub.js';
   const fm=FileManager.local();
-  const cache=fm.joinPath(fm.documentsDirectory(),'motorsport-hub-remote-v3.js');
+  const cache=fm.joinPath(fm.documentsDirectory(),'motorsport-hub-remote-v4.js');
 
-  // Only accept the post-v8.5 module router. Old v8.4.x monoliths are intentionally rejected.
+  // Require the v8.6+ module architecture. Older routers are intentionally rejected.
   const valid=s=>typeof s==='string'
     &&s.includes('Motorsport Hub')
     &&s.includes('module router')
+    &&s.includes('v8.6.0')
     &&s.includes("'FDJ'")
     &&s.includes('motorsport-core-v841.js')
+    &&s.includes('motorsport-hq-core.js')
     &&s.includes('fdj-widget.js')
     &&s.includes('Script.complete()');
 
@@ -29,9 +31,14 @@
 
   let code='';
   try{
-    const r=new Request(`${URL}?mhv3=${Date.now()}-${Math.random()}`);
-    r.timeoutInterval=12;
-    r.headers={'Cache-Control':'no-cache, no-store, max-age=0','Pragma':'no-cache'};
+    const r=new Request(`${URL}?mhv4=${Date.now()}-${Math.random()}`);
+    r.timeoutInterval=15;
+    r.headers={
+      'Cache-Control':'no-cache, no-store, max-age=0, must-revalidate',
+      'Pragma':'no-cache',
+      'Expires':'0',
+      'User-Agent':'MotorsportHubLoader/4'
+    };
     code=await r.loadString();
     if(!valid(code))throw new Error('Stale or invalid Motorsport Hub router');
     fm.writeString(cache,code);
@@ -46,7 +53,7 @@
   }
 
   if(!valid(code)){
-    await fail('最新版ルーターを取得できません。旧版は表示せず、数分後に再試行します。');
+    await fail('v8.6以降の最新版ルーターを取得できません。旧版は表示せず、数分後に再試行します。');
     return;
   }
 
