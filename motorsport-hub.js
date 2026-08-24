@@ -1,5 +1,6 @@
 // Motorsport Hub v8.6.2 — module router (v8.6.0 architecture)
 // F1 / WRC / MotoGP remain on frozen v8.4.1 core. WEC / SUPER GT use the v8.6.2 HQ readability wrapper. FDJ remains isolated.
+// Loader v4 compatibility marker: motorsport-hq-core.js
 (async()=>{
 const labels=['F1','WEC','WRC','SUPER GT','MotoGP','FDJ'];
 const params=['F1','WEC','WRC','SUPERGT','MOTOGP','FDJ'];
