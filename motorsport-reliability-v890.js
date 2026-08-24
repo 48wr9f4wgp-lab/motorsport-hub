@@ -33,6 +33,11 @@ async function updateWEC`);
 
  // WRC: use FIA's static official standings page and complete the remaining calendar.
  if(sel==='WRC'){
+  // Hold the current rally through its multi-day event instead of advancing after Thursday morning.
+  rx(/function calendar\(d\)\{[^\n]*\}/,
+`function calendar(d){const c=CAL[K];if(!c)return d;const now=Date.now();for(const e of c){const t=Date.parse(e[1]);if(t+4*86400000>now)return{...d,race:e[0],date:e[1],circuit:e[2],timeTbd:!!e[3]}}return d}`);
+  rx(/function countdown\(d\)\{[^\n]*\}/,
+`function countdown(d){const q=new Date(d.date)-Date.now();if(q<=0&&q>-4*86400000)return{label:'開催中',live:true};if(q<=0)return{label:'終了',live:false};const h=q/3600000;if(d.timeTbd)return{label:'あと'+Math.max(1,Math.ceil(h/24))+'日',live:false};if(h<1)return{label:'あと'+Math.ceil(q/60000)+'分',live:false};if(h<24)return{label:'あと'+Math.ceil(h)+'時間',live:false};return{label:'あと'+Math.ceil(h/24)+'日',live:false}}`);
   rx(/wrc:\[[\s\S]*?\],\n  motogp:/,
 `wrc:[
  ['WRC ueno Rally del Paraguay','2026-08-27T09:00:00-03:00','Paraguay',true],
@@ -57,6 +62,14 @@ async function updateWEC`);
  if(u.length<3)throw Error('WRC');d.ranking=u;return calendar(d)
 }
 async function updateMoto`);
+ }
+
+ // FDJ: keep the current two-day event visible through the weekend and show an in-event state.
+ if(sel==='FDJ'){
+  rx(/function nextEvent\(d\)\{[^\n]*\}/,
+`function nextEvent(d){const now=Date.now();for(const e of CAL){if(Date.parse(e[1])+40*3600000>now)return{...d,race:e[0],date:e[1],circuit:e[2],timeTbd:!!e[3]}}return d}`);
+  rx(/function countdown\(d\)\{[^\n]*\}/,
+`function countdown(d){const q=new Date(d.date)-Date.now();if(q<=0&&q>-40*3600000)return{label:'開催中',live:true};if(q<=0)return{label:'終了',live:false};const h=q/3600000;if(d.timeTbd)return{label:'あと'+Math.max(1,Math.ceil(h/24))+'日',live:false};if(h<24)return{label:'あと'+Math.ceil(h)+'時間',live:false};return{label:'あと'+Math.ceil(h/24)+'日',live:false}}`);
  }
 
  // MotoGP: fill the whole remaining 2026 season. Unknown start times stay explicitly TBD.
