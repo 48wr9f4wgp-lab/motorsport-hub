@@ -1,36 +1,54 @@
 # Changelog
 
-## v9.2.0 — NASCAR Cup expansion build
+## v9.3.0 — GT World Challenge Europe expansion build
 
 ### Category expansion
-- Added **NASCAR Cup Series** as the tenth Motorsport Hub category.
-- New Widget Parameter: `NASCAR` (`CUP` and `NASCAR CUP` aliases accepted).
-- Existing nine device-reviewed category paths remain isolated.
+- Added **GT World Challenge Europe** as the eleventh Motorsport Hub category.
+- New Widget Parameter: `GTWCEU` (`GTWC` and `GTWC EUROPE` aliases accepted).
+- Existing ten category paths remain isolated.
 
 ### Data / calendar
-- Primary standings source: official NASCAR public CDN `https://cf.nascar.com/cacher/2026/1/points-feed.json`.
-- Current fallback standings after New Hampshire: Denny Hamlin 1001 / Ryan Blaney 924 / Ty Gibbs 880.
-- Remaining 2026 Cup calendar encoded from Daytona through the Homestead-Miami championship.
-- Six-hour race windows prevent the widget from advancing immediately at the scheduled start or during normal red-flag delays.
+- Official overall driver standings: `https://www.gt-world-challenge-europe.com/standings?filter_standing_type=0_0_drivers`.
+- Drivers sharing the same championship position/car are grouped into one Medium row to avoid duplicate-position clutter.
+- Current fallback TOP3: Lucas Auer / Maro Engel 114.5; Ricardo Feller / Bastian Buus 77; Kelvin Van Der Linde / Charles Weerts 74.
+- Current next race: Nürburgring Endurance Cup Main Race, 2026-08-30 15:00 CEST.
+- Remaining configured events: Zandvoort / Barcelona / Portimão finale.
+- Exact Nürburgring main-race end window prevents early event switching; later rounds use event-weekend windows until detailed session clocks are locked.
 
 ### Visuals / licensing
-- Added dedicated Small and Medium NASCAR layouts.
-- Hero: `Denny Hamlin 11 Las Vegas 2025.jpg`.
-- Author: **TaurusEmerald**.
+- Added dedicated Small and Medium GTWC Europe layouts.
+- Hero: `GT World Challenge Europe 2024 Nürburg Nr. 48 Auer, Engel, Morad (1).jpg`.
+- Author: **Lukas Raich**.
 - License: **CC BY-SA 4.0**; exact Commons file page verified.
 
 ### QA / release gates
-- QA diagnostics expanded from 9 to **10** routes.
-- Boundary gate covers Daytona active-race retention and Daytona → Darlington transition.
-- Release gate validates the NASCAR module, official JSON source, calendar, hero and attribution.
-- **NASCAR 10/10 route + Small/Medium device QA pending.**
+- QA diagnostics expanded from 10 to **11** routes.
+- Boundary gate covers Nürburgring active race → Zandvoort and Zandvoort weekend retention.
+- Release gate validates the GTWC Europe module, official source, grouped TOP3 snapshot, hero and attribution.
+- **GTWC Europe 11/11 route + Small/Medium device QA pending.**
+
+---
+
+## v9.2.0 — NASCAR Cup expansion build
+
+### Category expansion
+- Added **NASCAR Cup Series** as the tenth category (`NASCAR`, aliases `CUP` / `NASCAR CUP`).
+- Primary standings source: official NASCAR public CDN `https://cf.nascar.com/cacher/2026/1/points-feed.json`.
+- Remaining Cup calendar encoded from Daytona through Homestead-Miami.
+- Hero: TaurusEmerald / CC BY-SA 4.0.
+
+### QA status
+- iPhone Small/Medium visual QA: **PASS** on 2026-08-25 00:03 JST.
+- Medium rendered fresh standings without `更新待ち`, confirming the direct NASCAR live-widget parser path succeeded.
+- A separate 10/10 diagnostics screenshot was not captured before v9.3.0 and is not claimed.
+- NASCAR is **LOCKED**.
 
 ---
 
 ## v9.1.0 — INDYCAR expansion build
 
 ### Category expansion
-- Added **INDYCAR** as the ninth Motorsport Hub category (`INDYCAR`, alias `INDY`).
+- Added **INDYCAR** as the ninth category (`INDYCAR`, alias `INDY`).
 - Official standings source: `https://www.indycar.com/standings/`.
 - Remaining calendar: Milwaukee Race 1 / Milwaukee Race 2 / Laguna Seca finale.
 - Hero: Ben Goyette / CC BY-SA 4.0.
