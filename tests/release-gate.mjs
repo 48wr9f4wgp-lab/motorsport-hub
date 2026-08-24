@@ -22,24 +22,26 @@ const files={
  fdj:read('fdj-widget.js'),
  d1:read('d1gp-reliability-v890.js'),
  d1base:read('d1gp-widget.js'),
+ superformula:read('superformula-widget.js'),
  attribution:read('ATTRIBUTION.md'),
  boundary:read('tests/boundary-gate.mjs'),
 };
 
 for(const [name,src] of Object.entries(files))if(!['attribution','boundary'].includes(name))parse(name,src);
 
-for(const token of ['F1','WEC','WRC','SUPERGT','MOTOGP','FDJ','D1GP'])
+for(const token of ['F1','WEC','WRC','SUPERGT','MOTOGP','FDJ','D1GP','SUPERFORMULA'])
  assert(files.router.includes(token),`router missing category ${token}`);
 
-for(const marker of ['Motorsport Hub','module router','v8.6.0',"'FDJ'",'motorsport-core-v841.js','motorsport-hq-core.js','fdj-widget.js','Script.complete()'])
+for(const marker of ['Motorsport Hub','v8.6.0',"'FDJ'",'motorsport-core-v841.js','motorsport-hq-core.js','fdj-widget.js','Script.complete()'])
  assert(files.router.includes(marker),`loader-v4 compatibility marker missing: ${marker}`);
 
-assert(files.router.includes('motorsport-reliability-v896.js'),'router is not using v8.9.6 verified-hero reliability guard');
+assert(files.router.includes('motorsport-reliability-v896.js'),'router lost v8.9.6 stable reliability path');
 assert(files.router.includes('d1gp-reliability-v890.js'),'router lost D1GP reliability wrapper');
+assert(files.router.includes('superformula-widget.js'),'router is not using SUPER FORMULA module');
 assert(files.router.includes('motorsport-diagnostics-v890.js'),'router lost QA diagnostics');
 assert(files.router.includes("'QA'"),'router missing QA selector');
 assert(files.diagnostics.includes('QA diagnostics'),'QA diagnostics marker missing');
-for(const token of ['F1','WEC','WRC','MotoGP','SUPER GT','FDJ','D1GP'])
+for(const token of ['F1','WEC','WRC','MotoGP','SUPER GT','FDJ','D1GP','SUPER FORMULA'])
  assert(files.diagnostics.includes(token),`QA diagnostics missing ${token}`);
 
 assert(files.reliability.includes('F1_PARTIAL'),'F1 atomic refresh guard missing');
@@ -64,10 +66,18 @@ assert(files.fdj.includes('formulad.jp/2026-fdj-standings'),'FDJ live standings 
 assert(files.d1base.includes('d1gp.co.jp'),'D1GP live source missing');
 assert(files.d1.includes('King%20of%20Europe'),'D1GP action hero missing');
 
-for(const token of ['Eustace Bagge','TTTNIS','Liauzh','MarcelX42','Rowan Harrison','Tokumeigakarinoaoshima','CC0 1.0 Universal','CC BY 4.0','CC BY-SA 4.0','CC BY-SA 2.0'])
+// SUPER FORMULA expansion gate.
+assert(files.superformula.includes('SUPER FORMULA module'),'SUPER FORMULA module marker missing');
+assert(files.superformula.includes('superformula.net/sf2/race2026/standings'),'SUPER FORMULA official standings source missing');
+for(const token of ['第9・10戦 富士','第11・12戦 鈴鹿','2026-10-11T18:00:00+09:00','SF23'])
+ assert(files.superformula.includes(token),`SUPER FORMULA configuration missing: ${token}`);
+assert(files.superformula.includes('Igor%20Fraga%20Super%20Formula%20Round%205%20Suzuka%20Post-Race%202026.jpg'),'SUPER FORMULA verified hero missing');
+assert(files.boundary.includes('SUPER FORMULA: retain Fuji during double-header weekend'),'SUPER FORMULA weekend boundary coverage missing');
+
+for(const token of ['Eustace Bagge','TTTNIS','Liauzh','MarcelX42','Rowan Harrison','Tokumeigakarinoaoshima','BWard 1997','CC0 1.0 Universal','CC BY 4.0','CC BY-SA 4.0','CC BY-SA 2.0'])
  assert(files.attribution.includes(token),`attribution audit missing: ${token}`);
-assert(files.attribution.includes('former SUPER GT public-distribution blocker is **closed in v8.9.6**'),'SUPER GT attribution gate is not closed');
-assert(!files.attribution.includes('RELEASE BLOCKER FOR PUBLIC DISTRIBUTION'),'stale SUPER GT release blocker remains');
+assert(files.attribution.includes('SUPER FORMULA v9.0.0 hero licensing: **PASS**'),'SUPER FORMULA attribution gate is not closed');
+assert(!files.attribution.includes('RELEASE BLOCKER FOR PUBLIC DISTRIBUTION'),'stale release blocker remains');
 assert(files.boundary.includes('Motorsport Hub boundary gate: PASS'),'boundary gate file missing PASS marker');
 
 console.log('Motorsport Hub release gate: PASS');
