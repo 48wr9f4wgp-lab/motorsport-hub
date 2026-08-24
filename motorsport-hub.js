@@ -1,5 +1,5 @@
-// Motorsport Hub v8.5.5 — module router / HQ hero pass
-// Existing category logic remains frozen; HQ rendering is injected only for FDJ / WEC / SUPER GT.
+// Motorsport Hub v8.5.6 — Hero Asset Quality Pass
+// Existing category logic remains frozen; HQ asset/rendering injection is limited to FDJ / WEC / SUPER GT.
 (async()=>{
 const labels=['F1','WEC','WRC','SUPER GT','MotoGP','FDJ'];
 const params=['F1','WEC','WRC','SUPERGT','MOTOGP','FDJ'];
@@ -20,12 +20,20 @@ if(!config.runsInWidget&&!params.includes(selected)){
 if(!selected)selected='F1';
 
 const isFDJ=selected==='FDJ'||selected==='FORMULADRIFTJAPAN';
-const isHQCore=selected==='WEC'||selected==='SUPERGT';
+const isWEC=selected==='WEC';
+const isSGT=selected==='SUPERGT';
+const isHQCore=isWEC||isSGT;
 const key=isFDJ?'fdj':'core-v841';
 const file=isFDJ?'fdj-widget.js':'motorsport-core-v841.js';
 const URL=`https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/main/${file}`;
 const fm=FileManager.local(),cache=fm.joinPath(fm.documentsDirectory(),`motorsport-hub-module-${key}.js`);
 const valid=s=>typeof s==='string'&&s.includes('Motorsport Hub')&&s.includes('(async()=>')&&s.includes('Script.complete()');
+
+const ASSET={
+  fdj:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Nissan%20Silvia%20S14%20Drift.jpg?width=2560',
+  wec:'https://commons.wikimedia.org/wiki/Special:Redirect/file/2024%206%20Hours%20of%20Spa-Francorchamps%20Toyota%20Gazoo%20Racing%20Toyota%20GR010%20Hybrid%20No.8%20%28DSC04184%29.jpg?width=2560',
+  supergt:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Au%20TOM%27S%20GR%20Supra%202025%20%28front%20three-quarter%20view%29%20at%20Osaka%20Auto%20Messe%202026.jpg?width=2560'
+};
 
 async function fail(){
   const w=new ListWidget();w.backgroundColor=new Color('#080B10');w.setPadding(12,12,12,12);
@@ -53,28 +61,37 @@ if(!isFDJ){
   code=code.replace('let mode=norm(args.widgetParameter);','let mode=norm(globalThis.__MH_WIDGET_PARAMETER||args.widgetParameter);');
 }
 
-// v8.5.5 HQ pass. Keep layout/data logic untouched and upgrade only the image pipeline.
+// v8.5.6: replace source assets first, then retain the proven 2x rendering pipeline.
+if(isWEC){
+  code=rep(code,"https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/TGR_GR010_HYBRID_240908.jpg/960px-TGR_GR010_HYBRID_240908.jpg",ASSET.wec);
+  code=rep(code,'focus:.44,shift:96','focus:.52,shift:62');
+}
+if(isSGT){
+  code=rep(code,"https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Osaka_Auto_Messe_2025_%281%29_-_No.36_au_TOM%27S_GR_Supra_in_2024_SUPER_GT.jpg/960px-Osaka_Auto_Messe_2025_%281%29_-_No.36_au_TOM%27S_GR_Supra_in_2024_SUPER_GT.jpg",ASSET.supergt);
+  code=rep(code,'focus:.58,shift:28','focus:.54,shift:36');
+}
 if(isHQCore){
   code=rep(code,'/960px-','/1920px-');
   code=rep(code,'?width=960','?width=1920');
-  code=rep(code,'motorsport-hero-v840-small-','motorsport-hero-v855-small-');
-  code=rep(code,'motorsport-hero-v832-','motorsport-hero-v855-medium-');
+  code=rep(code,'motorsport-hero-v840-small-','motorsport-hero-v856-small-');
+  code=rep(code,'motorsport-hero-v832-','motorsport-hero-v856-medium-');
   code=rep(code,'const W=isSmall?360:690,H=isSmall?360:320','const W=isSmall?720:1380,H=isSmall?720:640');
-  code=rep(code,"ctx.setFillColor(col('#030609',.18))","ctx.setFillColor(col('#030609',.11))");
-  code=rep(code,'a=.82*(1-s)+.06','a=.76*(1-s)+.04');
-  code=rep(code,'a=.015+.25*t*t','a=.012+.19*t*t');
-  code=rep(code,'a=.02+.14*smoothstep(t)','a=.015+.10*smoothstep(t)');
+  code=rep(code,"ctx.setFillColor(col('#030609',.18))","ctx.setFillColor(col('#030609',.10))");
+  code=rep(code,'a=.82*(1-s)+.06','a=.74*(1-s)+.035');
+  code=rep(code,'a=.015+.25*t*t','a=.010+.18*t*t');
+  code=rep(code,'a=.02+.14*smoothstep(t)','a=.012+.09*smoothstep(t)');
 }
 
 if(isFDJ){
-  code=rep(code,"const V='8.5.4'","const V='8.5.5'");
-  code=rep(code,'?width=1280','?width=1920');
-  code=rep(code,'?width=960','?width=1600');
-  code=rep(code,'motorsport-hero-v854-','motorsport-hero-v855-');
+  code=rep(code,"const V='8.5.4'","const V='8.5.6'");
+  code=rep(code,"'https://commons.wikimedia.org/wiki/Special:Redirect/file/DRIFT-0ae1a2ba-2d7b-4d51-b082-b698f2fbb2f1.jpg?width=1280'",`'${ASSET.fdj}'`);
+  code=rep(code,"'https://commons.wikimedia.org/wiki/Special:Redirect/file/DRIFT-0ae1a2ba-2d7b-4d51-b082-b698f2fbb2f1.jpg?width=960'",`'${ASSET.fdj}'`);
+  code=rep(code,'motorsport-hero-v854-','motorsport-hero-v856-');
   code=rep(code,'const W=small?360:690,H=small?360:320','const W=small?720:1380,H=small?720:640');
-  code=rep(code,"ctx.setFillColor(col('#030609',.15))","ctx.setFillColor(col('#030609',.10))");
-  code=rep(code,'a=.82*(1-smooth(t))+.04','a=.76*(1-smooth(t))+.035');
-  code=rep(code,'a=.015+.22*t*t','a=.012+.18*t*t');
+  code=rep(code,'ctx.drawImageInRect(img,cover(img,W,H,.50,small?14:34))','ctx.drawImageInRect(img,cover(img,W,H,.55,small?10:24))');
+  code=rep(code,"ctx.setFillColor(col('#030609',.15))","ctx.setFillColor(col('#030609',.09))");
+  code=rep(code,'a=.82*(1-smooth(t))+.04','a=.74*(1-smooth(t))+.03');
+  code=rep(code,'a=.015+.22*t*t','a=.010+.17*t*t');
 }
 
 try{await eval(code)}catch(e){await fail()}
