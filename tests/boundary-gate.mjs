@@ -50,4 +50,17 @@ assert.equal(pickRange(SF,parse('2026-10-11T17:59:00+09:00')),'第9・10戦 富�
 assert.equal(pickRange(SF,parse('2026-10-11T18:01:00+09:00')),'第11・12戦 鈴鹿','SUPER FORMULA: advance to Suzuka after Fuji weekend');
 assert.equal(pickRange(SF,parse('2026-11-22T18:01:00+09:00')),null,'SUPER FORMULA: no phantom event after season finale');
 
+// INDYCAR uses explicit four-hour race windows, important for the Milwaukee double-header.
+const INDY=[
+ {name:'Milwaukee Race 1',start:'2026-08-29T14:30:00-04:00',end:'2026-08-29T18:30:00-04:00'},
+ {name:'Milwaukee Race 2',start:'2026-08-30T13:00:00-04:00',end:'2026-08-30T17:00:00-04:00'},
+ {name:'Laguna Seca Finale',start:'2026-09-06T14:30:00-04:00',end:'2026-09-06T18:30:00-04:00'},
+];
+assert.equal(pickRange(INDY,parse('2026-08-29T13:00:00-04:00')),'Milwaukee Race 1','INDYCAR: select upcoming Milwaukee Race 1');
+assert.equal(pickRange(INDY,parse('2026-08-29T16:00:00-04:00')),'Milwaukee Race 1','INDYCAR: retain Race 1 while active');
+assert.equal(pickRange(INDY,parse('2026-08-29T18:31:00-04:00')),'Milwaukee Race 2','INDYCAR: advance to Race 2 after Race 1 hold');
+assert.equal(pickRange(INDY,parse('2026-08-30T15:00:00-04:00')),'Milwaukee Race 2','INDYCAR: retain Race 2 while active');
+assert.equal(pickRange(INDY,parse('2026-08-30T17:01:00-04:00')),'Laguna Seca Finale','INDYCAR: advance to Laguna Seca after Milwaukee');
+assert.equal(pickRange(INDY,parse('2026-09-06T18:31:00-04:00')),null,'INDYCAR: no phantom event after season finale');
+
 console.log('Motorsport Hub boundary gate: PASS');
