@@ -1,6 +1,6 @@
 # Motorsport Hub — Hero Image Attribution
 
-Motorsport Hub v8.5.7 uses the following Wikimedia Commons hero assets for the HQ pass.
+Motorsport Hub v8.6.1 uses the following Wikimedia Commons hero assets for the HQ pass.
 
 ## Formula Drift Japan (FDJ)
 - **Nissan Silvia S14 Drift.jpg**
@@ -18,9 +18,8 @@ Motorsport Hub v8.5.7 uses the following Wikimedia Commons hero assets for the H
 - The image is cropped, resized and darkened for widget presentation.
 
 ## SUPER GT
-- **MOTUL AUTECH Z 2024 rd.2 FUJI.jpg**
+- **No.36 au TOM'S GR Supra at 2022 Fujimaki Group Suzuka GT 450km (13).jpg**
 - Source: Wikimedia Commons
-- Author: Abarabone1206
-- License: **CC BY 4.0**
-- https://commons.wikimedia.org/wiki/File:MOTUL_AUTECH_Z_2024_rd.2_FUJI.jpg
+- https://commons.wikimedia.org/wiki/File:No.36_au_TOM%27S_GR_Supra_at_2022_Fujimaki_Group_Suzuka_GT_450km_(13).jpg
 - The image is cropped, resized and darkened for widget presentation.
+- **Release gate:** verify and record the exact file-page author/license before any public distribution.
