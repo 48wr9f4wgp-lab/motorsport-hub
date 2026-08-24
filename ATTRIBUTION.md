@@ -1,7 +1,7 @@
 # Motorsport Hub — Hero Image Attribution
 
 Last audited: 2026-08-24 JST
-Scope: current v8.9.6 visual system / hero assets used by the Scriptable widget.
+Scope: current v9.0.0 expansion build / hero assets used by the Scriptable widget.
 
 All hero images are cropped/resized and darkened for widget presentation. Where the source license requires attribution or ShareAlike, redistribution must preserve those obligations.
 
@@ -62,7 +62,18 @@ All hero images are cropped/resized and darkened for widget presentation. Where 
 - Exact Commons file page directly verified during the v8.9.6 audit.
 - The image is cropped/resized/darkened for widget presentation. CC0 imposes no attribution requirement, but the source and author are retained here for provenance.
 
+## SUPER FORMULA
+- **Igor Fraga Super Formula Round 5 Suzuka Post-Race 2026.jpg**
+- Depiction: No.65 PONOS NAKAJIMA RACING Dallara SF23 after Round 5 of the 2026 SUPER FORMULA Championship at Suzuka.
+- Source: Wikimedia Commons
+- Author: **BWard 1997**
+- License: **CC BY 4.0 International**
+- File page: https://commons.wikimedia.org/wiki/File:Igor_Fraga_Super_Formula_Round_5_Suzuka_Post-Race_2026.jpg
+- Exact Commons file page directly verified for the v9.0.0 expansion.
+- Public redistribution requirement: credit BWard 1997, link the CC BY 4.0 license, and indicate that the image was cropped/resized/darkened.
+
 ## Audit decision
-- All current hero assets have an exact source/license record.
-- The former SUPER GT public-distribution blocker is **closed in v8.9.6** by replacing the unverified action hero with the exact-page verified CC0 au TOM'S asset.
-- Licensing/attribution audit: **PASS for Release Candidate**.
+- All eight current hero assets have an exact source/license record.
+- The former SUPER GT public-distribution blocker remains closed.
+- SUPER FORMULA v9.0.0 hero licensing: **PASS**.
+- Licensing/attribution audit: **PASS for the current expansion build**.
