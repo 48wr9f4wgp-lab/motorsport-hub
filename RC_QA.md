@@ -1,25 +1,24 @@
 # Motorsport Hub — Release Candidate QA
 
-## v9.1.0 expansion status
-- Current `main`: **9-category expansion build**.
+## v9.2.0 expansion status
+- Current `main`: **10-category expansion build**.
 - SUPER FORMULA (`SUPERFORMULA` / alias `SF`): **LOCKED / PASS**.
-  - Official 2026 standings/calendar source review: complete.
-  - Hero licensing: BWard 1997 / CC BY 4.0 — exact Commons page verified.
-  - Weekend-boundary simulation: PASS.
-  - iPhone route QA at 2026-08-24 23:19 JST: 8/8 LIVE; SUPER FORMULA 409 ms.
-  - iPhone Small/Medium visual QA at 2026-08-24 23:35 JST: **PASS**.
-  - Live standings observed on-device: 太田格之進 105 / 岩佐歩夢 59.5 / 福住仁嶺 58.
+  - iPhone route QA: PASS.
+  - iPhone Small/Medium visual QA: PASS.
 - INDYCAR (`INDYCAR` / alias `INDY`): **LOCKED / PASS**.
-  - Official 2026 standings/schedule source review: complete.
   - Hero licensing: Ben Goyette / CC BY-SA 4.0 — exact Commons page verified.
-  - Milwaukee double-header deterministic transition coverage: PASS.
+  - Milwaukee transition coverage: PASS.
   - iPhone route QA at 2026-08-24 23:47 JST: **9/9 LIVE — PASS**; INDYCAR 1188 ms.
   - iPhone Small/Medium visual QA at 2026-08-24 23:50 JST: **PASS**.
-  - Medium snapshot displayed correctly: Alex Palou 553 / Kyle Kirkwood 462 / Christian Lundgaard 443.
-
-## v9.2.0 expansion next gate
-- NASCAR Cup Series is the next category scheduled for integration.
-- Existing nine categories are device-reviewed and locked before NASCAR work begins.
+  - Medium displayed Alex Palou 553 / Kyle Kirkwood 462 / Christian Lundgaard 443 correctly.
+- NASCAR Cup (`NASCAR` / aliases `CUP`, `NASCAR CUP`): **IMPLEMENTED / DEVICE QA PENDING**.
+  - Primary standings source: official NASCAR public CDN `https://cf.nascar.com/cacher/2026/1/points-feed.json`.
+  - Current fallback standings after New Hampshire: Denny Hamlin 1001 / Ryan Blaney 924 / Ty Gibbs 880.
+  - Remaining 2026 calendar encoded from Daytona through Homestead-Miami championship.
+  - Daytona six-hour event-retention boundary coverage added.
+  - Hero licensing: TaurusEmerald / CC BY-SA 4.0 — exact Commons page verified.
+  - QA diagnostics expanded to **10 routes**.
+- Pending v9.2.0 gate: **NASCAR 10/10 live-route QA + Small/Medium iPhone visual QA**.
 
 ---
 
@@ -27,7 +26,7 @@
 - Version: **v8.9.6 Release Candidate**
 - Date: 2026-08-24 JST
 - Scope: Scriptable iPhone widget, Small / Medium, 7 baseline categories
-- Visual baseline: v8.7.1 (locked); SUPER GT hero replaced in v8.9.6 for verified licensing.
+- Visual baseline: v8.7.1 locked.
 
 ## Baseline manual diagnostics — iPhone / Scriptable
 Observed at 2026-08-24 21:32 JST.
@@ -40,16 +39,6 @@ Observed at 2026-08-24 21:32 JST.
 - D1GP: LIVE — 588 ms
 Result: **7/7 LIVE — PASS**
 
-## Baseline home-screen regression
-Observed at 2026-08-24 21:38–22:05 JST.
-PASS:
-- Small widgets: all seven baseline categories render with no blank/error state.
-- Medium widgets: F1 / WEC / WRC / SUPER GT / MotoGP / FDJ / D1GP reviewed.
-- SUPER GT machine/team secondary lines restored after the v8.9.2 hotfix.
-- Countdown, rankings, PTS and readability passed.
-- D1GP Small/Medium action hero passed.
-- WEC display `TR010 Hybrid / TOYOTA RACING` is correct for the 2026 Toyota entry.
-
 ## Boundary / transition QA
 Covered:
 - WEC active-event hold: 10 h
@@ -60,7 +49,8 @@ Covered:
 - D1GP active-weekend hold: 40 h
 - F1 race-start retention: 4 h
 - SUPER FORMULA explicit weekend end boundaries
-- INDYCAR explicit race windows, including Milwaukee Race 1 → Race 2 transition
+- INDYCAR explicit race windows / Milwaukee double-header transition
+- NASCAR Daytona six-hour active-event window → Darlington transition
 
 ## Hero asset audit
 Verified:
@@ -73,9 +63,11 @@ Verified:
 - SUPER GT — Tokumeigakarinoaoshima — CC0 1.0
 - SUPER FORMULA — BWard 1997 — CC BY 4.0
 - INDYCAR — Ben Goyette — CC BY-SA 4.0
+- NASCAR — TaurusEmerald — CC BY-SA 4.0
 
 ## RC decision
 - **v8.9.6 seven-category Release Candidate: PASS**
-- **SUPER FORMULA v9.0.0 expansion gate: PASS / LOCKED**
-- **INDYCAR v9.1.0 expansion gate: PASS / LOCKED**
+- **SUPER FORMULA v9.0.0: PASS / LOCKED**
+- **INDYCAR v9.1.0: PASS / LOCKED**
+- **NASCAR v9.2.0: PENDING DEVICE QA**
 - No public deployment, Store submission or release action has been performed; explicit owner approval is required before release.
