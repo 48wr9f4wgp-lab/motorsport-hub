@@ -1,6 +1,6 @@
-// Motorsport Hub v8.5.3 — Formula Drift Japan module
+// Motorsport Hub v8.5.4 — Formula Drift Japan module
 (async()=>{
-const V='8.5.3',K='fdj';
+const V='8.5.4',K='fdj';
 const S={label:'FDJ',accent:'#FF7A00',url:'https://formulad.jp/'};
 const C={bg:'#06080B',text:'#F7F9FB',muted:'#B9C2CC',dim:'#8D98A4',good:'#58DA8A',warn:'#FFB84D'};
 const fm=FileManager.local(),DOC=fm.documentsDirectory(),CACHE=fm.joinPath(DOC,'motorsport-data-v85-fdj.json');
@@ -17,10 +17,10 @@ const CAL=[
  ['第5戦 奥伊吹','2026-09-05T09:00:00+09:00','グランスノー奥伊吹',true],
  ['第6戦 岡山','2026-10-03T09:00:00+09:00','岡山国際サーキット',true]
 ];
-// CC0 / public-domain dedication. Source: Wikimedia Commons, File:Toyota Supra Drift Car.jpg
+// CC0 / public-domain dedication. Source: Wikimedia Commons, drifting sportscar with tire smoke.
 const HERO_URLS=[
- 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Toyota_Supra_Drift_Car.jpg/960px-Toyota_Supra_Drift_Car.jpg',
- 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Toyota%20Supra%20Drift%20Car.jpg?width=960'
+ 'https://commons.wikimedia.org/wiki/Special:Redirect/file/DRIFT-0ae1a2ba-2d7b-4d51-b082-b698f2fbb2f1.jpg?width=1280',
+ 'https://commons.wikimedia.org/wiki/Special:Redirect/file/DRIFT-0ae1a2ba-2d7b-4d51-b082-b698f2fbb2f1.jpg?width=960'
 ];
 const col=(h,a=1)=>new Color(h,a),clone=o=>JSON.parse(JSON.stringify(o)),num=v=>{const m=String(v||'').replace(/,/g,'').match(/-?\d+(?:\.\d+)?/);return m?Number(m[0]):NaN};
 const clean=s=>String(s||'').replace(/<script[\s\S]*?<\/script>/gi,' ').replace(/<style[\s\S]*?<\/style>/gi,' ').replace(/<[^>]+>/g,' ').replace(/&nbsp;|&#160;/gi,' ').replace(/&amp;/gi,'&').replace(/\s+/g,' ').trim();
@@ -45,7 +45,7 @@ async function load(){const base=nextEvent(clone(SNAP));try{const d=await update
 function smooth(t){return t*t*(3-2*t)}
 function cover(img,W,H,focus=.54,shift=0){const iw=img.size.width||1,ih=img.size.height||1,s=Math.max(W/iw,H/ih),dw=iw*s,dh=ih*s;return new Rect(-(dw-W)*focus+shift,-(dh-H)*.5,dw,dh)}
 async function hero(){
- const small=(config.widgetFamily||'medium')==='small',p=fm.joinPath(DOC,`motorsport-hero-v853-${small?'small':'medium'}-fdj.jpg`);
+ const small=(config.widgetFamily||'medium')==='small',p=fm.joinPath(DOC,`motorsport-hero-v854-${small?'small':'medium'}-fdj.jpg`);
  if(fm.fileExists(p)){try{return fm.readImage(p)}catch(_){} }
  try{
   let img=null;
@@ -53,10 +53,10 @@ async function hero(){
   if(!img)return null;
   const W=small?360:690,H=small?360:320,ctx=new DrawContext();ctx.size=new Size(W,H);ctx.opaque=true;ctx.respectScreenScale=false;
   ctx.setFillColor(col(C.bg));ctx.fillRect(new Rect(0,0,W,H));
-  ctx.drawImageInRect(img,cover(img,W,H,.57,small?18:48));
-  ctx.setFillColor(col('#030609',.20));ctx.fillRect(new Rect(0,0,W,H));
-  for(let x=0;x<W;x+=2){const t=x/(W-1),a=.84*(1-smooth(t))+.06;ctx.setFillColor(col('#030609',a));ctx.fillRect(new Rect(x,0,3,H))}
-  const bs=H*.67,bh=H-bs;for(let i=0;i<48;i++){const y=bs+i*(bh/48),t=i/47,a=.02+.25*t*t;ctx.setFillColor(col('#020407',a));ctx.fillRect(new Rect(0,y,W,bh/48+1))}
+  ctx.drawImageInRect(img,cover(img,W,H,.50,small?14:34));
+  ctx.setFillColor(col('#030609',.15));ctx.fillRect(new Rect(0,0,W,H));
+  for(let x=0;x<W;x+=2){const t=x/(W-1),a=.82*(1-smooth(t))+.04;ctx.setFillColor(col('#030609',a));ctx.fillRect(new Rect(x,0,3,H))}
+  const bs=H*.67,bh=H-bs;for(let i=0;i<48;i++){const y=bs+i*(bh/48),t=i/47,a=.015+.22*t*t;ctx.setFillColor(col('#020407',a));ctx.fillRect(new Rect(0,y,W,bh/48+1))}
   ctx.setFillColor(col(S.accent,.9));ctx.fillRect(new Rect(0,0,W,3));
   const out=ctx.getImage();try{fm.writeImage(p,out)}catch(_){}return out
  }catch(_){return null}
