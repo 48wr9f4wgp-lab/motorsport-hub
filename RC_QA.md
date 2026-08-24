@@ -8,8 +8,17 @@
 - Hero licensing: **BWard 1997 / CC BY 4.0 — exact Commons page verified**.
 - SUPER FORMULA deterministic weekend-boundary simulation: **PASS**.
 - QA diagnostics expanded to **8 routes**.
-- **Pending gate:** SUPER FORMULA live-parser + Small/Medium iPhone visual QA.
-- Until that device gate passes, **v8.9.6 remains the last fully device-reviewed Release Candidate**.
+- iPhone live data-route QA at 2026-08-24 23:19 JST: **8/8 LIVE — PASS**.
+  - F1: 879 ms
+  - WEC: 3527 ms
+  - WRC: 273 ms
+  - MotoGP: 3296 ms
+  - SUPER GT: 957 ms
+  - FDJ: 933 ms
+  - D1GP: 1232 ms
+  - SUPER FORMULA: **409 ms**
+- **Pending gate:** SUPER FORMULA Small/Medium iPhone visual QA only.
+- Until that visual gate passes, **v8.9.6 remains the last fully device-reviewed Release Candidate**.
 
 ---
 
@@ -65,5 +74,5 @@ Verified:
 
 ## RC decision
 - **v8.9.6 RELEASE CANDIDATE: PASS**
-- **v9.0.0 EXPANSION RC: PENDING SUPER FORMULA DEVICE QA**
+- **v9.0.0 EXPANSION RC: PENDING SUPER FORMULA VISUAL QA ONLY**
 - No public deployment, Store submission or release action has been performed; explicit owner approval is required before release.
