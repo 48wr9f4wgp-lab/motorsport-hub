@@ -1,7 +1,7 @@
 # Motorsport Hub — Hero Image Attribution
 
 Last audited: 2026-08-24 JST
-Scope: current v9.1.0 expansion build / hero assets used by the Scriptable widget.
+Scope: current v9.2.0 expansion build / hero assets used by the Scriptable widget.
 
 All hero images are cropped/resized and darkened for widget presentation. Where the source license requires attribution or ShareAlike, redistribution must preserve those obligations.
 
@@ -82,9 +82,20 @@ All hero images are cropped/resized and darkened for widget presentation. Where 
 - Exact Commons file page directly verified for the v9.1.0 expansion.
 - Public redistribution requirement: credit Ben Goyette, link the CC BY-SA 4.0 license, indicate that the image was cropped/resized/darkened, and preserve applicable ShareAlike obligations.
 
+## NASCAR Cup Series
+- **Denny Hamlin 11 Las Vegas 2025.jpg**
+- Depiction: Denny Hamlin's No.11 Toyota Cup car at Las Vegas Motor Speedway in 2025.
+- Source: Wikimedia Commons
+- Author: **TaurusEmerald**
+- License: **CC BY-SA 4.0 International**
+- File page: https://commons.wikimedia.org/wiki/File:Denny_Hamlin_11_Las_Vegas_2025.jpg
+- Exact Commons file page directly verified for the v9.2.0 expansion.
+- Public redistribution requirement: credit TaurusEmerald, link the CC BY-SA 4.0 license, indicate that the image was cropped/resized/darkened, and preserve applicable ShareAlike obligations.
+
 ## Audit decision
-- All nine current hero assets have an exact source/license record.
+- All ten current hero assets have an exact source/license record.
 - The former SUPER GT public-distribution blocker remains closed.
 - SUPER FORMULA v9.0.0 hero licensing: **PASS**.
 - INDYCAR v9.1.0 hero licensing: **PASS**.
+- NASCAR v9.2.0 hero licensing: **PASS**.
 - Licensing/attribution audit: **PASS for the current expansion build**.
