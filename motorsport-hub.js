@@ -1,5 +1,5 @@
-// Motorsport Hub v8.9.4 — module router
-// Reliability Pass + QA diagnostics + SUPER GT metadata hotfix + official 2026 WEC Toyota naming guard.
+// Motorsport Hub v8.9.5 — module router
+// Reliability Pass + QA diagnostics + event-boundary guard + official 2026 WEC Toyota naming guard.
 // Loader v4 compatibility marker: v8.6.0 motorsport-core-v841.js motorsport-hq-core.js fdj-widget.js
 (async()=>{
 const labels=['F1','WEC','WRC','SUPER GT','MotoGP','FDJ','D1GP','QA診断'];
@@ -16,8 +16,8 @@ if(!selected)selected='F1';
 
 const isQA=selected==='QA';
 const isD1=selected==='D1GP';
-const file=isQA?'motorsport-diagnostics-v890.js':isD1?'d1gp-reliability-v890.js':'motorsport-reliability-v894.js';
-const key=isQA?'diagnostics-v890':isD1?'d1gp-v890':'reliability-v894';
+const file=isQA?'motorsport-diagnostics-v890.js':isD1?'d1gp-reliability-v890.js':'motorsport-reliability-v895.js';
+const key=isQA?'diagnostics-v890':isD1?'d1gp-v890':'reliability-v895';
 const URL=`https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/main/${file}`;
 const fm=FileManager.local(),cache=fm.joinPath(fm.documentsDirectory(),`motorsport-hub-module-${key}.js`);
 const valid=s=>typeof s==='string'
@@ -35,8 +35,8 @@ async function fail(){
 
 let code='';
 try{
-  const r=new Request(`${URL}?v=894&t=${Date.now()}-${Math.random()}`);r.timeoutInterval=15;
-  r.headers={'Cache-Control':'no-cache, no-store, max-age=0, must-revalidate','Pragma':'no-cache','Expires':'0','User-Agent':'MotorsportHubRouter/8.9.4'};
+  const r=new Request(`${URL}?v=895&t=${Date.now()}-${Math.random()}`);r.timeoutInterval=15;
+  r.headers={'Cache-Control':'no-cache, no-store, max-age=0, must-revalidate','Pragma':'no-cache','Expires':'0','User-Agent':'MotorsportHubRouter/8.9.5'};
   code=await r.loadString();if(!valid(code))throw Error('invalid module');fm.writeString(cache,code);
 }catch(e){
   try{if(fm.fileExists(cache)){const c=fm.readString(cache);if(valid(c))code=c;else fm.remove(cache)}}catch(_){}
