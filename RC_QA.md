@@ -1,10 +1,10 @@
 # Motorsport Hub — Release Candidate QA
 
 ## Candidate
-- Version: **v8.9.5 Technical RC**
+- Version: **v8.9.6 Release Candidate**
 - Date: 2026-08-24 JST
 - Scope: Scriptable iPhone widget, Small / Medium, 7 motorsport categories
-- Visual baseline: v8.7.1 (locked)
+- Visual baseline: v8.7.1 (locked); SUPER GT hero asset replaced in v8.9.6 for verified licensing.
 
 ## Manual diagnostics — iPhone / Scriptable
 Observed at 2026-08-24 21:32 JST.
@@ -47,12 +47,12 @@ Covered:
 Result: **PASS**
 
 ## Static / repository gates
-- Router uses `motorsport-reliability-v895.js`.
+- Router uses `motorsport-reliability-v896.js`.
 - Loader v4 compatibility markers retained.
 - Seven Widget Parameters + QA selector retained.
 - Season-tail calendar coverage and standings fallbacks retained.
-- v8.9.4 official 2026 WEC naming guard retained.
-- `tests/release-gate.mjs` updated for v8.9.5 and attribution markers.
+- Official 2026 WEC naming guard retained.
+- v8.9.6 forces a fresh SUPER GT hero cache after the asset replacement.
 
 ## Hero asset audit
 Verified:
@@ -62,11 +62,12 @@ Verified:
 - WEC — MarcelX42 — CC BY-SA 4.0
 - FDJ — CC0 1.0
 - D1GP — Rowan Harrison — CC BY-SA 2.0
+- SUPER GT — Tokumeigakarinoaoshima — **CC0 1.0**, exact Commons file page verified in v8.9.6
 
-Unresolved public-distribution gate:
-- SUPER GT hero exact author/license is not yet independently verified. See `ATTRIBUTION.md`.
+The former SUPER GT attribution/license blocker is **closed**. See `ATTRIBUTION.md`.
 
 ## RC decision
-- **TECHNICAL RC: PASS — PRIVATE/PERSONAL USE OK**
-- **PUBLIC RELEASE: BLOCKED by SUPER GT hero attribution/license only**
-- No public deployment, Store submission or release action performed.
+- **RELEASE CANDIDATE: PASS**
+- Technical, runtime-reviewed and hero-attribution gates are closed.
+- One visual spot-check of the new SUPER GT CC0 hero on-device is recommended before any public release action.
+- No public deployment, Store submission or release action has been performed; explicit owner approval is still required before release.
