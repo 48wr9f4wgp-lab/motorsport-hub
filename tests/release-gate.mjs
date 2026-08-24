@@ -12,6 +12,8 @@ const files={
  router:read('motorsport-hub.js'),
  reliability:read('motorsport-reliability-v890.js'),
  reliability892:read('motorsport-reliability-v892.js'),
+ reliability894:read('motorsport-reliability-v894.js'),
+ reliability895:read('motorsport-reliability-v895.js'),
  diagnostics:read('motorsport-diagnostics-v890.js'),
  visual:read('motorsport-universal-v871.js'),
  core:read('motorsport-core-v841.js'),
@@ -19,9 +21,11 @@ const files={
  fdj:read('fdj-widget.js'),
  d1:read('d1gp-reliability-v890.js'),
  d1base:read('d1gp-widget.js'),
+ attribution:read('ATTRIBUTION.md'),
+ boundary:read('tests/boundary-gate.mjs'),
 };
 
-for(const [name,src] of Object.entries(files))parse(name,src);
+for(const [name,src] of Object.entries(files))if(!['attribution','boundary'].includes(name))parse(name,src);
 
 for(const token of ['F1','WEC','WRC','SUPERGT','MOTOGP','FDJ','D1GP'])
  assert(files.router.includes(token),`router missing category ${token}`);
@@ -29,7 +33,7 @@ for(const token of ['F1','WEC','WRC','SUPERGT','MOTOGP','FDJ','D1GP'])
 for(const marker of ['Motorsport Hub','module router','v8.6.0',"'FDJ'",'motorsport-core-v841.js','motorsport-hq-core.js','fdj-widget.js','Script.complete()'])
  assert(files.router.includes(marker),`loader-v4 compatibility marker missing: ${marker}`);
 
-assert(files.router.includes('motorsport-reliability-v892.js'),'router is not using v8.9.2 reliability hotfix');
+assert(files.router.includes('motorsport-reliability-v895.js'),'router is not using v8.9.5 boundary guard');
 assert(files.router.includes('d1gp-reliability-v890.js'),'router lost D1GP reliability wrapper');
 assert(files.router.includes('motorsport-diagnostics-v890.js'),'router lost QA diagnostics');
 assert(files.router.includes("'QA'"),'router missing QA selector');
@@ -39,10 +43,8 @@ for(const token of ['F1','WEC','WRC','MotoGP','SUPER GT','FDJ','D1GP'])
 
 assert(files.reliability.includes('F1_PARTIAL'),'F1 atomic refresh guard missing');
 assert(files.reliability.includes('fia.com/events/world-rally-championship/season-2026/standings'),'FIA WRC standings source missing');
-
 for(const token of ['6 Hours of Barcelona','6 Hours of Monza','Rally Saudi Arabia','Valencia Grand Prix','第8戦 MOTEGI'])
  assert(files.reliability.includes(token),`season-tail calendar missing: ${token}`);
-
 assert(files.reliability.includes("META[m]||['','']"),'WEC unknown-manufacturer fallback missing');
 assert(files.reliability.includes("no?'No.'+no:''"),'SUPER GT unknown-car fallback missing');
 assert(files.reliability.includes('4*86400000'),'WRC multi-day hold missing');
@@ -51,9 +53,17 @@ assert(files.d1.includes('40*3600000'),'D1GP weekend hold missing');
 assert(files.reliability.includes("label:'開催中'"),'multi-day in-event state missing');
 assert(files.reliability892.includes('/坪井|山下/'),'SUPER GT driver-name metadata fallback missing');
 assert(files.reliability892.includes("s||'GT500'"),'SUPER GT non-empty secondary-line fallback missing');
+assert(files.reliability894.includes('TR010 Hybrid')&&files.reliability894.includes('TOYOTA RACING'),'official 2026 WEC Toyota naming guard missing');
+assert(files.reliability895.includes("selected==='WEC'?10:8"),'WEC/SUPER GT event hold guard missing');
+assert(files.reliability895.includes('hold=4*3600000'),'MotoGP event hold guard missing');
 assert(files.visual.includes('Final Visual Polish'),'v8.7.1 visual lock source missing');
 assert(files.fdj.includes('formulad.jp/2026-fdj-standings'),'FDJ live standings source missing');
 assert(files.d1base.includes('d1gp.co.jp'),'D1GP live source missing');
 assert(files.d1.includes('King%20of%20Europe'),'D1GP action hero missing');
+
+for(const token of ['Eustace Bagge','TTTNIS','Liauzh','MarcelX42','Rowan Harrison','CC0 1.0 Universal','CC BY 4.0','CC BY-SA 4.0','CC BY-SA 2.0'])
+ assert(files.attribution.includes(token),`attribution audit missing: ${token}`);
+assert(files.attribution.includes('SUPER GT — RELEASE BLOCKER FOR PUBLIC DISTRIBUTION'),'SUPER GT public-release legal gate not recorded');
+assert(files.boundary.includes('Motorsport Hub boundary gate: PASS'),'boundary gate file missing PASS marker');
 
 console.log('Motorsport Hub release gate: PASS');
