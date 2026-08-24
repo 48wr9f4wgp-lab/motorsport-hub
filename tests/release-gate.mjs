@@ -11,6 +11,7 @@ const files={
  loader:read('scriptable-loader.js'),
  router:read('motorsport-hub.js'),
  reliability:read('motorsport-reliability-v890.js'),
+ diagnostics:read('motorsport-diagnostics-v890.js'),
  visual:read('motorsport-universal-v871.js'),
  core:read('motorsport-core-v841.js'),
  hq:read('motorsport-hq-core.js'),
@@ -29,6 +30,12 @@ for(const marker of ['Motorsport Hub','module router','v8.6.0',"'FDJ'",'motorspo
 
 assert(files.router.includes('motorsport-reliability-v890.js'),'router is not using v8.9 reliability pass');
 assert(files.router.includes('d1gp-reliability-v890.js'),'router lost D1GP reliability wrapper');
+assert(files.router.includes('motorsport-diagnostics-v890.js'),'router lost QA diagnostics');
+assert(files.router.includes("'QA'"),'router missing QA selector');
+assert(files.diagnostics.includes('QA diagnostics'),'QA diagnostics marker missing');
+for(const token of ['F1','WEC','WRC','MotoGP','SUPER GT','FDJ','D1GP'])
+ assert(files.diagnostics.includes(token),`QA diagnostics missing ${token}`);
+
 assert(files.reliability.includes('F1_PARTIAL'),'F1 atomic refresh guard missing');
 assert(files.reliability.includes('fia.com/events/world-rally-championship/season-2026/standings'),'FIA WRC standings source missing');
 
