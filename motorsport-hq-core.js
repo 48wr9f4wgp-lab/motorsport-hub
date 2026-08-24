@@ -11,7 +11,7 @@ const C={bg:'#06080B',text:'#F7F9FB',muted:'#B9C2CC',dim:'#8D98A4',good:'#58DA8A
 const fm=FileManager.local(),DOC=fm.documentsDirectory(),CACHE=fm.joinPath(DOC,`motorsport-data-v860-${K}.json`);
 const SNAP={
  wec:{race:'Lone Star Le Mans',date:'2026-09-06T13:00:00-05:00',circuit:'Circuit of the Americas',ranking:[
-  {pos:1,name:'TOYOTA',points:'132 pts',maker:'TOYOTA',machine:'TR010 Hybrid',team:'TOYOTA RACING'},
+  {pos:1,name:'TOYOTA',points:'132 pts',maker:'TOYOTA',machine:'GR010 Hybrid',team:'TOYOTA GAZOO RACING'},
   {pos:2,name:'BMW',points:'127 pts',maker:'BMW',machine:'M Hybrid V8',team:'BMW M Team WRT'},
   {pos:3,name:'FERRARI',points:'88 pts',maker:'FERRARI',machine:'499P',team:'Ferrari AF Corse'}]},
  supergt:{race:'第6戦 SUGO',date:'2026-09-20T12:00:00+09:00',timeTbd:true,circuit:'スポーツランドSUGO',ranking:[
@@ -23,7 +23,7 @@ const CAL={
  wec:[['Lone Star Le Mans','2026-09-06T13:00:00-05:00','Circuit of the Americas'],['6 Hours of Fuji','2026-09-27T12:00:00+09:00','Fuji Speedway']],
  supergt:[['第6戦 SUGO','2026-09-20T12:00:00+09:00','スポーツランドSUGO',true],['第7戦 AUTOPOLIS','2026-10-18T12:00:00+09:00','オートポリス',true]]
 };
-const META={TOYOTA:['TR010 Hybrid','TOYOTA RACING'],BMW:['M Hybrid V8','BMW M Team WRT'],FERRARI:['499P','Ferrari AF Corse'],CADILLAC:['V-Series.R','Cadillac Hertz Team JOTA'],ALPINE:['A424','Alpine Endurance']};
+const META={TOYOTA:['GR010 Hybrid','TOYOTA GAZOO RACING'],BMW:['M Hybrid V8','BMW M Team WRT'],FERRARI:['499P','Ferrari AF Corse'],CADILLAC:['V-Series.R','Cadillac Hertz Team JOTA'],ALPINE:['A424','Alpine Endurance']};
 const HERO={
  wec:[
   'https://commons.wikimedia.org/wiki/Special:Redirect/file/2024%206%20Hours%20of%20Spa-Francorchamps%20Toyota%20Gazoo%20Racing%20Toyota%20GR010%20Hybrid%20No.7%20%28DSC04523%29.jpg?width=2048',
