@@ -1,20 +1,21 @@
 # Motorsport Hub — Hero Image Attribution
 
-Motorsport Hub v8.8.0 uses the following Wikimedia Commons hero assets in the current visual system.
+Motorsport Hub v8.8.1 uses the following Wikimedia Commons hero assets in the current visual system.
 
 ## Formula Drift Japan (FDJ)
+- **DRIFT-0ae1a2ba-2d7b-4d51-b082-b698f2fbb2f1.jpg**
+- Source: Wikimedia Commons / Pixabay
+- Author credit on file page: Free for commercial use - no attribution required
+- License: **CC0 1.0 Universal**
+- https://commons.wikimedia.org/wiki/File:DRIFT-0ae1a2ba-2d7b-4d51-b082-b698f2fbb2f1.jpg
+- The image is cropped, resized and darkened for widget presentation.
+
+## D1 GRAND PRIX (D1GP)
 - **Nissan Silvia S14 Drift.jpg**
-- Source: Wikimedia Commons
+- Source: Wikimedia Commons / Flickr
 - Author: crash71100
 - License: **CC0 1.0 Universal**
 - https://commons.wikimedia.org/wiki/File:Nissan_Silvia_S14_Drift.jpg
-
-## D1 GRAND PRIX (D1GP)
-- **Nissan Silvia S15 Driftworks.jpg**
-- Source: Wikimedia Commons
-- Author: Motoring Weapon R
-- License used: **CC BY-SA 4.0**
-- https://commons.wikimedia.org/wiki/File:Nissan_Silvia_S15_Driftworks.jpg
 - The image is cropped, resized and darkened for widget presentation.
 
 ## FIA World Endurance Championship (WEC)
