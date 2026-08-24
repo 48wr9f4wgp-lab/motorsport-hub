@@ -15,14 +15,14 @@ if(!config.runsInWidget&&!params.includes(selected)){
 if(!selected)selected='F1';
 
 const isD1=selected==='D1GP';
-const file=isD1?'d1gp-action-v882.js':'motorsport-reliability-v890.js';
-const key=isD1?'d1gp-v882':'reliability-v890';
+const file=isD1?'d1gp-reliability-v890.js':'motorsport-reliability-v890.js';
+const key=isD1?'d1gp-v890':'reliability-v890';
 const URL=`https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/main/${file}`;
 const fm=FileManager.local(),cache=fm.joinPath(fm.documentsDirectory(),`motorsport-hub-module-${key}.js`);
 const valid=s=>typeof s==='string'
   &&s.includes('Motorsport Hub')
   &&s.includes('Script.complete()')
-  &&(isD1?s.includes('D1GP module'):s.includes('Reliability Pass'));
+  &&(isD1?s.includes('D1GP reliability wrapper'):s.includes('Reliability Pass'));
 
 async function fail(){
   const w=new ListWidget();w.backgroundColor=new Color('#080B10');w.setPadding(12,12,12,12);
