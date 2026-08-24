@@ -40,7 +40,6 @@ assert(!f1StillCurrent('2026-09-06T13:00:00Z',parse('2026-09-06T18:00:00Z')),'F1
 
 const pickRange=(events,now)=>events.find(e=>parse(e.end)>now)?.name||null;
 
-// SUPER FORMULA uses explicit event-weekend end timestamps instead of a guessed race-duration hold.
 const SF=[
  {name:'第9・10戦 富士',start:'2026-10-09T09:00:00+09:00',end:'2026-10-11T18:00:00+09:00'},
  {name:'第11・12戦 鈴鹿',start:'2026-11-20T09:00:00+09:00',end:'2026-11-22T18:00:00+09:00'},
@@ -51,7 +50,6 @@ assert.equal(pickRange(SF,parse('2026-10-11T17:59:00+09:00')),'第9・10戦 富�
 assert.equal(pickRange(SF,parse('2026-10-11T18:01:00+09:00')),'第11・12戦 鈴鹿','SUPER FORMULA: advance to Suzuka after Fuji weekend');
 assert.equal(pickRange(SF,parse('2026-11-22T18:01:00+09:00')),null,'SUPER FORMULA: no phantom event after season finale');
 
-// INDYCAR uses explicit four-hour race windows, important for the Milwaukee double-header.
 const INDY=[
  {name:'Milwaukee Race 1',start:'2026-08-29T14:30:00-04:00',end:'2026-08-29T18:30:00-04:00'},
  {name:'Milwaukee Race 2',start:'2026-08-30T13:00:00-04:00',end:'2026-08-30T17:00:00-04:00'},
@@ -64,7 +62,6 @@ assert.equal(pickRange(INDY,parse('2026-08-30T15:00:00-04:00')),'Milwaukee Race 
 assert.equal(pickRange(INDY,parse('2026-08-30T17:01:00-04:00')),'Laguna Seca Finale','INDYCAR: advance to Laguna Seca after Milwaukee');
 assert.equal(pickRange(INDY,parse('2026-09-06T18:31:00-04:00')),null,'INDYCAR: no phantom event after season finale');
 
-// NASCAR Cup uses six-hour race windows; verify the Daytona night race does not switch too early.
 const NASCAR=[
  {name:'Daytona',start:'2026-08-29T19:30:00-04:00',end:'2026-08-30T01:30:00-04:00'},
  {name:'Darlington',start:'2026-09-06T17:00:00-04:00',end:'2026-09-06T23:00:00-04:00'},
@@ -74,5 +71,18 @@ assert.equal(pickRange(NASCAR,parse('2026-08-29T18:00:00-04:00')),'Daytona','NAS
 assert.equal(pickRange(NASCAR,parse('2026-08-29T22:00:00-04:00')),'Daytona','NASCAR: retain Daytona while active');
 assert.equal(pickRange(NASCAR,parse('2026-08-30T01:29:00-04:00')),'Daytona','NASCAR: retain Daytona through six-hour race window');
 assert.equal(pickRange(NASCAR,parse('2026-08-30T01:31:00-04:00')),'Darlington','NASCAR: advance to Darlington after Daytona hold');
+
+// GTWC Europe uses the exact Nürburgring main-race window, then weekend windows for later rounds whose session clocks are not yet locked.
+const GTWC=[
+ {name:'Nürburgring 3H',start:'2026-08-30T15:00:00+02:00',end:'2026-08-30T18:30:00+02:00'},
+ {name:'Zandvoort',start:'2026-09-18T09:00:00+02:00',end:'2026-09-20T20:00:00+02:00'},
+ {name:'Barcelona',start:'2026-10-02T09:00:00+02:00',end:'2026-10-04T20:00:00+02:00'},
+ {name:'Portimão Finale',start:'2026-10-16T09:00:00+01:00',end:'2026-10-18T20:00:00+01:00'},
+];
+assert.equal(pickRange(GTWC,parse('2026-08-30T14:30:00+02:00')),'Nürburgring 3H','GTWC Europe: select Nürburgring main race');
+assert.equal(pickRange(GTWC,parse('2026-08-30T17:00:00+02:00')),'Nürburgring 3H','GTWC Europe: retain Nürburgring while active');
+assert.equal(pickRange(GTWC,parse('2026-08-30T18:31:00+02:00')),'Zandvoort','GTWC Europe: advance to Zandvoort after Nürburgring');
+assert.equal(pickRange(GTWC,parse('2026-09-19T12:00:00+02:00')),'Zandvoort','GTWC Europe: retain Zandvoort through Sprint weekend');
+assert.equal(pickRange(GTWC,parse('2026-10-18T20:01:00+01:00')),null,'GTWC Europe: no phantom event after finale');
 
 console.log('Motorsport Hub boundary gate: PASS');
