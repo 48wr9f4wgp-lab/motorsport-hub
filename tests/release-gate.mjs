@@ -32,7 +32,7 @@ for(const [name,src] of Object.entries(files))if(!['attribution','boundary'].inc
 for(const token of ['F1','WEC','WRC','SUPERGT','MOTOGP','FDJ','D1GP','SUPERFORMULA'])
  assert(files.router.includes(token),`router missing category ${token}`);
 
-for(const marker of ['Motorsport Hub','v8.6.0',"'FDJ'",'motorsport-core-v841.js','motorsport-hq-core.js','fdj-widget.js','Script.complete()'])
+for(const marker of ['Motorsport Hub','module router','v8.6.0',"'FDJ'",'motorsport-core-v841.js','motorsport-hq-core.js','fdj-widget.js','Script.complete()'])
  assert(files.router.includes(marker),`loader-v4 compatibility marker missing: ${marker}`);
 
 assert(files.router.includes('motorsport-reliability-v896.js'),'router lost v8.9.6 stable reliability path');
