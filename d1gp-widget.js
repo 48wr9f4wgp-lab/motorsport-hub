@@ -1,6 +1,6 @@
-// Motorsport Hub v8.8.0 — D1GP module
+// Motorsport Hub v8.8.1 — D1GP module
 (async()=>{
-const V='8.8.0',K='d1gp';
+const V='8.8.1',K='d1gp';
 const S={label:'D1GP',accent:'#FF2D6F',url:'https://d1gp.co.jp/'};
 const C={bg:'#06080B',text:'#F7F9FB',muted:'#B9C2CC',dim:'#8D98A4',good:'#58DA8A',warn:'#FFB84D'};
 const F=config.widgetFamily||'medium';
@@ -18,8 +18,8 @@ const CAL=[
 ];
 const RANK_URL='https://d1gp.co.jp/2026d1%E3%82%B0%E3%83%A9%E3%83%B3%E3%83%97%E3%83%AA%E3%82%B7%E3%83%AA%E3%83%BC%E3%82%BA%E3%83%A9%E3%83%B3%E3%82%AD%E3%83%B3%E3%82%B0/';
 const HERO_URLS=[
- 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Nissan%20Silvia%20S15%20Driftworks.jpg?width=2048',
- 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Nissan%20Silvia%20S15%20Driftworks.jpg?width=1280'
+ 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Nissan%20Silvia%20S14%20Drift.jpg?width=2048',
+ 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Nissan%20Silvia%20S14%20Drift.jpg?width=1280'
 ];
 const col=(h,a=1)=>new Color(h,a),clone=o=>JSON.parse(JSON.stringify(o));
 const num=v=>{const m=String(v||'').replace(/,/g,'').match(/-?\d+(?:\.\d+)?/);return m?Number(m[0]):NaN};
@@ -45,13 +45,13 @@ async function load(){const base=nextEvent(clone(SNAP));try{const d=await update
 function smooth(t){return t*t*(3-2*t)}
 function cover(img,W,H,focus=.52,shift=0){const iw=img.size.width||1,ih=img.size.height||1,s=Math.max(W/iw,H/ih),dw=iw*s,dh=ih*s;return new Rect(-(dw-W)*focus+shift,-(dh-H)*.5,dw,dh)}
 async function hero(){
- const small=F==='small',p=fm.joinPath(DOC,`motorsport-hero-v880-${small?'small':'medium'}-d1gp.jpg`);
+ const small=F==='small',p=fm.joinPath(DOC,`motorsport-hero-v881-${small?'small':'medium'}-d1gp.jpg`);
  if(fm.fileExists(p)){try{return fm.readImage(p)}catch(_){} }
  try{
-  let img=null;for(const u of HERO_URLS){try{const r=new Request(`${u}&v=880`);r.timeoutInterval=12;r.headers={'User-Agent':'Mozilla/5.0','Cache-Control':'no-cache'};img=await r.loadImage();if(img)break}catch(_){}}
+  let img=null;for(const u of HERO_URLS){try{const r=new Request(`${u}&v=881`);r.timeoutInterval=12;r.headers={'User-Agent':'Mozilla/5.0','Cache-Control':'no-cache'};img=await r.loadImage();if(img)break}catch(_){}}
   if(!img)return null;
   const W=small?720:1380,H=small?720:640,ctx=new DrawContext();ctx.size=new Size(W,H);ctx.opaque=true;ctx.respectScreenScale=false;
-  ctx.setFillColor(col(C.bg));ctx.fillRect(new Rect(0,0,W,H));ctx.drawImageInRect(img,cover(img,W,H,.52,small?10:34));
+  ctx.setFillColor(col(C.bg));ctx.fillRect(new Rect(0,0,W,H));ctx.drawImageInRect(img,cover(img,W,H,.50,small?8:26));
   ctx.setFillColor(col('#030609',.08));ctx.fillRect(new Rect(0,0,W,H));
   for(let x=0;x<W;x+=3){const t=x/(W-1),a=.84*(1-smooth(t))+.06;ctx.setFillColor(col('#030609',a));ctx.fillRect(new Rect(x,0,4,H))}
   const rs=W*.76;for(let x=rs;x<W;x+=3){const t=(x-rs)/(W-rs),a=.10+.42*smooth(t);ctx.setFillColor(col('#020407',a));ctx.fillRect(new Rect(x,0,4,H))}
