@@ -1,36 +1,32 @@
 # Motorsport Hub — Release Candidate QA
 
-## v9.0.0 expansion status
-- Current `main`: **8-category expansion build**.
-- Added category: **SUPER FORMULA** (`SUPERFORMULA` / alias `SF`).
-- Code integration: complete.
-- Official 2026 standings/calendar source review: complete.
-- Hero licensing: **BWard 1997 / CC BY 4.0 — exact Commons page verified**.
-- SUPER FORMULA deterministic weekend-boundary simulation: **PASS**.
-- QA diagnostics expanded to **8 routes**.
-- iPhone live data-route QA at 2026-08-24 23:19 JST: **8/8 LIVE — PASS**.
-  - F1: 879 ms
-  - WEC: 3527 ms
-  - WRC: 273 ms
-  - MotoGP: 3296 ms
-  - SUPER GT: 957 ms
-  - FDJ: 933 ms
-  - D1GP: 1232 ms
-  - SUPER FORMULA: **409 ms**
-- **Pending gate:** SUPER FORMULA Small/Medium iPhone visual QA only.
-- Until that visual gate passes, **v8.9.6 remains the last fully device-reviewed Release Candidate**.
+## v9.1.0 expansion status
+- Current `main`: **9-category expansion build**.
+- SUPER FORMULA (`SUPERFORMULA` / alias `SF`): **LOCKED / PASS**.
+  - Official 2026 standings/calendar source review: complete.
+  - Hero licensing: BWard 1997 / CC BY 4.0 — exact Commons page verified.
+  - Weekend-boundary simulation: PASS.
+  - iPhone route QA at 2026-08-24 23:19 JST: 8/8 LIVE; SUPER FORMULA 409 ms.
+  - iPhone Small/Medium visual QA at 2026-08-24 23:35 JST: **PASS**.
+  - Live standings observed on-device: 太田格之進 105 / 岩佐歩夢 59.5 / 福住仁嶺 58.
+- INDYCAR (`INDYCAR` / alias `INDY`): **IMPLEMENTED / DEVICE QA PENDING**.
+  - Official 2026 standings/schedule source review: complete.
+  - Hero licensing: Ben Goyette / CC BY-SA 4.0 — exact Commons page verified.
+  - Remaining calendar configured: Milwaukee Race 1 / Milwaukee Race 2 / Laguna Seca finale.
+  - Milwaukee double-header deterministic transition coverage added.
+  - QA diagnostics expanded to **9 routes**.
+- Pending gate for v9.1.0: **INDYCAR 9/9 live-route QA + Small/Medium iPhone visual QA**.
 
 ---
 
-## Stable baseline candidate
+## Stable seven-category baseline
 - Version: **v8.9.6 Release Candidate**
 - Date: 2026-08-24 JST
-- Scope: Scriptable iPhone widget, Small / Medium, 7 motorsport categories
-- Visual baseline: v8.7.1 (locked); SUPER GT hero asset replaced in v8.9.6 for verified licensing.
+- Scope: Scriptable iPhone widget, Small / Medium, 7 baseline categories
+- Visual baseline: v8.7.1 (locked); SUPER GT hero replaced in v8.9.6 for verified licensing.
 
-## Manual diagnostics — iPhone / Scriptable
+## Baseline manual diagnostics — iPhone / Scriptable
 Observed at 2026-08-24 21:32 JST.
-
 - F1: LIVE — 131 ms
 - WEC: LIVE — 3475 ms
 - WRC: LIVE — 240 ms
@@ -38,22 +34,20 @@ Observed at 2026-08-24 21:32 JST.
 - SUPER GT: LIVE — 1014 ms
 - FDJ: LIVE — 673 ms
 - D1GP: LIVE — 588 ms
+Result: **7/7 LIVE — PASS**
 
-Result: **7/7 LIVE — stable-baseline data routes PASS**
-
-## Home-screen regression — iPhone
+## Baseline home-screen regression
 Observed at 2026-08-24 21:38–22:05 JST.
-
 PASS:
 - Small widgets: all seven baseline categories render with no blank/error state.
 - Medium widgets: F1 / WEC / WRC / SUPER GT / MotoGP / FDJ / D1GP reviewed.
-- SUPER GT machine/team secondary lines restored after the v8.9.2 regression hotfix.
-- Countdown, rankings, PTS and readability passed the reviewed pages.
-- D1GP Small/Medium action hero passed visual QA.
+- SUPER GT machine/team secondary lines restored after the v8.9.2 hotfix.
+- Countdown, rankings, PTS and readability passed.
+- D1GP Small/Medium action hero passed.
 - WEC display `TR010 Hybrid / TOYOTA RACING` is correct for the 2026 Toyota entry.
 
-## Boundary / transition QA — baseline
-Covered and passed:
+## Boundary / transition QA
+Covered:
 - WEC active-event hold: 10 h
 - SUPER GT active-event hold: 8 h
 - MotoGP active-event hold: 4 h
@@ -61,8 +55,10 @@ Covered and passed:
 - FDJ active-weekend hold: 40 h
 - D1GP active-weekend hold: 40 h
 - F1 race-start retention: 4 h
+- SUPER FORMULA explicit weekend end boundaries
+- INDYCAR explicit race windows, including Milwaukee Race 1 → Race 2 transition
 
-## Hero asset audit — baseline
+## Hero asset audit
 Verified:
 - F1 — Eustace Bagge — CC BY 4.0
 - WRC — TTTNIS — CC0 1.0
@@ -71,8 +67,11 @@ Verified:
 - FDJ — CC0 1.0
 - D1GP — Rowan Harrison — CC BY-SA 2.0
 - SUPER GT — Tokumeigakarinoaoshima — CC0 1.0
+- SUPER FORMULA — BWard 1997 — CC BY 4.0
+- INDYCAR — Ben Goyette — CC BY-SA 4.0
 
 ## RC decision
-- **v8.9.6 RELEASE CANDIDATE: PASS**
-- **v9.0.0 EXPANSION RC: PENDING SUPER FORMULA VISUAL QA ONLY**
+- **v8.9.6 seven-category Release Candidate: PASS**
+- **SUPER FORMULA v9.0.0 expansion gate: PASS / LOCKED**
+- **v9.1.0 nine-category expansion: PENDING INDYCAR DEVICE QA ONLY**
 - No public deployment, Store submission or release action has been performed; explicit owner approval is required before release.
