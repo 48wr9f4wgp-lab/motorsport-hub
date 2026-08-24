@@ -1,7 +1,7 @@
-// Motorsport Hub v8.4.0 — Professional Visual Pass / GitHub hosted / Scriptable
+// Motorsport Hub v8.4.1 — Professional Visual Pass / GitHub hosted / Scriptable
 // Widget Parameter: F1 / WEC / WRC / SUPERGT / MOTOGP
 (async()=>{
-const V='8.4.0';
+const V='8.4.1';
 const MAP={F1:'f1',WEC:'wec',WRC:'wrc',SUPERGT:'supergt',MOTOGP:'motogp'};
 const labels=['F1','WEC','WRC','SUPER GT','MotoGP'],params=['F1','WEC','WRC','SUPERGT','MOTOGP'];
 const norm=v=>String(v||'').trim().toUpperCase().replace(/[\s_-]+/g,'');
@@ -68,7 +68,7 @@ const clone=o=>JSON.parse(JSON.stringify(o)),col=(h,a=1)=>new Color(h,a),num=v=>
 const clean=s=>String(s||'').replace(/<script[\s\S]*?<\/script>/gi,' ').replace(/<style[\s\S]*?<\/style>/gi,' ').replace(/<[^>]+>/g,' ').replace(/&nbsp;|&#160;/gi,' ').replace(/&amp;/gi,'&').replace(/\s+/g,' ').trim();
 function rows(h){const out=[];for(const tr of String(h||'').match(/<tr\b[\s\S]*?<\/tr>/gi)||[]){const a=[];let m,re=/<t[dh]\b[^>]*>([\s\S]*?)<\/t[dh]>/gi;while((m=re.exec(tr)))a.push(clean(m[1]));if(a.length)out.push(a)}return out}
 async function txt(url){const r=new Request(url);r.timeoutInterval=9;r.headers={'User-Agent':'Mozilla/5.0'};return await r.loadString()}
-async function json(url){const r=new Request(url);r.timeoutInterval=9;r.headers={'User-Agent':'MotorsportHub/8.4.0'};return await r.loadJSON()}
+async function json(url){const r=new Request(url);r.timeoutInterval=9;r.headers={'User-Agent':'MotorsportHub/8.4.1'};return await r.loadJSON()}
 function calendar(d){const c=CAL[K];if(!c)return d;const now=Date.now();for(const e of c){const t=Date.parse(e[1]);if(t>now)return{...d,race:e[0],date:e[1],circuit:e[2],timeTbd:!!e[3]}}return d}
 function save(d){try{fm.writeString(CACHE,JSON.stringify(d))}catch(_){} }
 function cache(){try{return fm.fileExists(CACHE)?JSON.parse(fm.readString(CACHE)):null}catch(_){return null}}
@@ -148,14 +148,15 @@ function small(d,cached,bg){
   const w=base(bg),ci=countdown(d);w.setPadding(10,11,9,11);
   const top=w.addStack();top.layoutHorizontally();top.centerAlignContent();pill(top,S.label,true);top.addSpacer(4);T(top,'次戦',7.2,col(C.dim),'semibold');top.addSpacer();
   const cp=top.addStack();cp.backgroundColor=ci.live?col(C.good,.20):col('#000000',.32);cp.cornerRadius=8;cp.setPadding(2,6,2,6);T(cp,ci.label,11.8,ci.live?col(C.good):col(C.text),'heavy');
-  w.addSpacer(7);
-  T(w,rn(d.race||'次戦'),18.5,col(C.text),'heavy',2);
-  w.addSpacer(3);
+  const title=rn(d.race||'次戦'),len=title.replace(/\s/g,'').length,oneLine=len<=9,titleSize=len>=11?16:len>=8?17.2:18.5;
+  w.addSpacer(len>=10?5:7);
+  const rt=T(w,title,titleSize,col(C.text),'heavy',oneLine?1:2);rt.minimumScaleFactor=oneLine?.72:.78;
+  w.addSpacer(len>=10?1:3);
   T(w,dateText(d),9.8,col(C.muted),'semibold',1);
   w.addSpacer();
   const foot=w.addStack();foot.layoutHorizontally();foot.centerAlignContent();
   if(d.circuit){const loc=foot.addStack();loc.backgroundColor=col('#000000',.28);loc.cornerRadius=7;loc.setPadding(2,5,2,5);T(loc,cn(d.circuit),8.2,col(C.muted),'semibold',1)}
-  foot.addSpacer();if(cached)T(foot,'• 更新待ち',6.4,col(C.warn,.72),'semibold');
+  foot.addSpacer();if(cached)T(foot,'•',6.6,col(C.warn,.62),'semibold');
   w.refreshAfterDate=new Date(Date.now()+15*60000);return w;
 }
 
