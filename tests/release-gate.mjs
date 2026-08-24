@@ -25,13 +25,14 @@ const files={
  superformula:read('superformula-widget.js'),
  indycar:read('indycar-widget.js'),
  nascar:read('nascar-widget.js'),
+ gtwc:read('gtwc-europe-widget.js'),
  attribution:read('ATTRIBUTION.md'),
  boundary:read('tests/boundary-gate.mjs'),
 };
 
 for(const [name,src] of Object.entries(files))if(!['attribution','boundary'].includes(name))parse(name,src);
 
-for(const token of ['F1','WEC','WRC','SUPERGT','MOTOGP','FDJ','D1GP','SUPERFORMULA','INDYCAR','NASCAR'])
+for(const token of ['F1','WEC','WRC','SUPERGT','MOTOGP','FDJ','D1GP','SUPERFORMULA','INDYCAR','NASCAR','GTWCEU'])
  assert(files.router.includes(token),`router missing category ${token}`);
 
 for(const marker of ['Motorsport Hub','module router','v8.6.0',"'FDJ'",'motorsport-core-v841.js','motorsport-hq-core.js','fdj-widget.js','Script.complete()'])
@@ -42,12 +43,13 @@ assert(files.router.includes('d1gp-reliability-v890.js'),'router lost D1GP relia
 assert(files.router.includes('superformula-widget.js'),'router is not using SUPER FORMULA module');
 assert(files.router.includes('indycar-widget.js'),'router is not using INDYCAR module');
 assert(files.router.includes('nascar-widget.js'),'router is not using NASCAR module');
+assert(files.router.includes('gtwc-europe-widget.js'),'router is not using GTWC Europe module');
 assert(files.router.includes('motorsport-diagnostics-v890.js'),'router lost QA diagnostics');
 assert(files.router.includes("'QA'"),'router missing QA selector');
 assert(files.diagnostics.includes('QA diagnostics'),'QA diagnostics marker missing');
-for(const token of ['F1','WEC','WRC','MotoGP','SUPER GT','FDJ','D1GP','SUPER FORMULA','INDYCAR','NASCAR'])
+for(const token of ['F1','WEC','WRC','MotoGP','SUPER GT','FDJ','D1GP','SUPER FORMULA','INDYCAR','NASCAR','GTWC EUROPE'])
  assert(files.diagnostics.includes(token),`QA diagnostics missing ${token}`);
-assert(files.diagnostics.includes('10/10 LIVE'),'QA diagnostics not expanded to ten routes');
+assert(files.diagnostics.includes('11/11 LIVE'),'QA diagnostics not expanded to eleven routes');
 
 assert(files.reliability.includes('F1_PARTIAL'),'F1 atomic refresh guard missing');
 assert(files.reliability.includes('fia.com/events/world-rally-championship/season-2026/standings'),'FIA WRC standings source missing');
@@ -71,7 +73,6 @@ assert(files.fdj.includes('formulad.jp/2026-fdj-standings'),'FDJ live standings 
 assert(files.d1base.includes('d1gp.co.jp'),'D1GP live source missing');
 assert(files.d1.includes('King%20of%20Europe'),'D1GP action hero missing');
 
-// SUPER FORMULA expansion gate.
 assert(files.superformula.includes('SUPER FORMULA module'),'SUPER FORMULA module marker missing');
 assert(files.superformula.includes('superformula.net/sf2/race2026/standings'),'SUPER FORMULA official standings source missing');
 for(const token of ['第9・10戦 富士','第11・12戦 鈴鹿','2026-10-11T18:00:00+09:00','SF23'])
@@ -79,7 +80,6 @@ for(const token of ['第9・10戦 富士','第11・12戦 鈴鹿','2026-10-11T18:
 assert(files.superformula.includes('Igor%20Fraga%20Super%20Formula%20Round%205%20Suzuka%20Post-Race%202026.jpg'),'SUPER FORMULA verified hero missing');
 assert(files.boundary.includes('SUPER FORMULA: retain Fuji during double-header weekend'),'SUPER FORMULA weekend boundary coverage missing');
 
-// INDYCAR expansion gate.
 assert(files.indycar.includes('INDYCAR module'),'INDYCAR module marker missing');
 assert(files.indycar.includes('https://www.indycar.com/standings/'),'INDYCAR official standings source missing');
 for(const token of ['Milwaukee Race 1','Milwaukee Race 2','Laguna Seca Finale','Alex Palou','Kyle Kirkwood','Christian Lundgaard'])
@@ -87,7 +87,6 @@ for(const token of ['Milwaukee Race 1','Milwaukee Race 2','Laguna Seca Finale','
 assert(files.indycar.includes('Alex%20Palou%20%2854686833932%29.jpg'),'INDYCAR verified hero missing');
 assert(files.boundary.includes('INDYCAR: advance to Race 2 after Race 1 hold'),'INDYCAR Milwaukee boundary coverage missing');
 
-// NASCAR Cup expansion gate.
 assert(files.nascar.includes('NASCAR Cup Series module'),'NASCAR module marker missing');
 assert(files.nascar.includes('https://cf.nascar.com/cacher/2026/1/points-feed.json'),'NASCAR official points JSON source missing');
 for(const token of ['Daytona','Darlington','Talladega','Martinsville','Homestead-Miami Speedway','Denny Hamlin','Ryan Blaney','Ty Gibbs'])
@@ -95,11 +94,20 @@ for(const token of ['Daytona','Darlington','Talladega','Martinsville','Homestead
 assert(files.nascar.includes('Denny%20Hamlin%2011%20Las%20Vegas%202025.jpg'),'NASCAR verified hero missing');
 assert(files.boundary.includes('NASCAR: advance to Darlington after Daytona hold'),'NASCAR Daytona boundary coverage missing');
 
-for(const token of ['Eustace Bagge','TTTNIS','Liauzh','MarcelX42','Rowan Harrison','Tokumeigakarinoaoshima','BWard 1997','Ben Goyette','TaurusEmerald','CC0 1.0 Universal','CC BY 4.0','CC BY-SA 4.0','CC BY-SA 2.0'])
+// GT World Challenge Europe expansion gate.
+assert(files.gtwc.includes('GT World Challenge Europe module'),'GTWC Europe module marker missing');
+assert(files.gtwc.includes('https://www.gt-world-challenge-europe.com/standings?filter_standing_type=0_0_drivers'),'GTWC Europe official standings source missing');
+for(const token of ['Nürburgring 3H','Zandvoort','Barcelona','Portimão Finale','Lucas Auer / Maro Engel','Ricardo Feller / Bastian Buus','Kelvin Van Der Linde / Charles Weerts'])
+ assert(files.gtwc.includes(token),`GTWC Europe configuration missing: ${token}`);
+assert(files.gtwc.includes('GT%20World%20Challenge%20Europe%202024%20N%C3%BCrburg%20Nr.%2048'),'GTWC Europe verified hero missing');
+assert(files.boundary.includes('GTWC Europe: advance to Zandvoort after Nürburgring'),'GTWC Europe Nürburgring boundary coverage missing');
+
+for(const token of ['Eustace Bagge','TTTNIS','Liauzh','MarcelX42','Rowan Harrison','Tokumeigakarinoaoshima','BWard 1997','Ben Goyette','TaurusEmerald','Lukas Raich','CC0 1.0 Universal','CC BY 4.0','CC BY-SA 4.0','CC BY-SA 2.0'])
  assert(files.attribution.includes(token),`attribution audit missing: ${token}`);
 assert(files.attribution.includes('SUPER FORMULA v9.0.0 hero licensing: **PASS**'),'SUPER FORMULA attribution gate is not closed');
 assert(files.attribution.includes('INDYCAR v9.1.0 hero licensing: **PASS**'),'INDYCAR attribution gate is not closed');
 assert(files.attribution.includes('NASCAR v9.2.0 hero licensing: **PASS**'),'NASCAR attribution gate is not closed');
+assert(files.attribution.includes('GTWC Europe v9.3.0 hero licensing: **PASS**'),'GTWC Europe attribution gate is not closed');
 assert(!files.attribution.includes('RELEASE BLOCKER FOR PUBLIC DISTRIBUTION'),'stale release blocker remains');
 assert(files.boundary.includes('Motorsport Hub boundary gate: PASS'),'boundary gate file missing PASS marker');
 
