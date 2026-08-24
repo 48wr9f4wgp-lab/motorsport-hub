@@ -1,7 +1,7 @@
-// Motorsport Hub v8.3.1 — Professional Visual Pass / GitHub hosted / Scriptable
+// Motorsport Hub v8.3.2 — Professional Visual Pass / GitHub hosted / Scriptable
 // Widget Parameter: F1 / WEC / WRC / SUPERGT / MOTOGP
 (async()=>{
-const V='8.3.1';
+const V='8.3.2';
 const MAP={F1:'f1',WEC:'wec',WRC:'wrc',SUPERGT:'supergt',MOTOGP:'motogp'};
 const labels=['F1','WEC','WRC','SUPER GT','MotoGP'],params=['F1','WEC','WRC','SUPERGT','MOTOGP'];
 const norm=v=>String(v||'').trim().toUpperCase().replace(/[\s_-]+/g,'');
@@ -52,7 +52,7 @@ const HERO={
     FERRARI:{url:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Ferrari_499P_%282025%29_%2855079052197%29.jpg/960px-Ferrari_499P_%282025%29_%2855079052197%29.jpg',focus:.48,shift:64}
   },
   wrc:{
-    TOYOTA:{urls:['https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/2025_Toyota_GR_Yaris_Rally_1_Katsuta.jpg/960px-2025_Toyota_GR_Yaris_Rally_1_Katsuta.jpg','https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/2025_Toyota_GR_Yaris_Rally_1_Ogier_%28cropped%29.jpg/645px-2025_Toyota_GR_Yaris_Rally_1_Ogier_%28cropped%29.jpg'],focus:.52,shift:82}
+    TOYOTA:{urls:['https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/2025_Toyota_GR_Yaris_Rally_1_Katsuta.jpg/960px-2025_Toyota_GR_Yaris_Rally_1_Katsuta.jpg','https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/2025_Toyota_GR_Yaris_Rally_1_Ogier_%28cropped%29.jpg/645px-2025_Toyota_GR_Yaris_Rally_1_Ogier_%28cropped%29.jpg'],focus:.49,shift:126}
   },
   motogp:{
     APRILIA:{url:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/MotoGP_2025_Malaysian_Grand_Prix_-_Aprilia_Racing_-_Marco_Bezzecchi.jpg/960px-MotoGP_2025_Malaysian_Grand_Prix_-_Aprilia_Racing_-_Marco_Bezzecchi.jpg',focus:.55,shift:30},
@@ -68,7 +68,7 @@ const clone=o=>JSON.parse(JSON.stringify(o)),col=(h,a=1)=>new Color(h,a),num=v=>
 const clean=s=>String(s||'').replace(/<script[\s\S]*?<\/script>/gi,' ').replace(/<style[\s\S]*?<\/style>/gi,' ').replace(/<[^>]+>/g,' ').replace(/&nbsp;|&#160;/gi,' ').replace(/&amp;/gi,'&').replace(/\s+/g,' ').trim();
 function rows(h){const out=[];for(const tr of String(h||'').match(/<tr\b[\s\S]*?<\/tr>/gi)||[]){const a=[];let m,re=/<t[dh]\b[^>]*>([\s\S]*?)<\/t[dh]>/gi;while((m=re.exec(tr)))a.push(clean(m[1]));if(a.length)out.push(a)}return out}
 async function txt(url){const r=new Request(url);r.timeoutInterval=9;r.headers={'User-Agent':'Mozilla/5.0'};return await r.loadString()}
-async function json(url){const r=new Request(url);r.timeoutInterval=9;r.headers={'User-Agent':'MotorsportHub/8.3.1'};return await r.loadJSON()}
+async function json(url){const r=new Request(url);r.timeoutInterval=9;r.headers={'User-Agent':'MotorsportHub/8.3.2'};return await r.loadJSON()}
 function calendar(d){const c=CAL[K];if(!c)return d;const now=Date.now();for(const e of c){const t=Date.parse(e[1]);if(t>now)return{...d,race:e[0],date:e[1],circuit:e[2],timeTbd:!!e[3]}}return d}
 function save(d){try{fm.writeString(CACHE,JSON.stringify(d))}catch(_){} }
 function cache(){try{return fm.fileExists(CACHE)?JSON.parse(fm.readString(CACHE)):null}catch(_){return null}}
@@ -88,7 +88,7 @@ async function hero(d){
   const maker=String(d?.ranking?.[0]?.maker||'').toUpperCase();
   const preset=HERO[K]?.[maker]||Object.values(HERO[K]||{})[0];
   if(!preset)return null;
-  const p=fm.joinPath(DOC,`motorsport-hero-v831-${K}-${maker}.jpg`);
+  const p=fm.joinPath(DOC,`motorsport-hero-v832-${K}-${maker}.jpg`);
   if(fm.fileExists(p)){try{return fm.readImage(p)}catch(_){} }
   try{
     let img=null;
@@ -126,14 +126,14 @@ function medium(d,cached,bg){
   w.addSpacer(1);
   const info=w.addStack();info.layoutHorizontally();info.centerAlignContent();T(info,dateText(d),10.7,col(C.muted),'semibold');if(d.circuit){info.addSpacer(5);T(info,`｜ ${cn(d.circuit)}`,9.6,col(C.dim),'semibold')}info.addSpacer();const cp=info.addStack();cp.backgroundColor=ci.live?col(C.good,.19):col('#000000',.27);cp.cornerRadius=9;cp.setPadding(3,7,3,7);T(cp,ci.label,16.2,ci.live?col(C.good):col(C.text),'heavy');
   w.addSpacer(5);
-  const hh=w.addStack();hh.layoutHorizontally();T(hh,S.rank,8.2,col(C.muted),'bold');hh.addSpacer();rightLabel(hh,'PTS',7,col(C.dim),'semibold');
+  const hh=w.addStack();hh.layoutHorizontally();T(hh,S.rank,8.2,col(C.muted),'bold');hh.addSpacer();rightLabel(hh,'PTS',7.1,col(C.muted,.82),'semibold');
   w.addSpacer(2);
   const ranking=(d.ranking||[]).slice(0,3);
   for(let i=0;i<ranking.length;i++){
     const r=ranking[i],row=w.addStack();row.layoutHorizontally();row.centerAlignContent();
     const pos=row.addStack();pos.size=new Size(18,0);T(pos,String(r.pos),11.4,col(S.accent),'heavy');row.addSpacer(4);
     const nm=row.addStack();T(nm,r.name,K==='supergt'?12.1:13.1,col(C.text),'semibold');row.addSpacer();
-    const pts=row.addStack();pts.size=new Size(38,0);pts.backgroundColor=col('#000000',.10);pts.cornerRadius=5;pts.setPadding(0,2,0,2);const pt=T(pts,String(r.points||'').replace(' pts',''),10.3,col(C.muted),'semibold');pt.rightAlignText();
+    const pts=row.addStack();pts.size=new Size(38,0);pts.backgroundColor=col('#000000',.14);pts.cornerRadius=5;pts.setPadding(0,2,0,2);const pt=T(pts,String(r.points||'').replace(' pts',''),10.4,col(C.text,.84),'semibold');pt.rightAlignText();
     const sr=w.addStack();sr.layoutHorizontally();sr.addSpacer(22);T(sr,sub(r),8.6,col(C.dim),'semibold');
     if(i<ranking.length-1)w.addSpacer(1);
   }
