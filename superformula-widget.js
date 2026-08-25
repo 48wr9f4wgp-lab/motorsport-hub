@@ -1,7 +1,8 @@
-// Motorsport Hub v9.0.0 — SUPER FORMULA module
-// Official 2026 calendar + driver standings. Visual language matches the accepted Motorsport Hub Small/Medium system.
+// Motorsport Hub v9.0.1-hardening — SUPER FORMULA module
+// Official 2026 calendar + driver standings. Visual output remains v9.0.0-compatible.
 (async()=>{
-const V='9.0.0',K='superformula';
+const V='9.0.1-hardening',K='superformula',SEASON=2026,CACHE_SCHEMA=1,CACHE_MAX_AGE=7*86400000;
+const DATA_SOURCE='https://superformula.net/sf2/race2026/standings';
 const S={label:'SUPER FORMULA',accent:'#00AEEF',url:'https://superformula.net/'};
 const C={bg:'#06080B',text:'#F7F9FB',muted:'#B9C2CC',dim:'#8D98A4',good:'#58DA8A',warn:'#FFB84D'};
 const fm=FileManager.local(),DOC=fm.documentsDirectory(),CACHE=fm.joinPath(DOC,'motorsport-data-v900-superformula.json');
@@ -14,7 +15,6 @@ const SNAP={
  ]
 };
 
-// Official 2026 event weekends. Start/end are used for reliable weekend retention; race-session clock times remain TBD.
 const CAL=[
  {race:'第1・2戦 もてぎ',start:'2026-04-03T09:00:00+09:00',end:'2026-04-05T18:00:00+09:00',circuit:'モビリティリゾートもてぎ'},
  {race:'第3戦 オートポリス',start:'2026-04-25T09:00:00+09:00',end:'2026-04-26T18:00:00+09:00',circuit:'オートポリス'},
@@ -40,11 +40,14 @@ const clean=s=>String(s||'').replace(/<script[\s\S]*?<\/script>/gi,' ').replace(
 function rows(h){const out=[];for(const tr of String(h||'').match(/<tr\b[\s\S]*?<\/tr>/gi)||[]){const a=[];let m,re=/<t[dh]\b[^>]*>([\s\S]*?)<\/t[dh]>/gi;while((m=re.exec(tr)))a.push(clean(m[1]));if(a.length)out.push(a)}return out}
 async function txt(url){const r=new Request(url);r.timeoutInterval=10;r.headers={'User-Agent':'Mozilla/5.0 MotorsportHub/9.0','Cache-Control':'no-cache'};return await r.loadString()}
 function nextEvent(d){const now=Date.now();for(const e of CAL){if(Date.parse(e.end)>now)return{...d,...e,seasonEnded:false}}const last=CAL[CAL.length-1];return{...d,...last,seasonEnded:true}}
-function save(d){try{fm.writeString(CACHE,JSON.stringify(d))}catch(_){} }
-function cache(){try{return fm.fileExists(CACHE)?JSON.parse(fm.readString(CACHE)):null}catch(_){return null}}
+function validRanking(a){return Array.isArray(a)&&a.length>=3&&a.slice(0,5).every(r=>r&&Number(r.pos)>=1&&String(r.name||'').trim()&&Number.isFinite(Number(String(r.points||'').replace(/[^0-9.-]/g,''))))}
+function validData(d){return !!d&&typeof d==='object'&&validRanking(d.ranking)&&String(d.race||'').trim()&&String(d.circuit||'').trim()&&Number.isFinite(Date.parse(d.start))&&Number.isFinite(Date.parse(d.end))}
+function removeCache(){try{if(fm.fileExists(CACHE))fm.remove(CACHE)}catch(_){} }
+function save(d){try{if(!validData(d))return;const payload={schemaVersion:CACHE_SCHEMA,category:K,season:SEASON,fetchedAt:Date.now(),source:DATA_SOURCE,ranking:d.ranking,event:{race:d.race,start:d.start,end:d.end,circuit:d.circuit,seasonEnded:!!d.seasonEnded},data:d};fm.writeString(CACHE,JSON.stringify(payload))}catch(_){} }
+function cache(){try{if(!fm.fileExists(CACHE))return null;const p=JSON.parse(fm.readString(CACHE)),age=Date.now()-Number(p?.fetchedAt);if(p?.schemaVersion!==CACHE_SCHEMA||p?.category!==K||Number(p?.season)!==SEASON||p?.source!==DATA_SOURCE||!Number.isFinite(age)||age<0||age>CACHE_MAX_AGE||!validRanking(p?.ranking)||!p?.event||!validData(p?.data)){removeCache();return null}return p.data}catch(_){removeCache();return null}}
 function displayName(raw){const s=String(raw||'').trim();const jp=s.split(/[A-Za-z]/)[0].trim();return jp||s}
 async function update(d){
- const h=await txt('https://superformula.net/sf2/race2026/standings'),a=[];
+ const h=await txt(DATA_SOURCE),a=[];
  for(const c of rows(h)){
   if(c.length<4)continue;
   const p=num(c[0]),no=String(c[1]||'').match(/\d+/)?.[0]||'',name=displayName(c[2]),pts=num(c[3]);
@@ -54,7 +57,7 @@ async function update(d){
  a.sort((x,y)=>x.pos-y.pos);const seen=new Set(),u=[];for(const r of a){if(seen.has(r.pos))continue;seen.add(r.pos);u.push(r);if(u.length>=5)break}
  if(u.length<3)throw Error('SUPER FORMULA standings');d.ranking=u;return nextEvent(d)
 }
-async function load(){const base=nextEvent(clone(SNAP));try{const d=await update(base);save(d);return{d,cached:false}}catch(e){return{d:nextEvent(cache()||base),cached:true}}}
+async function load(){const base=nextEvent(clone(SNAP));try{const d=await update(base);save(d);return{d,cached:false}}catch(e){const c=cache();return{d:nextEvent(c||base),cached:true}}}
 function smooth(t){return t*t*(3-2*t)}
 function cover(img,W,H,focus=.54,shift=0){const iw=img.size.width||1,ih=img.size.height||1,s=Math.max(W/iw,H/ih),dw=iw*s,dh=ih*s;return new Rect(-(dw-W)*focus+shift,-(dh-H)*.5,dw,dh)}
 async function hero(){
