@@ -107,6 +107,25 @@ After the finale the Widget must show `シーズン終了` / `SEASON END`, not a
 
 F1 is therefore **device-visual LOCKED for the current hardening path**, subject to the still-pending repository gates, cache/offline regression and Codex re-audit.
 
+### 2026-08-26 07:53 JST — WRC flat visual regression
+- Module: `wrc-widget-flat-v1000.js`
+- Small: **PASS**
+- Medium: **PASS**
+- Event shown: `ラリー・パラグアイ` / `8/27(木)・時刻未定` / `Paraguay`
+- Countdown: `あと2日` — consistent with device date/time.
+- Medium TOP3 rendered correctly and without clipping:
+  1. Elfyn Evans — 201
+  2. Sami Pajari — 171
+  3. Takamoto Katsuta — 160
+- Metadata sublines rendered for all three: `TOYOTA · GR Yaris Rally1 ｜ TOYOTA GAZOO Racing WRT`.
+- Hero framing: PASS
+- Left-side readability veil: PASS
+- PTS pills/alignment: PASS
+- Small information hierarchy: PASS
+- No visible flat-migration regression observed in the supplied device screenshot.
+
+WRC is therefore **device-visual LOCKED for the current hardening path**, subject to the still-pending repository gates, cache/offline regression and Codex re-audit.
+
 ## Historical device evidence — baseline only
 Previously observed before the full flatten:
 - original seven: 7/7 live diagnostic PASS.
