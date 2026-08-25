@@ -1,5 +1,6 @@
 // Motorsport Hub v9.3.1-hardening — module router / explicit parameter validation
 // H1: prevents unknown widget parameters from silently falling back to F1.
+// H4 bridge: a repo-raw circuit breaker prevents repeated serial GitHub timeouts before legacy caches are used.
 // MH_ROUTER_SCHEMA=5
 // MH_CATEGORY_MANIFEST=F1,WEC,WRC,SUPERGT,MOTOGP,FDJ,D1GP,SUPERFORMULA,INDYCAR,NASCAR,GTWCEU,QA
 // Loader v4 compatibility marker: v8.6.0 motorsport-core-v841.js motorsport-hq-core.js fdj-widget.js
@@ -72,17 +73,33 @@ async function fail(){
 }
 
 let code='';
-try{
-  const r=new Request(`${URL}?v=931&t=${Date.now()}-${Math.random()}`);r.timeoutInterval=15;
-  r.headers={'Cache-Control':'no-cache, no-store, max-age=0, must-revalidate','Pragma':'no-cache','Expires':'0','User-Agent':'MotorsportHubRouter/9.3.1-hardening'};
-  code=await r.loadString();if(!valid(code))throw Error('invalid module');fm.writeString(cache,code);
-}catch(e){
+if(globalThis.__MH_REMOTE_OFFLINE!==true){
+  try{
+    const r=new Request(`${URL}?v=931&t=${Date.now()}-${Math.random()}`);r.timeoutInterval=15;
+    r.headers={'Cache-Control':'no-cache, no-store, max-age=0, must-revalidate','Pragma':'no-cache','Expires':'0','User-Agent':'MotorsportHubRouter/9.3.1-hardening'};
+    code=await r.loadString();if(!valid(code))throw Error('invalid module');fm.writeString(cache,code);
+  }catch(e){globalThis.__MH_REMOTE_OFFLINE=true;}
+}
+if(!valid(code)){
   try{if(fm.fileExists(cache)){const c=fm.readString(cache);if(valid(c))code=c;else fm.remove(cache)}}catch(_){}
 }
 if(!valid(code)){await fail();return}
 
 globalThis.__MH_ROUTER_BOOT_OK=true;
 if(!isQA&&!isD1&&!isSF&&!isINDY&&!isNASCAR&&!isGTWC)globalThis.__MH_UNIVERSAL_PARAMETER=selected;
+
+const originalLoadString=Request.prototype.loadString;
+Request.prototype.loadString=async function(){
+  const u=String(this?.url||'');
+  const repoRaw=u.includes('raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/');
+  if(repoRaw&&globalThis.__MH_REMOTE_OFFLINE===true)throw Error('MH_REPO_RAW_CIRCUIT_OPEN');
+  try{return await originalLoadString.call(this)}
+  catch(e){if(repoRaw)globalThis.__MH_REMOTE_OFFLINE=true;throw e}
+};
 try{await eval(code)}catch(e){await fail()}
-finally{try{delete globalThis.__MH_UNIVERSAL_PARAMETER}catch(_){}}
+finally{
+  Request.prototype.loadString=originalLoadString;
+  try{delete globalThis.__MH_UNIVERSAL_PARAMETER}catch(_){}
+  try{delete globalThis.__MH_REMOTE_OFFLINE}catch(_){}
+}
 })();
