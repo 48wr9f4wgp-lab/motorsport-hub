@@ -4,7 +4,7 @@
   "season": 2026,
   "categories": [
     {"id":"F1","displayName":"F1","aliases":["FORMULA1"],"module":"f1-widget-flat-v1000.js","moduleMarker":"flattened F1 pilot module","moduleCacheKey":"f1-flat-v1000","dataCacheSchema":1,"releaseStatus":"HARDENING_FLAT_PILOT"},
-    {"id":"WEC","displayName":"WEC","aliases":[],"module":"motorsport-reliability-v896.js","moduleMarker":"Reliability Pass","moduleCacheKey":"reliability-v896","dataCacheSchema":0,"releaseStatus":"LEGACY_HARDENING"},
+    {"id":"WEC","displayName":"WEC","aliases":[],"module":"wec-widget-flat-v1000.js","moduleMarker":"flattened WEC module","moduleCacheKey":"wec-flat-v1000","dataCacheSchema":1,"releaseStatus":"HARDENING_FLAT_PILOT"},
     {"id":"WRC","displayName":"WRC","aliases":[],"module":"wrc-widget-flat-v1000.js","moduleMarker":"flattened WRC module","moduleCacheKey":"wrc-flat-v1000","dataCacheSchema":1,"releaseStatus":"HARDENING_FLAT_PILOT"},
     {"id":"SUPERGT","displayName":"SUPER GT","aliases":["SUPER GT"],"module":"motorsport-reliability-v896.js","moduleMarker":"Reliability Pass","moduleCacheKey":"reliability-v896","dataCacheSchema":0,"releaseStatus":"LEGACY_HARDENING"},
     {"id":"MOTOGP","displayName":"MotoGP","aliases":["MOTO GP"],"module":"motogp-widget-flat-v1000.js","moduleMarker":"flattened MotoGP module","moduleCacheKey":"motogp-flat-v1000","dataCacheSchema":1,"releaseStatus":"HARDENING_FLAT_PILOT"},
