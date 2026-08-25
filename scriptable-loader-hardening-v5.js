@@ -1,7 +1,7 @@
-// Motorsport Hub HARDENING TEST loader v5 — isolated + immutable.
+// Motorsport Hub HARDENING TEST loader v5 — isolated rolling test ref.
 // TEST ONLY. Does not share Router candidate/LKG/quarantine files with the normal loader.
 (async()=>{
-  const ROUTER_REF='c941311d2a969c3095017ceebf5a936090fbb9fc';
+  const ROUTER_REF='hardening-live';
   const URL=`https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/${ROUTER_REF}/motorsport-hub.js`;
   const ROUTER_SCHEMA=5;
   const CATEGORY_MANIFEST='F1,WEC,WRC,SUPERGT,MOTOGP,FDJ,D1GP,SUPERFORMULA,INDYCAR,NASCAR,GTWCEU,QA';
