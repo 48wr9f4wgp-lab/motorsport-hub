@@ -71,7 +71,7 @@
     }
   };
 
-  let candidate='',repoFetchFailed=false;
+  let candidate='';
   try{
     const r=new Request(`${URL}?mhv5=${Date.now()}-${Math.random()}`);
     r.timeoutInterval=8;
@@ -85,7 +85,6 @@
     if(!valid(candidate))throw new Error('Invalid router candidate');
     fm.writeString(candidatePath,candidate);
   }catch(_){
-    repoFetchFailed=true;
     if(candidate&&!valid(candidate))quarantine(candidate);
     candidate='';
   }
@@ -102,7 +101,7 @@
 
   const lkg=readValid(lkgPath);
   if(lkg){
-    const ok=await execute(lkg,repoFetchFailed||!candidate);
+    const ok=await execute(lkg,true);
     if(ok)return;
     quarantine(lkg);
     remove(lkgPath);
