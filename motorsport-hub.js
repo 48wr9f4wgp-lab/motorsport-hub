@@ -1,4 +1,4 @@
-// Motorsport Hub v9.4.0-hardening — direct category router
+// Motorsport Hub v9.4.1-hardening — direct category module router
 // H1: explicit parameter validation and full-name aliases.
 // H3: expansion categories retain a strict fail-closed lifecycle transform until their modules absorb it directly.
 // H4: every current category now routes directly to a completed/dedicated module. No legacy reliability-wrapper runtime remains.
@@ -51,7 +51,7 @@ function hardenExpansionLifecycle(src){
 async function fail(){await messageWidget('Motorsport Hub','最新版モジュールを安全に実行できません。数分後に再試行します。')}
 
 let code='';
-if(globalThis.__MH_REMOTE_OFFLINE!==true){try{const r=new Request(`${URL}?v=940&t=${Date.now()}-${Math.random()}`);r.timeoutInterval=15;r.headers={'Cache-Control':'no-cache, no-store, max-age=0, must-revalidate','Pragma':'no-cache','Expires':'0','User-Agent':'MotorsportHubRouter/9.4.0-hardening'};code=await r.loadString();if(!valid(code))throw Error('invalid module');fm.writeString(cache,code)}catch(e){globalThis.__MH_REMOTE_OFFLINE=true}}
+if(globalThis.__MH_REMOTE_OFFLINE!==true){try{const r=new Request(`${URL}?v=941&t=${Date.now()}-${Math.random()}`);r.timeoutInterval=15;r.headers={'Cache-Control':'no-cache, no-store, max-age=0, must-revalidate','Pragma':'no-cache','Expires':'0','User-Agent':'MotorsportHubRouter/9.4.1-hardening'};code=await r.loadString();if(!valid(code))throw Error('invalid module');fm.writeString(cache,code)}catch(e){globalThis.__MH_REMOTE_OFFLINE=true}}
 if(!valid(code)){try{if(fm.fileExists(cache)){const c=fm.readString(cache);if(valid(c))code=c;else fm.remove(cache)}}catch(_){} }
 if(!valid(code)){await fail();return}
 try{code=hardenExpansionLifecycle(code)}catch(_){await fail();return}
