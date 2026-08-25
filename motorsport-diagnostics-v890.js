@@ -1,5 +1,5 @@
-// Motorsport Hub v9.4.0-hardening — QA diagnostics
-// Manual diagnostics: checks the eleven current category data dependencies without changing widget cache/state.
+// Motorsport Hub v9.4.1-hardening — QA diagnostics
+// Manual diagnostics: checks the eleven current category data dependencies without changing any widget cache/state.
 (async()=>{
 const C={bg:'#080B10',text:'#F7F9FB',muted:'#AEB8C4',ok:'#58DA8A',bad:'#FF6B6B',warn:'#FFB84D'};
 const tests=[
@@ -7,7 +7,7 @@ const tests=[
   {kind:'json',url:'https://api.jolpi.ca/ergast/f1/2026.json?limit=100',check:x=>((x?.MRData?.RaceTable?.Races||[]).length>=10)},
   {kind:'json',url:'https://api.jolpi.ca/ergast/f1/2026/driverstandings.json',check:x=>((x?.MRData?.StandingsTable?.StandingsLists?.[0]?.DriverStandings||[]).length>=3)}
  ]},
- {name:'WEC',requests:[{kind:'text',url:'https://www.fiawec.com/en/page/manufacturers-classification/34',check:x=>/Manufacturers['’]?\s*standings/i.test(x)&&/FIA Hypercar World Endurance Manufacturers/i.test(x)&&/TOYOTA|BMW|FERRARI/i.test(x)}]},
+ {name:'WEC',requests:[{kind:'text',url:'https://www.fiawec.com/en/page/manufacturers-classification/34',check:x=>/2026/i.test(x)&&/TOYOTA/i.test(x)&&/BMW/i.test(x)&&/FERRARI/i.test(x)&&/(Manufacturer|Manufacturers|Constructeur|Constructeurs|Hypercar)/i.test(x)}]},
  {name:'WRC',requests:[{kind:'text',url:'https://www.fia.com/events/world-rally-championship/season-2026/standings',check:x=>/2026 FIA World Rally Championship for Drivers/i.test(x)&&/Elfyn Evans|Sami Pajari|Takamoto Katsuta/i.test(x)}]},
  {name:'MotoGP',requests:[{kind:'text',url:'https://stats.motogp.com/en/world-standing',check:x=>/Riders'? Championship|RIDERS'? CHAMPIONSHIP/i.test(x)&&/MotoGP/i.test(x)&&/Aprilia|Ducati|Honda|Yamaha|KTM/i.test(x)}]},
  {name:'SUPER GT',requests:[{kind:'text',url:'https://supergt.net/driver_ranking?gt_class=gt500&series=2026',check:x=>/GT\s*500/i.test(x)&&/(?:ドライバーランキング|Driver Ranking)/i.test(x)&&/坪井|野尻|福住|Sho Tsuboi|Tomoki Nojiri/i.test(x)}]},
@@ -18,7 +18,7 @@ const tests=[
  {name:'NASCAR',requests:[{kind:'json',url:'https://cf.nascar.com/cacher/2026/1/points-feed.json',check:x=>Array.isArray(x)&&x.length>=3&&x.slice(0,5).some(d=>d?.driver_name)&&x.slice(0,5).some(d=>Number.isFinite(Number(d?.points)))}]},
  {name:'GTWC EUROPE',requests:[{kind:'text',url:'https://www.gt-world-challenge-europe.com/standings?filter_standing_type=0_0_drivers',check:x=>/Lucas Auer|Maro Engel|Ricardo Feller|GT World Challenge Europe Powered by AWS Drivers/i.test(x)}]}
 ];
-async function request(q){const r=new Request(q.url);r.timeoutInterval=10;r.headers={'User-Agent':'Mozilla/5.0 MotorsportHubQA/9.4','Cache-Control':'no-cache'};const data=q.kind==='json'?await r.loadJSON():await r.loadString();return!!q.check(data)}
+async function request(q){const r=new Request(q.url);r.timeoutInterval=10;r.headers={'User-Agent':'Mozilla/5.0 MotorsportHubQA/9.4.1','Cache-Control':'no-cache'};const data=q.kind==='json'?await r.loadJSON():await r.loadString();return!!q.check(data)}
 const run=async t=>{const s=Date.now();try{const checks=await Promise.all(t.requests.map(request)),ok=checks.every(Boolean);return{name:t.name,ok,ms:Date.now()-s,msg:ok?'LIVE':'PARSE'}}catch(e){return{name:t.name,ok:false,ms:Date.now()-s,msg:'NET'}}};
 const results=await Promise.all(tests.map(run));
 const all=results.every(x=>x.ok),count=results.filter(x=>x.ok).length,w=new ListWidget();w.backgroundColor=new Color(C.bg);w.setPadding(8,14,7,14);
