@@ -1,7 +1,11 @@
 // Motorsport Hub v9.3.1-hardening — module router / explicit parameter validation
 // H1: prevents unknown widget parameters from silently falling back to F1.
+// MH_ROUTER_SCHEMA=5
+// MH_CATEGORY_MANIFEST=F1,WEC,WRC,SUPERGT,MOTOGP,FDJ,D1GP,SUPERFORMULA,INDYCAR,NASCAR,GTWCEU,QA
 // Loader v4 compatibility marker: v8.6.0 motorsport-core-v841.js motorsport-hq-core.js fdj-widget.js
 (async()=>{
+const ROUTER_SCHEMA=5;
+const CATEGORY_MANIFEST='F1,WEC,WRC,SUPERGT,MOTOGP,FDJ,D1GP,SUPERFORMULA,INDYCAR,NASCAR,GTWCEU,QA';
 const labels=['F1','WEC','WRC','SUPER GT','MotoGP','FDJ','D1GP','SUPER FORMULA','INDYCAR','NASCAR Cup','GTWC Europe','QA診断'];
 const params=['F1','WEC','WRC','SUPERGT','MOTOGP','FDJ','D1GP','SUPERFORMULA','INDYCAR','NASCAR','GTWCEU','QA'];
 const norm=v=>String(v||'').trim().toUpperCase().replace(/[\s_-]+/g,'');
@@ -23,6 +27,9 @@ const rawParameter=String(args.widgetParameter||'').trim();
 let selected=norm(rawParameter);
 selected=aliases[selected]||selected;
 
+globalThis.__MH_ROUTER_SCHEMA=ROUTER_SCHEMA;
+globalThis.__MH_ROUTER_MANIFEST=CATEGORY_MANIFEST;
+
 async function messageWidget(title,msg){
   const w=new ListWidget();w.backgroundColor=new Color('#080B10');w.setPadding(12,12,12,12);
   const a=w.addText(title);a.font=Font.boldSystemFont(14);a.textColor=Color.white();
@@ -39,6 +46,7 @@ if(!config.runsInWidget&&!params.includes(selected)){
 }
 if(!selected)selected='F1';
 if(!params.includes(selected)){
+  globalThis.__MH_ROUTER_BOOT_OK=true;
   await messageWidget('Motorsport Hub','Widget Parameterが不正です。設定値を確認してください。'+(rawParameter?`\n入力: ${rawParameter}`:''));
   return;
 }
@@ -72,6 +80,7 @@ try{
 }
 if(!valid(code)){await fail();return}
 
+globalThis.__MH_ROUTER_BOOT_OK=true;
 if(!isQA&&!isD1&&!isSF&&!isINDY&&!isNASCAR&&!isGTWC)globalThis.__MH_UNIVERSAL_PARAMETER=selected;
 try{await eval(code)}catch(e){await fail()}
 finally{try{delete globalThis.__MH_UNIVERSAL_PARAMETER}catch(_){}}
