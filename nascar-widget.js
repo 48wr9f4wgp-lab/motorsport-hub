@@ -1,7 +1,8 @@
-// Motorsport Hub v9.2.0 — NASCAR Cup Series module
-// Official NASCAR public CDN points feed + 2026 Cup schedule. Small / Medium visual system matches Motorsport Hub.
+// Motorsport Hub v9.2.1-hardening — NASCAR Cup Series module
+// Official NASCAR public CDN points feed + 2026 Cup schedule. Visual output remains v9.2.0-compatible.
 (async()=>{
-const V='9.2.0',K='nascar';
+const V='9.2.1-hardening',K='nascar',SEASON=2026,CACHE_SCHEMA=1,CACHE_MAX_AGE=7*86400000;
+const DATA_SOURCE='https://cf.nascar.com/cacher/2026/1/points-feed.json';
 const S={label:'NASCAR',accent:'#FFD23F',url:'https://www.nascar.com/'};
 const C={bg:'#06080B',text:'#F7F9FB',muted:'#B9C2CC',dim:'#8D98A4',good:'#58DA8A',warn:'#FFB84D'};
 const fm=FileManager.local(),DOC=fm.documentsDirectory(),CACHE=fm.joinPath(DOC,'motorsport-data-v920-nascar.json');
@@ -12,7 +13,6 @@ const SNAP={race:'Daytona',start:'2026-08-29T19:30:00-04:00',end:'2026-08-30T01:
  {pos:3,no:'54',name:'Ty Gibbs',points:'880 pts',team:'Joe Gibbs Racing',maker:'TOYOTA'}
 ]};
 
-// Official 2026 NASCAR Cup race start times. End windows intentionally allow a six-hour race/red-flag window.
 const CAL=[
  {race:'Daytona',start:'2026-08-29T19:30:00-04:00',end:'2026-08-30T01:30:00-04:00',circuit:'Daytona International Speedway'},
  {race:'Darlington',start:'2026-09-06T17:00:00-04:00',end:'2026-09-06T23:00:00-04:00',circuit:'Darlington Raceway'},
@@ -40,17 +40,20 @@ const HERO_URLS=[
 const col=(h,a=1)=>new Color(h,a),clone=o=>JSON.parse(JSON.stringify(o));
 async function json(url){const r=new Request(url);r.timeoutInterval=10;r.headers={'User-Agent':'Mozilla/5.0 MotorsportHub/9.2','Cache-Control':'no-cache'};return await r.loadJSON()}
 function nextEvent(d){const now=Date.now();for(const e of CAL){if(Date.parse(e.end)>now)return{...d,...e,seasonEnded:false}}const last=CAL[CAL.length-1];return{...d,...last,seasonEnded:true}}
-function save(d){try{fm.writeString(CACHE,JSON.stringify(d))}catch(_){} }
-function cache(){try{return fm.fileExists(CACHE)?JSON.parse(fm.readString(CACHE)):null}catch(_){return null}}
+function validRanking(a){return Array.isArray(a)&&a.length>=3&&a.slice(0,5).every(r=>r&&Number(r.pos)>=1&&String(r.name||'').trim()&&Number.isFinite(Number(String(r.points||'').replace(/[^0-9.-]/g,''))))}
+function validData(d){return !!d&&typeof d==='object'&&validRanking(d.ranking)&&String(d.race||'').trim()&&String(d.circuit||'').trim()&&Number.isFinite(Date.parse(d.start))&&Number.isFinite(Date.parse(d.end))}
+function removeCache(){try{if(fm.fileExists(CACHE))fm.remove(CACHE)}catch(_){} }
+function save(d){try{if(!validData(d))return;const payload={schemaVersion:CACHE_SCHEMA,category:K,season:SEASON,fetchedAt:Date.now(),source:DATA_SOURCE,ranking:d.ranking,event:{race:d.race,start:d.start,end:d.end,circuit:d.circuit,seasonEnded:!!d.seasonEnded},data:d};fm.writeString(CACHE,JSON.stringify(payload))}catch(_){} }
+function cache(){try{if(!fm.fileExists(CACHE))return null;const p=JSON.parse(fm.readString(CACHE)),age=Date.now()-Number(p?.fetchedAt);if(p?.schemaVersion!==CACHE_SCHEMA||p?.category!==K||Number(p?.season)!==SEASON||p?.source!==DATA_SOURCE||!Number.isFinite(age)||age<0||age>CACHE_MAX_AGE||!validRanking(p?.ranking)||!p?.event||!validData(p?.data)){removeCache();return null}return p.data}catch(_){removeCache();return null}}
 async function update(d){
- const j=await json('https://cf.nascar.com/cacher/2026/1/points-feed.json');
+ const j=await json(DATA_SOURCE);
  if(!Array.isArray(j)||j.length<3)throw Error('NASCAR points');
  const a=j.filter(x=>Number(x?.position)>=1&&Number(x?.position)<=50&&x?.driver_name&&Number.isFinite(Number(x?.points))).sort((x,y)=>Number(x.position)-Number(y.position)).slice(0,5).map(x=>({
   pos:Number(x.position),no:String(x.car_no||''),name:String(x.driver_name||'').trim(),points:`${Number(x.points)} pts`,team:TEAM[String(x.car_no||'')]||'NASCAR Cup',maker:String(x.manufacturer||'').toUpperCase()
  }));
  if(a.length<3)throw Error('NASCAR standings');d.ranking=a;return nextEvent(d)
 }
-async function load(){const base=nextEvent(clone(SNAP));try{const d=await update(base);save(d);return{d,cached:false}}catch(e){return{d:nextEvent(cache()||base),cached:true}}}
+async function load(){const base=nextEvent(clone(SNAP));try{const d=await update(base);save(d);return{d,cached:false}}catch(e){const c=cache();return{d:nextEvent(c||base),cached:true}}}
 function smooth(t){return t*t*(3-2*t)}
 function cover(img,W,H,focus=.54,shift=0){const iw=img.size.width||1,ih=img.size.height||1,s=Math.max(W/iw,H/ih),dw=iw*s,dh=ih*s;return new Rect(-(dw-W)*focus+shift,-(dh-H)*.5,dw,dh)}
 async function hero(){
