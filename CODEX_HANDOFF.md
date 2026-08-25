@@ -1,172 +1,189 @@
 # Motorsport Hub — Codex Handoff / Hardening Branch
 
-## Purpose
-This branch exists so development can continue while Codex is rate-limited without creating merge ambiguity when Codex returns.
-
-## Branch
+## Branch contract
 - Branch: `hardening/v9.3-codex-handoff`
-- Base commit: `a09d16e11aa0f65104ba895b74e09124d30b487b`
-- Base meaning: exact `main` commit audited by Codex on 2026-08-25 JST.
-- `main` must remain untouched by this hardening work until review/merge.
-- Current recorded hardening HEAD after H1/performance bridge: `70a25e767cdcfc9ba1f628cfb3690054671ba925`.
+- Audited base: `a09d16e11aa0f65104ba895b74e09124d30b487b`
+- Base = exact `main` commit audited by Codex on 2026-08-25 JST.
+- `main` has not been modified by this hardening work.
+- Current hardening HEAD recorded here: `e3fd5a4c68272d709d643a341aa35fd1837647a5`.
+- Dakar remains intentionally blocked until P0 hardening is reviewed and device-regressed.
+- No public deployment / release / Store action.
 
-## Audit baseline
-Codex verdict at the base commit: **FAIL**.
-- Critical: 0
-- High: 5
-- Medium: 8
-- Low: 3
+## Codex audit baseline
+Verdict at base: **FAIL**.
+- Critical 0 / High 5 / Medium 8 / Low 3.
 
-Highest-priority findings to close before adding Dakar:
-1. RC-01 stale Loader v4 router cache can silently route newer categories to F1.
-2. RC-02 legacy seven-category season-end behavior can show old events as `次戦`.
-3. RC-03 legacy six-category network path uses a deep serial remote-wrapper chain.
-4. RC-04 remote source validation/LKG promotion is not transactional or immutable.
-5. RC-05 not every runtime-reachable hero fallback is represented in the attribution inventory.
-6. RC-06 data cache lacks schema/category/season/timestamp/TTL validation.
+Primary items being addressed:
+- RC-01 stale Loader/router cache can misroute newer categories to F1.
+- RC-02 season-final behavior can show historical events as `次戦`.
+- RC-03 legacy wrapper waterfall causes repeated remote waits.
+- RC-04 remote candidate/LKG promotion is not transactional/immutable.
+- RC-05 hero fallback inventory is incomplete.
+- RC-06 data cache has no schema/category/season/freshness validation.
+- RC-08 source rewriting can silently no-op.
+- RC-09/16 expansion season-end UI and end-boundary inconsistency.
+- RC-10 invalid parameter silently becomes F1.
 
-## Development rules on this branch
-- No public deployment/release/Store action.
-- No Dakar implementation until the P0 hardening gates are closed.
-- Do not intentionally change accepted Small/Medium visual design.
-- One concern per commit where practical.
-- Every behavior-changing commit must document:
-  - RC finding addressed
-  - files changed
-  - compatibility/migration effect
-  - tests actually run
-  - tests still pending
-- Never claim an unrun test passed.
-- Preserve the audited base SHA so Codex can compare `a09d16e...` → branch HEAD directly.
+## Completed branch work
 
-## Merge strategy when Codex returns
-1. Codex checks out/fetches this branch.
-2. Compare base `a09d16e11aa0f65104ba895b74e09124d30b487b` to branch HEAD.
-3. Re-run full audit and all repository tests.
-4. Review commits individually; avoid wholesale replacement of `main`.
-5. Fix/revert any disputed commit on this branch.
-6. Merge only after device regression gates and Codex review pass.
+### H1 — Router / Loader integrity
+Implemented:
+- Unknown Widget Parameter no longer enters default F1 path.
+- Explicit configuration-error Widget on invalid parameter.
+- `GT World Challenge Europe` full-name alias maps to `GTWCEU`.
+- Router schema marker = 5.
+- Exact manifest marker = `F1,WEC,WRC,SUPERGT,MOTOGP,FDJ,D1GP,SUPERFORMULA,INDYCAR,NASCAR,GTWCEU,QA`.
+- Runtime schema/manifest/boot handshake.
+- `__MH_SOURCE_REF` support for later immutable release pinning.
 
-## Work completed while Codex is unavailable
-
-### H1 — Router parameter integrity
-Implemented on the hardening branch only.
-
-Changes:
-- Unknown widget parameters no longer enter the legacy default path / F1 fallback.
-- Unknown values render an explicit `Widget Parameterが不正です` widget.
-- Added full display-name alias `GT World Challenge Europe` → `GTWCEU`.
-- Added additional explicit aliases for D1GP / NASCAR without changing canonical parameters.
-- Added router schema marker:
-  - `MH_ROUTER_SCHEMA=5`
-- Added exact current category manifest marker:
-  - `F1,WEC,WRC,SUPERGT,MOTOGP,FDJ,D1GP,SUPERFORMULA,INDYCAR,NASCAR,GTWCEU,QA`
-- Added loader/router runtime handshake globals for v5 validation.
-- Added loader-selected source ref support so a future release can pin an immutable commit SHA without rewriting the Router.
+Loader v5 candidate added as `scriptable-loader-v5.js` while v4 remains untouched/installed:
+- candidate / last-known-good / quarantine separated.
+- syntax preflight via `new Function`.
+- stale v8.6 router cache is invalid under schema 5.
+- candidate is promoted only after successful runtime handshake.
+- bad candidate is quarantined instead of replacing LKG.
+- LKG execution enters repo-offline mode.
+- Router fetch timeout = 8 s.
 
 Key commits:
-- `51c499a59d9a90a8d1f7f8726970856a5c528256` — reject unknown parameters / add full GTWC alias.
-- `299161c3491a978ef1a323a7d3e6c71893752adc` — schema + manifest + runtime handshake.
-- `3b00b6848044653578caa2a58711e06e61f7ff00` — loader-selected source ref support.
+- `51c499a59d9a90a8d1f7f8726970856a5c528256`
+- `299161c3491a978ef1a323a7d3e6c71893752adc`
+- `0c4274560e094dc6d8b3db889b20320b030ec758`
+- `70a25e767cdcfc9ba1f628cfb3690054671ba925`
 
-### H1 — Loader v5 migration candidate
-Added new `scriptable-loader-v5.js`; existing `scriptable-loader.js` v4 is intentionally untouched.
+Still open under RC-04:
+- immutable release SHA/tag and content hash manifest are not finalized.
+- Loader v5 has not been installed/device-tested.
 
-Current v5 behavior:
-- Separate `candidate`, `last-known-good`, and `quarantine` files.
-- Candidate must pass schema 5, exact category manifest, required router markers, and `new Function()` syntax preflight.
-- Candidate is not promoted to LKG until router execution returns the expected runtime handshake.
-- Stale v4/v8.6 router cache is not valid under v5.
-- Failed candidate is quarantined rather than replacing the LKG.
-- LKG execution is intentionally repo-offline so it cannot immediately re-enter the same bad/slow remote chain.
-- Router fetch timeout reduced to 8 s for the v5 migration candidate.
+### H4 bridge — outage performance circuit breaker
+Router now opens a repo-raw circuit after the first failed Motorsport Hub GitHub Raw request during one execution. Nested legacy wrappers then fail locally and fall to their caches instead of each consuming another network timeout.
 
-Key commits:
-- `0c4274560e094dc6d8b3db889b20320b030ec758` — initial transactional v5 loader.
-- `70a25e767cdcfc9ba1f628cfb3690054671ba925` — LKG execution forced repo-offline.
+Commit:
+- `6edeb5cc4051999fc8c5ff89fd7d9a3edf4af369`
 
-Not yet complete:
-- v5 has **not** been pasted to / device-tested in Scriptable.
-- v4 remains the installed compatibility path until explicit migration testing.
-- Immutable release SHA / SHA-256 content manifest is still pending; current v5 `ROUTER_REF` remains `main` until the release pinning design is reviewed.
+This is only an interim bridge. **RC-03 is still open** because normal online execution still uses the wrapper waterfall. Final target remains a flattened completed module/bundle.
 
-### H4 bridge — repeated remote-timeout circuit breaker
-This is a bridge, not a replacement for the Codex-recommended legacy flattening.
+### H2 — Data cache integrity for expansion modules
+Applied to:
+- SUPER FORMULA — `bbac1d9d5a37c77518fe6b180890058b425fb7df`
+- INDYCAR — `81db621605ac57d0b97bd06606edfc87a21312a3`
+- NASCAR — `d5c71884e33466db433e7462daacb1b47219ff1c`
+- GTWC Europe — `add80c10b6734685b96b8fdc7672ae3146a40de3`
 
-Router behavior during module execution now wraps `Request.prototype.loadString` only for the scope of the routed module:
-- repo-raw requests are monitored.
-- after the first failed `raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/` request, the repo circuit opens.
-- later nested legacy-wrapper repo requests fail locally and can immediately use their existing caches.
-- non-repo data endpoints are not intentionally blocked by the circuit breaker.
-- the original `Request.prototype.loadString` is restored in `finally`.
+All four now use cache envelope schema 1 with:
+- `schemaVersion`
+- `category`
+- `season`
+- `fetchedAt`
+- `source`
+- `ranking`
+- `event`
+- `data`
 
-This targets RC-03 worst-case outage latency without changing the accepted visual code or rewriting every legacy wrapper before Codex can review the flattening strategy.
+Rules:
+- seven-day max age.
+- category/season/source/schema must match.
+- ranking must be an array with at least 3 valid rows.
+- event timestamps/data shape must validate.
+- malformed, old-format, future-dated, or stale cache is removed and not rendered as validated data.
+- existing cache filenames are retained; old payload format migrates safely on the next successful live refresh, otherwise falls to built-in snapshot.
 
-Key commit:
-- `6edeb5cc4051999fc8c5ff89fd7d9a3edf4af369` — Router repo-raw circuit breaker.
+Added `tests/cache-hardening-gate.mjs` at commit:
+- `261e6701bd951bff4de3f4f771777a27b8f93acc`
 
-Important: **RC-03 is not closed yet.** The runtime wrapper waterfall still exists in normal online operation and must still be flattened later.
+The test reproduces Codex RC-06 `{"ranking":{}}`, old pre-envelope cache, and an 8-day stale envelope for all four modules.
 
-## Tests actually run during this hardening session
-The ChatGPT execution container has no GitHub DNS access, so the repository could not be cloned there. Exact branch file contents were mirrored locally for the focused H1 tests below.
+**This new gate has not been executed in this environment.** Container GitHub DNS is unavailable.
+Legacy seven-category data caches are not yet migrated; RC-06 is therefore only partially closed.
 
-Actually executed:
-- `node --check` on the hardening Router source: **PASS**.
-- `node --check` on `scriptable-loader-v5.js`: **PASS**.
-- Node VM router test:
-  - `GT World Challenge Europe` routes to `gtwc-europe-widget.js`: **PASS**.
-  - `GTWC Europe` routes to `gtwc-europe-widget.js`: **PASS**.
-  - invalid `INDYCARR` makes zero module requests and renders a configuration-error widget: **PASS**.
-- Loader v5 stale-router simulation:
-  - v8.6-style LKG without schema 5 is not executed: **PASS**.
-  - stale invalid LKG is removed and safe failure widget is rendered: **PASS**.
-- Repo-raw circuit-breaker simulation:
-  - nested legacy code attempted three repo-raw loads.
-  - only the first failed call reached the underlying network stub; later calls failed locally: **PASS**.
-- Focused gate output: `Motorsport Hub router hardening gate: PASS`.
+### H5 — Hero inventory / runtime policy
+Added machine-readable `hero-assets.json`:
+- commit `f8a0507e2462054276080a7e31be361dadb869a2`.
+- records active/fallback hero variants for F1, WRC, MotoGP, WEC, SUPER GT, FDJ, D1GP, SUPER FORMULA, INDYCAR, NASCAR, GTWC Europe.
+- includes runtime URL, exact source page, author, license, and modification-notice obligation.
 
-Repository test added:
-- `tests/router-hardening-gate.mjs`
+Newly verified historical fallbacks include:
+- F1 Mercedes / Ferrari / McLaren Japan 2025 — Liauzh / CC BY-SA 4.0.
+- WRC Ogier cropped — TTTNIS / CC0 1.0.
+- MotoGP Bagnaia — Liauzh / CC BY-SA 4.0.
+- WEC Toyota No.8 — MarcelX42 / CC BY-SA 4.0.
+- D1 base S14 — crash71100 / CC0 1.0.
 
-Not run after these branch changes:
-- `node tests/release-gate.mjs`
-- `node tests/boundary-gate.mjs`
-- full repository-wide `node --check`
-- real Scriptable/iPhone device matrix
+SUPER GT hardening:
+- exact license for the old `front three-quarter view` fallback was not directly retrievable.
+- instead of inferring it, active `motorsport-reliability-v896.js` now rewrites **all effective SUPER GT HQ hero candidates** to the previously exact-page verified CC0 No.36 asset.
+- commit `1986aa5ddfb1c82bdae9b95728235b651b4ed67d`.
 
-Those remain mandatory when Codex or another environment with a checkout is available.
+Added `tests/hero-manifest-gate.mjs`:
+- commit `9d0d843cd40116ea40360a4720c3ae0ab8b5a2e3`.
+- checks direct active hero URLs against the manifest and checks the effective SUPER GT policy rather than accepting historical raw HQ URLs as public runtime candidates.
 
-## Planned sequence from here
-### H2 — Cache integrity
-- Add schema/category/season/fetchedAt validation.
-- Reject/quarantine malformed cache.
-- Mark stale data explicitly.
-- Prefer beginning with the four dedicated expansion modules, then migrate legacy paths after golden regression coverage.
+**This new gate has not been executed in this environment.**
 
 ### H3 — Season lifecycle
-- Common `UPCOMING / ACTIVE / SEASON_ENDED` contract.
-- Half-open `[start, end)` boundaries.
-- No historical snapshot returning as `次戦` after the finale.
+Expansion categories now receive a strict fail-closed final Router transform:
+- explicit `UPCOMING / ACTIVE / SEASON_ENDED` lifecycle.
+- half-open `[start,end)` boundary.
+- finale header changes from `次戦` to `シーズン終了`.
+- source transform requires exact hit counts and postconditions; format drift fails closed instead of silently running old logic.
+- Router commit: `3f50d73410b4c3e6304260d73b6b1702a29efb5c`.
 
-### H4 — Performance / legacy flattening
-- Final target remains removal of the runtime patch-wrapper waterfall.
-- Build/test one completed module path rather than serial remote source rewriting.
-- Preserve golden visual output.
-- The current circuit breaker is only an interim resilience/performance improvement.
+Added production-linked VM gate `tests/lifecycle-hardening-gate.mjs`:
+- commit `9ee0b719a79e08ea431449d8d791fb5c36dc9d36`.
+- routes through the real Router and real module source.
+- tests exact event-end transition and post-finale UI for SUPER FORMULA / INDYCAR / NASCAR / GTWC Europe.
+- includes a deliberately broken `nextEvent` source to verify patch mismatch fails closed.
 
-### H5 — Asset manifest / parser hardening
-- Inventory every runtime-reachable hero fallback.
-- Strengthen table identity and fixtures for WRC / SUPER FORMULA / GTWC Europe.
+Legacy lifecycle hardening:
+- D1GP lifecycle + source-ref propagation: `1da1599d25aa02cd0d97d650360d8f7a9b81ccee`.
+- WEC / SUPER GT / MotoGP lifecycle in v8.9.5 layer: `dfb9ed70eac5575dd661d3c482f7f76fd345fcc1`.
+- source-ref propagation through v8.9.4: `7f7f40e02b09fc79889053cba6a98f3570a369b6`.
+- F1 / WRC / FDJ final lifecycle hook injected after v8.9.0 leaf patching: `e3fd5a4c68272d709d643a341aa35fd1837647a5`.
 
-### H6 — Codex rejoin gate
-- Update this file with the latest branch HEAD, commits, tests, unresolved items and device checks.
-- Codex re-runs the full audit before any merge to `main`.
+Remaining H3 issue:
+- F1 online season-final behavior is handled by the final hook, but **offline + no valid cache after the finale still needs an explicit Abu Dhabi final-event fallback** so the built-in Italian snapshot cannot reappear.
+- legacy cache validation is also still pending, so lifecycle work must not yet be considered fully closed.
 
-## Current status
-- `main`: untouched by this hardening session.
-- Hardening branch: active.
-- H1 parameter safety: implemented + focused Node VM PASS.
-- Loader v5: implemented as migration candidate; device QA pending.
-- RC-03 performance: worst-case repeated timeout path reduced by circuit breaker, but full flatten pending.
-- H2/H3/H5: not yet implemented.
-- Dakar: intentionally not started.
+## Tests actually executed vs pending
+
+Actually executed earlier in this hardening session:
+- focused Router syntax check — PASS.
+- Loader v5 syntax check — PASS.
+- VM routing: full GTWC name → GTWC — PASS.
+- invalid `INDYCARR` → zero module requests + error Widget — PASS.
+- stale v8.6 Router LKG rejected by Loader v5 — PASS.
+- repo-raw circuit-breaker focused simulation — PASS.
+- `tests/router-hardening-gate.mjs` focused mirrored run — PASS at that stage.
+
+Environment limitation:
+- container cannot resolve `github.com`, so the branch cannot currently be cloned to run the full repository directly.
+
+Added but **not yet executed after the latest branch changes**:
+- `tests/cache-hardening-gate.mjs`
+- `tests/hero-manifest-gate.mjs`
+- `tests/lifecycle-hardening-gate.mjs`
+
+Also mandatory before merge:
+- `node tests/release-gate.mjs`
+- `node tests/boundary-gate.mjs`
+- full `.js/.mjs` `node --check`
+- all new hardening gates from a real checkout
+- iPhone/Scriptable Small + Medium regression matrix
+- Loader v5 migration/offline/LKG device test
+
+## Next work order
+1. Close F1 offline post-finale fallback.
+2. Migrate legacy seven-category data cache integrity or implement it in the flattened replacement.
+3. Flatten the legacy wrapper waterfall without visual changes; current circuit breaker is not the final architecture.
+4. Harden WRC / SUPER FORMULA / GTWC table identity and add fixtures.
+5. Add category registry/build-time source of truth for Router/diagnostics/tests/docs before Dakar.
+6. Synchronize README / CHANGELOG / RC_QA / RELEASE_AUDIT / ATTRIBUTION after behavior stabilizes.
+7. Codex re-audit base → branch HEAD, then device regression, then merge decision.
+
+## Merge protocol when Codex returns
+1. Fetch `hardening/v9.3-codex-handoff`.
+2. Compare `a09d16e11aa0f65104ba895b74e09124d30b487b` → branch HEAD.
+3. Read this file before modifying anything.
+4. Run every repository/hardening gate and full syntax audit.
+5. Review commits individually; disputed changes are fixed/reverted on this branch, never by overwriting `main` wholesale.
+6. Merge only after Codex audit + device regression pass.
