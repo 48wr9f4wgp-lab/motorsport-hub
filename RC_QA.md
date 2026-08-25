@@ -84,6 +84,29 @@ After the finale the Widget must show `シーズン終了` / `SEASON END`, not a
 - FDJ duplicate RYUMA normalization retained.
 - D1GP driver ranking isolated from single-run ranking.
 
+## Current hardening device evidence
+### 2026-08-26 — QA diagnostic
+- iPhone / Scriptable hardening path: **11/11 LIVE — PASS**.
+- WEC parser false-negative was reproduced at 10/11, fixed, then retested to 11/11 LIVE.
+
+### 2026-08-26 07:48 JST — F1 flat visual regression
+- Module: `f1-widget-flat-v1000.js`
+- Small: **PASS**
+- Medium: **PASS**
+- Event shown: `イタリアGP` / `9/6(日) 22:00` / `Monza`
+- Countdown: `あと12日` — consistent with device date/time.
+- Medium TOP3 rendered correctly and without clipping:
+  1. Andrea Kimi Antonelli — 242
+  2. George Russell — 183
+  3. Lewis Hamilton — 183
+- Hero framing: PASS
+- Left-side readability veil: PASS
+- PTS pills/alignment: PASS
+- Small information hierarchy: PASS
+- No visible flat-migration regression observed in the supplied device screenshot.
+
+F1 is therefore **device-visual LOCKED for the current hardening path**, subject to the still-pending repository gates, cache/offline regression and Codex re-audit.
+
 ## Historical device evidence — baseline only
 Previously observed before the full flatten:
 - original seven: 7/7 live diagnostic PASS.
