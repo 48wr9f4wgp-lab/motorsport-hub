@@ -52,11 +52,13 @@
     Script.complete();
   };
 
-  const execute=async code=>{
+  const execute=async(code,repoOffline=false)=>{
     try{
       delete globalThis.__MH_ROUTER_SCHEMA;
       delete globalThis.__MH_ROUTER_MANIFEST;
       delete globalThis.__MH_ROUTER_BOOT_OK;
+      if(repoOffline)globalThis.__MH_REMOTE_OFFLINE=true;
+      else try{delete globalThis.__MH_REMOTE_OFFLINE}catch(_){}
       globalThis.__MH_SOURCE_REF=ROUTER_REF;
       await eval(code);
       return globalThis.__MH_ROUTER_BOOT_OK===true
@@ -65,10 +67,11 @@
     }catch(_){return false}
     finally{
       try{delete globalThis.__MH_SOURCE_REF}catch(_){}
+      try{delete globalThis.__MH_REMOTE_OFFLINE}catch(_){}
     }
   };
 
-  let candidate='';
+  let candidate='',repoFetchFailed=false;
   try{
     const r=new Request(`${URL}?mhv5=${Date.now()}-${Math.random()}`);
     r.timeoutInterval=8;
@@ -82,12 +85,13 @@
     if(!valid(candidate))throw new Error('Invalid router candidate');
     fm.writeString(candidatePath,candidate);
   }catch(_){
+    repoFetchFailed=true;
     if(candidate&&!valid(candidate))quarantine(candidate);
     candidate='';
   }
 
   if(candidate){
-    const ok=await execute(candidate);
+    const ok=await execute(candidate,false);
     if(ok){
       try{fm.writeString(lkgPath,candidate)}catch(_){}
       remove(candidatePath);
@@ -98,7 +102,7 @@
 
   const lkg=readValid(lkgPath);
   if(lkg){
-    const ok=await execute(lkg);
+    const ok=await execute(lkg,repoFetchFailed||!candidate);
     if(ok)return;
     quarantine(lkg);
     remove(lkgPath);
