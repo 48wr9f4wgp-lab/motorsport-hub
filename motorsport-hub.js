@@ -6,6 +6,7 @@
 (async()=>{
 const ROUTER_SCHEMA=5;
 const CATEGORY_MANIFEST='F1,WEC,WRC,SUPERGT,MOTOGP,FDJ,D1GP,SUPERFORMULA,INDYCAR,NASCAR,GTWCEU,QA';
+const SOURCE_REF=String(globalThis.__MH_SOURCE_REF||'main');
 const labels=['F1','WEC','WRC','SUPER GT','MotoGP','FDJ','D1GP','SUPER FORMULA','INDYCAR','NASCAR Cup','GTWC Europe','QA診断'];
 const params=['F1','WEC','WRC','SUPERGT','MOTOGP','FDJ','D1GP','SUPERFORMULA','INDYCAR','NASCAR','GTWCEU','QA'];
 const norm=v=>String(v||'').trim().toUpperCase().replace(/[\s_-]+/g,'');
@@ -59,7 +60,7 @@ const isNASCAR=selected==='NASCAR';
 const isGTWC=selected==='GTWCEU';
 const file=isQA?'motorsport-diagnostics-v890.js':isD1?'d1gp-reliability-v890.js':isSF?'superformula-widget.js':isINDY?'indycar-widget.js':isNASCAR?'nascar-widget.js':isGTWC?'gtwc-europe-widget.js':'motorsport-reliability-v896.js';
 const key=isQA?'diagnostics-v890':isD1?'d1gp-v890':isSF?'superformula-v900':isINDY?'indycar-v910':isNASCAR?'nascar-v920':isGTWC?'gtwceu-v930':'reliability-v896';
-const URL=`https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/main/${file}`;
+const URL=`https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/${SOURCE_REF}/${file}`;
 const fm=FileManager.local(),cache=fm.joinPath(fm.documentsDirectory(),`motorsport-hub-module-${key}.js`);
 const valid=s=>typeof s==='string'
   &&s.includes('Motorsport Hub')
