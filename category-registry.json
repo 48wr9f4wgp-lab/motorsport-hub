@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "routerSchema": 5,
+  "season": 2026,
+  "categories": [
+    {"id":"F1","displayName":"F1","aliases":["FORMULA1"],"module":"f1-widget-flat-v1000.js","moduleMarker":"flattened F1 pilot module","moduleCacheKey":"f1-flat-v1000","dataCacheSchema":1,"releaseStatus":"HARDENING_FLAT_PILOT"},
+    {"id":"WEC","displayName":"WEC","aliases":[],"module":"motorsport-reliability-v896.js","moduleMarker":"Reliability Pass","moduleCacheKey":"reliability-v896","dataCacheSchema":0,"releaseStatus":"LEGACY_HARDENING"},
+    {"id":"WRC","displayName":"WRC","aliases":[],"module":"motorsport-reliability-v896.js","moduleMarker":"Reliability Pass","moduleCacheKey":"reliability-v896","dataCacheSchema":0,"releaseStatus":"LEGACY_HARDENING"},
+    {"id":"SUPERGT","displayName":"SUPER GT","aliases":["SUPER GT"],"module":"motorsport-reliability-v896.js","moduleMarker":"Reliability Pass","moduleCacheKey":"reliability-v896","dataCacheSchema":0,"releaseStatus":"LEGACY_HARDENING"},
+    {"id":"MOTOGP","displayName":"MotoGP","aliases":["MOTO GP"],"module":"motorsport-reliability-v896.js","moduleMarker":"Reliability Pass","moduleCacheKey":"reliability-v896","dataCacheSchema":0,"releaseStatus":"LEGACY_HARDENING"},
+    {"id":"FDJ","displayName":"FDJ","aliases":["FORMULA DRIFT JAPAN"],"module":"motorsport-reliability-v896.js","moduleMarker":"Reliability Pass","moduleCacheKey":"reliability-v896","dataCacheSchema":0,"releaseStatus":"LEGACY_HARDENING"},
+    {"id":"D1GP","displayName":"D1GP","aliases":["D1","D1 GRAND PRIX"],"module":"d1gp-reliability-v890.js","moduleMarker":"D1GP reliability wrapper","moduleCacheKey":"d1gp-v890","dataCacheSchema":0,"releaseStatus":"LEGACY_HARDENING"},
+    {"id":"SUPERFORMULA","displayName":"SUPER FORMULA","aliases":["SF","SUPERF"],"module":"superformula-widget.js","moduleMarker":"SUPER FORMULA module","moduleCacheKey":"superformula-v900","dataCacheSchema":1,"releaseStatus":"LOCKED_VISUAL_HARDENING"},
+    {"id":"INDYCAR","displayName":"INDYCAR","aliases":["INDY"],"module":"indycar-widget.js","moduleMarker":"INDYCAR module","moduleCacheKey":"indycar-v910","dataCacheSchema":1,"releaseStatus":"LOCKED_VISUAL_HARDENING"},
+    {"id":"NASCAR","displayName":"NASCAR Cup","aliases":["CUP","NASCAR CUP","NASCAR CUP SERIES"],"module":"nascar-widget.js","moduleMarker":"NASCAR Cup Series module","moduleCacheKey":"nascar-v920","dataCacheSchema":1,"releaseStatus":"LOCKED_VISUAL_HARDENING"},
+    {"id":"GTWCEU","displayName":"GTWC Europe","aliases":["GTWC","GTWC EUROPE","GT WORLD CHALLENGE EUROPE"],"module":"gtwc-europe-widget.js","moduleMarker":"GT World Challenge Europe module","moduleCacheKey":"gtwceu-v930","dataCacheSchema":1,"releaseStatus":"DEVICE_QA_PENDING"}
+  ],
+  "qa":{"id":"QA","displayName":"QA診断","module":"motorsport-diagnostics-v890.js","moduleMarker":"QA diagnostics","moduleCacheKey":"diagnostics-v890"},
+  "planned":[{"id":"DAKAR","displayName":"Dakar Rally","status":"BLOCKED_UNTIL_HARDENING_REVIEW"}]
+}
