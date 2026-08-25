@@ -1,7 +1,7 @@
-// Motorsport Hub v9.3.3-hardening — module router / F1 flatten pilot
-// H1: prevents unknown widget parameters from silently falling back to F1.
+// Motorsport Hub v9.3.4-hardening — module router / F1 flatten pilot
+// H1: explicit parameter validation and full-name aliases.
 // H3: expansion categories use explicit UPCOMING / ACTIVE / SEASON_ENDED lifecycle with [start,end) boundaries.
-// H4: F1 now uses a completed dedicated module on this hardening branch; remaining legacy categories retain the bridge circuit breaker.
+// H4: F1 uses a completed dedicated module on this hardening branch; remaining legacy categories retain the bridge circuit breaker.
 // MH_ROUTER_SCHEMA=5
 // MH_CATEGORY_MANIFEST=F1,WEC,WRC,SUPERGT,MOTOGP,FDJ,D1GP,SUPERFORMULA,INDYCAR,NASCAR,GTWCEU,QA
 // Loader v4 compatibility marker: v8.6.0 motorsport-core-v841.js motorsport-hq-core.js fdj-widget.js
@@ -12,7 +12,12 @@ const SOURCE_REF=String(globalThis.__MH_SOURCE_REF||'main');
 const labels=['F1','WEC','WRC','SUPER GT','MotoGP','FDJ','D1GP','SUPER FORMULA','INDYCAR','NASCAR Cup','GTWC Europe','QA診断'];
 const params=['F1','WEC','WRC','SUPERGT','MOTOGP','FDJ','D1GP','SUPERFORMULA','INDYCAR','NASCAR','GTWCEU','QA'];
 const norm=v=>String(v||'').trim().toUpperCase().replace(/[\s_-]+/g,'');
-const aliases={D1:'D1GP',D1GRANDPRIX:'D1GP',SF:'SUPERFORMULA',SUPERF:'SUPERFORMULA',INDY:'INDYCAR',NASCARCUP:'NASCAR',NASCARCUPSERIES:'NASCAR',CUP:'NASCAR',GTWC:'GTWCEU',GTWCEUROPE:'GTWCEU',GTWCEU:'GTWCEU',GTWORLDCHALLENGEEUROPE:'GTWCEU'};
+const aliases={
+ FORMULA1:'F1',FORMULADRIFTJAPAN:'FDJ',
+ D1:'D1GP',D1GRANDPRIX:'D1GP',SF:'SUPERFORMULA',SUPERF:'SUPERFORMULA',INDY:'INDYCAR',
+ NASCARCUP:'NASCAR',NASCARCUPSERIES:'NASCAR',CUP:'NASCAR',
+ GTWC:'GTWCEU',GTWCEUROPE:'GTWCEU',GTWCEU:'GTWCEU',GTWORLDCHALLENGEEUROPE:'GTWCEU'
+};
 const rawParameter=String(args.widgetParameter||'').trim();let selected=norm(rawParameter);selected=aliases[selected]||selected;
 
 globalThis.__MH_ROUTER_SCHEMA=ROUTER_SCHEMA;globalThis.__MH_ROUTER_MANIFEST=CATEGORY_MANIFEST;
@@ -43,7 +48,7 @@ function hardenExpansionLifecycle(src){
 async function fail(){await messageWidget('Motorsport Hub','最新版モジュールを安全に実行できません。数分後に再試行します。')}
 
 let code='';
-if(globalThis.__MH_REMOTE_OFFLINE!==true){try{const r=new Request(`${URL}?v=933&t=${Date.now()}-${Math.random()}`);r.timeoutInterval=15;r.headers={'Cache-Control':'no-cache, no-store, max-age=0, must-revalidate','Pragma':'no-cache','Expires':'0','User-Agent':'MotorsportHubRouter/9.3.3-hardening'};code=await r.loadString();if(!valid(code))throw Error('invalid module');fm.writeString(cache,code)}catch(e){globalThis.__MH_REMOTE_OFFLINE=true}}
+if(globalThis.__MH_REMOTE_OFFLINE!==true){try{const r=new Request(`${URL}?v=934&t=${Date.now()}-${Math.random()}`);r.timeoutInterval=15;r.headers={'Cache-Control':'no-cache, no-store, max-age=0, must-revalidate','Pragma':'no-cache','Expires':'0','User-Agent':'MotorsportHubRouter/9.3.4-hardening'};code=await r.loadString();if(!valid(code))throw Error('invalid module');fm.writeString(cache,code)}catch(e){globalThis.__MH_REMOTE_OFFLINE=true}}
 if(!valid(code)){try{if(fm.fileExists(cache)){const c=fm.readString(cache);if(valid(c))code=c;else fm.remove(cache)}}catch(_){} }
 if(!valid(code)){await fail();return}
 try{code=hardenExpansionLifecycle(code)}catch(_){await fail();return}
