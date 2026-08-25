@@ -1,7 +1,8 @@
-// Motorsport Hub v9.3.0 — GT World Challenge Europe module
-// Official GTWC Europe overall driver standings + remaining 2026 calendar. Small / Medium visual system matches Motorsport Hub.
+// Motorsport Hub v9.3.1-hardening — GT World Challenge Europe module
+// Official GTWC Europe overall driver standings + remaining 2026 calendar. Visual output remains v9.3.0-compatible.
 (async()=>{
-const V='9.3.0',K='gtwceu';
+const V='9.3.1-hardening',K='gtwceu',SEASON=2026,CACHE_SCHEMA=1,CACHE_MAX_AGE=7*86400000;
+const DATA_SOURCE='https://www.gt-world-challenge-europe.com/standings?filter_standing_type=0_0_drivers';
 const S={label:'GTWC EUROPE',accent:'#00D1B2',url:'https://www.gt-world-challenge-europe.com/'};
 const C={bg:'#06080B',text:'#F7F9FB',muted:'#B9C2CC',dim:'#8D98A4',good:'#58DA8A',warn:'#FFB84D'};
 const fm=FileManager.local(),DOC=fm.documentsDirectory(),CACHE=fm.joinPath(DOC,'motorsport-data-v930-gtwceu.json');
@@ -36,11 +37,14 @@ const clean=s=>String(s||'').replace(/<script[\s\S]*?<\/script>/gi,' ').replace(
 function rows(h){const out=[];for(const tr of String(h||'').match(/<tr\b[\s\S]*?<\/tr>/gi)||[]){const a=[];let m,re=/<t[dh]\b[^>]*>([\s\S]*?)<\/t[dh]>/gi;while((m=re.exec(tr)))a.push(clean(m[1]));if(a.length)out.push(a)}return out}
 async function txt(url){const r=new Request(url);r.timeoutInterval=10;r.headers={'User-Agent':'Mozilla/5.0 MotorsportHub/9.3','Cache-Control':'no-cache'};return await r.loadString()}
 function nextEvent(d){const now=Date.now();for(const e of CAL){if(Date.parse(e.end)>now)return{...d,...e,seasonEnded:false}}const last=CAL[CAL.length-1];return{...d,...last,seasonEnded:true}}
-function save(d){try{fm.writeString(CACHE,JSON.stringify(d))}catch(_){} }
-function cache(){try{return fm.fileExists(CACHE)?JSON.parse(fm.readString(CACHE)):null}catch(_){return null}}
+function validRanking(a){return Array.isArray(a)&&a.length>=3&&a.slice(0,5).every(r=>r&&Number(r.pos)>=1&&String(r.name||'').trim()&&Number.isFinite(Number(String(r.points||'').replace(/[^0-9.-]/g,''))))}
+function validData(d){return !!d&&typeof d==='object'&&validRanking(d.ranking)&&String(d.race||'').trim()&&String(d.circuit||'').trim()&&Number.isFinite(Date.parse(d.start))&&Number.isFinite(Date.parse(d.end))}
+function removeCache(){try{if(fm.fileExists(CACHE))fm.remove(CACHE)}catch(_){} }
+function save(d){try{if(!validData(d))return;const payload={schemaVersion:CACHE_SCHEMA,category:K,season:SEASON,fetchedAt:Date.now(),source:DATA_SOURCE,ranking:d.ranking,event:{race:d.race,start:d.start,end:d.end,circuit:d.circuit,seasonEnded:!!d.seasonEnded},data:d};fm.writeString(CACHE,JSON.stringify(payload))}catch(_){} }
+function cache(){try{if(!fm.fileExists(CACHE))return null;const p=JSON.parse(fm.readString(CACHE)),age=Date.now()-Number(p?.fetchedAt);if(p?.schemaVersion!==CACHE_SCHEMA||p?.category!==K||Number(p?.season)!==SEASON||p?.source!==DATA_SOURCE||!Number.isFinite(age)||age<0||age>CACHE_MAX_AGE||!validRanking(p?.ranking)||!p?.event||!validData(p?.data)){removeCache();return null}return p.data}catch(_){removeCache();return null}}
 function metaFor(names){const u=names.map(x=>x.toUpperCase());return META.find(m=>m.names.every(n=>u.some(x=>x.includes(n)||n.includes(x))))||null}
 async function update(d){
- const h=await txt('https://www.gt-world-challenge-europe.com/standings?filter_standing_type=0_0_drivers'),groups=new Map();
+ const h=await txt(DATA_SOURCE),groups=new Map();
  for(const c of rows(h)){
   if(c.length<3)continue;const p=num(c[0]),name=String(c[1]||'').trim(),pts=num(c[2]);
   if(!(p>=1&&p<=60)||!name||!isFinite(pts))continue;
@@ -50,7 +54,7 @@ async function update(d){
  const seen=new Set();for(const g of ranked){if(seen.has(g.pos))continue;seen.add(g.pos);const m=metaFor(g.names);out.push({pos:g.pos,name:g.names.join(' / '),points:`${g.points} pts`,no:m?.no||'',machine:m?.machine||'GT3',team:m?.team||'GTWC Europe'});if(out.length>=5)break}
  if(out.length<3)throw Error('GTWC Europe standings');d.ranking=out;return nextEvent(d)
 }
-async function load(){const base=nextEvent(clone(SNAP));try{const d=await update(base);save(d);return{d,cached:false}}catch(e){return{d:nextEvent(cache()||base),cached:true}}}
+async function load(){const base=nextEvent(clone(SNAP));try{const d=await update(base);save(d);return{d,cached:false}}catch(e){const c=cache();return{d:nextEvent(c||base),cached:true}}}
 function smooth(t){return t*t*(3-2*t)}
 function cover(img,W,H,focus=.54,shift=0){const iw=img.size.width||1,ih=img.size.height||1,s=Math.max(W/iw,H/ih),dw=iw*s,dh=ih*s;return new Rect(-(dw-W)*focus+shift,-(dh-H)*.5,dw,dh)}
 async function hero(){
