@@ -26,6 +26,7 @@ async function runRouter(parameter){
     async loadString(){
       if(this.url.includes('f1-widget-flat-v1000.js'))return "// Motorsport Hub flattened F1 pilot module\n(async()=>{Script.complete()})();";
       if(this.url.includes('fdj-widget-flat-v1000.js'))return "// Motorsport Hub flattened Formula Drift Japan module\n(async()=>{Script.complete()})();";
+      if(this.url.includes('motogp-widget-flat-v1000.js'))return "// Motorsport Hub flattened MotoGP module\n(async()=>{Script.complete()})();";
       if(this.url.includes('gtwc-europe-widget.js'))return "// Motorsport Hub GT World Challenge Europe module\n(async()=>{Script.complete()})();";
       if(this.url.includes('motorsport-reliability-v896.js'))return "// Motorsport Hub Reliability Pass\n(async()=>{Script.complete()})();";
       return "// Motorsport Hub QA diagnostics\n(async()=>{Script.complete()})();";
@@ -52,6 +53,9 @@ async function runRouter(parameter){
   const r=await runRouter('Formula Drift Japan');assert.equal(r.requests.length,1);assert.match(r.requests[0],/fdj-widget-flat-v1000\.js/);
 }
 {
+  const r=await runRouter('MotoGP');assert.equal(r.requests.length,1,'MotoGP hardening path must make exactly one repo module request');assert.match(r.requests[0],/motogp-widget-flat-v1000\.js/,'MotoGP must route to flattened completed module');assert.doesNotMatch(r.requests[0],/motorsport-reliability-v896/,'MotoGP must no longer enter legacy wrapper path on hardening branch');
+}
+{
   const r=await runRouter('GT World Challenge Europe');assert.equal(r.requests.length,1);assert.match(r.requests[0],/gtwc-europe-widget\.js/);
 }
 {
@@ -73,7 +77,7 @@ assert.match(loader,/motorsport-hub-router-v5-candidate\.js/);assert.match(loade
   assert.equal(ctx.__STALE_EXECUTED,undefined,'stale v4 router cache must never execute under loader v5');assert.equal(fm.files.has(lkg),false,'invalid stale LKG should be removed');assert.equal(setWidget,1,'loader should render a safe failure widget when no current LKG exists');assert.equal(completed,1);
 }
 
-// Circuit breaker remains relevant for categories still on the legacy wrapper path. Use WEC, not flattened F1/FDJ.
+// Circuit breaker remains relevant for categories still on the legacy wrapper path. Use WEC, not flattened F1/FDJ/MotoGP.
 {
   let repoNetworkCalls=0,completed=0;
   const nestedModule=`// Motorsport Hub Reliability Pass\n(async()=>{for(let i=0;i<3;i++){try{const r=new Request('https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/main/legacy-'+i+'.js');await r.loadString()}catch(_){}}Script.complete()})();`;
