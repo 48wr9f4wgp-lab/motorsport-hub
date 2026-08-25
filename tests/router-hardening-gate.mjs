@@ -105,4 +105,30 @@ assert.match(loader,/new Function/,'loader must syntax-preflight router candidat
   assert.equal(completed,1);
 }
 
+// When the first nested repo-raw request fails, later legacy-wrapper repo requests should fail locally
+// without reaching the underlying network implementation again.
+{
+  let repoNetworkCalls=0,completed=0;
+  const nestedModule=`// Motorsport Hub Reliability Pass\n(async()=>{for(let i=0;i<3;i++){try{const r=new Request('https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/main/legacy-'+i+'.js');await r.loadString()}catch(_){}}Script.complete()})();`;
+  class Request {
+    constructor(url){this.url=url;this.headers={}}
+    async loadString(){
+      if(this.url.includes('motorsport-reliability-v896.js'))return nestedModule;
+      if(this.url.includes('raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/')){repoNetworkCalls++;throw new Error('repo raw outage')}
+      return'';
+    }
+  }
+  const fm=makeFM();
+  const ctx={
+    args:{widgetParameter:'F1'},config:{runsInWidget:true,widgetFamily:'medium'},
+    FileManager:{local:()=>fm},Request,ListWidget,Color,Font,Date,Math,
+    Script:{complete(){completed++},setWidget(){}},
+  };
+  ctx.globalThis=ctx;
+  vm.createContext(ctx);
+  await vm.runInContext(router,ctx);
+  assert.equal(repoNetworkCalls,1,'only the first failed nested repo request should hit the underlying network');
+  assert.equal(completed,1);
+}
+
 console.log('Motorsport Hub router hardening gate: PASS');
