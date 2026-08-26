@@ -1,5 +1,5 @@
-// Motorsport Hub v9.4.2-hardening — QA diagnostics
-// Manual diagnostics: checks the eleven current category data dependencies without changing any widget cache/state.
+// Motorsport Hub v9.5.0-hardening — QA diagnostics
+// Manual diagnostics: checks the twelve current category data dependencies without changing any widget cache/state.
 (async()=>{
 const C={bg:'#080B10',text:'#F7F9FB',muted:'#AEB8C4',ok:'#58DA8A',bad:'#FF6B6B',warn:'#FFB84D'};
 const tests=[
@@ -16,18 +16,22 @@ const tests=[
  {name:'SUPER FORMULA',requests:[{kind:'text',url:'https://superformula.net/sf2/race2026/standings',check:x=>/太田\s*格之進|岩佐\s*歩夢|イゴール.*フラガ|Driver Standings/i.test(x)}]},
  {name:'INDYCAR',requests:[{kind:'text',url:'https://www.indycar.com/standings/',check:x=>/Alex Palou|Kyle Kirkwood|Christian Lundgaard|Championship Standings/i.test(x)}]},
  {name:'NASCAR',requests:[{kind:'json',url:'https://cf.nascar.com/cacher/2026/1/points-feed.json',check:x=>Array.isArray(x)&&x.length>=3&&x.slice(0,5).some(d=>d?.driver_name)&&x.slice(0,5).some(d=>Number.isFinite(Number(d?.points)))}]},
- {name:'GTWC EUROPE',requests:[{kind:'text',url:'https://www.gt-world-challenge-europe.com/standings?filter_standing_type=0_0_drivers',check:x=>/Lucas Auer|Maro Engel|Ricardo Feller|GT World Challenge Europe Powered by AWS Drivers/i.test(x)}]}
+ {name:'GTWC EUROPE',requests:[{kind:'text',url:'https://www.gt-world-challenge-europe.com/standings?filter_standing_type=0_0_drivers',check:x=>/Lucas Auer|Maro Engel|Ricardo Feller|GT World Challenge Europe Powered by AWS Drivers/i.test(x)}]},
+ {name:'DAKAR',requests:[
+  {kind:'text',url:'https://www.dakar.com/en/overall-route?iframe=true',check:x=>/2027/i.test(x)&&/Stage 13/i.test(x)&&/King Abdullah Economic City/i.test(x)},
+  {kind:'text',url:'https://www.dakar.com/fr/webview/rankings/stage-13/auto?year=2026',check:x=>/NASSER AL-ATTIYAH/i.test(x)&&/NANI ROMA/i.test(x)&&/MATTIAS EKSTR[ÖO]M/i.test(x)}
+ ]}
 ];
-async function request(q){const r=new Request(q.url);r.timeoutInterval=10;r.headers={'User-Agent':'Mozilla/5.0 MotorsportHubQA/9.4.2','Cache-Control':'no-cache'};const data=q.kind==='json'?await r.loadJSON():await r.loadString();return!!q.check(data)}
+async function request(q){const r=new Request(q.url);r.timeoutInterval=10;r.headers={'User-Agent':'Mozilla/5.0 MotorsportHubQA/9.5.0','Cache-Control':'no-cache'};const data=q.kind==='json'?await r.loadJSON():await r.loadString();return!!q.check(data)}
 const run=async t=>{const s=Date.now();try{const checks=await Promise.all(t.requests.map(request)),ok=checks.every(Boolean);return{name:t.name,ok,ms:Date.now()-s,msg:ok?'LIVE':'PARSE'}}catch(e){return{name:t.name,ok:false,ms:Date.now()-s,msg:'NET'}}};
 const results=await Promise.all(tests.map(run));
 const all=results.every(x=>x.ok),count=results.filter(x=>x.ok).length,w=new ListWidget();w.backgroundColor=new Color(C.bg);w.setPadding(8,14,7,14);
 const title=w.addText('Motorsport Hub  QA');title.font=Font.heavySystemFont(15.5);title.textColor=new Color(C.text);
-const sub=w.addText(all?'11/11 LIVE — データ経路OK':`${count}/11 LIVE — 要確認`);sub.font=Font.semiboldSystemFont(9.2);sub.textColor=new Color(all?C.ok:C.warn);w.addSpacer(3);
-for(const x of results){const row=w.addStack();row.layoutHorizontally();row.centerAlignContent();const a=row.addText('●');a.font=Font.boldSystemFont(8.8);a.textColor=new Color(x.ok?C.ok:C.bad);row.addSpacer(5);const n=row.addText(x.name);n.font=Font.semiboldSystemFont(8.9);n.textColor=new Color(C.text);n.lineLimit=1;n.minimumScaleFactor=.64;row.addSpacer();const st=row.addText(`${x.msg}  ${x.ms}ms`);st.font=Font.systemFont(7.7);st.textColor=new Color(x.ok?C.muted:C.bad);w.addSpacer(1)}
+const sub=w.addText(all?'12/12 LIVE — データ経路OK':`${count}/12 LIVE — 要確認`);sub.font=Font.semiboldSystemFont(9.2);sub.textColor=new Color(all?C.ok:C.warn);w.addSpacer(3);
+for(const x of results){const row=w.addStack();row.layoutHorizontally();row.centerAlignContent();const a=row.addText('●');a.font=Font.boldSystemFont(8.3);a.textColor=new Color(x.ok?C.ok:C.bad);row.addSpacer(5);const n=row.addText(x.name);n.font=Font.semiboldSystemFont(8.3);n.textColor=new Color(C.text);n.lineLimit=1;n.minimumScaleFactor=.60;row.addSpacer();const st=row.addText(`${x.msg}  ${x.ms}ms`);st.font=Font.systemFont(7.3);st.textColor=new Color(x.ok?C.muted:C.bad);w.addSpacer(.5)}
 const rel=globalThis.__MH_RELEASE_INTEGRITY,src=String(rel?.sourceRef||''),pinned=/^[0-9a-f]{40}$/i.test(src),hasRel=!!rel;
 const path=pinned?(globalThis.__MH_REMOTE_OFFLINE===true?'LKG':'CANDIDATE'):'DEV';
 const footText=pinned?`IMMUTABLE ✓ · ${path} · ${src.slice(0,12)}`:(hasRel?'INTEGRITY INVALID':'DEV ROUTER · integrity OFF');
-const foot=w.addText(footText);foot.font=Font.semiboldSystemFont(7.2);foot.textColor=new Color(pinned?C.ok:(hasRel?C.bad:C.muted));foot.lineLimit=1;w.refreshAfterDate=new Date(Date.now()+10*60000);
+const foot=w.addText(footText);foot.font=Font.semiboldSystemFont(7.0);foot.textColor=new Color(pinned?C.ok:(hasRel?C.bad:C.muted));foot.lineLimit=1;w.refreshAfterDate=new Date(Date.now()+10*60000);
 if(config.runsInWidget)Script.setWidget(w);else await w.presentMedium();Script.complete();
 })();
