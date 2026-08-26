@@ -61,6 +61,7 @@ jobs:
             tests/fdj-flat-gate.mjs
             tests/d1gp-flat-gate.mjs
             tests/dakar-gate.mjs
+            tests/tap-action-gate.mjs
           )
           for gate in "${gates[@]}"; do
             echo "::group::$gate"
