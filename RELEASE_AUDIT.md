@@ -2,222 +2,169 @@
 
 ## Current decision
 - Branch: `hardening/v9.3-codex-handoff`
-- Audited base: `a09d16e11aa0f65104ba895b74e09124d30b487b`
-- Current branch is a **hardening candidate, not a release-approved build**.
-- `main` has not been modified by this hardening work.
-- No public release / Store action has been performed.
+- Original Codex-audited base: `a09d16e11aa0f65104ba895b74e09124d30b487b`
+- Current scope: **12 categories + QA**.
+- `main` has not been modified by this hardening line.
+- Public release / Store action: **not performed**.
 
-Current status:
-
-**AUTOMATED GATES PASS + LOADER V6 DEVICE QA PASS / CODEX RE-AUDIT PENDING**
+**Decision: NOT RELEASE APPROVED — 12-CATEGORY AUTOMATED GREEN / DAKAR TARGETED DEVICE QA + CODEX FINAL QUALITY PASS PENDING**
 
 ---
 
-## Architecture status
-The current Router is a direct category-module Router for 11 categories + QA.
+## Current architecture
+Direct Router routes exactly one category module per selected category:
+- F1, WEC, WRC, SUPER GT, MotoGP, FDJ, D1GP
+- SUPER FORMULA, INDYCAR, NASCAR, GTWC Europe
+- **Dakar Rally**
+- QA
 
-Original seven:
-- F1 → `f1-widget-flat-v1000.js`
-- WEC → `wec-widget-flat-v1000.js`
-- WRC → `wrc-widget-flat-v1000.js`
-- SUPER GT → `supergt-widget-flat-v1000.js`
-- MotoGP → `motogp-widget-flat-v1000.js`
-- FDJ → `fdj-widget-flat-v1000.js`
-- D1GP → `d1gp-widget-flat-v1000.js`
-
-Expansion:
-- SUPER FORMULA → `superformula-widget.js`
-- INDYCAR → `indycar-widget.js`
-- NASCAR → `nascar-widget.js`
-- GTWC Europe → `gtwc-europe-widget.js`
-
-QA:
-- `motorsport-diagnostics-v890.js`
-
-Current Router has:
-- no v8.9 reliability-wrapper runtime path;
-- no nested category-wrapper waterfall;
+Current Router:
+- no legacy v8.9 wrapper waterfall;
 - no runtime source rewriting;
-- explicit invalid-parameter failure;
-- Router schema/manifest handshake;
+- explicit invalid-parameter error;
+- schema/manifest handshake;
 - optional immutable SHA-256 release integrity enforcement.
 
+Manifest:
+`F1,WEC,WRC,SUPERGT,MOTOGP,FDJ,D1GP,SUPERFORMULA,INDYCAR,NASCAR,GTWCEU,DAKAR,QA`
+
 ---
 
-## Audit finding status
-| Finding | Current hardening status |
+## Original audit finding status
+| Finding | Current state |
 | --- | --- |
-| RC-01 stale Router/LKG routing | Loader v6 uses release-namespaced candidate/LKG/quarantine; stale/mismatched release caches are not accepted; device candidate + offline LKG path PASS |
-| RC-02 historical event shown as next race | All 11 modules implement explicit lifecycle; deterministic boundary/lifecycle gates PASS |
-| RC-03 serial wrapper waterfall | **Structurally removed from current Router**; direct modules enforced by CI |
-| RC-04 mutable/unverified release source | Immutable commit + byte length + SHA-256 Router/module verification implemented; automated tamper tests PASS; online candidate + fully offline verified-LKG iPhone QA PASS; Codex hostile re-audit remains |
-| RC-05 incomplete Hero inventory | Runtime-only Hero manifest + exact URL-set gate PASS |
-| RC-06 unsafe data cache | Schema-1 validated cache implemented for all 11 categories; cache gate PASS |
-| RC-08 silent runtime source rewrite | **Closed in current architecture**; Router source transform removed and expansion lifecycle baked into modules |
-| RC-09/16 season lifecycle/boundaries | Half-open lifecycle and finale behavior enforced by deterministic gates |
-| RC-10 invalid parameter → F1 | Explicit invalid-parameter error path implemented and Router gate PASS |
+| RC-01 stale Router/LKG misrouting | release-namespaced immutable Loader v6 candidate/LKG/quarantine; old mismatched Router not accepted; prior iPhone candidate/LKG PASS |
+| RC-02 historical next-event display | explicit lifecycle / deterministic boundaries for current modules |
+| RC-03 serial wrapper waterfall | **structurally removed** |
+| RC-04 mutable/unverified release source | immutable SHA/bytes verification implemented, automated tamper tests PASS, previous real iPhone Candidate+LKG PASS; Codex hostile re-audit remains |
+| RC-05 Hero inventory | exact runtime/manifest URL-set Gate PASS; Dakar added with exact Commons license record |
+| RC-06 unsafe data cache | schema-1 cache across all 12 categories |
+| RC-07 parser false positives | series-specific identity/parsing gates materially improved; Codex should re-attack current pages |
+| RC-08 runtime source rewrite | **closed in current Router architecture** |
+| RC-09/16 lifecycle/end-boundary inconsistency | half-open contracts; Dakar has dedicated stage boundary Gate |
+| RC-10 invalid parameter → F1 | explicit fail path + alias tests |
+| RC-11 docs drift | current RC/Handoff/Audit being synchronized to 12 categories |
+| RC-12 duplicated category integration | Registry + CI-generated manifest/integrity packaging reduce integration drift; architectural consolidation still a Codex quality-review topic |
+| RC-13 timezone compatibility | still suitable for Codex/device compatibility review |
+| RC-14 preview exception edge | low-priority Codex review |
+| RC-15 long/unknown metadata | risk-based visual/fixture review remains useful |
 
 ---
 
-## Immutable release hardening
-Release packaging tool:
-- `tools/generate-release-package.mjs`
+## Latest automated evidence
+Hardening CI Dakar integration run:
+- Run #53 / ID `32960344219`
+- Head `f8ccb14b69adeb538a59f061425fe73bc2ee582d`
+- **SUCCESS**
 
-Release descriptor contains:
-- immutable 40-char commit SHA;
-- Router SHA-256 + byte length;
-- all 11 category modules + QA SHA-256 + byte length;
-- Router schema;
-- category manifest;
-- release namespace.
+Global functional smoke:
+- **24/24 PASS = 12 categories × Small/Medium**
 
-Generated Loader v6:
-- fetches Router from immutable commit SHA, not mutable `main`;
-- validates syntax, markers, byte length and SHA-256 before execution;
-- passes integrity descriptor to Router;
-- Router validates the selected module byte length and SHA-256;
-- release-namespaces candidate/LKG/quarantine caches;
-- offline fallback runs only verified immutable LKG;
-- tampered Router/module/sourceRef mismatch fails closed.
+Dakar dedicated Gate covers:
+- CAR ranking parser fixture;
+- schema-1 cache;
+- pre-start `2026 FINAL` overall;
+- Small next-stage-only hierarchy;
+- Medium `総合 CAR / GAP` hierarchy;
+- exact Prologue→Stage1 boundary;
+- final Stage13 behavior.
 
-Automated evidence:
-- `tests/integrity-gate.mjs`: PASS
-- `tests/release-package-generator-gate.mjs`: PASS
-
-### iPhone / Scriptable Loader v6 evidence — 2026-08-26
-Fixed sourceRef:
-- `1f22919dc2a89053bff60f96b4c173ba6fb49076`
-
-Online immutable candidate:
-- `11/11 LIVE — データ経路OK`
-- `IMMUTABLE ✓ · CANDIDATE · 1f22919dc2a8`
-- verdict: **PASS**
-
-Fully offline verified LKG:
-- airplane mode enabled;
-- Wi-Fi disabled;
-- `0/11 LIVE — 要確認` with dependency `NET` failures as expected;
-- `IMMUTABLE ✓ · LKG · 1f22919dc2a8`
-- verdict: **PASS**
-
-This confirms on real Scriptable:
-- immutable Router acquisition/integrity path works;
-- verified candidate can be promoted to release-namespaced LKG;
-- fully offline boot uses only verified LKG;
-- QA Router still executes locally while external dependencies correctly fail;
-- no mutable `main` or historical unrelated Router fallback was observed.
-
-**RC-04 is materially mitigated in code, automated tests and real-device migration/offline behavior. Remaining closure work is Codex attack-testing, downgrade semantics review and reachable-path re-audit.**
+CI only synchronizes runtime to `hardening-live` after all deterministic gates pass.
 
 ---
 
-## Current data-source audit
-- F1: Jolpica/Ergast 2026 schedule + driver standings; atomic promotion.
-- WEC: FIA WEC manufacturers classification; canonical Toyota naming `TR010 Hybrid / TOYOTA RACING`.
-- WRC: FIA 2026 World Rally Championship for Drivers table.
-- SUPER GT: official GT500 driver ranking, 2026 series.
-- MotoGP: official stats world standings, Riders' Championship identity.
-- FDJ: Formula Drift Japan 2026 standings.
-- D1GP: official 2026 D1 Grand Prix driver ranking.
-- SUPER FORMULA: official 2026 standings.
-- INDYCAR: official championship standings.
-- NASCAR: official NASCAR public points CDN.
-- GTWC Europe: official overall driver standings.
+## Immutable 12-category packaging
+Latest code-run artifact:
+- `motorsport-hub-immutable-f8ccb14b69adeb538a59f061425fe73bc2ee582d`
+- Artifact ID `9603606992`
+- digest `sha256:2928a4b750bb66c752b5e7dbb046ddca97907f784db3dff347065c32bd660a98`
 
-QA diagnostics checks the same dependency groups. F1 requires both schedule and standings checks.
+Inspected release manifest:
+- includes `DAKAR`
+- 13 integrity-protected runtime files = 12 categories + QA
+- `dakar-widget.js` SHA-256 `4422b4ae4f6ebb3cb4e9bf0af1121833312b902985f9943dd417f8d1e007389a`
+- bytes `15704`
 
----
+Therefore Dakar is inside the same immutable release trust boundary as every other category.
 
-## Cache audit
-`category-registry.json` records `dataCacheSchema: 1` for all 11 categories.
+Previous Loader v6 architecture was already verified on iPhone:
+- online immutable Candidate — PASS
+- fully offline verified LKG — PASS
 
-Acceptance requirements include:
-- matching schema/category/season/source;
-- finite and fresh `fetchedAt`;
-- valid ranking structure;
-- valid event/data structure.
-
-Invalid cache is removed rather than treated as current live data.
+Dakar does not create a separate Loader/fallback path.
 
 ---
 
-## Lifecycle audit
-All 11 modules own lifecycle directly.
+## Dakar audit contract
+Dakar uses a rally-raid-specific model instead of fake championship points.
 
-Original-seven retention:
-- F1 4h
-- WEC 10h
-- WRC 4d
-- SUPER GT 8h
-- MotoGP 4h
-- FDJ 40h
-- D1GP 40h
+### Small
+- next stage / countdown
+- stage name
+- date + SS distance
+- route
 
-Expansion modules use explicit event start/end ranges directly in their own module code.
+### Medium
+- next stage / route / SS distance
+- overall **CAR TOP3**
+- **GAP** column
+- bib / machine / team metadata
 
-Active windows are half-open `[start,end)`.
-Final state is `SEASON_ENDED` with `シーズン終了 / SEASON END`.
+2027 encoded lifecycle:
+- Prologue Jan 1
+- Stage 1 Jan 2
+- Stage 13 Jan 15
+- half-open stage ranges
+- finale `2027 FINISH / FINISH`.
+
+Pre-start completed-overall baseline:
+1. Nasser Al-Attiyah
+2. Nani Roma +9:42
+3. Mattias Ekström +14:33
+
+After completed 2027 stages, source rolls to the completed 2027 stage CAR overall endpoint.
+
+Hero:
+- Dacia Sandrider GIMS 2024
+- Alexander-93
+- CC BY-SA 4.0
+- exact source page / redistribution obligations recorded.
 
 ---
 
-## Hero/legal audit
-`hero-assets.json` is scoped to image URLs reachable from current Registry modules.
+## Data/cache/legal status
+All 12 Registry categories record `dataCacheSchema: 1`.
 
-`tests/hero-manifest-gate.mjs` requires exact set equality between:
-1. Wikimedia image URLs found in all current category modules; and
-2. runtime URLs recorded in Hero manifest.
+Hero runtime URLs are checked against `hero-assets.json` by exact set equality.
 
-Important protections:
-- SUPER GT direct runtime uses only the exact-page verified CC0 No.36 image variants.
-- old unverified historical SUPER GT fallback images are not current direct-runtime assets.
-- D1GP direct runtime uses the verified action image.
-
----
-
-## Test status
-Current GitHub Actions hardening suite is **GREEN**.
-
-It includes:
-- syntax audit for all JS/MJS;
-- release gate;
-- boundary gate;
-- Router hardening gate;
-- Registry gate;
-- cache hardening gate;
-- Hero manifest gate;
-- lifecycle gate;
-- immutable integrity gate;
-- release-package generator gate;
-- all original-seven flat gates;
-- 11 categories × Small/Medium = 22 automated render smoke cases.
-
-After green CI it also:
-- creates immutable Loader v6 + integrity manifest artifact;
-- synchronizes only tested runtime files to `hardening-live`.
+Current Dakar Hero is legally verified but is intentionally only the initial asset. Higher-quality action imagery and automatic framing are deferred to the post-Codex Hero Rendering Engine rather than manual recurring crop fixes.
 
 ---
 
 ## Device evidence
-- current hardening dependency diagnostic: **11/11 LIVE — PASS**.
-- immutable Loader v6 online candidate: **PASS**.
-- immutable Loader v6 fully offline verified LKG: **PASS**.
-- current hardening pixel-level locks: F1, WRC, MotoGP, FDJ Small/Medium PASS.
+Previously passed on hardening direct-runtime:
+- 11/11 dependency diagnostic before Dakar
+- F1 Small/Medium
+- WRC Small/Medium
+- MotoGP Small/Medium
+- FDJ Small/Medium
+- immutable Loader v6 online Candidate
+- immutable Loader v6 fully-offline verified LKG
 
-Routine 22-widget human regression is retired. Canonical policy: `DEVICE_QA_POLICY.md`.
+Routine 24-widget manual QA is retired by `DEVICE_QA_POLICY.md`.
 
----
-
-## Remaining blockers before final RC approval
-1. Codex re-audit audited base → current hardening tip, especially RC-04 hostile review, downgrade semantics, cache isolation and any reachable bypass.
-2. Final risk-based iPhone visual spot checks only for paths whose renderer/Hero changed since accepted evidence.
-3. Final README / CHANGELOG synchronization after Codex decision.
-4. Explicit user approval before public release.
-
-Dakar remains blocked until the hardening line is accepted.
+Because Dakar is new, remaining targeted checks are:
+1. `hardening-live` dependency diagnostic → **12/12 LIVE**.
+2. one Dakar Small + Medium visual review.
 
 ---
+
+## Final blockers before RC approval
+1. Dakar targeted iPhone live + visual checks.
+2. Codex final hostile re-audit / performance / architecture / total-quality pass over all 12 categories.
+3. Post-Codex fixes must return CI to green.
+4. Final README / CHANGELOG synchronization.
+5. Explicit user approval before any public release.
 
 ## Release decision
 **NOT RELEASE APPROVED.**
-
-Automated hardening is green and Loader v6 migration/offline device QA has passed. Public distribution still waits for Codex re-audit, any required risk-based visual confirmation, final documentation synchronization and explicit user approval.
