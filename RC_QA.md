@@ -145,6 +145,25 @@ WRC is therefore **device-visual LOCKED for the current hardening path**, subjec
 
 MotoGP is therefore **device-visual LOCKED for the current hardening path**, subject to the still-pending repository gates, cache/offline regression and Codex re-audit.
 
+### 2026-08-26 17:32 JST — FDJ flat visual regression
+- Module: `fdj-widget-flat-v1000.js`
+- Small: **PASS**
+- Medium: **PASS**
+- Event shown: `第5戦 奥伊吹` / `9/5(土)・時刻未定` / `グランスノー奥伊吹`
+- Countdown: `あと10日` — consistent with device date/time.
+- Medium TOP3 rendered correctly and without clipping:
+  1. CONNOR XIA — 231 / #18
+  2. RYUMA — 230 / #131
+  3. KAZUMI TAKAHASHI — 226 / #36
+- FDJ duplicate-RYUMA normalization is visually correct; no duplicate name artifact observed.
+- Hero framing: PASS
+- Left-side readability veil: PASS
+- PTS pills/alignment: PASS
+- Small information hierarchy: PASS
+- No visible flat-migration regression observed in the supplied device screenshot.
+
+FDJ is therefore **device-visual LOCKED for the current hardening path**, subject to the still-pending repository gates, cache/offline regression and Codex re-audit.
+
 ## Historical device evidence — baseline only
 Previously observed before the full flatten:
 - original seven: 7/7 live diagnostic PASS.
