@@ -1,217 +1,219 @@
 # Motorsport Hub — Release Candidate QA
 
-## Current branch status
+## Current verdict
 - Branch: `hardening/v9.3-codex-handoff`
 - Audited base: `a09d16e11aa0f65104ba895b74e09124d30b487b`
-- Current architecture: 11 categories + QA, direct category modules.
-- **Current hardening build verdict: NOT YET RC PASS.**
-- Reason: the post-flatten repository gates and the full iPhone Small/Medium regression matrix have not yet been executed.
-- No public release action is authorized from this branch.
+- Architecture: 11 categories + QA, direct category modules.
+- Legacy runtime wrapper waterfall for the original seven: **removed from current Router path**.
+- Deterministic repository CI: **PASS**.
+- iPhone live data diagnostic: **11/11 LIVE — PASS**.
+- Public release: **NOT authorized / NOT performed**.
 
-## What changed after the previously accepted device build
-The earlier iPhone QA remains useful as a visual/data baseline, but it does **not** prove the current hardening branch because the runtime architecture changed substantially.
+Current status:
 
-Original seven categories now route directly:
-- F1 → `f1-widget-flat-v1000.js`
-- WEC → `wec-widget-flat-v1000.js`
-- WRC → `wrc-widget-flat-v1000.js`
-- SUPER GT → `supergt-widget-flat-v1000.js`
-- MotoGP → `motogp-widget-flat-v1000.js`
-- FDJ → `fdj-widget-flat-v1000.js`
-- D1GP → `d1gp-widget-flat-v1000.js`
+**HARDENING CANDIDATE — CI PASS / FINAL REVIEW PENDING**
 
-Expansion modules:
-- SUPER FORMULA
-- INDYCAR
-- NASCAR Cup
-- GTWC Europe
+This is not yet promoted to Release Candidate PASS because Codex re-audit, final Loader v5 release pinning/migration checks, and the remaining high-risk visual spot checks are still pending.
 
-Router no longer uses the legacy reliability-wrapper waterfall for the original seven.
+---
 
-## Current data/cache QA contract
-All 11 categories are now recorded in `category-registry.json` with `dataCacheSchema: 1`.
+## Automated hardening evidence
 
-Validated cache contract includes:
-- schema version
-- category
-- season
-- fetched timestamp
-- source
-- ranking structure
-- event structure
-- stale/future timestamp rejection
+### GitHub Actions Hardening CI
+Workflow: `.github/workflows/hardening-ci.yml`
 
-Malformed/old/stale cache must not be rendered as validated current data.
+First full green run after fixing the MotoGP test assertion:
+- Run: **#3**
+- Run ID: `32949810775`
+- Head: `553ddfdae5069152054bb2f5d52a3be850460660`
+- Result: **SUCCESS**
 
-## Current event lifecycle contract
-- F1: 4h race retention; Abu Dhabi explicit offline finale fallback.
+Expanded CI with the automated Small/Medium render smoke:
+- Run: **#5**
+- Run ID: `32950012839`
+- Head: `f734b2239bfffd23912fd9c27ef2afc7d97ab1f5`
+- Result: **SUCCESS**
+
+The workflow now runs a full syntax audit plus every deterministic gate, and it does not stop at the first gate failure.
+
+### Deterministic gates currently green
+- `tests/release-gate.mjs`
+- `tests/boundary-gate.mjs`
+- `tests/router-hardening-gate.mjs`
+- `tests/registry-gate.mjs`
+- `tests/cache-hardening-gate.mjs`
+- `tests/hero-manifest-gate.mjs`
+- `tests/lifecycle-hardening-gate.mjs`
+- `tests/render-smoke-gate.mjs`
+- `tests/f1-flat-gate.mjs`
+- `tests/wec-flat-gate.mjs`
+- `tests/wrc-flat-gate.mjs`
+- `tests/supergt-flat-gate.mjs`
+- `tests/motogp-flat-gate.mjs`
+- `tests/fdj-flat-gate.mjs`
+- `tests/d1gp-flat-gate.mjs`
+
+### Automated 22-case render smoke
+`tests/render-smoke-gate.mjs` renders all **11 categories × Small/Medium** through the real Router in a Scriptable VM mock with live data forced offline.
+
+It verifies for every case:
+- exactly one category module is fetched;
+- `Script.setWidget()` is called once;
+- `Script.complete()` is called once;
+- snapshot/cache fallback renders instead of an error Widget;
+- expected event identity is present;
+- Medium exposes the standings/points surface;
+- no `データ取得失敗`, Router safety-error, or invalid-parameter state appears.
+
+This replaces routine human repetition of all 22 functional render cases. It does **not** replace pixel-level iPhone visual judgement.
+
+---
+
+## Current data/cache contract
+All 11 categories are recorded in `category-registry.json` with `dataCacheSchema: 1`.
+
+Validated cache envelope includes:
+- `schemaVersion`
+- `category`
+- `season`
+- `fetchedAt`
+- `source`
+- `ranking`
+- `event`
+- `data`
+
+Malformed, old-format, stale, future-dated, wrong-category, or wrong-season cache must not be rendered as validated current data.
+
+---
+
+## Current lifecycle contract
+Original seven flat modules directly implement `UPCOMING / ACTIVE / SEASON_ENDED`.
+
+Current hold windows:
+- F1: 4h; explicit Abu Dhabi offline finale fallback.
 - WEC: 10h.
 - WRC: 4 days.
 - SUPER GT: 8h.
 - MotoGP: 4h.
 - FDJ: 40h.
 - D1GP: 40h.
-- SUPER FORMULA / INDYCAR / NASCAR / GTWC Europe: explicit start/end ranges with Router fail-closed lifecycle transform.
 
-Event active windows are half-open: `[start,end)`.
-After the finale the Widget must show `シーズン終了` / `SEASON END`, not a historical event as `次戦`.
+Expansion four currently retain the strict fail-closed Router lifecycle transform. Absorbing that logic into each expansion module remains a pre-RC cleanup item.
 
-## Data-source invariants to verify
+Event windows are half-open: `[start,end)`.
+After the finale the UI must show `シーズン終了` / `SEASON END`, never a historical race as `次戦`.
+
+---
+
+## Current data-source invariants
+
 ### F1
-- schedule + standings must both succeed before a live refresh is promoted.
-- partial live refresh must not overwrite valid cache.
+- schedule + standings are fetched concurrently;
+- both must succeed before a live refresh is promoted;
+- partial refresh cannot overwrite valid cache.
 
 ### WEC
-- manufacturer classification source must parse the intended manufacturer table.
-- Toyota must render **TR010 Hybrid / TOYOTA RACING**.
+- manufacturer classification parser must resolve the intended manufacturer table;
+- Toyota naming is **TR010 Hybrid / TOYOTA RACING**.
 
 ### WRC
-- FIA table identity must be `2026 FIA World Rally Championship for Drivers`.
-- WRC3/Masters/other tables must not be accepted.
+- FIA table identity must be `2026 FIA World Rally Championship for Drivers`;
+- WRC3 / Masters / unrelated tables must not be promoted.
 
 ### SUPER GT
-- GT500 driver ranking only; GT300 must not be accepted.
-- expected current metadata:
+- GT500 driver ranking only;
+- current metadata contract:
   - #36 坪井 翔 / 山下 健太 — `TOYOTA · GR Supra ｜ au TOM'S`
   - #16 野尻 智紀 / 佐藤 蓮 — `HONDA · PRELUDE-GT ｜ ARTA`
   - #14 福住 仁嶺 / 大嶋 和也 — `TOYOTA · GR Supra ｜ ROOKIE`
-- verified CC0 #36 Hero only.
+- only the verified CC0 #36 Hero is current runtime policy.
 
 ### MotoGP
-- Riders' Championship + MotoGP table identity required.
+- Riders' Championship + MotoGP identity required.
 
 ### FDJ / D1GP
-- FDJ duplicate RYUMA normalization retained.
+- FDJ duplicate-RYUMA normalization retained;
 - D1GP driver ranking isolated from single-run ranking.
 
-## Current hardening device evidence
-### 2026-08-26 — QA diagnostic
-- iPhone / Scriptable hardening path: **11/11 LIVE — PASS**.
-- WEC parser false-negative was reproduced at 10/11, fixed, then retested to 11/11 LIVE.
+---
 
-### 2026-08-26 07:48 JST — F1 flat visual regression
-- Module: `f1-widget-flat-v1000.js`
-- Small: **PASS**
-- Medium: **PASS**
-- Event shown: `イタリアGP` / `9/6(日) 22:00` / `Monza`
-- Countdown: `あと12日` — consistent with device date/time.
-- Medium TOP3 rendered correctly and without clipping:
-  1. Andrea Kimi Antonelli — 242
-  2. George Russell — 183
-  3. Lewis Hamilton — 183
-- Hero framing: PASS
-- Left-side readability veil: PASS
-- PTS pills/alignment: PASS
-- Small information hierarchy: PASS
-- No visible flat-migration regression observed in the supplied device screenshot.
+## iPhone / Scriptable evidence
 
-F1 is therefore **device-visual LOCKED for the current hardening path**, subject to the still-pending repository gates, cache/offline regression and Codex re-audit.
+### 2026-08-26 — live dependency diagnostic
+- Hardening path: **11/11 LIVE — PASS**.
+- WEC initially reproduced a `10/11` parse false-negative, parser/diagnostic identity was corrected, and the device retest reached **11/11 LIVE**.
 
-### 2026-08-26 07:53 JST — WRC flat visual regression
-- Module: `wrc-widget-flat-v1000.js`
-- Small: **PASS**
-- Medium: **PASS**
-- Event shown: `ラリー・パラグアイ` / `8/27(木)・時刻未定` / `Paraguay`
-- Countdown: `あと2日` — consistent with device date/time.
-- Medium TOP3 rendered correctly and without clipping:
-  1. Elfyn Evans — 201
-  2. Sami Pajari — 171
-  3. Takamoto Katsuta — 160
-- Metadata sublines rendered for all three: `TOYOTA · GR Yaris Rally1 ｜ TOYOTA GAZOO Racing WRT`.
-- Hero framing: PASS
-- Left-side readability veil: PASS
-- PTS pills/alignment: PASS
-- Small information hierarchy: PASS
-- No visible flat-migration regression observed in the supplied device screenshot.
+### Pixel-level spot checks completed on the current hardening path
 
-WRC is therefore **device-visual LOCKED for the current hardening path**, subject to the still-pending repository gates, cache/offline regression and Codex re-audit.
+#### F1 — PASS / Visual LOCK
+- Small: PASS
+- Medium: PASS
+- Event: `イタリアGP` / `9/6(日) 22:00` / `Monza`
+- TOP3: Antonelli 242 / Russell 183 / Hamilton 183
+- Hero framing, veil, PTS pills, typography and Small hierarchy: PASS.
 
-### 2026-08-26 17:29 JST — MotoGP flat visual regression
-- Module: `motogp-widget-flat-v1000.js`
-- Small: **PASS**
-- Medium: **PASS**
-- Event shown: `アラゴンGP` / `8/30(日) 21:00` / `モーターランド・アラゴン`
-- Countdown: `あと5日` — consistent with device date/time.
-- Medium TOP3 rendered correctly and without clipping:
-  1. Jorge Martin — 240
-  2. Marco Bezzecchi — 209
-  3. Ai Ogura — 203
-- Metadata sublines rendered for all three; the long Trackhouse team line remained readable without layout breakage.
-- Hero framing: PASS
-- Left-side readability veil: PASS
-- PTS pills/alignment: PASS
-- Small information hierarchy: PASS
-- No visible flat-migration regression observed in the supplied device screenshot.
+#### WRC — PASS / Visual LOCK
+- Small: PASS
+- Medium: PASS
+- Event: `ラリー・パラグアイ` / `8/27(木)・時刻未定` / `Paraguay`
+- TOP3: Evans 201 / Pajari 171 / Katsuta 160
+- metadata, Hero, veil, PTS and layout: PASS.
 
-MotoGP is therefore **device-visual LOCKED for the current hardening path**, subject to the still-pending repository gates, cache/offline regression and Codex re-audit.
+#### MotoGP — PASS / Visual LOCK
+- Small: PASS
+- Medium: PASS
+- Event: `アラゴンGP` / `8/30(日) 21:00` / `モーターランド・アラゴン`
+- TOP3: Martin 240 / Bezzecchi 209 / Ogura 203
+- long Trackhouse metadata remains readable; Hero / veil / PTS: PASS.
 
-### 2026-08-26 17:32 JST — FDJ flat visual regression
-- Module: `fdj-widget-flat-v1000.js`
-- Small: **PASS**
-- Medium: **PASS**
-- Event shown: `第5戦 奥伊吹` / `9/5(土)・時刻未定` / `グランスノー奥伊吹`
-- Countdown: `あと10日` — consistent with device date/time.
-- Medium TOP3 rendered correctly and without clipping:
-  1. CONNOR XIA — 231 / #18
-  2. RYUMA — 230 / #131
-  3. KAZUMI TAKAHASHI — 226 / #36
-- FDJ duplicate-RYUMA normalization is visually correct; no duplicate name artifact observed.
-- Hero framing: PASS
-- Left-side readability veil: PASS
-- PTS pills/alignment: PASS
-- Small information hierarchy: PASS
-- No visible flat-migration regression observed in the supplied device screenshot.
+#### FDJ — PASS / Visual LOCK
+- Small: PASS
+- Medium: PASS
+- Event: `第5戦 奥伊吹` / `9/5(土)・時刻未定` / `グランスノー奥伊吹`
+- TOP3: CONNOR XIA 231 / RYUMA 230 / KAZUMI TAKAHASHI 226
+- duplicate-RYUMA artifact absent; Hero / veil / PTS: PASS.
 
-FDJ is therefore **device-visual LOCKED for the current hardening path**, subject to the still-pending repository gates, cache/offline regression and Codex re-audit.
+Historical accepted visuals for SUPER FORMULA / INDYCAR / NASCAR remain useful baselines, but future human retests follow the risk-based policy below rather than automatically repeating every category.
 
-## Historical device evidence — baseline only
-Previously observed before the full flatten:
-- original seven: 7/7 live diagnostic PASS.
-- original seven Small/Medium visual regression: PASS.
-- SUPER FORMULA Small/Medium: PASS / LOCKED.
-- INDYCAR Small/Medium: PASS / LOCKED.
-- NASCAR Small/Medium: previously visually accepted.
-- GTWC Europe: device QA remained pending.
+---
 
-These results are **not promoted to current hardening PASS** without rerunning the affected paths.
+## Device QA policy
+Canonical policy: `DEVICE_QA_POLICY.md`.
 
-## Mandatory repository gates before RC PASS
-Run from a real checkout:
-- full `.js/.mjs` syntax audit
-- `node tests/release-gate.mjs`
-- `node tests/boundary-gate.mjs`
-- `node tests/router-hardening-gate.mjs`
-- `node tests/registry-gate.mjs`
-- `node tests/cache-hardening-gate.mjs`
-- `node tests/hero-manifest-gate.mjs`
-- `node tests/lifecycle-hardening-gate.mjs`
-- `node tests/f1-flat-gate.mjs`
-- `node tests/wec-flat-gate.mjs`
-- `node tests/wrc-flat-gate.mjs`
-- `node tests/supergt-flat-gate.mjs`
-- `node tests/motogp-flat-gate.mjs`
-- `node tests/fdj-flat-gate.mjs`
-- `node tests/d1gp-flat-gate.mjs`
+The previous practice of manually checking every category × Small/Medium after routine non-visual changes is retired.
 
-Current ChatGPT container cannot run these from checkout because `github.com` DNS resolution fails. No unrun gate is considered PASS.
+Human iPhone QA is required when one of these changes:
+- renderer/layout code;
+- typography, spacing, safe areas or PTS geometry;
+- Hero/crop/veil logic;
+- a new category;
+- Scriptable-native behavior that cannot be represented by the VM mocks;
+- a failure or suspicious result from automated CI.
 
-## Mandatory iPhone / Scriptable regression
-For every 11 categories:
-1. Medium Widget opens and completes.
-2. Small Widget opens and completes.
-3. Hero loads or safe background fallback is acceptable.
-4. Event title/date/location are correct.
-5. Medium TOP3 and PTS are readable.
-6. metadata subline is correct/non-empty where applicable.
-7. cache/offline behavior does not crash or resurrect stale historical event.
-8. no visible regression against accepted layout.
+Routine data/parser/cache/calendar changes are primarily covered by deterministic gates + the 22-case render smoke + 11/11 live diagnostics.
 
-Additionally:
-- QA diagnostic must show 11/11 LIVE under normal network conditions.
-- Loader v5 migration candidate/LKG/quarantine/offline paths must be device-tested.
-- cold-network and GitHub-outage latency should be compared with audited base.
+Before public RC, perform a **small risk-based visual spot-check set**, not a mandatory 22-widget manual matrix.
+
+---
+
+## Remaining blockers before RC PASS
+1. Codex re-audit of audited base → hardening branch.
+2. Absorb lifecycle behavior into SUPER FORMULA / INDYCAR / NASCAR / GTWC Europe so Router no longer rewrites module source at runtime.
+3. Finalize immutable Loader/Router/module release pinning and integrity policy for RC-04.
+4. Device-test Loader v5 candidate/LKG/quarantine/offline migration behavior.
+5. Perform only the final high-risk visual spot checks required by `DEVICE_QA_POLICY.md`.
+6. Synchronize final README / CHANGELOG / RELEASE_AUDIT wording after the above is complete.
+
+## Post-Codex visual automation
+`POST_CODEX_VISUAL_AUTOMATION.md` is the retained roadmap for:
+- high-resolution Hero Asset Manager;
+- automatic subject-aware Small/Medium crop;
+- text-safe-area preservation;
+- automatic veil generation;
+- LKG Hero fallback;
+- visual regression automation.
+
+Goal: **future Hero/data updates must not require manual crop correction or repetitive per-category visual QA.**
 
 ## RC decision
-**HARDENING CANDIDATE — VERIFICATION PENDING.**
-
-Do not mark this branch Release Candidate PASS until repository gates, device regression, Loader v5 migration QA and Codex re-audit are complete.
+**HARDENING CANDIDATE — CI PASS / FINAL REVIEW PENDING.**
