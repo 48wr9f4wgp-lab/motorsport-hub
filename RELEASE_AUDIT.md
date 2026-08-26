@@ -8,40 +8,78 @@
 - No public release / Store action has been performed.
 
 ## Architecture status
-### Current Router
-The current Router is a direct category module router.
+The current Router is a direct category module router for 11 categories + QA.
 
 Original seven:
-- F1 → flat module
-- WEC → flat module
-- WRC → flat module
-- SUPER GT → flat module
-- MotoGP → flat module
-- FDJ → flat module
-- D1GP → flat module
+- F1 → `f1-widget-flat-v1000.js`
+- WEC → `wec-widget-flat-v1000.js`
+- WRC → `wrc-widget-flat-v1000.js`
+- SUPER GT → `supergt-widget-flat-v1000.js`
+- MotoGP → `motogp-widget-flat-v1000.js`
+- FDJ → `fdj-widget-flat-v1000.js`
+- D1GP → `d1gp-widget-flat-v1000.js`
 
 Expansion:
-- SUPER FORMULA → dedicated module
-- INDYCAR → dedicated module
-- NASCAR → dedicated module
-- GTWC Europe → dedicated module
+- SUPER FORMULA → `superformula-widget.js`
+- INDYCAR → `indycar-widget.js`
+- NASCAR → `nascar-widget.js`
+- GTWC Europe → `gtwc-europe-widget.js`
 
-QA is a dedicated diagnostics module.
+QA:
+- `motorsport-diagnostics-v890.js`
 
-The Router no longer references the v8.9 reliability wrapper path for current category execution. Runtime wrapper waterfall removal is therefore structurally complete on this branch, subject to verification.
+Current Router has:
+- no v8.9 reliability-wrapper runtime path;
+- no nested category-wrapper waterfall;
+- no runtime source rewriting;
+- explicit invalid-parameter failure;
+- Router schema/manifest handshake;
+- optional immutable SHA-256 release integrity enforcement.
 
 ## Audit finding status
 | Finding | Current hardening status |
 | --- | --- |
-| RC-01 stale Router/LKG routing | Loader v5 candidate architecture implemented; device migration still pending |
-| RC-02 historical event shown as next race | Direct original modules implement explicit season lifecycle; tests/device pending |
-| RC-03 serial wrapper waterfall | **Structurally removed from current Router**; performance verification pending |
-| RC-04 mutable/unverified release source | Transactional Loader v5 implemented; immutable SHA/hash pin still open |
-| RC-05 incomplete Hero inventory | Runtime-only schema-2 Hero manifest + exact module URL gate implemented; test pending |
-| RC-06 unsafe data cache | Schema-1 validated cache implemented for all 11 categories; test pending |
-| RC-08 silent runtime source rewrite | Original seven no longer source-rewritten; expansion four still use strict fail-closed Router lifecycle transform |
-| RC-09/16 season lifecycle/boundaries | Original seven direct; expansion transform strict; tests pending |
-| RC-10 invalid parameter → F1 | Explicit invalid-parameter error path implemented |
+| RC-01 stale Router/LKG routing | Loader candidate/LKG/quarantine architecture implemented; immutable Loader v6 generated; targeted device migration QA remains |
+| RC-02 historical event shown as next race | All 11 modules implement explicit lifecycle; deterministic boundary/lifecycle gates PASS |
+| RC-03 serial wrapper waterfall | **Structurally removed from current Router**; direct modules enforced by CI |
+| RC-04 mutable/unverified release source | Immutable commit + byte length + SHA-256 Router/module verification implemented and generator/CI artifact PASS; targeted device QA + Codex attack review remain |
+| RC-05 incomplete Hero inventory | Runtime-only schema-2 Hero manifest + exact URL-set gate PASS |
+| RC-06 unsafe data cache | Schema-1 validated cache implemented for all 11 categories; cache gate PASS |
+| RC-08 silent runtime source rewrite | **Closed in current architecture**; Router source transform removed and expansion lifecycle baked into modules |
+| RC-09/16 season lifecycle/boundaries | Half-open lifecycle and finale behavior enforced by deterministic gates |
+| RC-10 invalid parameter → F1 | Explicit invalid-parameter error path implemented and Router gate PASS |
+
+## Immutable release hardening
+Release packaging tool:
+- `tools/generate-release-package.mjs`
+
+Release descriptor contains:
+- immutable 40-char commit SHA;
+- Router SHA-256 + byte length;
+- all 11 category modules + QA SHA-256 + byte length;
+- Router schema;
+- category manifest;
+- release namespace.
+
+Generated Loader v6:
+- fetches Router from immutable commit SHA, not mutable `main`;
+- validates syntax, markers, byte length and SHA-256 before execution;
+- passes integrity descriptor to Router;
+- Router validates the selected module byte length and SHA-256;
+- release-namespaces candidate/LKG/quarantine caches;
+- offline fallback runs only verified immutable LKG;
+- tampered Router/module/sourceRef mismatch fails closed.
+
+Automated evidence:
+- `tests/integrity-gate.mjs`: PASS
+- `tests/release-package-generator-gate.mjs`: PASS
+- Hardening CI run #26 / ID `32952423421`: SUCCESS
+- Head: `30faaae959835d4342a0f23594b4b667d1923cda`
+- Artifact: `motorsport-hub-immutable-30faaae959835d4342a0f23594b4b667d1923cda`
+- Artifact ID: `9600650504`
+- Artifact digest: `sha256:5147bb874c7635b5d07da582dfa39a947eda2c8eb16a72a9f74cab3a4f32dd8f`
+
+RC-04 is therefore **substantially mitigated in code and automated tests**, but not marked fully closed until Scriptable device migration/offline behavior and Codex security review are complete.
 
 ## Current data-source audit
 - F1: Jolpica/Ergast 2026 schedule + driver standings; atomic promotion.
@@ -56,24 +94,23 @@ The Router no longer references the v8.9 reliability wrapper path for current ca
 - NASCAR: official NASCAR public points CDN.
 - GTWC Europe: official overall driver standings.
 
-QA diagnostics now checks these same dependency groups rather than stale legacy endpoints. F1 requires both schedule and standings checks.
+QA diagnostics checks the same dependency groups. F1 requires both schedule and standings checks.
 
 ## Cache audit
 `category-registry.json` records `dataCacheSchema: 1` for all 11 categories.
 
-Common acceptance requirements:
-- matching schema
-- matching category
-- matching season
-- matching source
-- finite/fresh `fetchedAt`
-- valid ranking structure
-- valid event/data structure
+Acceptance requirements include:
+- matching schema/category/season/source;
+- finite and fresh `fetchedAt`;
+- valid ranking structure;
+- valid event/data structure.
 
 Invalid cache is removed rather than treated as current live data.
 
 ## Lifecycle audit
-Original seven direct modules use:
+All 11 modules own lifecycle directly.
+
+Original-seven retention:
 - F1 4h
 - WEC 10h
 - WRC 4d
@@ -82,16 +119,16 @@ Original seven direct modules use:
 - FDJ 40h
 - D1GP 40h
 
+Expansion modules use explicit event start/end ranges directly in their module code.
+
 Active windows are half-open `[start,end)`.
 Final state is `SEASON_ENDED` with `シーズン終了 / SEASON END`.
-
-Expansion modules use explicit event start/end ranges and currently receive a strict Router finalization transform.
 
 ## Hero/legal audit
 `hero-assets.json` schema 2 is scoped to image URLs reachable from current Registry modules.
 
 `tests/hero-manifest-gate.mjs` requires exact set equality between:
-1. Wikimedia image URLs found in all current category modules, and
+1. Wikimedia image URLs found in all current category modules; and
 2. runtime URLs recorded in Hero manifest.
 
 Important current protections:
@@ -100,51 +137,42 @@ Important current protections:
 - D1GP direct runtime uses the verified Rowan Harrison action image; old S14 base fallback is not a current Router asset.
 
 ## Test status
-### Historical tests/evidence
-Earlier baseline/device tests passed for several pre-flatten paths. They are retained as comparison evidence only.
+Current GitHub Actions hardening suite is **GREEN**.
 
-### Current post-flatten verification
-**Not yet executed from a full repository checkout.**
+It includes:
+- syntax audit for all JS/MJS;
+- release gate;
+- boundary gate;
+- Router hardening gate;
+- Registry gate;
+- cache hardening gate;
+- Hero manifest gate;
+- lifecycle gate;
+- immutable integrity gate;
+- release-package generator gate;
+- all original-seven flat gates;
+- 11 categories × Small/Medium = 22 automated render smoke cases.
 
-The current execution container still reports:
-`Could not resolve host: github.com`
-for GitHub checkout attempts.
+CI runs all deterministic gates before returning failure so a single push exposes the full failure set.
 
-Therefore no newly added/rewritten hardening gate is considered PASS yet.
+After green CI, it also:
+- creates an immutable Loader v6 + integrity manifest workflow artifact;
+- synchronizes only tested runtime files to `hardening-live`.
 
-Mandatory repository test set:
-- syntax audit for all JS/MJS
-- release gate
-- boundary gate
-- Router hardening gate
-- Registry gate
-- cache hardening gate
-- Hero manifest gate
-- lifecycle gate
-- F1 flat gate
-- WEC flat gate
-- WRC flat gate
-- SUPER GT flat gate
-- MotoGP flat gate
-- FDJ flat gate
-- D1GP flat gate
+## Device evidence
+- current hardening dependency diagnostic: **11/11 LIVE — PASS**.
+- current hardening pixel-level locks: F1, WRC, MotoGP, FDJ Small/Medium PASS.
+- previous accepted expansion visuals remain baseline evidence.
 
-## Device audit still required
-- all 11 categories Small + Medium
-- current QA diagnostics 11/11
-- offline/cache recovery paths
-- Loader v5 candidate → LKG → quarantine behavior
-- cold-load and outage latency comparison against audited base
+Routine 22-widget human regression is retired. Canonical policy: `DEVICE_QA_POLICY.md`.
 
-## Open blockers before release approval
-1. Execute/fix full post-flatten test suite.
-2. Run full iPhone regression.
-3. Device-test Loader v5 migration.
-4. Remove remaining expansion Router source transform by absorbing lifecycle into four expansion modules, or explicitly re-audit/accept it.
-5. Pin release source to immutable commit/tag and add content hash verification.
-6. Codex re-audit audited base → hardening tip.
+## Remaining blockers before final RC approval
+1. Codex re-audit audited base → current hardening tip, especially attack-testing RC-04.
+2. Targeted Scriptable Loader v6 migration/offline QA using an immutable generated candidate.
+3. Risk-based final iPhone visual spot checks for changed/high-risk paths only.
+4. Final README / CHANGELOG wording once the above is accepted.
 
 ## Release decision
 **NOT RELEASE APPROVED.**
 
-The architectural hardening is materially advanced, but verification gates remain open. Public distribution must wait for repository tests, device regression, Loader migration QA and Codex review.
+Automated hardening is green and the major architecture/security findings are materially reduced. Public distribution still waits for Codex re-audit, Loader v6 device QA, risk-based visual confirmation, and explicit user approval.
