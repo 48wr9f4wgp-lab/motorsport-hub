@@ -20,30 +20,40 @@ assert(router.includes('const ROUTER_SCHEMA=5'),'Router schema drift');
 assert(!router.includes('motorsport-reliability-v896.js'),'legacy reliability wrapper leaked back into current Router');
 assert(!router.includes('d1gp-reliability-v890.js'),'legacy D1 wrapper leaked back into current Router');
 assert(!/Request\.prototype\.loadString\s*=/.test(router),'legacy nested-request circuit-breaker shim leaked back into current Router');
-assert(router.includes('HARDENING_PATCH_MISMATCH'),'expansion lifecycle transform must fail closed on source drift');
+assert(!router.includes('hardenExpansionLifecycle'),'Router runtime lifecycle rewriting must remain removed');
+assert(!router.includes('HARDENING_PATCH_MISMATCH'),'Router runtime source-patch machinery must remain removed');
+assert(!router.includes('replaceExact('),'Router replace-based source rewriting must remain removed');
 
-for(const marker of ['Motorsport Hub','v8.6.0','motorsport-core-v841.js','motorsport-hq-core.js','fdj-widget.js','Script.complete()'])assert(router.includes(marker),`Loader v4 compatibility marker missing: ${marker}`);
+for(const marker of ['Motorsport Hub','module router','v8.6.0','motorsport-core-v841.js','motorsport-hq-core.js','fdj-widget.js','Script.complete()'])assert(router.includes(marker),`Loader v4 compatibility marker missing: ${marker}`);
 for(const marker of ['motorsport-hub-router-v5-candidate.js','motorsport-hub-router-v5-lkg.js','motorsport-hub-router-v5-quarantine.js','new Function'])assert(loaderV5.includes(marker),`Loader v5 safety marker missing: ${marker}`);
 
 const sourceById={};
 for(const c of registry.categories){
-  assert.equal(c.dataCacheSchema,1,`${c.id}: every current category must use validated data cache schema 1`);
-  assert(fs.existsSync(path.join(root,c.module)),`${c.id}: missing module ${c.module}`);
-  const src=read(c.module);sourceById[c.id]=src;parse(c.module,src);
-  assert(src.includes(c.moduleMarker),`${c.id}: module marker drift`);assert(src.includes('Script.complete()'),`${c.id}: Script.complete missing`);
-  assert(router.includes(c.module),`${c.id}: Router is not using registry module`);assert(router.includes(c.moduleCacheKey),`${c.id}: Router cache key drift`);
-  assert(src.includes('CACHE_SCHEMA=1'),`${c.id}: cache schema marker missing`);assert(src.includes('SEASON=2026'),`${c.id}: season marker missing`);
+ assert.equal(c.dataCacheSchema,1,`${c.id}: every current category must use validated data cache schema 1`);
+ assert(fs.existsSync(path.join(root,c.module)),`${c.id}: missing module ${c.module}`);
+ const src=read(c.module);sourceById[c.id]=src;parse(c.module,src);
+ assert(src.includes(c.moduleMarker),`${c.id}: module marker drift`);assert(src.includes('Script.complete()'),`${c.id}: Script.complete missing`);
+ assert(router.includes(c.module),`${c.id}: Router is not using registry module`);assert(router.includes(c.moduleCacheKey),`${c.id}: Router cache key drift`);
+ assert(src.includes('CACHE_SCHEMA=1'),`${c.id}: cache schema marker missing`);assert(src.includes('SEASON=2026'),`${c.id}: season marker missing`);
 }
 
-// Original seven categories must be true completed modules: no nested repo module fetches and no remote-source eval.
 for(const id of ['F1','WEC','WRC','SUPERGT','MOTOGP','FDJ','D1GP']){
-  const src=sourceById[id];assert(/flattened .* module|flattened F1 pilot module/.test(src),`${id}: flattened module marker missing`);
-  assert(!src.includes('raw.githubusercontent.com'),`${id}: nested repo source fetch leaked into flattened module`);
-  assert(!/\beval\s*\(/.test(src),`${id}: remote source eval leaked into flattened module`);
-  assert(src.includes("lifecycle:'SEASON_ENDED'")||src.includes("lifecycle:'UPCOMING'"),`${id}: lifecycle contract missing`);
+ const src=sourceById[id];assert(/flattened .* module|flattened F1 pilot module/.test(src),`${id}: flattened module marker missing`);
+ assert(!src.includes('raw.githubusercontent.com'),`${id}: nested repo source fetch leaked into flattened module`);
+ assert(!/\beval\s*\(/.test(src),`${id}: remote source eval leaked into flattened module`);
+ assert(src.includes("lifecycle:'SEASON_ENDED'")||src.includes("lifecycle:'UPCOMING'"),`${id}: lifecycle contract missing`);
 }
 
-// Canonical data and reliability invariants.
+for(const id of ['SUPERFORMULA','INDYCAR','NASCAR','GTWCEU']){
+ const src=sourceById[id];
+ assert(src.includes('MH_LIFECYCLE_BAKED=1'),`${id}: baked lifecycle marker missing`);
+ assert(src.includes("lifecycle:'SEASON_ENDED'"),`${id}: baked season-ended contract missing`);
+ assert(src.includes('now>=s&&now<e'),`${id}: half-open active boundary missing`);
+ assert(src.includes("?'シーズン終了':'次戦'"),`${id}: lifecycle-aware header missing`);
+ assert(!src.includes('raw.githubusercontent.com'),`${id}: expansion module must not fetch nested repo source`);
+ assert(!/\beval\s*\(/.test(src),`${id}: expansion module must not eval remote source`);
+}
+
 assert(sourceById.F1.includes('api.jolpi.ca/ergast/f1/2026.json')&&sourceById.F1.includes('driverstandings.json'),'F1 atomic sources missing');
 assert(sourceById.F1.includes('Promise.all([json(SCHEDULE_SOURCE),json(STANDINGS_SOURCE)])'),'F1 schedule/standings must update atomically');
 assert(sourceById.F1.includes("race:'Abu Dhabi Grand Prix'")&&sourceById.F1.includes('2026-12-06T13:00:00Z'),'F1 season-final fallback missing');
@@ -65,7 +75,6 @@ for(const token of ['Valencia Grand Prix','Riders','hold=4*3600000'])assert(sour
 assert(sourceById.FDJ.includes('formulad.jp/2026-fdj-standings/')&&sourceById.FDJ.includes('hold=40*3600000'),'FDJ source/weekend hold missing');
 assert(sourceById.D1GP.includes('d1gp.co.jp/2026d1')&&sourceById.D1GP.includes('King%20of%20Europe')&&sourceById.D1GP.includes('hold=40*3600000'),'D1GP source/action hero/weekend hold missing');
 
-// Expansion modules remain direct and cache-hardened; Router temporarily owns their lifecycle finalization.
 assert(sourceById.SUPERFORMULA.includes('superformula.net/sf2/race2026/standings'));assert(sourceById.SUPERFORMULA.includes('Igor%20Fraga%20Super%20Formula'));
 assert(sourceById.INDYCAR.includes('https://www.indycar.com/standings/'));assert(sourceById.INDYCAR.includes('Alex%20Palou%20%2854686833932%29.jpg'));
 assert(sourceById.NASCAR.includes('https://cf.nascar.com/cacher/2026/1/points-feed.json'));assert(sourceById.NASCAR.includes('Denny%20Hamlin%2011%20Las%20Vegas%202025.jpg'));
