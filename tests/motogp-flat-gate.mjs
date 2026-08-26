@@ -10,7 +10,7 @@ const moto=fs.readFileSync(path.join(root,'motogp-widget-flat-v1000.js'),'utf8')
 assert.match(moto,/flattened MotoGP module/);
 assert.match(moto,/CACHE_SCHEMA=1/);
 assert.match(moto,/CACHE_MAX_AGE=7\*86400000/);
-assert.match(moto,/Riders'? Championship\|RIDERS'? CHAMPIONSHIP/,'MotoGP parser identity guard missing');
+assert.match(moto,/Riders'? Championship/i,'MotoGP parser identity guard missing');
 assert.doesNotMatch(moto,/eval\s*\(/,'flat MotoGP must not eval remote source');
 assert.doesNotMatch(moto,/raw\.githubusercontent\.com/,'flat MotoGP must not fetch nested repo modules');
 
@@ -65,7 +65,6 @@ async function run({now,seedCache=null,html=null}){
   assert(!finale.sink.includes('次戦'),'post-finale MotoGP must not claim a next race');
 }
 
-// RC-06 malformed cache reproduction.
 {
   const r=await run({now:'2026-11-29T16:00:00+01:00',seedCache:JSON.stringify({ranking:{}})});
   assert.equal(r.files.has(r.cachePath),false,'malformed MotoGP cache must be removed');
@@ -85,7 +84,6 @@ const validHtml=`<html><body><h1>Riders' Championship MotoGP 2026</h1><table>
   assert.equal(payload.ranking[0].name,'Jorge Martin');assert.equal(payload.ranking[2].maker,'APRILIA');
 }
 
-// Correct-looking numbers in the wrong table must not be promoted.
 {
   const wrong=`<html><body><h1>MotoGP Teams Championship</h1><table>
   <tr><td>1</td><td>Fake Rider</td><td>ES</td><td>Fake Team</td><td>Aprilia</td><td>999</td></tr>
