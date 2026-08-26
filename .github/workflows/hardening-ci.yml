@@ -50,6 +50,7 @@ jobs:
             tests/hero-manifest-gate.mjs
             tests/lifecycle-hardening-gate.mjs
             tests/integrity-gate.mjs
+            tests/release-package-generator-gate.mjs
             tests/render-smoke-gate.mjs
             tests/f1-flat-gate.mjs
             tests/wec-flat-gate.mjs
