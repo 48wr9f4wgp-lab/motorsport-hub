@@ -1,0 +1,51 @@
+name: Bake Expansion Lifecycle
+
+on:
+  push:
+    branches:
+      - 'hardening/**'
+    paths:
+      - 'tools/build-expansion-lifecycle.mjs'
+
+permissions:
+  contents: write
+
+jobs:
+  bake:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Bake lifecycle into expansion modules
+        run: node tools/build-expansion-lifecycle.mjs --apply
+
+      - name: Verify syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          for f in superformula-widget.js indycar-widget.js nascar-widget.js gtwc-europe-widget.js; do
+            node --check "$f"
+          done
+
+      - name: Commit baked modules
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- superformula-widget.js indycar-widget.js nascar-widget.js gtwc-europe-widget.js; then
+            echo 'No bake changes required.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add superformula-widget.js indycar-widget.js nascar-widget.js gtwc-europe-widget.js
+          git commit -m 'build: bake expansion lifecycle into modules'
+          git push origin "HEAD:${GITHUB_REF_NAME}"
