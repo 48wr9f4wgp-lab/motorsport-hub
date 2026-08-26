@@ -9,14 +9,14 @@
 - Deterministic repository CI: **PASS**.
 - Automated 11 categories × Small/Medium render smoke: **22/22 PASS**.
 - iPhone live data diagnostic: **11/11 LIVE — PASS**.
-- Immutable release integrity path: **automated PASS; device migration QA pending**.
+- Immutable release integrity path: **automated PASS + iPhone CANDIDATE PASS; LKG/offline device QA pending**.
 - Public release: **NOT authorized / NOT performed**.
 
 Current status:
 
-**HARDENING CANDIDATE — AUTOMATED GATES PASS / FINAL DEVICE + CODEX REVIEW PENDING**
+**HARDENING CANDIDATE — AUTOMATED GATES PASS / IMMUTABLE CANDIDATE DEVICE PASS / LKG + CODEX REVIEW PENDING**
 
-This branch is not yet promoted to final RC PASS because the generated Loader v6 path still needs targeted Scriptable device migration/offline QA, Codex re-audit remains pending, and the final risk-based visual spot checks have not been completed.
+This branch is not yet promoted to final RC PASS because generated Loader v6 still needs one targeted Scriptable offline/LKG device check, Codex re-audit remains pending, and the final risk-based visual spot checks have not been completed.
 
 ---
 
@@ -30,14 +30,12 @@ Key green milestones:
 - Run #5 / ID `32950012839`: 22-case Small/Medium render smoke added and green.
 - Run #25 / ID `32952305230`: immutable integrity gate + release-package generator gate green.
 - Run #26 / ID `32952423421`: immutable release candidate package generation + artifact upload green.
+- Run #34 / ID `32953293805`: Loader v6 QA candidate committed; full CI success.
 
-Latest immutable package run:
-- Head: `30faaae959835d4342a0f23594b4b667d1923cda`
-- Result: **SUCCESS**
-- Artifact: `motorsport-hub-immutable-30faaae959835d4342a0f23594b4b667d1923cda`
-- Artifact ID: `9600650504`
-- Artifact digest: `sha256:5147bb874c7635b5d07da582dfa39a947eda2c8eb16a72a9f74cab3a4f32dd8f`
-- Contents: generated `release-integrity.json` + generated `scriptable-loader-v6.js`
+Latest tested immutable package used on iPhone:
+- Fixed sourceRef: `1f22919dc2a89053bff60f96b4c173ba6fb49076`
+- QA display short SHA: `1f22919dc2a8`
+- Result: **CANDIDATE device path PASS**
 
 The workflow runs the full syntax audit, executes all deterministic gates without stopping at the first failure, generates an immutable RC package only after the gates pass, and syncs only green runtime files to `hardening-live`.
 
@@ -121,7 +119,25 @@ Automated coverage:
 - `tests/integrity-gate.mjs` verifies valid, tampered, wrong-sourceRef, offline-LKG, and corrupt-cache behavior.
 - `tests/release-package-generator-gate.mjs` verifies generated descriptor hashes/bytes and executes a generated Loader v6 against valid, tampered, and offline-LKG fixtures.
 
-**RC-04 is substantially mitigated in code and automated tests.** Remaining closure item: targeted real-device Loader v6 migration/offline QA using a generated immutable candidate package.
+### iPhone Loader v6 evidence — 2026-08-26
+Fresh online execution of the immutable QA candidate showed:
+- `11/11 LIVE — データ経路OK`
+- bottom status: `IMMUTABLE ✓ · CANDIDATE · 1f22919dc2a8`
+- verdict: **PASS**
+
+This confirms on real Scriptable/iPhone:
+- immutable Router download succeeded;
+- Router byte/hash verification succeeded;
+- immutable module path executed;
+- QA module executed under Integrity Mode;
+- candidate path reached the expected fixed sourceRef.
+
+Remaining RC-04 device check:
+- disable network after the successful candidate run;
+- rerun the same QA script;
+- expected bottom status: `IMMUTABLE ✓ · LKG · 1f22919dc2a8`.
+
+**RC-04 is substantially mitigated in code, automated tests, and online device execution. Remaining closure item: one offline/LKG device pass, then Codex hostile re-audit.**
 
 ---
 
@@ -252,7 +268,7 @@ Before public RC, perform a **small risk-based visual spot-check set**, not a ma
 
 ## Remaining blockers before final RC PASS
 1. Codex re-audit of audited base → current hardening branch.
-2. Targeted iPhone / Scriptable QA of generated Loader v6: fresh install/candidate, verified LKG, tampered rejection where reproducible, and offline fallback.
+2. One targeted iPhone / Scriptable offline/LKG check for generated Loader v6.
 3. Final risk-based visual spot checks required by `DEVICE_QA_POLICY.md`, especially any categories whose runtime/hero changed since their last visual lock.
 4. Synchronize final README / CHANGELOG / RELEASE_AUDIT wording after those checks.
 
@@ -270,4 +286,4 @@ No public release, tag, Store submission, or external publication is authorized 
 Goal: **future Hero/data updates must not require manual crop correction or repetitive per-category visual QA.**
 
 ## RC decision
-**HARDENING CANDIDATE — AUTOMATED GATES PASS / FINAL DEVICE + CODEX REVIEW PENDING.**
+**HARDENING CANDIDATE — AUTOMATED GATES PASS / IMMUTABLE CANDIDATE DEVICE PASS / LKG + CODEX REVIEW PENDING.**
