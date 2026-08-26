@@ -7,8 +7,14 @@
 - `main` has not been modified by this hardening work.
 - No public release / Store action has been performed.
 
+Current status:
+
+**AUTOMATED GATES PASS + LOADER V6 DEVICE QA PASS / CODEX RE-AUDIT PENDING**
+
+---
+
 ## Architecture status
-The current Router is a direct category module router for 11 categories + QA.
+The current Router is a direct category-module Router for 11 categories + QA.
 
 Original seven:
 - F1 → `f1-widget-flat-v1000.js`
@@ -36,18 +42,22 @@ Current Router has:
 - Router schema/manifest handshake;
 - optional immutable SHA-256 release integrity enforcement.
 
+---
+
 ## Audit finding status
 | Finding | Current hardening status |
 | --- | --- |
-| RC-01 stale Router/LKG routing | Loader candidate/LKG/quarantine architecture implemented; immutable Loader v6 generated; targeted device migration QA remains |
+| RC-01 stale Router/LKG routing | Loader v6 uses release-namespaced candidate/LKG/quarantine; stale/mismatched release caches are not accepted; device candidate + offline LKG path PASS |
 | RC-02 historical event shown as next race | All 11 modules implement explicit lifecycle; deterministic boundary/lifecycle gates PASS |
 | RC-03 serial wrapper waterfall | **Structurally removed from current Router**; direct modules enforced by CI |
-| RC-04 mutable/unverified release source | Immutable commit + byte length + SHA-256 Router/module verification implemented and generator/CI artifact PASS; targeted device QA + Codex attack review remain |
-| RC-05 incomplete Hero inventory | Runtime-only schema-2 Hero manifest + exact URL-set gate PASS |
+| RC-04 mutable/unverified release source | Immutable commit + byte length + SHA-256 Router/module verification implemented; automated tamper tests PASS; online candidate + fully offline verified-LKG iPhone QA PASS; Codex hostile re-audit remains |
+| RC-05 incomplete Hero inventory | Runtime-only Hero manifest + exact URL-set gate PASS |
 | RC-06 unsafe data cache | Schema-1 validated cache implemented for all 11 categories; cache gate PASS |
 | RC-08 silent runtime source rewrite | **Closed in current architecture**; Router source transform removed and expansion lifecycle baked into modules |
 | RC-09/16 season lifecycle/boundaries | Half-open lifecycle and finale behavior enforced by deterministic gates |
 | RC-10 invalid parameter → F1 | Explicit invalid-parameter error path implemented and Router gate PASS |
+
+---
 
 ## Immutable release hardening
 Release packaging tool:
@@ -73,13 +83,33 @@ Generated Loader v6:
 Automated evidence:
 - `tests/integrity-gate.mjs`: PASS
 - `tests/release-package-generator-gate.mjs`: PASS
-- Hardening CI run #26 / ID `32952423421`: SUCCESS
-- Head: `30faaae959835d4342a0f23594b4b667d1923cda`
-- Artifact: `motorsport-hub-immutable-30faaae959835d4342a0f23594b4b667d1923cda`
-- Artifact ID: `9600650504`
-- Artifact digest: `sha256:5147bb874c7635b5d07da582dfa39a947eda2c8eb16a72a9f74cab3a4f32dd8f`
 
-RC-04 is therefore **substantially mitigated in code and automated tests**, but not marked fully closed until Scriptable device migration/offline behavior and Codex security review are complete.
+### iPhone / Scriptable Loader v6 evidence — 2026-08-26
+Fixed sourceRef:
+- `1f22919dc2a89053bff60f96b4c173ba6fb49076`
+
+Online immutable candidate:
+- `11/11 LIVE — データ経路OK`
+- `IMMUTABLE ✓ · CANDIDATE · 1f22919dc2a8`
+- verdict: **PASS**
+
+Fully offline verified LKG:
+- airplane mode enabled;
+- Wi-Fi disabled;
+- `0/11 LIVE — 要確認` with dependency `NET` failures as expected;
+- `IMMUTABLE ✓ · LKG · 1f22919dc2a8`
+- verdict: **PASS**
+
+This confirms on real Scriptable:
+- immutable Router acquisition/integrity path works;
+- verified candidate can be promoted to release-namespaced LKG;
+- fully offline boot uses only verified LKG;
+- QA Router still executes locally while external dependencies correctly fail;
+- no mutable `main` or historical unrelated Router fallback was observed.
+
+**RC-04 is materially mitigated in code, automated tests and real-device migration/offline behavior. Remaining closure work is Codex attack-testing, downgrade semantics review and reachable-path re-audit.**
+
+---
 
 ## Current data-source audit
 - F1: Jolpica/Ergast 2026 schedule + driver standings; atomic promotion.
@@ -96,6 +126,8 @@ RC-04 is therefore **substantially mitigated in code and automated tests**, but 
 
 QA diagnostics checks the same dependency groups. F1 requires both schedule and standings checks.
 
+---
+
 ## Cache audit
 `category-registry.json` records `dataCacheSchema: 1` for all 11 categories.
 
@@ -106,6 +138,8 @@ Acceptance requirements include:
 - valid event/data structure.
 
 Invalid cache is removed rather than treated as current live data.
+
+---
 
 ## Lifecycle audit
 All 11 modules own lifecycle directly.
@@ -119,22 +153,26 @@ Original-seven retention:
 - FDJ 40h
 - D1GP 40h
 
-Expansion modules use explicit event start/end ranges directly in their module code.
+Expansion modules use explicit event start/end ranges directly in their own module code.
 
 Active windows are half-open `[start,end)`.
 Final state is `SEASON_ENDED` with `シーズン終了 / SEASON END`.
 
+---
+
 ## Hero/legal audit
-`hero-assets.json` schema 2 is scoped to image URLs reachable from current Registry modules.
+`hero-assets.json` is scoped to image URLs reachable from current Registry modules.
 
 `tests/hero-manifest-gate.mjs` requires exact set equality between:
 1. Wikimedia image URLs found in all current category modules; and
 2. runtime URLs recorded in Hero manifest.
 
-Important current protections:
-- SUPER GT direct runtime uses only the exact-page verified Tokumeigakarinoaoshima CC0 No.36 image variants.
-- old Fujimaki/MOTUL/front-three-quarter fallbacks are not current direct-runtime Hero assets.
-- D1GP direct runtime uses the verified Rowan Harrison action image; old S14 base fallback is not a current Router asset.
+Important protections:
+- SUPER GT direct runtime uses only the exact-page verified CC0 No.36 image variants.
+- old unverified historical SUPER GT fallback images are not current direct-runtime assets.
+- D1GP direct runtime uses the verified action image.
+
+---
 
 ## Test status
 Current GitHub Actions hardening suite is **GREEN**.
@@ -153,26 +191,33 @@ It includes:
 - all original-seven flat gates;
 - 11 categories × Small/Medium = 22 automated render smoke cases.
 
-CI runs all deterministic gates before returning failure so a single push exposes the full failure set.
-
-After green CI, it also:
-- creates an immutable Loader v6 + integrity manifest workflow artifact;
+After green CI it also:
+- creates immutable Loader v6 + integrity manifest artifact;
 - synchronizes only tested runtime files to `hardening-live`.
+
+---
 
 ## Device evidence
 - current hardening dependency diagnostic: **11/11 LIVE — PASS**.
+- immutable Loader v6 online candidate: **PASS**.
+- immutable Loader v6 fully offline verified LKG: **PASS**.
 - current hardening pixel-level locks: F1, WRC, MotoGP, FDJ Small/Medium PASS.
-- previous accepted expansion visuals remain baseline evidence.
 
 Routine 22-widget human regression is retired. Canonical policy: `DEVICE_QA_POLICY.md`.
 
+---
+
 ## Remaining blockers before final RC approval
-1. Codex re-audit audited base → current hardening tip, especially attack-testing RC-04.
-2. Targeted Scriptable Loader v6 migration/offline QA using an immutable generated candidate.
-3. Risk-based final iPhone visual spot checks for changed/high-risk paths only.
-4. Final README / CHANGELOG wording once the above is accepted.
+1. Codex re-audit audited base → current hardening tip, especially RC-04 hostile review, downgrade semantics, cache isolation and any reachable bypass.
+2. Final risk-based iPhone visual spot checks only for paths whose renderer/Hero changed since accepted evidence.
+3. Final README / CHANGELOG synchronization after Codex decision.
+4. Explicit user approval before public release.
+
+Dakar remains blocked until the hardening line is accepted.
+
+---
 
 ## Release decision
 **NOT RELEASE APPROVED.**
 
-Automated hardening is green and the major architecture/security findings are materially reduced. Public distribution still waits for Codex re-audit, Loader v6 device QA, risk-based visual confirmation, and explicit user approval.
+Automated hardening is green and Loader v6 migration/offline device QA has passed. Public distribution still waits for Codex re-audit, any required risk-based visual confirmation, final documentation synchronization and explicit user approval.
