@@ -10,7 +10,7 @@ const moto=fs.readFileSync(path.join(root,'motogp-widget-flat-v1000.js'),'utf8')
 assert.match(moto,/flattened MotoGP module/);
 assert.match(moto,/CACHE_SCHEMA=1/);
 assert.match(moto,/CACHE_MAX_AGE=7\*86400000/);
-assert.match(moto,/Riders'? Championship/i,'MotoGP parser identity guard missing');
+assert(moto.includes("Riders'? Championship|RIDERS'? CHAMPIONSHIP"),'MotoGP parser identity guard missing');
 assert.doesNotMatch(moto,/eval\s*\(/,'flat MotoGP must not eval remote source');
 assert.doesNotMatch(moto,/raw\.githubusercontent\.com/,'flat MotoGP must not fetch nested repo modules');
 
