@@ -98,13 +98,12 @@ jobs:
           git checkout -B hardening-live origin/hardening-live
           git checkout "$green_sha" -- "${runtime_files[@]}"
 
-          if git diff --quiet -- "${runtime_files[@]}"; then
+          if git diff --cached --quiet -- "${runtime_files[@]}"; then
             echo 'hardening-live already matches the latest green runtime.'
             exit 0
           fi
 
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add "${runtime_files[@]}"
           git commit -m "test: sync green hardening runtime ${green_sha:0:12}"
           git push origin HEAD:hardening-live
