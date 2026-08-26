@@ -3,17 +3,20 @@
 ## Current verdict
 - Branch: `hardening/v9.3-codex-handoff`
 - Audited base: `a09d16e11aa0f65104ba895b74e09124d30b487b`
-- Architecture: 11 categories + QA, direct category modules.
-- Legacy runtime wrapper waterfall for the original seven: **removed from current Router path**.
+- Architecture: 11 categories + QA, one direct category module per route.
+- Legacy reliability-wrapper waterfall: **removed from current Router path**.
+- Runtime source rewriting in Router: **removed**.
 - Deterministic repository CI: **PASS**.
+- Automated 11 categories × Small/Medium render smoke: **22/22 PASS**.
 - iPhone live data diagnostic: **11/11 LIVE — PASS**.
+- Immutable release integrity path: **automated PASS; device migration QA pending**.
 - Public release: **NOT authorized / NOT performed**.
 
 Current status:
 
-**HARDENING CANDIDATE — CI PASS / FINAL REVIEW PENDING**
+**HARDENING CANDIDATE — AUTOMATED GATES PASS / FINAL DEVICE + CODEX REVIEW PENDING**
 
-This is not yet promoted to Release Candidate PASS because Codex re-audit, final Loader v5 release pinning/migration checks, and the remaining high-risk visual spot checks are still pending.
+This branch is not yet promoted to final RC PASS because the generated Loader v6 path still needs targeted Scriptable device migration/offline QA, Codex re-audit remains pending, and the final risk-based visual spot checks have not been completed.
 
 ---
 
@@ -22,19 +25,21 @@ This is not yet promoted to Release Candidate PASS because Codex re-audit, final
 ### GitHub Actions Hardening CI
 Workflow: `.github/workflows/hardening-ci.yml`
 
-First full green run after fixing the MotoGP test assertion:
-- Run: **#3**
-- Run ID: `32949810775`
-- Head: `553ddfdae5069152054bb2f5d52a3be850460660`
-- Result: **SUCCESS**
+Key green milestones:
+- Run #3 / ID `32949810775`: first full hardening green after MotoGP gate correction.
+- Run #5 / ID `32950012839`: 22-case Small/Medium render smoke added and green.
+- Run #25 / ID `32952305230`: immutable integrity gate + release-package generator gate green.
+- Run #26 / ID `32952423421`: immutable release candidate package generation + artifact upload green.
 
-Expanded CI with the automated Small/Medium render smoke:
-- Run: **#5**
-- Run ID: `32950012839`
-- Head: `f734b2239bfffd23912fd9c27ef2afc7d97ab1f5`
+Latest immutable package run:
+- Head: `30faaae959835d4342a0f23594b4b667d1923cda`
 - Result: **SUCCESS**
+- Artifact: `motorsport-hub-immutable-30faaae959835d4342a0f23594b4b667d1923cda`
+- Artifact ID: `9600650504`
+- Artifact digest: `sha256:5147bb874c7635b5d07da582dfa39a947eda2c8eb16a72a9f74cab3a4f32dd8f`
+- Contents: generated `release-integrity.json` + generated `scriptable-loader-v6.js`
 
-The workflow now runs a full syntax audit plus every deterministic gate, and it does not stop at the first gate failure.
+The workflow runs the full syntax audit, executes all deterministic gates without stopping at the first failure, generates an immutable RC package only after the gates pass, and syncs only green runtime files to `hardening-live`.
 
 ### Deterministic gates currently green
 - `tests/release-gate.mjs`
@@ -44,6 +49,8 @@ The workflow now runs a full syntax audit plus every deterministic gate, and it 
 - `tests/cache-hardening-gate.mjs`
 - `tests/hero-manifest-gate.mjs`
 - `tests/lifecycle-hardening-gate.mjs`
+- `tests/integrity-gate.mjs`
+- `tests/release-package-generator-gate.mjs`
 - `tests/render-smoke-gate.mjs`
 - `tests/f1-flat-gate.mjs`
 - `tests/wec-flat-gate.mjs`
@@ -56,16 +63,65 @@ The workflow now runs a full syntax audit plus every deterministic gate, and it 
 ### Automated 22-case render smoke
 `tests/render-smoke-gate.mjs` renders all **11 categories × Small/Medium** through the real Router in a Scriptable VM mock with live data forced offline.
 
-It verifies for every case:
+For every case it verifies:
 - exactly one category module is fetched;
 - `Script.setWidget()` is called once;
 - `Script.complete()` is called once;
 - snapshot/cache fallback renders instead of an error Widget;
 - expected event identity is present;
 - Medium exposes the standings/points surface;
-- no `データ取得失敗`, Router safety-error, or invalid-parameter state appears.
+- no data-failure, Router safety-error, or invalid-parameter state appears.
 
 This replaces routine human repetition of all 22 functional render cases. It does **not** replace pixel-level iPhone visual judgement.
+
+---
+
+## Router / runtime architecture
+Current Router marker on `hardening-live`:
+- `v9.4.4-hardening`
+- `MH_ROUTER_SCHEMA=5`
+- direct category modules only
+- no legacy wrapper runtime
+- no Router source rewriting
+- optional immutable release integrity enforcement
+
+All four expansion categories now own their lifecycle directly and carry `MH_LIFECYCLE_BAKED=1`:
+- SUPER FORMULA
+- INDYCAR
+- NASCAR
+- GTWC Europe
+
+**RC-08 runtime source-rewrite concern is closed in the current hardening architecture.**
+
+`hardening-live` is automatically synchronized only after Hardening CI succeeds, so iPhone testing follows the latest known-green runtime instead of intermediate branch states.
+
+---
+
+## Immutable release / RC-04 hardening
+Release packaging tool: `tools/generate-release-package.mjs`.
+
+Generated release descriptor pins:
+- immutable 40-character Git commit SHA (`sourceRef`);
+- Router byte length + SHA-256;
+- every one of the 11 category modules plus QA byte length + SHA-256;
+- Router schema;
+- category manifest;
+- release namespace.
+
+Generated Loader v6 behavior:
+- never fetches mutable `main` for the fixed release;
+- validates Router syntax, markers, byte length, and SHA-256 before execution;
+- passes the immutable release integrity descriptor into Router;
+- Router validates category module byte length + SHA-256 before execution;
+- candidate / LKG / quarantine are release-namespaced;
+- offline fallback executes only a previously verified immutable LKG;
+- tampered Router/module or sourceRef mismatch fails closed.
+
+Automated coverage:
+- `tests/integrity-gate.mjs` verifies valid, tampered, wrong-sourceRef, offline-LKG, and corrupt-cache behavior.
+- `tests/release-package-generator-gate.mjs` verifies generated descriptor hashes/bytes and executes a generated Loader v6 against valid, tampered, and offline-LKG fixtures.
+
+**RC-04 is substantially mitigated in code and automated tests.** Remaining closure item: targeted real-device Loader v6 migration/offline QA using a generated immutable candidate package.
 
 ---
 
@@ -87,9 +143,9 @@ Malformed, old-format, stale, future-dated, wrong-category, or wrong-season cach
 ---
 
 ## Current lifecycle contract
-Original seven flat modules directly implement `UPCOMING / ACTIVE / SEASON_ENDED`.
+All 11 category modules directly implement their event lifecycle. Event windows are half-open: `[start,end)`.
 
-Current hold windows:
+Current hold/range behavior includes:
 - F1: 4h; explicit Abu Dhabi offline finale fallback.
 - WEC: 10h.
 - WRC: 4 days.
@@ -97,10 +153,8 @@ Current hold windows:
 - MotoGP: 4h.
 - FDJ: 40h.
 - D1GP: 40h.
+- SUPER FORMULA / INDYCAR / NASCAR / GTWC Europe: explicit start/end ranges in their own modules.
 
-Expansion four currently retain the strict fail-closed Router lifecycle transform. Absorbing that logic into each expansion module remains a pre-RC cleanup item.
-
-Event windows are half-open: `[start,end)`.
 After the finale the UI must show `シーズン終了` / `SEASON END`, never a historical race as `次戦`.
 
 ---
@@ -141,9 +195,9 @@ After the finale the UI must show `シーズン終了` / `SEASON END`, never a h
 
 ### 2026-08-26 — live dependency diagnostic
 - Hardening path: **11/11 LIVE — PASS**.
-- WEC initially reproduced a `10/11` parse false-negative, parser/diagnostic identity was corrected, and the device retest reached **11/11 LIVE**.
+- WEC initially reproduced a `10/11` parser false-negative, was corrected, then retested to **11/11 LIVE**.
 
-### Pixel-level spot checks completed on the current hardening path
+### Pixel-level spot checks completed on the hardening path
 
 #### F1 — PASS / Visual LOCK
 - Small: PASS
@@ -187,25 +241,25 @@ Human iPhone QA is required when one of these changes:
 - typography, spacing, safe areas or PTS geometry;
 - Hero/crop/veil logic;
 - a new category;
-- Scriptable-native behavior that cannot be represented by the VM mocks;
+- Scriptable-native behavior that cannot be represented by VM mocks;
 - a failure or suspicious result from automated CI.
 
-Routine data/parser/cache/calendar changes are primarily covered by deterministic gates + the 22-case render smoke + 11/11 live diagnostics.
+Routine data/parser/cache/calendar changes are primarily covered by deterministic gates + 22-case render smoke + 11/11 live diagnostics.
 
 Before public RC, perform a **small risk-based visual spot-check set**, not a mandatory 22-widget manual matrix.
 
 ---
 
-## Remaining blockers before RC PASS
-1. Codex re-audit of audited base → hardening branch.
-2. Absorb lifecycle behavior into SUPER FORMULA / INDYCAR / NASCAR / GTWC Europe so Router no longer rewrites module source at runtime.
-3. Finalize immutable Loader/Router/module release pinning and integrity policy for RC-04.
-4. Device-test Loader v5 candidate/LKG/quarantine/offline migration behavior.
-5. Perform only the final high-risk visual spot checks required by `DEVICE_QA_POLICY.md`.
-6. Synchronize final README / CHANGELOG / RELEASE_AUDIT wording after the above is complete.
+## Remaining blockers before final RC PASS
+1. Codex re-audit of audited base → current hardening branch.
+2. Targeted iPhone / Scriptable QA of generated Loader v6: fresh install/candidate, verified LKG, tampered rejection where reproducible, and offline fallback.
+3. Final risk-based visual spot checks required by `DEVICE_QA_POLICY.md`, especially any categories whose runtime/hero changed since their last visual lock.
+4. Synchronize final README / CHANGELOG / RELEASE_AUDIT wording after those checks.
+
+No public release, tag, Store submission, or external publication is authorized by this document.
 
 ## Post-Codex visual automation
-`POST_CODEX_VISUAL_AUTOMATION.md` is the retained roadmap for:
+`POST_CODEX_VISUAL_AUTOMATION.md` remains the roadmap for:
 - high-resolution Hero Asset Manager;
 - automatic subject-aware Small/Medium crop;
 - text-safe-area preservation;
@@ -216,4 +270,4 @@ Before public RC, perform a **small risk-based visual spot-check set**, not a ma
 Goal: **future Hero/data updates must not require manual crop correction or repetitive per-category visual QA.**
 
 ## RC decision
-**HARDENING CANDIDATE — CI PASS / FINAL REVIEW PENDING.**
+**HARDENING CANDIDATE — AUTOMATED GATES PASS / FINAL DEVICE + CODEX REVIEW PENDING.**
