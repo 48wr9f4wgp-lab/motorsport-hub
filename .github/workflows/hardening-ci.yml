@@ -34,44 +34,36 @@ jobs:
             node --check "$file"
           done < <(find . -type f \( -name '*.js' -o -name '*.mjs' \) -not -path './.git/*' -print0)
 
-      - name: Release gate
-        run: node tests/release-gate.mjs
-
-      - name: Boundary gate
-        run: node tests/boundary-gate.mjs
-
-      - name: Router hardening gate
-        run: node tests/router-hardening-gate.mjs
-
-      - name: Registry gate
-        run: node tests/registry-gate.mjs
-
-      - name: Cache hardening gate
-        run: node tests/cache-hardening-gate.mjs
-
-      - name: Hero manifest gate
-        run: node tests/hero-manifest-gate.mjs
-
-      - name: Lifecycle hardening gate
-        run: node tests/lifecycle-hardening-gate.mjs
-
-      - name: F1 flat gate
-        run: node tests/f1-flat-gate.mjs
-
-      - name: WEC flat gate
-        run: node tests/wec-flat-gate.mjs
-
-      - name: WRC flat gate
-        run: node tests/wrc-flat-gate.mjs
-
-      - name: SUPER GT flat gate
-        run: node tests/supergt-flat-gate.mjs
-
-      - name: MotoGP flat gate
-        run: node tests/motogp-flat-gate.mjs
-
-      - name: FDJ flat gate
-        run: node tests/fdj-flat-gate.mjs
-
-      - name: D1GP flat gate
-        run: node tests/d1gp-flat-gate.mjs
+      - name: Run all deterministic gates
+        shell: bash
+        run: |
+          set +e
+          failed=0
+          gates=(
+            tests/release-gate.mjs
+            tests/boundary-gate.mjs
+            tests/router-hardening-gate.mjs
+            tests/registry-gate.mjs
+            tests/cache-hardening-gate.mjs
+            tests/hero-manifest-gate.mjs
+            tests/lifecycle-hardening-gate.mjs
+            tests/render-smoke-gate.mjs
+            tests/f1-flat-gate.mjs
+            tests/wec-flat-gate.mjs
+            tests/wrc-flat-gate.mjs
+            tests/supergt-flat-gate.mjs
+            tests/motogp-flat-gate.mjs
+            tests/fdj-flat-gate.mjs
+            tests/d1gp-flat-gate.mjs
+          )
+          for gate in "${gates[@]}"; do
+            echo "::group::$gate"
+            node "$gate"
+            rc=$?
+            echo "::endgroup::"
+            if [ $rc -ne 0 ]; then
+              echo "::error::$gate failed with exit code $rc"
+              failed=1
+            fi
+          done
+          exit $failed
