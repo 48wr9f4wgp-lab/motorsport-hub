@@ -10,8 +10,8 @@ const norm=v=>String(v||'').trim().toUpperCase().replace(/[\s_-]+/g,'');
 
 assert.equal(registry.schemaVersion,1);
 assert.equal(registry.routerSchema,5);
-assert.equal(registry.categories.length,11,'registry category count drift');
-assert.equal(registry.planned?.find(x=>x.id==='DAKAR')?.status,'BLOCKED_UNTIL_HARDENING_REVIEW','Dakar must remain blocked during hardening');
+assert.equal(registry.categories.length,12,'registry category count drift');
+assert.equal(registry.planned?.length,0,'planned categories should be empty after Dakar integration');
 
 const ids=new Set(),tokens=new Map();
 for(const c of registry.categories){
@@ -28,15 +28,14 @@ const expectedManifest=[...registry.categories.map(x=>x.id),registry.qa.id].join
 assert(router.includes(`MH_CATEGORY_MANIFEST=${expectedManifest}`),'Router manifest differs from category-registry.json');
 assert(router.includes(`const ROUTER_SCHEMA=${registry.routerSchema}`),'Router schema differs from registry');
 for(const c of registry.categories){
-  assert(router.includes(`'${c.id}'`)||router.includes(`selected==='${c.id}'`),`Router missing category ${c.id}`);
+  assert(router.includes(`'${c.id}'`)||router.includes(`selected==='${c.id}'`)||router.includes(`${c.id}:{`),`Router missing category ${c.id}`);
   assert(router.includes(c.module),`Router missing module ${c.module}`);
   assert(router.includes(c.moduleCacheKey),`Router missing cache key ${c.moduleCacheKey}`);
 }
 assert(router.includes(registry.qa.module),'Router missing QA module');
 assert(router.includes(registry.qa.moduleCacheKey),'Router missing QA cache key');
 
-// These human-facing aliases are required to resolve rather than silently becoming another category.
-for(const [alias,id] of [['Formula 1','F1'],['Formula Drift Japan','FDJ'],['GT World Challenge Europe','GTWCEU'],['NASCAR Cup Series','NASCAR'],['D1 Grand Prix','D1GP']]){
+for(const [alias,id] of [['Formula 1','F1'],['Formula Drift Japan','FDJ'],['GT World Challenge Europe','GTWCEU'],['NASCAR Cup Series','NASCAR'],['D1 Grand Prix','D1GP'],['Dakar Rally','DAKAR']]){
   const n=norm(alias);assert.equal(tokens.get(n),id,`registry missing full-name alias ${alias}`);
 }
 
