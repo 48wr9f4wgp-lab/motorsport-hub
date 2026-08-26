@@ -72,6 +72,23 @@ jobs:
           done
           exit $failed
 
+      - name: Build immutable release candidate package
+        if: ${{ github.event_name == 'push' && github.ref_name == 'hardening/v9.3-codex-handoff' }}
+        env:
+          RELEASE_REF: ${{ github.sha }}
+        run: node tools/generate-release-package.mjs --source-ref="$RELEASE_REF" --write
+
+      - name: Upload immutable release candidate package
+        if: ${{ github.event_name == 'push' && github.ref_name == 'hardening/v9.3-codex-handoff' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: motorsport-hub-immutable-${{ github.sha }}
+          if-no-files-found: error
+          retention-days: 14
+          path: |
+            release-integrity.json
+            scriptable-loader-v6.js
+
       - name: Sync tested runtime to hardening-live
         if: ${{ github.event_name == 'push' && github.ref_name == 'hardening/v9.3-codex-handoff' }}
         shell: bash
