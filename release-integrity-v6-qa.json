@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "releaseId": "mh-1f22919dc2a8",
+  "sourceRef": "1f22919dc2a89053bff60f96b4c173ba6fb49076",
+  "routerSchema": 5,
+  "categoryManifest": "F1,WEC,WRC,SUPERGT,MOTOGP,FDJ,D1GP,SUPERFORMULA,INDYCAR,NASCAR,GTWCEU,QA",
+  "router": {
+    "path": "motorsport-hub.js",
+    "sha256": "88807f86cca394ae7aac5d5d07cd1160eff7ba448a613a33832af3c2b305bd11",
+    "bytes": 8630
+  },
+  "files": {
+    "f1-widget-flat-v1000.js": {
+      "sha256": "5b94a1f132d9eb2b75c4e169b373fbbe947f1bb788c8e37fafef48937965d107",
+      "bytes": 12260
+    },
+    "wec-widget-flat-v1000.js": {
+      "sha256": "5fbd92ba08c52bd3d67b60b69a30f8521a1311aca5da0e16f1c1490367273e7f",
+      "bytes": 12623
+    },
+    "wrc-widget-flat-v1000.js": {
+      "sha256": "92e3d5073a1263845691a88ace05bd749100dfc247087de087c8fcf0a2e81d94",
+      "bytes": 13285
+    },
+    "supergt-widget-flat-v1000.js": {
+      "sha256": "9631031526efcb470486074cc61a37a1a2b3b393f50c795de5c9048e51772f9c",
+      "bytes": 12470
+    },
+    "motogp-widget-flat-v1000.js": {
+      "sha256": "b1562558a8546ff364e88132f68c6d6bdfc8ad76d1e90aa336213633f93bbb5d",
+      "bytes": 13788
+    },
+    "fdj-widget-flat-v1000.js": {
+      "sha256": "a9eb5c5b37b3755a5890fa1be19b764e4347c96260514753c208f1fde74bfa19",
+      "bytes": 11224
+    },
+    "d1gp-widget-flat-v1000.js": {
+      "sha256": "3b0f5db052c2574c03cd4299cb00f35779f3962a6a8a17ae17aa4750b0e77587",
+      "bytes": 11594
+    },
+    "superformula-widget.js": {
+      "sha256": "ca0c7896181442d11a0190bed9733479968426a024771e4b43a5feaa37dc0f52",
+      "bytes": 12320
+    },
+    "indycar-widget.js": {
+      "sha256": "33d8e99af7b59bbf5767f7dfc78aa2a8367efb10b34aa9a8a38ef84c86c140fc",
+      "bytes": 12591
+    },
+    "nascar-widget.js": {
+      "sha256": "0bcbc8d73e93ac8ad6fe339ea7e5f684419cc101954fa0d8a922891e4bd541d4",
+      "bytes": 12702
+    },
+    "gtwc-europe-widget.js": {
+      "sha256": "b347c39f24294d8e1548b9bc86485d22f8ce500d36001de64210bd512a333a9e",
+      "bytes": 12868
+    },
+    "motorsport-diagnostics-v890.js": {
+      "sha256": "733cb79afe67fd546700773d57724527c116b10f805f590270a19a84dafcae94",
+      "bytes": 5079
+    }
+  }
+}
