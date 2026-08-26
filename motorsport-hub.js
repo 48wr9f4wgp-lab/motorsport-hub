@@ -1,7 +1,7 @@
-// Motorsport Hub v9.4.1-hardening — direct category module router
+// Motorsport Hub v9.4.2-hardening — direct category module router
 // H1: explicit parameter validation and full-name aliases.
-// H3: expansion categories retain a strict fail-closed lifecycle transform until their modules absorb it directly.
-// H4: every current category now routes directly to a completed/dedicated module. No legacy reliability-wrapper runtime remains.
+// H3: expansion categories accept build-time baked lifecycle modules; unbaked modules retain the strict fail-closed migration transform.
+// H4: every current category routes directly to a completed/dedicated module. No legacy reliability-wrapper runtime remains.
 // MH_ROUTER_SCHEMA=5
 // MH_CATEGORY_MANIFEST=F1,WEC,WRC,SUPERGT,MOTOGP,FDJ,D1GP,SUPERFORMULA,INDYCAR,NASCAR,GTWCEU,QA
 // Loader v4 compatibility marker: v8.6.0 motorsport-core-v841.js motorsport-hq-core.js fdj-widget.js
@@ -40,7 +40,7 @@ const fm=FileManager.local(),cache=fm.joinPath(fm.documentsDirectory(),`motorspo
 const valid=s=>typeof s==='string'&&s.includes('Motorsport Hub')&&s.includes('Script.complete()')&&s.includes(route.marker);
 function replaceExact(s,needle,replacement,expected,label){const parts=String(s).split(needle),hits=parts.length-1;if(hits!==expected)throw Error(`HARDENING_PATCH_MISMATCH:${label}:${hits}/${expected}`);return parts.join(replacement)}
 function hardenExpansionLifecycle(src){
- if(!route.expansion)return src;
+ if(!route.expansion||String(src).includes('MH_LIFECYCLE_BAKED=1'))return src;
  const oldNext="function nextEvent(d){const now=Date.now();for(const e of CAL){if(Date.parse(e.end)>now)return{...d,...e,seasonEnded:false}}const last=CAL[CAL.length-1];return{...d,...last,seasonEnded:true}}";
  const newNext="function nextEvent(d){const now=Date.now();for(const e of CAL){const s=Date.parse(e.start),end=Date.parse(e.end);if(now<end)return{...d,...e,seasonEnded:false,lifecycle:now>=s?'ACTIVE':'UPCOMING'}}const last=CAL[CAL.length-1];return{...d,...last,seasonEnded:true,lifecycle:'SEASON_ENDED'}}";
  const oldCountdown="function countdown(d){if(d.seasonEnded)return{label:'SEASON END',live:false};const now=Date.now(),s=Date.parse(d.start),e=Date.parse(d.end);if(now>=s&&now<=e)return{label:'開催中',live:true};const q=s-now;if(q<=0)return{label:'終了',live:false};const h=q/3600000;if(h<24)return{label:`あと${Math.ceil(h)}時間`,live:false};return{label:`あと${Math.ceil(h/24)}日`,live:false}}";
@@ -51,7 +51,7 @@ function hardenExpansionLifecycle(src){
 async function fail(){await messageWidget('Motorsport Hub','最新版モジュールを安全に実行できません。数分後に再試行します。')}
 
 let code='';
-if(globalThis.__MH_REMOTE_OFFLINE!==true){try{const r=new Request(`${URL}?v=941&t=${Date.now()}-${Math.random()}`);r.timeoutInterval=15;r.headers={'Cache-Control':'no-cache, no-store, max-age=0, must-revalidate','Pragma':'no-cache','Expires':'0','User-Agent':'MotorsportHubRouter/9.4.1-hardening'};code=await r.loadString();if(!valid(code))throw Error('invalid module');fm.writeString(cache,code)}catch(e){globalThis.__MH_REMOTE_OFFLINE=true}}
+if(globalThis.__MH_REMOTE_OFFLINE!==true){try{const r=new Request(`${URL}?v=942&t=${Date.now()}-${Math.random()}`);r.timeoutInterval=15;r.headers={'Cache-Control':'no-cache, no-store, max-age=0, must-revalidate','Pragma':'no-cache','Expires':'0','User-Agent':'MotorsportHubRouter/9.4.2-hardening'};code=await r.loadString();if(!valid(code))throw Error('invalid module');fm.writeString(cache,code)}catch(e){globalThis.__MH_REMOTE_OFFLINE=true}}
 if(!valid(code)){try{if(fm.fileExists(cache)){const c=fm.readString(cache);if(valid(c))code=c;else fm.remove(cache)}}catch(_){} }
 if(!valid(code)){await fail();return}
 try{code=hardenExpansionLifecycle(code)}catch(_){await fail();return}
