@@ -126,6 +126,25 @@ F1 is therefore **device-visual LOCKED for the current hardening path**, subject
 
 WRC is therefore **device-visual LOCKED for the current hardening path**, subject to the still-pending repository gates, cache/offline regression and Codex re-audit.
 
+### 2026-08-26 17:29 JST — MotoGP flat visual regression
+- Module: `motogp-widget-flat-v1000.js`
+- Small: **PASS**
+- Medium: **PASS**
+- Event shown: `アラゴンGP` / `8/30(日) 21:00` / `モーターランド・アラゴン`
+- Countdown: `あと5日` — consistent with device date/time.
+- Medium TOP3 rendered correctly and without clipping:
+  1. Jorge Martin — 240
+  2. Marco Bezzecchi — 209
+  3. Ai Ogura — 203
+- Metadata sublines rendered for all three; the long Trackhouse team line remained readable without layout breakage.
+- Hero framing: PASS
+- Left-side readability veil: PASS
+- PTS pills/alignment: PASS
+- Small information hierarchy: PASS
+- No visible flat-migration regression observed in the supplied device screenshot.
+
+MotoGP is therefore **device-visual LOCKED for the current hardening path**, subject to the still-pending repository gates, cache/offline regression and Codex re-audit.
+
 ## Historical device evidence — baseline only
 Previously observed before the full flatten:
 - original seven: 7/7 live diagnostic PASS.
