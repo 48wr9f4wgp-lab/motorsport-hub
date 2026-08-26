@@ -60,6 +60,7 @@ jobs:
             tests/motogp-flat-gate.mjs
             tests/fdj-flat-gate.mjs
             tests/d1gp-flat-gate.mjs
+            tests/dakar-gate.mjs
           )
           for gate in "${gates[@]}"; do
             echo "::group::$gate"
@@ -109,6 +110,7 @@ jobs:
             indycar-widget.js
             nascar-widget.js
             gtwc-europe-widget.js
+            dakar-widget.js
             motorsport-diagnostics-v890.js
             category-registry.json
             hero-assets.json
