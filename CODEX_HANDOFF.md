@@ -10,7 +10,7 @@
 
 Current branch verdict:
 
-**HARDENING CANDIDATE — AUTOMATED GATES PASS / FINAL CODEX + DEVICE REVIEW PENDING**
+**HARDENING CANDIDATE — AUTOMATED GATES + LOADER V6 DEVICE QA PASS / CODEX RE-AUDIT PENDING**
 
 Read in this order:
 1. `CODEX_HANDOFF.md`
@@ -21,17 +21,17 @@ Read in this order:
 
 ---
 
-## What Codex originally found
-The audited base was rated **FAIL** with:
+## Original Codex audit
+Base `a09d16e...` was rated **FAIL**:
 - Critical: 0
 - High: 5
 - Medium: 8
 - Low: 3
 
-Primary issues targeted by this branch:
-- RC-01 stale Router/LKG could misroute new categories to F1.
+Primary findings targeted by this branch:
+- RC-01 stale Router/LKG could misroute categories to F1.
 - RC-02 / RC-09 / RC-16 season-final and event-boundary bugs.
-- RC-03 deep serial remote wrapper waterfall.
+- RC-03 serial remote wrapper waterfall.
 - RC-04 mutable remote source + unsafe candidate/LKG promotion.
 - RC-05 incomplete reachable Hero attribution inventory.
 - RC-06 unvalidated/stale/cross-category data cache.
@@ -41,7 +41,7 @@ Primary issues targeted by this branch:
 ---
 
 ## Current architecture
-`motorsport-hub.js` is now a direct category module Router.
+`motorsport-hub.js` is a direct category-module Router.
 
 Original seven:
 - F1 → `f1-widget-flat-v1000.js`
@@ -61,141 +61,130 @@ Expansion four:
 QA:
 - `motorsport-diagnostics-v890.js`
 
-Current Router:
-- no legacy `motorsport-reliability-v896.js` / D1 reliability runtime path;
+Current Router guarantees:
+- no legacy reliability-wrapper runtime path;
 - no nested wrapper waterfall;
-- no runtime module source rewriting;
-- one Router fetch + one selected category module path;
-- Router schema = 5;
-- exact category manifest;
-- invalid parameters fail explicitly instead of silently becoming F1.
+- no Router runtime source rewriting;
+- one Router + one selected category module path;
+- explicit invalid-parameter failure;
+- Router schema/manifest handshake;
+- optional immutable release integrity enforcement.
 
 Legacy wrapper files remain only as historical/rollback artifacts and are not current runtime dependencies.
 
 ---
 
-## Closed / structurally resolved items
+## Structurally resolved findings
 
 ### RC-03 — wrapper waterfall
-The old chain similar to:
+Old multi-hop runtime chain is no longer reachable from current Router.
 
-`Router → v896 → v895 → v894 → v892 → v890 → universal → leaf`
-
-is no longer used by current routes.
-
-Verified by:
+Enforced by:
 - `tests/router-hardening-gate.mjs`
-- category-specific flat gates
+- flat-module gates
 - `tests/render-smoke-gate.mjs`
 
-Treat RC-03 as structurally resolved unless re-audit finds a new reachable dependency path.
+### RC-08 — runtime source rewriting
+All four expansion modules own lifecycle directly and carry `MH_LIFECYCLE_BAKED=1`.
 
-### RC-08 — Router runtime source rewriting
-SUPER FORMULA / INDYCAR / NASCAR / GTWC Europe now own lifecycle logic directly and contain `MH_LIFECYCLE_BAKED=1`.
+Router no longer transforms module source before execution.
 
-Router no longer performs `String.replace`, `replaceExact`, or lifecycle source transforms before execution.
+Enforced by:
+- `tests/lifecycle-hardening-gate.mjs`
+- `tests/release-gate.mjs`
 
-`tests/lifecycle-hardening-gate.mjs` and `tests/release-gate.mjs` enforce this architecture.
-
-Treat RC-08 as **closed in current hardening code**, subject to re-audit.
-
-### RC-06 — cache envelope
-All 11 categories use `dataCacheSchema: 1` and validate:
-- schemaVersion
-- category
-- season
-- fetchedAt
-- source
-- ranking
-- event
-- data
+### RC-06 — data cache integrity
+All 11 categories use `dataCacheSchema: 1` and validate schema/category/season/fetchedAt/source/ranking/event/data.
 
 Malformed, stale, future-dated, wrong-category and wrong-season payloads are rejected.
 
-`tests/cache-hardening-gate.mjs` is green.
+### RC-05 — Hero inventory
+`hero-assets.json` is scoped to URLs reachable from current Registry modules.
+
+`tests/hero-manifest-gate.mjs` enforces runtime URL-set equality.
+
+SUPER GT current runtime uses only the exact-page verified CC0 #36 asset.
 
 ---
 
 ## RC-04 — immutable release hardening
-This area has materially changed since the original audit.
+This is the main area Codex should attack-test on return.
 
 ### Current implementation
-Router `v9.4.4-hardening` supports release integrity mode using:
-- immutable 40-char Git commit `sourceRef`;
-- byte-length verification;
-- SHA-256 verification;
-- release-namespaced module cache;
-- fail-closed sourceRef mismatch handling.
-
-Release package generator:
+Release packaging tool:
 - `tools/generate-release-package.mjs`
 
-Generated descriptor contains:
-- Router SHA-256 + byte count;
-- every 11 category module + QA SHA-256 + byte count;
+Generated descriptor pins:
+- immutable 40-char Git commit `sourceRef`;
+- Router byte length + SHA-256;
+- every 11 category modules + QA byte length + SHA-256;
 - Router schema;
 - category manifest;
-- immutable sourceRef;
-- release ID.
+- release ID / cache namespace.
 
 Generated Loader v6:
-- hard-pins immutable commit SHA;
-- verifies Router syntax/markers/bytes/SHA-256 before execution;
-- passes the release integrity descriptor into Router;
-- Router verifies the selected category module bytes/SHA-256 before execution;
-- uses release-namespaced candidate/LKG/quarantine;
-- offline fallback runs only a previously verified immutable LKG;
-- tampered Router/module fails closed.
+- never uses mutable `main` for the fixed release;
+- verifies Router syntax, markers, bytes and SHA-256 before execution;
+- passes the immutable release descriptor into Router;
+- Router verifies the selected module bytes/SHA-256;
+- candidate / LKG / quarantine are release-namespaced;
+- tampered Router/module/sourceRef mismatch fails closed;
+- offline fallback executes only previously verified immutable LKG.
 
-### Automated tests
-- `tests/integrity-gate.mjs`
-  - valid candidate executes;
-  - tampered module rejected;
-  - sourceRef mismatch rejected before fetch;
-  - verified offline cache executes;
-  - corrupt cache removed/rejected.
-- `tests/release-package-generator-gate.mjs`
-  - descriptor hashes/byte counts match Node crypto;
-  - generated Loader contains immutable sourceRef;
-  - mutable `/main/` Router URL forbidden;
-  - valid generated Loader fixture executes/promotes LKG;
-  - tampered Router rejected;
-  - offline verified LKG executes.
+### Automated coverage
+- `tests/integrity-gate.mjs`: PASS.
+- `tests/release-package-generator-gate.mjs`: PASS.
 
-Latest generated immutable package evidence:
-- Hardening CI run #26
-- Run ID: `32952423421`
-- Head: `30faaae959835d4342a0f23594b4b667d1923cda`
-- Result: **SUCCESS**
-- Artifact: `motorsport-hub-immutable-30faaae959835d4342a0f23594b4b667d1923cda`
-- Artifact ID: `9600650504`
-- Artifact digest: `sha256:5147bb874c7635b5d07da582dfa39a947eda2c8eb16a72a9f74cab3a4f32dd8f`
+These cover valid candidate, tampered Router/module, wrong sourceRef, corrupt cache, and verified offline LKG behavior.
 
-### Remaining RC-04 work for Codex
+### Real-device Scriptable evidence — PASS
+Fixed immutable sourceRef tested on iPhone:
+- `1f22919dc2a89053bff60f96b4c173ba6fb49076`
+
+Online candidate run:
+- `11/11 LIVE — データ経路OK`
+- `IMMUTABLE ✓ · CANDIDATE · 1f22919dc2a8`
+- verdict: **PASS**
+
+Fully offline run (airplane mode + Wi-Fi off):
+- `0/11 LIVE — 要確認`
+- dependencies correctly reported `NET`;
+- `IMMUTABLE ✓ · LKG · 1f22919dc2a8`
+- verdict: **PASS**
+
+This proves on real Scriptable/iPhone:
+1. immutable candidate acquisition;
+2. Router integrity validation;
+3. selected-module integrity path;
+4. release-namespaced LKG promotion;
+5. fully offline verified-LKG recovery;
+6. no fallback to mutable `main` or unrelated historical Router cache.
+
+### What remains for Codex on RC-04
 Do **not** redesign this from scratch unless a concrete flaw is found.
 
-Re-audit the implementation for:
-1. hash implementation correctness in Scriptable JS;
-2. immutable sourceRef propagation Loader → Router → category module fetch;
+Attack-test:
+1. Scriptable SHA-256 implementation correctness;
+2. sourceRef propagation Loader → Router → category module;
 3. cache namespace isolation between releases;
-4. candidate/LKG/quarantine failure behavior;
-5. any bypass where mutable remote code could still execute in release mode;
-6. downgrade/rollback semantics.
+4. candidate/LKG/quarantine transitions;
+5. downgrade/rollback semantics;
+6. any bypass where mutable code can still execute in integrity mode;
+7. failure behavior under truncated/altered payloads.
 
-Real-device Loader v6 migration/offline QA remains pending and should be targeted, not a full 22-widget visual matrix.
+Device migration/offline QA is no longer pending; it passed on 2026-08-26.
 
 ---
 
 ## Event lifecycle
-All 11 modules own their lifecycle directly.
+All 11 modules own lifecycle directly.
 
 States:
 - `UPCOMING`
 - `ACTIVE`
 - `SEASON_ENDED`
 
-Event windows use half-open `[start,end)` semantics.
-Finale UI uses `シーズン終了` / `SEASON END` rather than a historical `次戦`.
+Active windows use half-open `[start,end)` semantics. Finale UI uses `シーズン終了` / `SEASON END` rather than a historical `次戦`.
 
 Retention/ranges:
 - F1: 4h + explicit Abu Dhabi offline finale fallback
@@ -205,73 +194,48 @@ Retention/ranges:
 - MotoGP: 4h
 - FDJ: 40h
 - D1GP: 40h
-- SUPER FORMULA / INDYCAR / NASCAR / GTWC Europe: explicit module-owned start/end ranges
+- SUPER FORMULA / INDYCAR / NASCAR / GTWC Europe: module-owned explicit start/end ranges
 
 ---
 
-## Hero assets
-`hero-assets.json` is scoped to assets reachable from current Registry modules.
-
-`tests/hero-manifest-gate.mjs` checks runtime URL-set equality against the manifest.
-
-SUPER GT current policy:
-- verified CC0 #36 au TOM'S asset only;
-- unverified historical fallback images are not current runtime candidates.
-
-Post-Codex work is intentionally separated into `POST_CODEX_VISUAL_AUTOMATION.md`:
-- high-resolution Hero Asset Manager;
-- automatic subject-aware crop for Small/Medium;
-- text-safe-area reservation;
-- veil generation;
-- image-quality rejection;
-- LKG Hero fallback;
-- automated visual regression.
-
-Target: **Hero changes must not require manual crop tuning every update.**
-
----
-
-## Current deterministic CI
+## Current CI
 Workflow:
 - `.github/workflows/hardening-ci.yml`
 
-Current gates:
-- syntax audit for all `.js/.mjs`;
-- `release-gate`;
-- `boundary-gate`;
-- `router-hardening-gate`;
-- `registry-gate`;
-- `cache-hardening-gate`;
-- `hero-manifest-gate`;
-- `lifecycle-hardening-gate`;
-- `integrity-gate`;
-- `release-package-generator-gate`;
-- `render-smoke-gate`;
-- all original-seven flat gates.
+Current suite includes:
+- full JS/MJS syntax audit;
+- release gate;
+- boundary gate;
+- Router hardening gate;
+- Registry gate;
+- cache hardening gate;
+- Hero manifest gate;
+- lifecycle gate;
+- integrity gate;
+- release-package generator gate;
+- all original-seven flat gates;
+- 11 categories × Small/Medium = 22 render smoke cases.
 
-`render-smoke-gate` covers **11 categories × Small/Medium = 22 functional renders**.
-
-After all gates succeed on the hardening branch, CI:
-1. generates immutable Loader v6 + integrity manifest as a 14-day workflow artifact;
-2. syncs only the tested runtime files to `hardening-live`.
+After all gates succeed, CI:
+1. generates immutable Loader v6 + integrity manifest artifact;
+2. syncs only tested runtime files to `hardening-live`.
 
 This prevents iPhone testing against intermediate broken commits.
 
 ---
 
 ## Current device evidence
-Hardening Scriptable dependency diagnostic:
-- **11/11 LIVE — PASS** on iPhone.
+- live dependency diagnostic: **11/11 LIVE — PASS**.
+- immutable Loader v6 online candidate: **PASS**.
+- immutable Loader v6 fully offline verified LKG: **PASS**.
 
-Current pixel-level visual locks on hardening paths:
+Pixel-level visual locks on current hardening paths:
 - F1 Small/Medium: PASS
 - WRC Small/Medium: PASS
 - MotoGP Small/Medium: PASS
 - FDJ Small/Medium: PASS
 
-Previously accepted expansion visuals remain baseline evidence, but do not manually rerun all 11 × Small/Medium after every non-visual change.
-
-Canonical QA policy: `DEVICE_QA_POLICY.md`.
+Routine 11×Small/Medium manual regression is retired. Canonical policy: `DEVICE_QA_POLICY.md`.
 
 ---
 
@@ -310,13 +274,26 @@ Canonical QA policy: `DEVICE_QA_POLICY.md`.
 1. Fetch `hardening/v9.3-codex-handoff`.
 2. Compare audited base `a09d16e11aa0f65104ba895b74e09124d30b487b` → current branch tip.
 3. Confirm latest Hardening CI is green before editing anything.
-4. Re-evaluate original RC-01 through RC-16 against current reachable code.
-5. Specifically attack-test RC-04 immutable release mode rather than redoing already-green parser/layout work.
+4. Re-evaluate original RC-01 through RC-16 against **current reachable code**, not historical wrappers.
+5. Attack-test RC-04 immutable Loader/Router path, downgrade semantics and cache isolation.
 6. Benchmark runtime/network behavior vs audited base where useful.
-7. Run targeted Scriptable Loader v6 migration/offline QA or provide precise steps for the iPhone checks that cannot be automated.
-8. Preserve accepted visual locks unless a verified defect requires change.
-9. Review `POST_CODEX_VISUAL_AUTOMATION.md` only after release hardening is stable.
-10. Do not start Dakar until the re-audit says this hardening line is mergeable/acceptable.
+7. Preserve accepted visual locks unless a verified defect requires change.
+8. Review `POST_CODEX_VISUAL_AUTOMATION.md` after release hardening is stable.
+9. Do not start Dakar until the re-audit says this hardening line is mergeable/acceptable.
+
+---
+
+## Post-Codex visual automation
+`POST_CODEX_VISUAL_AUTOMATION.md` is a committed next-phase requirement:
+- high-resolution Hero Asset Manager;
+- automatic subject-aware Small/Medium crop;
+- text-safe-area reservation;
+- automatic veil generation;
+- image-quality rejection;
+- LKG Hero fallback;
+- automated visual regression.
+
+Target: **Hero changes must not require manual crop tuning every update.**
 
 ---
 
@@ -324,5 +301,5 @@ Canonical QA policy: `DEVICE_QA_POLICY.md`.
 - Never overwrite `main` wholesale.
 - Fix disputed findings only on the hardening branch.
 - Require green CI after every hardening fix.
-- Merge only after Codex re-audit + Loader v6 migration/offline decision + risk-based device QA.
+- Merge only after Codex re-audit + risk-based device QA decision.
 - Public release still requires explicit user approval.
