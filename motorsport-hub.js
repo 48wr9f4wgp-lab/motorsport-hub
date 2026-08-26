@@ -1,20 +1,20 @@
-// Motorsport Hub v9.4.4-hardening — direct category module router
+// Motorsport Hub v9.5.0-hardening — direct category module router
 // H1: explicit parameter validation and full-name aliases.
 // H3: lifecycle behavior is owned directly by every category module.
 // H4: every current category routes directly to one completed/dedicated module. No legacy wrapper runtime or Router source rewriting remains.
 // H5: release mode can enforce immutable sourceRef + byte length + SHA-256 for every category module.
 // MH_ROUTER_SCHEMA=5
-// MH_CATEGORY_MANIFEST=F1,WEC,WRC,SUPERGT,MOTOGP,FDJ,D1GP,SUPERFORMULA,INDYCAR,NASCAR,GTWCEU,QA
+// MH_CATEGORY_MANIFEST=F1,WEC,WRC,SUPERGT,MOTOGP,FDJ,D1GP,SUPERFORMULA,INDYCAR,NASCAR,GTWCEU,DAKAR,QA
 // Loader v4/v5 compatibility marker: module router v8.6.0 motorsport-core-v841.js motorsport-hq-core.js fdj-widget.js
 (async()=>{
 const ROUTER_SCHEMA=5;
-const CATEGORY_MANIFEST='F1,WEC,WRC,SUPERGT,MOTOGP,FDJ,D1GP,SUPERFORMULA,INDYCAR,NASCAR,GTWCEU,QA';
+const CATEGORY_MANIFEST='F1,WEC,WRC,SUPERGT,MOTOGP,FDJ,D1GP,SUPERFORMULA,INDYCAR,NASCAR,GTWCEU,DAKAR,QA';
 const SOURCE_REF=String(globalThis.__MH_SOURCE_REF||'main');
 const INTEGRITY=globalThis.__MH_RELEASE_INTEGRITY||null;
-const labels=['F1','WEC','WRC','SUPER GT','MotoGP','FDJ','D1GP','SUPER FORMULA','INDYCAR','NASCAR Cup','GTWC Europe','QA診断'];
-const params=['F1','WEC','WRC','SUPERGT','MOTOGP','FDJ','D1GP','SUPERFORMULA','INDYCAR','NASCAR','GTWCEU','QA'];
+const labels=['F1','WEC','WRC','SUPER GT','MotoGP','FDJ','D1GP','SUPER FORMULA','INDYCAR','NASCAR Cup','GTWC Europe','Dakar Rally','QA診断'];
+const params=['F1','WEC','WRC','SUPERGT','MOTOGP','FDJ','D1GP','SUPERFORMULA','INDYCAR','NASCAR','GTWCEU','DAKAR','QA'];
 const norm=v=>String(v||'').trim().toUpperCase().replace(/[\s_-]+/g,'');
-const aliases={FORMULA1:'F1',FORMULADRIFTJAPAN:'FDJ',D1:'D1GP',D1GRANDPRIX:'D1GP',SF:'SUPERFORMULA',SUPERF:'SUPERFORMULA',INDY:'INDYCAR',NASCARCUP:'NASCAR',NASCARCUPSERIES:'NASCAR',CUP:'NASCAR',GTWC:'GTWCEU',GTWCEUROPE:'GTWCEU',GTWCEU:'GTWCEU',GTWORLDCHALLENGEEUROPE:'GTWCEU'};
+const aliases={FORMULA1:'F1',FORMULADRIFTJAPAN:'FDJ',D1:'D1GP',D1GRANDPRIX:'D1GP',SF:'SUPERFORMULA',SUPERF:'SUPERFORMULA',INDY:'INDYCAR',NASCARCUP:'NASCAR',NASCARCUPSERIES:'NASCAR',CUP:'NASCAR',GTWC:'GTWCEU',GTWCEUROPE:'GTWCEU',GTWCEU:'GTWCEU',GTWORLDCHALLENGEEUROPE:'GTWCEU',DAKARRALLY:'DAKAR'};
 const ROUTES={
  F1:{file:'f1-widget-flat-v1000.js',key:'f1-flat-v1000',marker:'flattened F1 pilot module'},
  WEC:{file:'wec-widget-flat-v1000.js',key:'wec-flat-v1000',marker:'flattened WEC module'},
@@ -27,6 +27,7 @@ const ROUTES={
  INDYCAR:{file:'indycar-widget.js',key:'indycar-v910',marker:'INDYCAR module'},
  NASCAR:{file:'nascar-widget.js',key:'nascar-v920',marker:'NASCAR Cup Series module'},
  GTWCEU:{file:'gtwc-europe-widget.js',key:'gtwceu-v930',marker:'GT World Challenge Europe module'},
+ DAKAR:{file:'dakar-widget.js',key:'dakar-v950',marker:'DAKAR dedicated rally-raid module'},
  QA:{file:'motorsport-diagnostics-v890.js',key:'diagnostics-v890',marker:'QA diagnostics'}
 };
 
@@ -92,7 +93,7 @@ async function fail(){await messageWidget('Motorsport Hub','最新版モジュ�
 if(!integrityConfigOK){await fail();return}
 
 let code='';
-if(globalThis.__MH_REMOTE_OFFLINE!==true){try{const r=new Request(`${URL}?v=944&t=${Date.now()}-${Math.random()}`);r.timeoutInterval=15;r.headers={'Cache-Control':'no-cache, no-store, max-age=0, must-revalidate','Pragma':'no-cache','Expires':'0','User-Agent':'MotorsportHubRouter/9.4.4-hardening'};code=await r.loadString();if(!valid(code))throw Error('invalid module');fm.writeString(cache,code)}catch(e){globalThis.__MH_REMOTE_OFFLINE=true}}
+if(globalThis.__MH_REMOTE_OFFLINE!==true){try{const r=new Request(`${URL}?v=950&t=${Date.now()}-${Math.random()}`);r.timeoutInterval=15;r.headers={'Cache-Control':'no-cache, no-store, max-age=0, must-revalidate','Pragma':'no-cache','Expires':'0','User-Agent':'MotorsportHubRouter/9.5.0-hardening'};code=await r.loadString();if(!valid(code))throw Error('invalid module');fm.writeString(cache,code)}catch(e){globalThis.__MH_REMOTE_OFFLINE=true}}
 if(!valid(code)){try{if(fm.fileExists(cache)){const c=fm.readString(cache);if(valid(c))code=c;else fm.remove(cache)}}catch(_){} }
 if(!valid(code)){await fail();return}
 globalThis.__MH_ROUTER_BOOT_OK=true;
