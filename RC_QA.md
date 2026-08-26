@@ -9,14 +9,14 @@
 - Deterministic repository CI: **PASS**.
 - Automated 11 categories × Small/Medium render smoke: **22/22 PASS**.
 - iPhone live data diagnostic: **11/11 LIVE — PASS**.
-- Immutable release integrity path: **automated PASS + iPhone CANDIDATE PASS; LKG/offline device QA pending**.
+- Immutable release integrity path: **automated PASS + iPhone CANDIDATE PASS + iPhone offline LKG PASS**.
 - Public release: **NOT authorized / NOT performed**.
 
 Current status:
 
-**HARDENING CANDIDATE — AUTOMATED GATES PASS / IMMUTABLE CANDIDATE DEVICE PASS / LKG + CODEX REVIEW PENDING**
+**HARDENING CANDIDATE — AUTOMATED GATES + LOADER V6 DEVICE QA PASS / CODEX RE-AUDIT PENDING**
 
-This branch is not yet promoted to final RC PASS because generated Loader v6 still needs one targeted Scriptable offline/LKG device check, Codex re-audit remains pending, and the final risk-based visual spot checks have not been completed.
+This branch is not yet promoted to final RC PASS because Codex re-audit remains pending and only the final risk-based visual spot checks required by `DEVICE_QA_POLICY.md` should be considered before release approval.
 
 ---
 
@@ -35,7 +35,7 @@ Key green milestones:
 Latest tested immutable package used on iPhone:
 - Fixed sourceRef: `1f22919dc2a89053bff60f96b4c173ba6fb49076`
 - QA display short SHA: `1f22919dc2a8`
-- Result: **CANDIDATE device path PASS**
+- Result: **CANDIDATE device path PASS + offline verified-LKG PASS**
 
 The workflow runs the full syntax audit, executes all deterministic gates without stopping at the first failure, generates an immutable RC package only after the gates pass, and syncs only green runtime files to `hardening-live`.
 
@@ -120,10 +120,11 @@ Automated coverage:
 - `tests/release-package-generator-gate.mjs` verifies generated descriptor hashes/bytes and executes a generated Loader v6 against valid, tampered, and offline-LKG fixtures.
 
 ### iPhone Loader v6 evidence — 2026-08-26
-Fresh online execution of the immutable QA candidate showed:
+
+#### Online immutable candidate — PASS
+Observed:
 - `11/11 LIVE — データ経路OK`
 - bottom status: `IMMUTABLE ✓ · CANDIDATE · 1f22919dc2a8`
-- verdict: **PASS**
 
 This confirms on real Scriptable/iPhone:
 - immutable Router download succeeded;
@@ -132,12 +133,25 @@ This confirms on real Scriptable/iPhone:
 - QA module executed under Integrity Mode;
 - candidate path reached the expected fixed sourceRef.
 
-Remaining RC-04 device check:
-- disable network after the successful candidate run;
-- rerun the same QA script;
-- expected bottom status: `IMMUTABLE ✓ · LKG · 1f22919dc2a8`.
+#### Fully offline verified LKG — PASS
+Test condition:
+- airplane mode enabled;
+- Wi-Fi disabled;
+- no network connectivity.
 
-**RC-04 is substantially mitigated in code, automated tests, and online device execution. Remaining closure item: one offline/LKG device pass, then Codex hostile re-audit.**
+Observed:
+- `0/11 LIVE — 要確認`
+- all external dependencies reported `NET` immediately, as expected offline;
+- bottom status: `IMMUTABLE ✓ · LKG · 1f22919dc2a8`.
+
+This confirms on real Scriptable/iPhone:
+- immutable candidate fetch failed because the device was offline;
+- Loader v6 selected the previously verified release-namespaced LKG;
+- LKG byte/hash validation passed;
+- Router/QA still executed locally;
+- no downgrade to mutable `main`, stale v4 Router, or unrelated release cache occurred.
+
+**RC-04 device migration/offline behavior is now verified on iPhone. Remaining closure item is Codex hostile re-audit / downgrade-bypass review, not routine functional QA.**
 
 ---
 
@@ -220,30 +234,26 @@ After the finale the UI must show `シーズン終了` / `SEASON END`, never a h
 - Medium: PASS
 - Event: `イタリアGP` / `9/6(日) 22:00` / `Monza`
 - TOP3: Antonelli 242 / Russell 183 / Hamilton 183
-- Hero framing, veil, PTS pills, typography and Small hierarchy: PASS.
 
 #### WRC — PASS / Visual LOCK
 - Small: PASS
 - Medium: PASS
 - Event: `ラリー・パラグアイ` / `8/27(木)・時刻未定` / `Paraguay`
 - TOP3: Evans 201 / Pajari 171 / Katsuta 160
-- metadata, Hero, veil, PTS and layout: PASS.
 
 #### MotoGP — PASS / Visual LOCK
 - Small: PASS
 - Medium: PASS
 - Event: `アラゴンGP` / `8/30(日) 21:00` / `モーターランド・アラゴン`
 - TOP3: Martin 240 / Bezzecchi 209 / Ogura 203
-- long Trackhouse metadata remains readable; Hero / veil / PTS: PASS.
 
 #### FDJ — PASS / Visual LOCK
 - Small: PASS
 - Medium: PASS
 - Event: `第5戦 奥伊吹` / `9/5(土)・時刻未定` / `グランスノー奥伊吹`
 - TOP3: CONNOR XIA 231 / RYUMA 230 / KAZUMI TAKAHASHI 226
-- duplicate-RYUMA artifact absent; Hero / veil / PTS: PASS.
 
-Historical accepted visuals for SUPER FORMULA / INDYCAR / NASCAR remain useful baselines, but future human retests follow the risk-based policy below rather than automatically repeating every category.
+Historical accepted visuals for SUPER FORMULA / INDYCAR / NASCAR remain useful baselines, but future human retests follow the risk-based policy rather than automatically repeating every category.
 
 ---
 
@@ -267,10 +277,9 @@ Before public RC, perform a **small risk-based visual spot-check set**, not a ma
 ---
 
 ## Remaining blockers before final RC PASS
-1. Codex re-audit of audited base → current hardening branch.
-2. One targeted iPhone / Scriptable offline/LKG check for generated Loader v6.
-3. Final risk-based visual spot checks required by `DEVICE_QA_POLICY.md`, especially any categories whose runtime/hero changed since their last visual lock.
-4. Synchronize final README / CHANGELOG / RELEASE_AUDIT wording after those checks.
+1. Codex re-audit of audited base → current hardening branch, with emphasis on immutable Loader/Router attack paths, downgrade semantics, cache namespace isolation, and reachable-code regression.
+2. Final risk-based visual spot checks only where runtime/renderer/Hero changed since the last accepted visual evidence.
+3. Synchronize final README / CHANGELOG / RELEASE_AUDIT wording after the Codex decision.
 
 No public release, tag, Store submission, or external publication is authorized by this document.
 
@@ -286,4 +295,4 @@ No public release, tag, Store submission, or external publication is authorized 
 Goal: **future Hero/data updates must not require manual crop correction or repetitive per-category visual QA.**
 
 ## RC decision
-**HARDENING CANDIDATE — AUTOMATED GATES PASS / IMMUTABLE CANDIDATE DEVICE PASS / LKG + CODEX REVIEW PENDING.**
+**HARDENING CANDIDATE — AUTOMATED GATES + LOADER V6 DEVICE QA PASS / CODEX RE-AUDIT PENDING.**
