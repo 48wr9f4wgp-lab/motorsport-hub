@@ -20,7 +20,9 @@ CONNOR RYUMA KAZUMI standings
 2026年ドライバーズランキング 横井 中村 蕎麦切
 太田 格之進 岩佐 歩夢 イゴール フラガ Driver Standings
 Alex Palou Kyle Kirkwood Christian Lundgaard Championship Standings
-Lucas Auer Maro Engel Ricardo Feller GT World Challenge Europe Powered by AWS Drivers`;
+Lucas Auer Maro Engel Ricardo Feller GT World Challenge Europe Powered by AWS Drivers
+2027 Stage 13 King Abdullah Economic City
+NASSER AL-ATTIYAH NANI ROMA MATTIAS EKSTRÖM`;
 
 async function render({release=null,offline=false}={}){
  const sink=[];let setWidget=0,complete=0;
@@ -40,28 +42,14 @@ async function render({release=null,offline=false}={}){
  ctx.globalThis=ctx;
  vm.createContext(ctx);
  await vm.runInContext(src,ctx,{timeout:5000});
- assert.equal(setWidget,1);assert.equal(complete,1);assert(sink.includes('11/11 LIVE — データ経路OK'));
+ assert.equal(setWidget,1);assert.equal(complete,1);assert(sink.includes('12/12 LIVE — データ経路OK'));
  return sink;
 }
 
 const sourceRef='abcdef0123456789abcdef0123456789abcdef01';
-{
- const sink=await render({release:{sourceRef}});
- assert(sink.includes('IMMUTABLE ✓ · CANDIDATE · abcdef012345'),'candidate integrity status missing');
-}
-{
- const sink=await render({release:{sourceRef},offline:true});
- assert(sink.includes('IMMUTABLE ✓ · LKG · abcdef012345'),'LKG integrity status missing');
-}
-{
- const sink=await render();
- assert(sink.includes('DEV ROUTER · integrity OFF'),'dev integrity status missing');
-}
-{
- const sink=await render({release:{sourceRef:'not-a-commit'}});
- assert(sink.includes('INTEGRITY INVALID'),'invalid integrity status missing');
-}
-
-assert(src.includes('__MH_RELEASE_INTEGRITY'));
-assert(src.includes('__MH_REMOTE_OFFLINE'));
+{const sink=await render({release:{sourceRef}});assert(sink.includes('IMMUTABLE ✓ · CANDIDATE · abcdef012345'))}
+{const sink=await render({release:{sourceRef},offline:true});assert(sink.includes('IMMUTABLE ✓ · LKG · abcdef012345'))}
+{const sink=await render();assert(sink.includes('DEV ROUTER · integrity OFF'))}
+{const sink=await render({release:{sourceRef:'not-a-commit'}});assert(sink.includes('INTEGRITY INVALID'))}
+assert(src.includes('__MH_RELEASE_INTEGRITY'));assert(src.includes('__MH_REMOTE_OFFLINE'));
 console.log('Motorsport Hub diagnostics loader-path gate: PASS');
