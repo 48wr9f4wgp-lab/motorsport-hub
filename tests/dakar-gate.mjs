@@ -18,12 +18,13 @@ assert.equal(baselineVersion,heroPolicy.visualRegression?.baselineVersion,'Dakar
 const cropLiteral=moduleSrc.match(/const HERO_CROPS=(\{[\s\S]*?\});\nconst HERO_VARIANTS=/)?.[1];
 assert(cropLiteral,'Dakar runtime Hero crop map missing');
 const runtimeCrops=JSON.parse(cropLiteral);
-for(const [assetId,baseline] of Object.entries(heroPolicy.visualRegression?.assets||{})){
+const baselineAssets=heroPolicy.visualRegression?.assets||{};
+for(const [assetId,baseline] of Object.entries(baselineAssets)){
  const runtime=runtimeCrops[assetId];assert(runtime,`Dakar runtime Hero crop missing ${assetId}`);
  assert.deepEqual(runtime.small,baseline.smallCrop,`Dakar Small crop drift ${assetId}`);
  assert.deepEqual(runtime.medium,baseline.mediumCrop,`Dakar Medium crop drift ${assetId}`);
 }
-assert.equal(Object.keys(runtimeCrops).length,Object.keys(heroPolicy.visualRegression?.assets||{}).length,'Dakar runtime Hero crop count drift');
+assert.equal(Object.keys(runtimeCrops).length,Object.keys(baselineAssets).length,'Dakar runtime Hero crop count drift');
 
 const FIXTURE=`<table><tr><th>P.</th><th>N°</th><th>Exp.</th><th>Pilote/Véhicule</th><th>Équipe</th><th>Temps</th><th>Écart</th></tr>
 <tr><td>1</td><td>299</td><td></td><td>The Dacia Sandriders (qat) NASSER AL-ATTIYAH (bel) FABIAN LURQUIN</td><td>The Dacia Sandriders</td><td>48h 56' 53''</td><td></td></tr>
@@ -36,19 +37,26 @@ class ListWidget extends Stack{constructor(s){super(s);this.refreshAfterDate=nul
 class Color{constructor(){}static white(){return new Color()}}
 class LinearGradient{constructor(){this.colors=[];this.locations=[]}}
 class Size{constructor(w,h){this.width=w;this.height=h}}
+class Rect{constructor(x,y,width,height){this.x=x;this.y=y;this.width=width;this.height=height}}
 const Font={heavySystemFont(){},boldSystemFont(){},semiboldSystemFont(){},systemFont(){}};
 function FixedDateFactory(ms){return class FixedDate extends Date{constructor(...a){super(...a)}static now(){return ms}static parse(s){return Date.parse(s)}}}
+const HERO_IMAGE_SIZES=[{width:3840,height:2562},{width:3840,height:2555},{width:3840,height:2560}];
 
-async function render(now,family='medium'){
- const sink=[],files=new Map(),DateClass=FixedDateFactory(Date.parse(now));let setWidget=0,complete=0,repoRequests=0,rankingRequests=0;
- const fm={documentsDirectory:()=>'/docs',joinPath:(a,b)=>`${a}/${b}`,fileExists:p=>p.includes('motorsport-hero-v950-')||files.has(p),readImage:()=>({size:{width:1800,height:1200}}),writeImage(){},readString:p=>files.get(p),writeString:(p,s)=>files.set(p,String(s)),remove:p=>files.delete(p)};
- class Request{constructor(url){this.url=url;this.headers={}}async loadString(){if(this.url.includes('dakar-widget.js')){repoRequests++;return moduleSrc}rankingRequests++;return FIXTURE}async loadImage(){throw Error('hero cache should be used')}async loadJSON(){throw Error('unexpected json')}}
+async function render(now,family='medium',heroVariant=0){
+ const sink=[],files=new Map(),DateClass=FixedDateFactory(Date.parse(now)),heroRects=[];let setWidget=0,complete=0,repoRequests=0,rankingRequests=0,imageRequests=0;
+ files.set('/docs/motorsport-ui-v1-dakar.json',JSON.stringify({schemaVersion:1,heroVariant}));
+ const fm={documentsDirectory:()=>'/docs',joinPath:(a,b)=>`${a}/${b}`,fileExists:p=>files.has(p),readImage:p=>files.get(p),writeImage:(p,img)=>files.set(p,img),readString:p=>files.get(p),writeString:(p,s)=>files.set(p,String(s)),remove:p=>files.delete(p)};
+ class Request{constructor(url){this.url=url;this.headers={}}async loadString(){if(this.url.includes('dakar-widget.js')){repoRequests++;return moduleSrc}rankingRequests++;return FIXTURE}async loadImage(){imageRequests++;return{size:HERO_IMAGE_SIZES[heroVariant]}}async loadJSON(){throw Error('unexpected json')}}
+ class DrawContext{constructor(){this.size=new Size(0,0);this.opaque=false;this.respectScreenScale=false}setFillColor(){}fillRect(){}drawImageInRect(_img,rect){heroRects.push(rect)}getImage(){return{size:{width:this.size.width,height:this.size.height}}}}
  const CtxListWidget=class extends ListWidget{constructor(){super(sink)}};
- const ctx={args:{widgetParameter:'DAKAR'},config:{runsInWidget:true,widgetFamily:family},FileManager:{local:()=>fm},Request,ListWidget:CtxListWidget,Color,LinearGradient,Size,Font,Date:DateClass,Math,Map,Set,JSON,Number,String,Array,Object,RegExp,Error,Promise,isFinite,Script:{setWidget(){setWidget++},complete(){complete++}}};ctx.globalThis=ctx;
+ const ctx={args:{widgetParameter:'DAKAR',queryParameters:{}},config:{runsInWidget:true,widgetFamily:family},FileManager:{local:()=>fm},Request,ListWidget:CtxListWidget,DrawContext,Rect,Color,LinearGradient,Size,Font,Date:DateClass,Math,Map,Set,JSON,Number,String,Array,Object,RegExp,Error,Promise,isFinite,Script:{setWidget(){setWidget++},complete(){complete++}}};ctx.globalThis=ctx;
  vm.createContext(ctx);await vm.runInContext(router,ctx,{timeout:5000});
- assert.equal(repoRequests,1);assert.equal(setWidget,1);assert.equal(complete,1);assert(rankingRequests>=1);
- return{sink,text:sink.join(' | '),files};
+ assert.equal(repoRequests,1);assert.equal(setWidget,1);assert.equal(complete,1);assert(rankingRequests>=1);assert.equal(imageRequests,1);assert.equal(heroRects.length,1);
+ return{sink,text:sink.join(' | '),files,heroRect:heroRects[0]};
 }
+
+function recoveredCrop(rect,family){const W=family==='small'?720:1380,H=family==='small'?720:640;return{x:-rect.x/rect.width,y:-rect.y/rect.height,w:W/rect.width,h:H/rect.height}}
+function assertCropClose(actual,expected,label,tol=.002){for(const k of ['x','y','w','h'])assert(Math.abs(actual[k]-expected[k])<=tol,`${label} ${k} drift: ${actual[k]} vs ${expected[k]}`)}
 
 {
  const r=await render('2026-08-26T12:00:00+09:00','medium');
@@ -63,5 +71,12 @@ async function render(now,family='medium'){
 }
 {
  const r=await render('2027-01-16T00:00:00+03:00','medium');assert(r.text.includes('2027 FINISH'));assert(r.text.includes('FINISH'));assert(!r.text.includes('次ステージ'),'post-finale must not claim another stage');
+}
+{
+ const assetIds=['dakar-dacia-sandrider-gims-2024','dakar-2021-stage05-action','dakar-2021-stage10-action'];
+ for(let heroVariant=0;heroVariant<assetIds.length;heroVariant++)for(const family of ['small','medium']){
+  const r=await render('2026-08-26T12:00:00+09:00',family,heroVariant),actual=recoveredCrop(r.heroRect,family),expected=runtimeCrops[assetIds[heroVariant]][family];
+  assertCropClose(actual,expected,`H${heroVariant+1} ${family}`);
+ }
 }
 console.log('Motorsport Hub Dakar gate: PASS');
