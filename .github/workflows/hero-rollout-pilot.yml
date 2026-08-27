@@ -11,6 +11,7 @@ on:
       - 'tools/hero-crop-core.mjs'
       - 'tools/detect-hero-subjects.mjs'
       - 'tools/test-hero-oversize-small.mjs'
+      - 'tools/test-hero-min-confidence.mjs'
       - '.github/workflows/hero-rollout-pilot.yml'
   workflow_dispatch:
 
@@ -54,11 +55,6 @@ jobs:
             --derived-manifest=hero-derived-manifest-motogp.json
       - name: Validate MotoGP pilot report integrity
         run: node -e "const r=require('./hero-subject-report-motogp.json'); if(r.category!=='MOTOGP'||r.summary.analyzed!==2||r.summary.visualReviewCandidates!==2||r.summary.subjectAwareDerivatives!==2||r.results.some(x=>x.error)) process.exit(1); console.log(r.summary)"
-      - name: Print pilot summaries
-        if: ${{ always() }}
-        run: |
-          cat hero-subject-report-wrc.json || true
-          cat hero-subject-report-motogp.json || true
       - name: Upload WRC and MotoGP pilot artifacts
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
@@ -81,8 +77,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Validate oversize Small crop policy isolation
-        run: node tools/test-hero-oversize-small.mjs
+      - name: Validate Hero crop core semantics
+        run: |
+          node tools/test-hero-oversize-small.mjs
+          node tools/test-hero-min-confidence.mjs
       - name: Install build-time subject detector
         run: npm install --no-save --no-package-lock @tensorflow/tfjs-node@4.22.0 @tensorflow-models/coco-ssd@2.2.3
       - name: Analyze WEC current Hero assets
@@ -112,11 +110,6 @@ jobs:
             --derived-manifest=hero-derived-manifest-f1-action.json
       - name: Validate F1 final action Hero set
         run: node -e "const r=require('./hero-subject-report-f1-action.json'); const expected=new Set(['f1-ferrari-hamilton-japan-fp1-2025','f1-mclaren-piastri-japan-fp1-2025','f1-mercedes-russell-japan-fp3-2025']); const got=new Set(r.results.filter(x=>x.status==='VISUAL_REVIEW_CANDIDATE'&&x.derivatives).map(x=>x.assetId)); if(r.category!=='F1_ACTION'||r.summary.analyzed!==3||got.size!==3||[...expected].some(x=>!got.has(x))||r.results.some(x=>x.error)) process.exit(1); console.log(r.summary)"
-      - name: Print WEC and F1 summaries
-        if: ${{ always() }}
-        run: |
-          cat hero-subject-report-wec.json || true
-          cat hero-subject-report-f1-action.json || true
       - name: Upload WEC and F1 pilot artifacts
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
@@ -132,63 +125,61 @@ jobs:
             hero-derived-wec/
             hero-derived-f1-action/
 
-  supergt-fdj-d1gp-analysis:
+  domestic-hero-analysis:
+    name: ${{ matrix.category }}-analysis
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        category: [supergt, fdj, d1gp]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Validate oversize Small crop policy isolation
-        run: node tools/test-hero-oversize-small.mjs
+      - name: Validate Hero crop core semantics
+        run: |
+          node tools/test-hero-oversize-small.mjs
+          node tools/test-hero-min-confidence.mjs
       - name: Install build-time subject detector
         run: npm install --no-save --no-package-lock @tensorflow/tfjs-node@4.22.0 @tensorflow-models/coco-ssd@2.2.3
-      - name: Analyze SUPER GT current Hero asset
+      - name: Analyze current Hero asset
         env:
           TF_CPP_MIN_LOG_LEVEL: '2'
+          CAT: ${{ matrix.category }}
         run: |
-          node tools/detect-hero-subjects.mjs --mode=current --policy=hero-pilot-policies/supergt.json --output=hero-subject-report-supergt.json --derivative-dir=hero-derived-supergt --derived-manifest=hero-derived-manifest-supergt.json
-      - name: Validate SUPER GT pilot report integrity
-        run: node -e "const r=require('./hero-subject-report-supergt.json'); if(r.category!=='SUPERGT'||r.summary.analyzed!==1||r.summary.visualReviewCandidates!==1||r.summary.subjectAwareDerivatives!==1||r.results.some(x=>x.error)) process.exit(1); console.log(r.summary)"
-      - name: Avoid Wikimedia burst before FDJ
-        run: sleep 5
-      - name: Analyze FDJ current Hero asset
+          node tools/detect-hero-subjects.mjs \
+            --mode=current \
+            --policy=hero-pilot-policies/${CAT}.json \
+            --output=hero-subject-report-${CAT}.json \
+            --derivative-dir=hero-derived-${CAT} \
+            --derived-manifest=hero-derived-manifest-${CAT}.json
+      - name: Validate pilot report integrity
         env:
-          TF_CPP_MIN_LOG_LEVEL: '2'
+          CAT: ${{ matrix.category }}
         run: |
-          node tools/detect-hero-subjects.mjs --mode=current --policy=hero-pilot-policies/fdj.json --output=hero-subject-report-fdj.json --derivative-dir=hero-derived-fdj --derived-manifest=hero-derived-manifest-fdj.json
-      - name: Validate FDJ pilot report integrity
-        run: node -e "const r=require('./hero-subject-report-fdj.json'); if(r.category!=='FDJ'||r.summary.analyzed!==1||r.summary.visualReviewCandidates!==1||r.summary.subjectAwareDerivatives!==1||r.results.some(x=>x.error)) process.exit(1); console.log(r.summary)"
-      - name: Avoid Wikimedia burst before D1GP
-        run: sleep 5
-      - name: Analyze D1GP current Hero asset
-        env:
-          TF_CPP_MIN_LOG_LEVEL: '2'
-        run: |
-          node tools/detect-hero-subjects.mjs --mode=current --policy=hero-pilot-policies/d1gp.json --output=hero-subject-report-d1gp.json --derivative-dir=hero-derived-d1gp --derived-manifest=hero-derived-manifest-d1gp.json
-      - name: Validate D1GP pilot report integrity
-        run: node -e "const r=require('./hero-subject-report-d1gp.json'); if(r.category!=='D1GP'||r.summary.analyzed!==1||r.summary.visualReviewCandidates!==1||r.summary.subjectAwareDerivatives!==1||r.results.some(x=>x.error)) process.exit(1); console.log(r.summary)"
-      - name: Print SUPER GT FDJ D1GP summaries
+          node - <<'NODE'
+          const fs=require('node:fs');
+          const cat=process.env.CAT;
+          const expected={supergt:'SUPERGT',fdj:'FDJ',d1gp:'D1GP'}[cat];
+          const r=JSON.parse(fs.readFileSync(`hero-subject-report-${cat}.json`,'utf8'));
+          if(r.category!==expected||r.summary.analyzed!==1||r.summary.visualReviewCandidates!==1||r.summary.subjectAwareDerivatives!==1||r.results.some(x=>x.error)) process.exit(1);
+          console.log(r.summary);
+          NODE
+      - name: Print category report
         if: ${{ always() }}
-        run: |
-          cat hero-subject-report-supergt.json || true
-          cat hero-subject-report-fdj.json || true
-          cat hero-subject-report-d1gp.json || true
-      - name: Upload SUPER GT FDJ D1GP pilot artifacts
+        env:
+          CAT: ${{ matrix.category }}
+        run: cat hero-subject-report-${CAT}.json || true
+      - name: Upload category pilot artifact
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
-          name: hero-rollout-supergt-fdj-d1gp-${{ github.run_id }}
+          name: hero-rollout-${{ matrix.category }}-${{ github.run_id }}
           retention-days: 14
           if-no-files-found: error
           path: |
-            hero-subject-report-supergt.json
-            hero-derived-manifest-supergt.json
-            hero-subject-report-fdj.json
-            hero-derived-manifest-fdj.json
-            hero-subject-report-d1gp.json
-            hero-derived-manifest-d1gp.json
-            hero-derived-supergt/
-            hero-derived-fdj/
-            hero-derived-d1gp/
+            hero-subject-report-${{ matrix.category }}.json
+            hero-derived-manifest-${{ matrix.category }}.json
+            hero-derived-${{ matrix.category }}/
