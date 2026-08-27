@@ -41,10 +41,10 @@ for(const id of ['SUPERFORMULA','INDYCAR','NASCAR','GTWCEU']){
 assert(sourceById.F1.includes('api.jolpi.ca/ergast/f1/2026.json')&&sourceById.F1.includes('driverstandings.json'));assert(sourceById.F1.includes('Promise.all([json(SCHEDULE_SOURCE),json(STANDINGS_SOURCE)])'));assert(sourceById.F1.includes("race:'Abu Dhabi Grand Prix'")&&sourceById.F1.includes('2026-12-06T13:00:00Z'));
 assert(sourceById.WEC.includes('fiawec.com/en/page/manufacturers-classification/34'));assert(sourceById.WEC.includes('TR010 Hybrid')&&sourceById.WEC.includes('TOYOTA RACING'));for(const token of ['6 Hours of Barcelona','6 Hours of Monza','hold=10*3600000'])assert(sourceById.WEC.includes(token));
 assert(sourceById.WRC.includes('fia.com/events/world-rally-championship/season-2026/standings'));for(const token of ['Rally Saudi Arabia','2026-11-11T09:00:00+03:00','hold=4*86400000','2026 FIA World Rally Championship for Drivers'])assert(sourceById.WRC.includes(token));
-assert(sourceById.SUPERGT.includes('supergt.net/driver_ranking?gt_class=gt500&series=2026'));for(const token of ["'36':{name:'坪井 翔 / 山下 健太'","'16':{name:'野尻 智紀 / 佐藤 蓮'","'14':{name:'福住 仁嶺 / 大嶋 和也'",'第8戦 MOTEGI','hold=8*3600000'])assert(sourceById.SUPERGT.includes(token));assert(sourceById.SUPERGT.includes('Osaka%20Auto%20Messe%202025'));
+assert(sourceById.SUPERGT.includes('supergt.net/driver_ranking?gt_class=gt500&series=2026'));for(const token of ["'36':{name:'坪井 翔 / 山下 健太'","'16':{name:'野尻 智紀 / 佐藤 蓮'","'14':{name:'福住 仁嶺 / 大嶋 和也'",'第8戦 MOTEGI','hold=8*3600000'])assert(sourceById.SUPERGT.includes(token));assert(sourceById.SUPERGT.includes('MOTUL%20AUTECH%20Z%202024%20rd.2%20FUJI.jpg'));assert(!sourceById.SUPERGT.includes('Osaka%20Auto%20Messe%202025'));
 assert(sourceById.MOTOGP.includes('stats.motogp.com/en/world-standing'));for(const token of ['Valencia Grand Prix','Riders','hold=4*3600000'])assert(sourceById.MOTOGP.includes(token));
 assert(sourceById.FDJ.includes('formulad.jp/2026-fdj-standings/')&&sourceById.FDJ.includes('hold=40*3600000'));
-assert(sourceById.D1GP.includes('d1gp.co.jp/2026d1')&&sourceById.D1GP.includes('King%20of%20Europe')&&sourceById.D1GP.includes('hold=40*3600000'));
+assert(sourceById.D1GP.includes('d1gp.co.jp/2026d1')&&sourceById.D1GP.includes('D1GP%20%285679098995%29.jpg')&&sourceById.D1GP.includes('hold=40*3600000'));assert(!sourceById.D1GP.includes('King%20of%20Europe'));
 assert(sourceById.SUPERFORMULA.includes('superformula.net/sf2/race2026/standings'));assert(sourceById.INDYCAR.includes('https://www.indycar.com/standings/'));assert(sourceById.NASCAR.includes('https://cf.nascar.com/cacher/2026/1/points-feed.json'));assert(sourceById.GTWCEU.includes('gt-world-challenge-europe.com/standings?filter_standing_type=0_0_drivers'));
 
 const dakar=sourceById.DAKAR;
@@ -56,8 +56,8 @@ assert(diagnostics.includes('12/12 LIVE'),'QA diagnostics not expanded to twelve
 
 for(const token of [
  'Lewis Hamilton / Ferrari SF-25 FP1','Oscar Piastri / McLaren MCL39 FP1','George Russell / Mercedes W16 FP3',
- 'TTTNIS','Liauzh','MarcelX42','Rowan Harrison','Tokumeigakarinoaoshima','BWard 1997','Ben Goyette','TaurusEmerald','Lukas Raich','Alexander-93',
- 'CC0 1.0 Universal','CC BY 4.0','CC BY-SA 4.0','CC BY-SA 2.0'
+ 'TTTNIS','Liauzh','MarcelX42','Rick Flores','Abarabone1206','BWard 1997','Ben Goyette','TaurusEmerald','Lukas Raich','Alexander-93',
+ 'CC0 1.0 Universal','CC BY 4.0','CC BY-SA 4.0','CC BY 2.0'
 ])assert(attribution.includes(token),`ATTRIBUTION.md audit record missing: ${token}`);
 assert(!attribution.includes('RELEASE BLOCKER FOR PUBLIC DISTRIBUTION'));
 

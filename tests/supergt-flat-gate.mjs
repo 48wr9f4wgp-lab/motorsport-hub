@@ -9,7 +9,7 @@ const router=fs.readFileSync(path.join(root,'motorsport-hub.js'),'utf8');
 const sgt=fs.readFileSync(path.join(root,'supergt-widget-flat-v1000.js'),'utf8');
 assert.match(sgt,/flattened SUPER GT module/);assert.match(sgt,/CACHE_SCHEMA=1/);assert.match(sgt,/hold=8\*3600000/);
 assert.doesNotMatch(sgt,/eval\s*\(/,'flat SUPER GT must not eval remote source');assert.doesNotMatch(sgt,/raw\.githubusercontent\.com/,'flat SUPER GT must not fetch nested repo modules');
-assert.match(sgt,/Osaka%20Auto%20Messe%202025/,'verified CC0 hero missing');assert.doesNotMatch(sgt,/Fujimaki|MOTUL%20AUTECH|front%20three-quarter/,'unverified historical hero must not return');
+assert.match(sgt,/MOTUL%20AUTECH%20Z%202024%20rd\.2%20FUJI/,'verified SUPER GT action hero missing');assert.doesNotMatch(sgt,/Osaka%20Auto%20Messe%202025|Fujimaki|front%20three-quarter/,'superseded or unverified SUPER GT hero must not return');
 
 class Text{constructor(v,s){this.value=String(v);s.push(this.value)}rightAlignText(){}}
 class Stack{constructor(s){this.s=s}addText(v){return new Text(v,this.s)}addSpacer(){}addStack(){return new Stack(this.s)}setPadding(){}layoutHorizontally(){}centerAlignContent(){}}

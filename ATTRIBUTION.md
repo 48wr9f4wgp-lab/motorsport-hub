@@ -1,7 +1,7 @@
 # Motorsport Hub — Hero Image Attribution
 
-Last audited: 2026-08-27 JST
-Scope: current v10.0.2 hardening build / 12 category hero assets used by the Scriptable widget.
+Last audited: 2026-08-28 JST
+Scope: current v10.0.3 hardening build / 12 category hero assets used by the Scriptable widget.
 
 All hero images are cropped/resized and darkened for widget presentation. Where the source license requires attribution or ShareAlike, redistribution must preserve those obligations. The machine-readable runtime inventory is `hero-assets.json` and is enforced by `tests/hero-manifest-gate.mjs`.
 
@@ -37,20 +37,23 @@ All hero images are cropped/resized and darkened for widget presentation. Where 
 - **DRIFT-0ae1a2ba-2d7b-4d51-b082-b698f2fbb2f1.jpg**.
 - Source: Wikimedia Commons / Pixabay.
 - License: **CC0 1.0 Universal**.
+- Runtime treatment: accepted subject-aware Small/Medium crop, resize, and darkening.
 - File page: https://commons.wikimedia.org/wiki/File:DRIFT-0ae1a2ba-2d7b-4d51-b082-b698f2fbb2f1.jpg
 
 ## D1 GRAND PRIX (D1GP)
-- **King of Europe Round 3 Lydden Hill 2014 (14356011899).jpg**.
-- Author: **Rowan Harrison**.
-- License: **CC BY-SA 2.0 Generic**.
-- File page: https://commons.wikimedia.org/wiki/File:King_of_Europe_Round_3_Lydden_Hill_2014_(14356011899).jpg
+- **D1GP (5679098995).jpg** — actual D1 Grand Prix action photograph from 2011.
+- Author: **Rick Flores** (Flickr metadata: Ricky Flores).
+- License: **CC BY 2.0 Generic**.
+- Runtime treatment: subject-aware crop, resize, and darkening; attribution and modification notice obligations remain applicable.
+- File page: https://commons.wikimedia.org/wiki/File:D1GP_(5679098995).jpg
 
 ## SUPER GT
-- **Osaka Auto Messe 2025 (1) - No.36 au TOM'S GR Supra in 2024 SUPER GT.jpg**.
-- Author: **Tokumeigakarinoaoshima**.
-- License: **CC0 1.0 Universal**.
-- File page: https://commons.wikimedia.org/wiki/File:Osaka_Auto_Messe_2025_(1)_-_No.36_au_TOM%27S_GR_Supra_in_2024_SUPER_GT.jpg
-- Current direct runtime exposes no unverified historical SUPER GT fallback.
+- **MOTUL AUTECH Z 2024 rd.2 FUJI.jpg** — 2024 SUPER GT race-action photograph.
+- Author: **Abarabone1206**.
+- License: **CC BY 4.0 International**.
+- Runtime treatment: subject-aware crop, resize, and darkening; attribution and modification notice obligations remain applicable.
+- File page: https://commons.wikimedia.org/wiki/File:MOTUL_AUTECH_Z_2024_rd.2_FUJI.jpg
+- The superseded Osaka Auto Messe showroom Hero is no longer reachable from runtime.
 
 ## SUPER FORMULA
 - **Igor Fraga Super Formula Round 5 Suzuka Post-Race 2026.jpg**.
