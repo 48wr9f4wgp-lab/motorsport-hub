@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "policyVersion": "1.0.0-wrc-pilot",
+  "category": "WRC",
+  "mode": "ANALYSIS_ONLY_NO_RUNTIME_MUTATION",
+  "subjectDetector": {
+    "engine": "@tensorflow-models/coco-ssd",
+    "base": "lite_mobilenet_v2",
+    "minConfidence": 0.30,
+    "textSafeLeft": 0.42,
+    "publicationPolicy": "ANALYSIS_ONLY_NO_RUNTIME_MUTATION",
+    "fallback": "KEEP_CURRENT_RUNTIME_ON_FAILURE"
+  },
+  "roles": [
+    {"id":"IDENTITY","minSmallSubjectFraction":0.16,"minMediumSubjectFraction":0.12,"minTextSafeScore":0.60},
+    {"id":"ACTION","minSmallSubjectFraction":0.14,"minMediumSubjectFraction":0.10,"minTextSafeScore":0.60}
+  ],
+  "observations": [
+    {"assetId":"wrc-katsuta-yaris-2025","roleTags":["IDENTITY","ACTION"]},
+    {"assetId":"wrc-ogier-yaris-2025","roleTags":["IDENTITY","ACTION"]}
+  ]
+}
