@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {choosePrimaryDetection,makeCrop,evaluateDetectionAcrossRoles} from '../tools/hero-crop-core.mjs';
+import {choosePrimaryDetection,makeCrop,makeSceneFallbackCrop,evaluateDetectionAcrossRoles} from '../tools/hero-crop-core.mjs';
 const roles=[
  {id:'IDENTITY',minSmallSubjectFraction:.18,minMediumSubjectFraction:.14,minTextSafeScore:.6},
  {id:'ACTION',minSmallSubjectFraction:.18,minMediumSubjectFraction:.14,minTextSafeScore:.6},
@@ -13,6 +13,13 @@ for(const family of ['small','medium']){
  assert(crop.normalized.x+crop.normalized.w<=1.000001&&crop.normalized.y+crop.normalized.h<=1.000001);
  assert(crop.subjectFraction>=0&&crop.subjectFraction<=1);
  assert(crop.textSafeScore>.6);
+ const scene=makeSceneFallbackCrop(3840,2560,family,{focusX:.58,focusY:.55});
+ assert.equal(scene.role,'ENVIRONMENT');
+ assert.equal(scene.fallbackMode,'SCENE_FOCUS');
+ assert(scene.normalized.x>=0&&scene.normalized.y>=0);
+ assert(scene.normalized.x+scene.normalized.w<=1.000001&&scene.normalized.y+scene.normalized.h<=1.000001);
+ const aspect=scene.crop.w/scene.crop.h,target=family==='small'?1:1380/640;
+ assert(Math.abs(aspect-target)<1e-6);
 }
 const clipped=makeCrop(3840,2562,{class:'truck',score:.97,bbox:[150,374,3422,1966],areaFraction:.68},'small',{role:'IDENTITY'});
 assert(clipped.subjectFraction>=0&&clipped.subjectFraction<=1);
