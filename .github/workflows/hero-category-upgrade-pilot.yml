@@ -1,0 +1,105 @@
+name: Motorsport Hub Hero Category Upgrade Pilot
+
+on:
+  push:
+    branches:
+      - 'hardening/v9.3-codex-handoff'
+    paths:
+      - 'hero-pilot-manifests/supergt-action-candidates.json'
+      - 'hero-pilot-manifests/d1gp-action-candidates.json'
+      - 'hero-pilot-policies/supergt.json'
+      - 'hero-pilot-policies/d1gp.json'
+      - 'tools/hero-crop-core.mjs'
+      - 'tools/detect-hero-subjects.mjs'
+      - 'tools/test-hero-oversize-small.mjs'
+      - 'tools/test-hero-min-confidence.mjs'
+      - '.github/workflows/hero-category-upgrade-pilot.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  supergt-action-candidates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate Hero crop core semantics
+        run: |
+          node tools/test-hero-oversize-small.mjs
+          node tools/test-hero-min-confidence.mjs
+      - name: Install build-time subject detector
+        run: npm install --no-save --no-package-lock @tensorflow/tfjs-node@4.22.0 @tensorflow-models/coco-ssd@2.2.3
+      - name: Analyze SUPER GT action candidate
+        env:
+          TF_CPP_MIN_LOG_LEVEL: '2'
+        run: |
+          node tools/detect-hero-subjects.mjs \
+            --mode=current \
+            --manifest=hero-pilot-manifests/supergt-action-candidates.json \
+            --policy=hero-pilot-policies/supergt.json \
+            --output=hero-subject-report-supergt-action.json \
+            --derivative-dir=hero-derived-supergt-action \
+            --derived-manifest=hero-derived-manifest-supergt-action.json
+      - name: Validate SUPER GT analysis completeness
+        run: node -e "const r=require('./hero-subject-report-supergt-action.json'); if(r.category!=='SUPERGT'||r.summary.analyzed!==1||r.results.some(x=>x.error)) process.exit(1); console.log(r.summary)"
+      - name: Print SUPER GT candidate report
+        if: ${{ always() }}
+        run: cat hero-subject-report-supergt-action.json || true
+      - name: Upload SUPER GT candidate artifact
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: hero-upgrade-supergt-${{ github.run_id }}
+          retention-days: 14
+          if-no-files-found: error
+          path: |
+            hero-subject-report-supergt-action.json
+            hero-derived-manifest-supergt-action.json
+            hero-derived-supergt-action/
+
+  d1gp-action-candidates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate Hero crop core semantics
+        run: |
+          node tools/test-hero-oversize-small.mjs
+          node tools/test-hero-min-confidence.mjs
+      - name: Install build-time subject detector
+        run: npm install --no-save --no-package-lock @tensorflow/tfjs-node@4.22.0 @tensorflow-models/coco-ssd@2.2.3
+      - name: Analyze D1GP action candidates
+        env:
+          TF_CPP_MIN_LOG_LEVEL: '2'
+        run: |
+          node tools/detect-hero-subjects.mjs \
+            --mode=current \
+            --manifest=hero-pilot-manifests/d1gp-action-candidates.json \
+            --policy=hero-pilot-policies/d1gp.json \
+            --output=hero-subject-report-d1gp-action.json \
+            --derivative-dir=hero-derived-d1gp-action \
+            --derived-manifest=hero-derived-manifest-d1gp-action.json
+      - name: Validate D1GP analysis completeness
+        run: node -e "const r=require('./hero-subject-report-d1gp-action.json'); if(r.category!=='D1GP'||r.summary.analyzed!==2||r.results.some(x=>x.error)) process.exit(1); console.log(r.summary)"
+      - name: Print D1GP candidate report
+        if: ${{ always() }}
+        run: cat hero-subject-report-d1gp-action.json || true
+      - name: Upload D1GP candidate artifact
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: hero-upgrade-d1gp-${{ github.run_id }}
+          retention-days: 14
+          if-no-files-found: error
+          path: |
+            hero-subject-report-d1gp-action.json
+            hero-derived-manifest-d1gp-action.json
+            hero-derived-d1gp-action/
