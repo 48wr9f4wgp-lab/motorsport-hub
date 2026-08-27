@@ -48,6 +48,7 @@ jobs:
             tests/registry-gate.mjs
             tests/cache-hardening-gate.mjs
             tests/hero-manifest-gate.mjs
+            tests/hero-discovery-gate.mjs
             tests/hero-selection-gate.mjs
             tests/lifecycle-hardening-gate.mjs
             tests/integrity-gate.mjs

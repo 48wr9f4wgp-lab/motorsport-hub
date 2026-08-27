@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "source": "wikimedia-commons-action-api",
+  "category": "DAKAR",
+  "apiUrl": "https://commons.wikimedia.org/w/api.php",
+  "searchQueries": [
+    "Dakar Rally 2026",
+    "Dakar Rally 2025",
+    "Dacia Sandrider Dakar",
+    "Ford Raptor Dakar"
+  ],
+  "resultsPerQuery": 20,
+  "thumbWidth": 2048,
+  "minSourceLongEdge": 2048,
+  "allowedLicenses": [
+    "CC BY 2.0",
+    "CC BY 4.0",
+    "CC BY-SA 2.0",
+    "CC BY-SA 3.0",
+    "CC BY-SA 4.0",
+    "CC0 1.0"
+  ]
+}

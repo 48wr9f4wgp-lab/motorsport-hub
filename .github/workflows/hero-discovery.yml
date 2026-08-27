@@ -1,0 +1,26 @@
+name: Motorsport Hub Hero Discovery
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  discover-dakar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Discover recent Wikimedia Commons candidates
+        run: node tools/commons-hero-discovery.mjs --write
+      - name: Upload discovery report
+        uses: actions/upload-artifact@v4
+        with:
+          name: dakar-hero-discovery-${{ github.run_id }}
+          retention-days: 14
+          if-no-files-found: error
+          path: hero-discovery-report.json

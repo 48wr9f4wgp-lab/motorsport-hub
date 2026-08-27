@@ -1,0 +1,21 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {reportFromApiResponses} from '../tools/commons-hero-discovery.mjs';
+
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const config=JSON.parse(fs.readFileSync(path.join(root,'hero-source-discovery.json'),'utf8'));
+const fixture=JSON.parse(fs.readFileSync(path.join(root,'tests/fixtures/commons-hero-discovery.json'),'utf8'));
+const r=reportFromApiResponses(fixture,config);
+assert.equal(r.publicationPolicy,'DISCOVERY_ONLY_NO_RUNTIME_MUTATION');
+assert.equal(r.summary.discovered,3);
+assert.equal(r.summary.eligibleForReview,1);
+const ok=r.candidates.find(x=>x.title==='File:Dakar Rally 2026 Action.jpg');
+assert(ok.eligibleForReview);assert.equal(ok.license,'CC BY-SA 4.0');assert.equal(ok.longEdge,4800);assert.equal(ok.sourceYear,2026);assert.equal(ok.author,'Example Author');
+const tiny=r.candidates.find(x=>x.title==='File:Dakar tiny.jpg');
+assert(tiny.reasons.includes('SOURCE_RESOLUTION_TOO_LOW'));
+const bad=r.candidates.find(x=>x.title==='File:Dakar unknown license.jpg');
+assert(bad.reasons.includes('LICENSE_NOT_ALLOWED'));
+assert(r.candidates.every(x=>x.status==='DISCOVERED_UNAPPROVED'),'Discovery must never mark an asset approved');
+console.log('Motorsport Hub Hero discovery gate: PASS');
