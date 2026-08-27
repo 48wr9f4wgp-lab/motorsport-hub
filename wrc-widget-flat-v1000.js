@@ -35,7 +35,8 @@ const META={
 };
 const HERO={urls:[
  'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/2025_Toyota_GR_Yaris_Rally_1_Katsuta.jpg/960px-2025_Toyota_GR_Yaris_Rally_1_Katsuta.jpg',
- 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/2025_Toyota_GR_Yaris_Rally_1_Ogier_%28cropped%29.jpg/645px-2025_Toyota_GR_Yaris_Rally_1_Ogier_%28cropped%29.jpg'
+ 'https://commons.wikimedia.org/wiki/Special:Redirect/file/2025%20Toyota%20GR%20Yaris%20Rally%201%20Ogier.jpg?width=2048',
+ 'https://commons.wikimedia.org/wiki/Special:Redirect/file/2025%20Toyota%20GR%20Yaris%20Rally%201%20Ogier.jpg?width=1280'
 ],focus:.49,shift:126};
 
 const col=(h,a=1)=>new Color(h,a),clone=o=>JSON.parse(JSON.stringify(o)),num=v=>{const m=String(v||'').replace(/,/g,'').match(/-?\d+(?:\.\d+)?/);return m?Number(m[0]):NaN};
