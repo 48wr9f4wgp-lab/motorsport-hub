@@ -10,6 +10,7 @@ on:
       - 'hero-assets.json'
       - 'tools/hero-crop-core.mjs'
       - 'tools/detect-hero-subjects.mjs'
+      - 'tools/test-hero-oversize-small.mjs'
       - '.github/workflows/hero-rollout-pilot.yml'
   workflow_dispatch:
 
@@ -80,6 +81,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Validate oversize Small crop policy isolation
+        run: node tools/test-hero-oversize-small.mjs
       - name: Install build-time subject detector
         run: npm install --no-save --no-package-lock @tensorflow/tfjs-node@4.22.0 @tensorflow-models/coco-ssd@2.2.3
       - name: Analyze WEC current Hero assets
@@ -96,7 +99,7 @@ jobs:
         run: node -e "const r=require('./hero-subject-report-wec.json'); if(r.category!=='WEC'||r.summary.analyzed!==2||r.summary.visualReviewCandidates!==2||r.summary.subjectAwareDerivatives!==2||r.results.some(x=>x.error)) process.exit(1); console.log(r.summary)"
       - name: Avoid Wikimedia burst between categories
         run: sleep 5
-      - name: Analyze F1 action Hero candidates
+      - name: Analyze F1 final action Hero set
         env:
           TF_CPP_MIN_LOG_LEVEL: '2'
         run: |
@@ -107,8 +110,8 @@ jobs:
             --output=hero-subject-report-f1-action.json \
             --derivative-dir=hero-derived-f1-action \
             --derived-manifest=hero-derived-manifest-f1-action.json
-      - name: Validate F1 action candidate pool
-        run: node -e "const r=require('./hero-subject-report-f1-action.json'); const ok=new Set(r.results.filter(x=>x.status==='VISUAL_REVIEW_CANDIDATE').map(x=>x.assetId)); const base=ok.has('f1-ferrari-hamilton-japan-fp1-2025')&&ok.has('f1-mclaren-piastri-japan-fp1-2025'); const merc=[...ok].filter(x=>x.startsWith('f1-mercedes-')).length; if(r.category!=='F1_ACTION'||r.summary.analyzed!==4||!base||merc<1||r.results.some(x=>x.error)) process.exit(1); console.log({summary:r.summary,mercedesPassed:[...ok].filter(x=>x.startsWith('f1-mercedes-'))})"
+      - name: Validate F1 final action Hero set
+        run: node -e "const r=require('./hero-subject-report-f1-action.json'); const expected=new Set(['f1-ferrari-hamilton-japan-fp1-2025','f1-mclaren-piastri-japan-fp1-2025','f1-mercedes-russell-japan-fp3-2025']); const got=new Set(r.results.filter(x=>x.status==='VISUAL_REVIEW_CANDIDATE'&&x.derivatives).map(x=>x.assetId)); if(r.category!=='F1_ACTION'||r.summary.analyzed!==3||got.size!==3||[...expected].some(x=>!got.has(x))||r.results.some(x=>x.error)) process.exit(1); console.log(r.summary)"
       - name: Print WEC and F1 summaries
         if: ${{ always() }}
         run: |
