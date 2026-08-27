@@ -24,6 +24,14 @@ function containedCrop(imageWidth,imageHeight,bbox,aspect,{minContextWidthFracti
   if(by+bh+padY>y+ch)y=clamp(by+bh+padY-ch,0,imageHeight-ch);
   return{x,y,w:cw,h:ch};
 }
+function applyOversizeSmallBalance(imageWidth,bbox,crop,oversizeSmall){
+  if(!oversizeSmall?.enabled)return{...crop,oversizeSmallApplied:false,oversizeSmallBalance:null};
+  const [bx,,bw]=bbox;
+  if(!(bw>crop.w))return{...crop,oversizeSmallApplied:false,oversizeSmallBalance:null};
+  const raw=Number(oversizeSmall.balance),balance=clamp(Number.isFinite(raw)?raw:.5,0,1),overflow=bw-crop.w;
+  const x=clamp(bx+overflow*balance,0,imageWidth-crop.w);
+  return{...crop,x,oversizeSmallApplied:true,oversizeSmallBalance:balance};
+}
 const intersectionArea=(a,b)=>{const x1=Math.max(a.x,b.x),y1=Math.max(a.y,b.y),x2=Math.min(a.x+a.w,b.x+b.w),y2=Math.min(a.y+a.h,b.y+b.h);return Math.max(0,x2-x1)*Math.max(0,y2-y1)};
 export function makeSceneFallbackCrop(imageWidth,imageHeight,family,{focusX=.58,focusY=.55}={}){
   const aspect=family==='small'?1:1380/640;
@@ -33,15 +41,16 @@ export function makeSceneFallbackCrop(imageWidth,imageHeight,family,{focusX=.58,
   const x=clamp(cx-cw/2,0,imageWidth-cw),y=clamp(cy-ch/2,0,imageHeight-ch);
   return{family,role:'ENVIRONMENT',crop:{x,y,w:cw,h:ch},normalized:{x:x/imageWidth,y:y/imageHeight,w:cw/imageWidth,h:ch/imageHeight},subjectFraction:null,textSafeScore:null,sourceSubjectFraction:null,detectionScore:null,fallbackMode:'SCENE_FOCUS'};
 }
-export function makeCrop(imageWidth,imageHeight,detection,family,{textSafeLeft=.42,role='ACTION',subjectX=.69}={}){
+export function makeCrop(imageWidth,imageHeight,detection,family,{textSafeLeft=.42,role='ACTION',subjectX=.69,oversizeSmall=null}={}){
   if(!detection)return null;
   const [x,y,w,h]=detection.bbox,aspect=family==='small'?1:1380/640;
   const minContextWidthFraction=role==='ENVIRONMENT'?(family==='small'?.64:.82):role==='IDENTITY'?(family==='small'?.46:.67):(family==='small'?.52:.72);
-  const crop=containedCrop(imageWidth,imageHeight,[x,y,w,h],aspect,{minContextWidthFraction,subjectX});
+  const contained=containedCrop(imageWidth,imageHeight,[x,y,w,h],aspect,{minContextWidthFraction,subjectX});
+  const crop=family==='small'?applyOversizeSmallBalance(imageWidth,[x,y,w,h],contained,oversizeSmall):{...contained,oversizeSmallApplied:false,oversizeSmallBalance:null};
   const subject={x,y,w,h},safe={x:crop.x,y:crop.y,w:crop.w*textSafeLeft,h:crop.h};
   const subjectArea=Math.max(1,w*h),visibleSubjectArea=intersectionArea(subject,crop),subjectFraction=clamp(visibleSubjectArea/Math.max(1,crop.w*crop.h),0,1),safeOverlap=intersectionArea(subject,safe)/subjectArea,textSafeScore=clamp(1-safeOverlap,0,1);
   const normalized={x:crop.x/imageWidth,y:crop.y/imageHeight,w:crop.w/imageWidth,h:crop.h/imageHeight};
-  return{family,role,crop,normalized,subjectFraction,textSafeScore,sourceSubjectFraction:detection.areaFraction??subjectArea/(imageWidth*imageHeight),detectionScore:Number(detection.score)||0};
+  return{family,role,crop,normalized,subjectFraction,textSafeScore,sourceSubjectFraction:detection.areaFraction??subjectArea/(imageWidth*imageHeight),detectionScore:Number(detection.score)||0,cropMode:crop.oversizeSmallApplied?'BALANCED_OVERSIZE':'CONTAINED',oversizeSmallBalance:crop.oversizeSmallApplied?crop.oversizeSmallBalance:null};
 }
 export function evaluateCropForRole(crop,rolePolicy){
   if(!crop)return{pass:false,reasons:['NO_VEHICLE_DETECTION'],rawTextSafeScore:null,effectiveTextSafeScore:null,veilCompensation:0};
@@ -51,12 +60,12 @@ export function evaluateCropForRole(crop,rolePolicy){
   if(crop.detectionScore<.32)reasons.push('DETECTION_CONFIDENCE_LOW');
   return{pass:reasons.length===0,reasons,rawTextSafeScore,effectiveTextSafeScore,veilCompensation};
 }
-export function evaluateDetectionAcrossRoles({predictions,imageWidth,imageHeight,roles,minScore=.32,textSafeLeft=.42,subjectX=.69}){
+export function evaluateDetectionAcrossRoles({predictions,imageWidth,imageHeight,roles,minScore=.32,textSafeLeft=.42,subjectX=.69,oversizeSmall=null}){
   const detection=choosePrimaryDetection(predictions,imageWidth,imageHeight,{minScore});
   if(!detection)return{detection:null,roles:Object.fromEntries((roles||[]).map(r=>[r.id,{pass:false,reasons:['NO_VEHICLE_DETECTION']}]))};
   const out={};
   for(const r of roles||[]){
-    const small=makeCrop(imageWidth,imageHeight,detection,'small',{role:r.id,textSafeLeft,subjectX}),medium=makeCrop(imageWidth,imageHeight,detection,'medium',{role:r.id,textSafeLeft,subjectX});
+    const small=makeCrop(imageWidth,imageHeight,detection,'small',{role:r.id,textSafeLeft,subjectX,oversizeSmall}),medium=makeCrop(imageWidth,imageHeight,detection,'medium',{role:r.id,textSafeLeft,subjectX,oversizeSmall});
     const se=evaluateCropForRole(small,r),me=evaluateCropForRole(medium,r);
     if(small)small.effectiveTextSafeScore=se.effectiveTextSafeScore;
     if(medium)medium.effectiveTextSafeScore=me.effectiveTextSafeScore;
