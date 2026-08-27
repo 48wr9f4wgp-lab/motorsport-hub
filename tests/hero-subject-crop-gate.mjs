@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import {choosePrimaryDetection,makeCrop,makeSceneFallbackCrop,evaluateDetectionAcrossRoles} from '../tools/hero-crop-core.mjs';
+import {evaluateVisualRegression} from '../tools/detect-hero-subjects.mjs';
 const roles=[
  {id:'IDENTITY',minSmallSubjectFraction:.18,minMediumSubjectFraction:.14,minTextSafeScore:.6},
  {id:'ACTION',minSmallSubjectFraction:.18,minMediumSubjectFraction:.14,minTextSafeScore:.6},
@@ -13,7 +14,7 @@ for(const family of ['small','medium']){
  assert(crop.normalized.x+crop.normalized.w<=1.000001&&crop.normalized.y+crop.normalized.h<=1.000001);
  assert(crop.subjectFraction>=0&&crop.subjectFraction<=1);
  assert(crop.textSafeScore>.6);
- const scene=makeSceneFallbackCrop(3840,2560,family,{focusX:.58,focusY:.55});
+ const scene=makeSceneFallbackCrop(3840,2560,family,{focusX:.58,focusY:.7});
  assert.equal(scene.role,'ENVIRONMENT');
  assert.equal(scene.fallbackMode,'SCENE_FOCUS');
  assert(scene.normalized.x>=0&&scene.normalized.y>=0);
@@ -29,4 +30,12 @@ const tiny=evaluateDetectionAcrossRoles({predictions:[{class:'car',score:.72,bbo
 assert.equal(tiny.roles.ENVIRONMENT.pass,false);assert(tiny.roles.ENVIRONMENT.reasons.includes('SUBJECT_TOO_SMALL'));
 const none=evaluateDetectionAcrossRoles({predictions:[{class:'person',score:.99,bbox:[1,1,100,100]}],imageWidth:2048,imageHeight:1365,roles});
 assert.equal(none.roles.ACTION.pass,false);assert(none.roles.ACTION.reasons.includes('NO_VEHICLE_DETECTION'));
+const baseCrop={x:.2,y:.1,w:.7,h:.7};
+const vrPolicy={visualRegression:{maxCropDelta:.015,assets:{asset:{role:'ACTION',mode:'SUBJECT_AWARE',smallCrop:baseCrop,mediumCrop:baseCrop}}}};
+const vrRows=[{assetId:'asset',derivatives:{role:'ACTION',mode:'SUBJECT_AWARE',small:{crop:{...baseCrop,x:.205}},medium:{crop:{...baseCrop,y:.11}}},environmentFallback:null}];
+const vrPass=evaluateVisualRegression(vrRows,vrPolicy);assert.equal(vrPass.status,'PASS');assert.equal(vrPass.reviewRequired,0);
+const driftRows=[{assetId:'asset',derivatives:{role:'ACTION',mode:'SUBJECT_AWARE',small:{crop:{...baseCrop,x:.24}},medium:{crop:baseCrop}},environmentFallback:null}];
+const vrDrift=evaluateVisualRegression(driftRows,vrPolicy);assert.equal(vrDrift.status,'REVIEW_REQUIRED');assert(vrDrift.assets[0].reasons.includes('CROP_DRIFT'));
+const roleRows=[{assetId:'asset',derivatives:{role:'IDENTITY',mode:'SUBJECT_AWARE',small:{crop:baseCrop},medium:{crop:baseCrop}},environmentFallback:null}];
+const vrRole=evaluateVisualRegression(roleRows,vrPolicy);assert(vrRole.assets[0].reasons.includes('ROLE_CHANGED'));
 console.log('Hero subject crop gate PASS');
