@@ -33,11 +33,11 @@ export function makeSceneFallbackCrop(imageWidth,imageHeight,family,{focusX=.58,
   const x=clamp(cx-cw/2,0,imageWidth-cw),y=clamp(cy-ch/2,0,imageHeight-ch);
   return{family,role:'ENVIRONMENT',crop:{x,y,w:cw,h:ch},normalized:{x:x/imageWidth,y:y/imageHeight,w:cw/imageWidth,h:ch/imageHeight},subjectFraction:null,textSafeScore:null,sourceSubjectFraction:null,detectionScore:null,fallbackMode:'SCENE_FOCUS'};
 }
-export function makeCrop(imageWidth,imageHeight,detection,family,{textSafeLeft=.42,role='ACTION'}={}){
+export function makeCrop(imageWidth,imageHeight,detection,family,{textSafeLeft=.42,role='ACTION',subjectX=.69}={}){
   if(!detection)return null;
   const [x,y,w,h]=detection.bbox,aspect=family==='small'?1:1380/640;
   const minContextWidthFraction=role==='ENVIRONMENT'?(family==='small'?.64:.82):role==='IDENTITY'?(family==='small'?.46:.67):(family==='small'?.52:.72);
-  const crop=containedCrop(imageWidth,imageHeight,[x,y,w,h],aspect,{minContextWidthFraction});
+  const crop=containedCrop(imageWidth,imageHeight,[x,y,w,h],aspect,{minContextWidthFraction,subjectX});
   const subject={x,y,w,h},safe={x:crop.x,y:crop.y,w:crop.w*textSafeLeft,h:crop.h};
   const subjectArea=Math.max(1,w*h),visibleSubjectArea=intersectionArea(subject,crop),subjectFraction=clamp(visibleSubjectArea/Math.max(1,crop.w*crop.h),0,1),safeOverlap=intersectionArea(subject,safe)/subjectArea,textSafeScore=clamp(1-safeOverlap,0,1);
   const normalized={x:crop.x/imageWidth,y:crop.y/imageHeight,w:crop.w/imageWidth,h:crop.h/imageHeight};
@@ -51,12 +51,12 @@ export function evaluateCropForRole(crop,rolePolicy){
   if(crop.detectionScore<.32)reasons.push('DETECTION_CONFIDENCE_LOW');
   return{pass:reasons.length===0,reasons};
 }
-export function evaluateDetectionAcrossRoles({predictions,imageWidth,imageHeight,roles,minScore=.32,textSafeLeft=.42}){
+export function evaluateDetectionAcrossRoles({predictions,imageWidth,imageHeight,roles,minScore=.32,textSafeLeft=.42,subjectX=.69}){
   const detection=choosePrimaryDetection(predictions,imageWidth,imageHeight,{minScore});
   if(!detection)return{detection:null,roles:Object.fromEntries((roles||[]).map(r=>[r.id,{pass:false,reasons:['NO_VEHICLE_DETECTION']}]))};
   const out={};
   for(const r of roles||[]){
-    const small=makeCrop(imageWidth,imageHeight,detection,'small',{role:r.id,textSafeLeft}),medium=makeCrop(imageWidth,imageHeight,detection,'medium',{role:r.id,textSafeLeft});
+    const small=makeCrop(imageWidth,imageHeight,detection,'small',{role:r.id,textSafeLeft,subjectX}),medium=makeCrop(imageWidth,imageHeight,detection,'medium',{role:r.id,textSafeLeft,subjectX});
     const se=evaluateCropForRole(small,r),me=evaluateCropForRole(medium,r);
     out[r.id]={pass:se.pass&&me.pass,reasons:[...new Set([...se.reasons,...me.reasons])],small,medium};
   }
