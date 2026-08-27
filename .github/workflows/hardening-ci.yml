@@ -33,22 +33,28 @@ jobs:
           set -euo pipefail
           python3 tools/apply-hero-runtime-crops.py
           python3 tools/apply-f1-wec-hero-runtime.py
-          runtime_patch_files=(
+          python3 tools/apply-domestic-hero-runtime.py
+          accepted_patch_files=(
             wrc-widget-flat-v1000.js
             motogp-widget-flat-v1000.js
             f1-widget-flat-v1000.js
             wec-widget-flat-v1000.js
+            supergt-widget-flat-v1000.js
+            fdj-widget-flat-v1000.js
+            d1gp-widget-flat-v1000.js
             hero-assets.json
             ATTRIBUTION.md
+            tests/release-gate.mjs
+            tests/supergt-flat-gate.mjs
           )
-          if git diff --quiet -- "${runtime_patch_files[@]}"; then
+          if git diff --quiet -- "${accepted_patch_files[@]}"; then
             echo 'Accepted Hero runtime crops already applied.'
           else
             git config user.name 'github-actions[bot]'
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git add "${runtime_patch_files[@]}"
+            git add "${accepted_patch_files[@]}"
             git diff --cached --check
-            git commit -m 'feat: apply accepted F1 WEC Hero runtime'
+            git commit -m 'feat: apply accepted domestic Hero runtime'
             git push origin HEAD:hardening/v9.3-codex-handoff
           fi
 
@@ -85,6 +91,7 @@ jobs:
             tests/hero-rollout-inventory-gate.mjs
             tests/hero-runtime-crop-gate.mjs
             tests/f1-wec-hero-runtime-gate.mjs
+            tests/domestic-hero-runtime-gate.mjs
             tests/lifecycle-hardening-gate.mjs
             tests/integrity-gate.mjs
             tests/release-package-generator-gate.mjs
