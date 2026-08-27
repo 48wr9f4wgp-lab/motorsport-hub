@@ -9,16 +9,22 @@ permissions:
 jobs:
   discover-dakar:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '20'
       - name: Discover recent Wikimedia Commons candidates
         run: node tools/commons-hero-discovery.mjs --write
       - name: Probe discovered image bytes and dimensions
         run: node tools/validate-discovered-hero-images.mjs
+      - name: Install build-time subject detector
+        run: npm install --no-save --no-package-lock @tensorflow/tfjs-node@4.22.0 @tensorflow-models/coco-ssd@2.2.3
+      - name: Detect vehicle subject and generate crop candidates
+        env:
+          TF_CPP_MIN_LOG_LEVEL: '2'
+        run: node tools/detect-hero-subjects.mjs --mode=discovery --preview-dir=hero-crop-previews
       - name: Upload discovery reports
         uses: actions/upload-artifact@v4
         with:
@@ -28,3 +34,5 @@ jobs:
           path: |
             hero-discovery-report.json
             hero-image-validation-report.json
+            hero-subject-report.json
+            hero-crop-previews/
