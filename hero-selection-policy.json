@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "policyVersion": "1.2.0",
+  "policyVersion": "1.2.1",
   "category": "DAKAR",
   "mode": "deterministic-build-time-pilot",
   "requireDistinctVariants": true,
@@ -51,7 +51,7 @@
       "lkgAssetId": "dakar-2021-stage10-action",
       "allowSceneFallbackForLkg": true,
       "sceneFallbackFocusX": 0.58,
-      "sceneFallbackFocusY": 0.55,
+      "sceneFallbackFocusY": 0.7,
       "sceneFallbackPublicationPolicy": "VISUAL_REVIEW_ONLY"
     }
   ],
@@ -87,7 +87,7 @@
       "compositionScore": 0.91,
       "textSafeScore": 0.86,
       "subjectFraction": {"small": 0.035, "medium": 0.025},
-      "evidence": "2026-08-27 iPhone Small/Medium device QA; vehicle is visibly too small in current crop"
+      "evidence": "2026-08-27 iPhone Small/Medium device QA; vehicle is intentionally small in the environmental composition; scene fallback remains visual-review-only"
     }
   ]
 }
