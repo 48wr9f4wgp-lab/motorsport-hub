@@ -9,7 +9,7 @@ const router=fs.readFileSync(path.join(root,'motorsport-hub.js'),'utf8');
 const dakar=fs.readFileSync(path.join(root,'dakar-widget.js'),'utf8');
 
 assert(router.includes('args.queryParameters?.mhCategory'),'Router must accept tap-action category query');
-for(const token of ['Tap Action v2','motorsport-ui-v1-dakar.json','HERO_VARIANTS','1X7A2026.jpg','1X7A2028.jpg','1X7A2029.jpg','mhAction=cycleHero','URLScheme.forRunningScript','heroVariant'])assert(dakar.includes(token),`Dakar tap invariant missing: ${token}`);
+for(const token of ['Tap Action v2','motorsport-ui-v1-dakar.json','HERO_VARIANTS','1X7A2026.jpg','50810898083).jpg','50832314671).jpg','mhAction=cycleHero','URLScheme.forRunningScript','heroVariant'])assert(dakar.includes(token),`Dakar tap invariant missing: ${token}`);
 
 class Text{constructor(v,s){this.value=String(v);s.push(this.value)}rightAlignText(){}}
 class Stack{constructor(s){this.s=s;this.url=null}addText(v){return new Text(v,this.s)}addSpacer(){}addStack(){return new Stack(this.s)}setPadding(){}layoutHorizontally(){}centerAlignContent(){}}
@@ -41,7 +41,7 @@ async function runTap(files){
  const sink=[];let widget=null,complete=0;
  const fm={
   documentsDirectory:()=>'/docs',joinPath:(a,b)=>`${a}/${b}`,
-  fileExists:p=>p.includes('motorsport-hero-v952-')||files.has(p),
+  fileExists:p=>p.includes('motorsport-hero-v953-')||files.has(p),
   readImage:()=>({size:{width:1800,height:1200}}),writeImage(){},
   readString:p=>{if(!files.has(p))throw Error('missing');return files.get(p)},
   writeString:(p,s)=>files.set(p,String(s)),remove:p=>files.delete(p)

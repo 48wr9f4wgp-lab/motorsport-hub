@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "auditedAt": "2026-08-26",
+  "auditedAt": "2026-08-27",
   "scope": "Wikimedia hero image URLs reachable from modules in category-registry.json on hardening/v9.3-codex-handoff",
   "assets": [
     {
@@ -228,32 +228,32 @@
       "modificationNoticeRequired": true
     },
     {
-      "assetId": "dakar-dacia-sandrider-gims-2024-photo2",
+      "assetId": "dakar-2021-stage05-action",
       "category": "DAKAR",
-      "filename": "Dacia Sandrider GIMS 2024 1X7A2028.jpg",
+      "filename": "Dakar Rally 2021 - Stage 05 (50810898083).jpg",
       "runtimeUrls": [
-        "https://commons.wikimedia.org/wiki/Special:Redirect/file/Dacia%20Sandrider%20GIMS%202024%201X7A2028.jpg?width=2048",
-        "https://commons.wikimedia.org/wiki/Special:Redirect/file/Dacia%20Sandrider%20GIMS%202024%201X7A2028.jpg?width=1280"
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/Dakar%20Rally%202021%20-%20Stage%2005%20%2850810898083%29.jpg?width=2048",
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/Dakar%20Rally%202021%20-%20Stage%2005%20%2850810898083%29.jpg?width=1280"
       ],
-      "sourcePage": "https://commons.wikimedia.org/wiki/File:Dacia_Sandrider_GIMS_2024_1X7A2028.jpg",
-      "author": "Alexander-93",
-      "license": "CC BY-SA 4.0",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Dakar_Rally_2021_-_Stage_05_(50810898083).jpg",
+      "author": "EKSRX (source photo credit: Eric Vargiolu / DPPI)",
+      "license": "CC BY 2.0",
       "modificationNoticeRequired": true,
-      "reviewNote": "Same Alexander-93 GIMS Sandrider series; exact file-page license metadata must be rechecked before public release."
+      "reviewNote": "Exact Wikimedia file page verified 2026-08-27; Commons records Flickr license review as CC BY 2.0."
     },
     {
-      "assetId": "dakar-dacia-sandrider-gims-2024-photo3",
+      "assetId": "dakar-2021-stage10-action",
       "category": "DAKAR",
-      "filename": "Dacia Sandrider GIMS 2024 1X7A2029.jpg",
+      "filename": "Dakar Rally 2021 - Stage 10 (50832314671).jpg",
       "runtimeUrls": [
-        "https://commons.wikimedia.org/wiki/Special:Redirect/file/Dacia%20Sandrider%20GIMS%202024%201X7A2029.jpg?width=2048",
-        "https://commons.wikimedia.org/wiki/Special:Redirect/file/Dacia%20Sandrider%20GIMS%202024%201X7A2029.jpg?width=1280"
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/Dakar%20Rally%202021%20-%20Stage%2010%20%2850832314671%29.jpg?width=2048",
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/Dakar%20Rally%202021%20-%20Stage%2010%20%2850832314671%29.jpg?width=1280"
       ],
-      "sourcePage": "https://commons.wikimedia.org/wiki/File:Dacia_Sandrider_GIMS_2024_1X7A2029.jpg",
-      "author": "Alexander-93",
-      "license": "CC BY-SA 4.0",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Dakar_Rally_2021_-_Stage_10_(50832314671).jpg",
+      "author": "EKSRX (source photo credit: Antonin Vincent / DPPI)",
+      "license": "CC BY 2.0",
       "modificationNoticeRequired": true,
-      "reviewNote": "Same Alexander-93 GIMS Sandrider series; exact file-page license metadata must be rechecked before public release."
+      "reviewNote": "Exact Wikimedia file page verified 2026-08-27; Commons records Flickr license review as CC BY 2.0."
     }
   ]
 }

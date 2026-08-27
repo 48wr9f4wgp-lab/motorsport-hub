@@ -1,7 +1,7 @@
 # Motorsport Hub — Hero Image Attribution
 
 Last audited: 2026-08-27 JST
-Scope: current v9.5.2 hardening build / 12 category hero assets used by the Scriptable widget.
+Scope: current v9.5.3 hardening build / 12 category hero assets used by the Scriptable widget.
 
 All hero images are cropped/resized and darkened for widget presentation. Where the source license requires attribution or ShareAlike, redistribution must preserve those obligations. The machine-readable runtime inventory is `hero-assets.json` and is enforced by `tests/hero-manifest-gate.mjs`.
 
@@ -71,36 +71,35 @@ All hero images are cropped/resized and darkened for widget presentation. Where 
 - License: **CC BY-SA 4.0 International**.
 - File page: https://commons.wikimedia.org/wiki/File:GT_World_Challenge_Europe_2024_N%C3%BCrburg_Nr._48_Auer,_Engel,_Morad_(1).jpg
 
-## Dakar Rally — Tap Action v2
-The widget now cycles three **distinct Dacia Sandrider photos**, not three crops of one file.
+## Dakar Rally — Tap Action v2.1
+The widget cycles three visually distinct Hero photos: one current Dacia Sandrider design reference plus two real Dakar action frames.
 
-### Hero 1
+### Hero 1 — current car identity
 - **Dacia Sandrider GIMS 2024 1X7A2026.jpg**.
 - Author: **Alexander-93**.
 - License: **CC BY-SA 4.0 International** — exact file page verified.
 - Original resolution: 5,378 × 3,588.
 - File page: https://commons.wikimedia.org/wiki/File:Dacia_Sandrider_GIMS_2024_1X7A2026.jpg
 
-### Hero 2
-- **Dacia Sandrider GIMS 2024 1X7A2028.jpg**.
-- Commons category / author archive confirms this file belongs to the same Alexander-93 Dacia Sandrider GIMS 2024 photo series and was produced by Alexander-93.
-- Runtime inventory currently records **CC BY-SA 4.0**, matching the series license assumption.
-- File page: https://commons.wikimedia.org/wiki/File:Dacia_Sandrider_GIMS_2024_1X7A2028.jpg
-- **Public-release gate:** exact file-page license metadata must be re-opened and re-verified before final publication.
+### Hero 2 — action
+- **Dakar Rally 2021 - Stage 05 (50810898083).jpg**.
+- Commons author: **EKSRX**; source metadata credits **Eric Vargiolu / DPPI**.
+- License: **CC BY 2.0 Generic** — exact Commons file page verified; Flickr license review recorded by Commons.
+- Original resolution: 4,800 × 3,194.
+- File page: https://commons.wikimedia.org/wiki/File:Dakar_Rally_2021_-_Stage_05_(50810898083).jpg
 
-### Hero 3
-- **Dacia Sandrider GIMS 2024 1X7A2029.jpg**.
-- Commons category / author archive confirms this file belongs to the same Alexander-93 Dacia Sandrider GIMS 2024 photo series and was produced by Alexander-93.
-- Runtime inventory currently records **CC BY-SA 4.0**, matching the series license assumption.
-- File page: https://commons.wikimedia.org/wiki/File:Dacia_Sandrider_GIMS_2024_1X7A2029.jpg
-- **Public-release gate:** exact file-page license metadata must be re-opened and re-verified before final publication.
+### Hero 3 — action / environmental variation
+- **Dakar Rally 2021 - Stage 10 (50832314671).jpg**.
+- Commons author: **EKSRX**; source metadata credits **Antonin Vincent / DPPI**.
+- License: **CC BY 2.0 Generic** — exact Commons file page verified; Flickr license review recorded by Commons.
+- Original resolution: 4,800 × 3,200.
+- File page: https://commons.wikimedia.org/wiki/File:Dakar_Rally_2021_-_Stage_10_(50832314671).jpg
 
-For all three Dakar Hero variants, widget presentation applies crop/resize/darkening. Public redistribution must include the applicable author/license attribution and modification notice.
+All three widget variants are cropped/resized and darkened for presentation. Attribution and modification notice obligations remain applicable where required.
 
 ## Audit decision
 - All runtime hero URLs reachable from the current 12-category Registry have a `hero-assets.json` record and runtime/manifest set equality is enforced automatically.
 - Former SUPER GT public-distribution blocker remains closed.
-- Dakar Tap Action v2 runtime inventory: **PASS**.
-- Dakar Hero 1 exact-page licensing: **PASS**.
-- Dakar Hero 2/3 exact-page license verification: **PENDING BEFORE PUBLIC RELEASE**.
-- Current hardening build may continue development/testing; **public licensing approval is not yet granted for the new three-photo Dakar rotation**.
+- Dakar Tap Action v2.1 runtime inventory: **PASS**.
+- Dakar Hero 1/2/3 exact-page license metadata verification: **PASS**.
+- Public release remains blocked by the overall Release/QA process; the selected Dakar Hero records no longer carry a pending exact-page-license check.
