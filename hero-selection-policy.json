@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "policyVersion": "1.1.0",
+  "policyVersion": "1.2.0",
   "category": "DAKAR",
   "mode": "deterministic-build-time-pilot",
   "requireDistinctVariants": true,
@@ -48,7 +48,11 @@
       "minMediumSubjectFraction": 0.07,
       "minTextSafeScore": 0.6,
       "minCompositeScore": 0.68,
-      "lkgAssetId": "dakar-2021-stage10-action"
+      "lkgAssetId": "dakar-2021-stage10-action",
+      "allowSceneFallbackForLkg": true,
+      "sceneFallbackFocusX": 0.58,
+      "sceneFallbackFocusY": 0.55,
+      "sceneFallbackPublicationPolicy": "VISUAL_REVIEW_ONLY"
     }
   ],
   "observations": [
