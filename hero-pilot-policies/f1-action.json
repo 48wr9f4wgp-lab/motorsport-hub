@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "policyVersion": "1.0.0-f1-action-pilot",
+  "policyVersion": "1.1.0-f1-action-pilot",
   "category": "F1_ACTION",
   "mode": "ANALYSIS_ONLY_NO_RUNTIME_MUTATION",
   "subjectDetector": {
@@ -19,6 +19,7 @@
   "observations": [
     {"assetId":"f1-ferrari-hamilton-japan-fp1-2025","roleTags":["IDENTITY","ACTION"]},
     {"assetId":"f1-mclaren-piastri-japan-fp1-2025","roleTags":["IDENTITY","ACTION"]},
-    {"assetId":"f1-mercedes-russell-japan-fp2-2025","roleTags":["IDENTITY","ACTION"]}
+    {"assetId":"f1-mercedes-antonelli-japan-fp2-2025","roleTags":["IDENTITY","ACTION"]},
+    {"assetId":"f1-mercedes-russell-japan-fp3-2025","roleTags":["IDENTITY","ACTION"]}
   ]
 }
