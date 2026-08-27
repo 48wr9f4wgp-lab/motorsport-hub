@@ -102,4 +102,5 @@ All three widget variants are cropped/resized and darkened for presentation. Att
 - Former SUPER GT public-distribution blocker remains closed.
 - Dakar Tap Action v2.1 runtime inventory: **PASS**.
 - Dakar Hero 1/2/3 exact-page license metadata verification: **PASS**.
+- Dakar Tap Action v2.1 device visual confirmation: **PENDING**.
 - Public release remains blocked by the overall Release/QA process; the selected Dakar Hero records no longer carry a pending exact-page-license check.
