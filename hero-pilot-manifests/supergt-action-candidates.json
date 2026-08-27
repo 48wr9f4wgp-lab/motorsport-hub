@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "purpose": "ANALYSIS_ONLY_NO_RUNTIME_MUTATION",
+  "assets": [
+    {
+      "assetId": "supergt-motul-autech-z-fuji-2024",
+      "category": "SUPERGT",
+      "filename": "MOTUL AUTECH Z 2024 rd.2 FUJI.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:MOTUL_AUTECH_Z_2024_rd.2_FUJI.jpg",
+      "runtimeUrls": [
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/MOTUL%20AUTECH%20Z%202024%20rd.2%20FUJI.jpg?width=2048"
+      ]
+    }
+  ]
+}
