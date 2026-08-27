@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "purpose": "ANALYSIS_ONLY_NO_RUNTIME_MUTATION",
+  "assets": [
+    {
+      "assetId": "d1gp-rick-flores-2011",
+      "category": "D1GP",
+      "filename": "D1GP (5679098995).jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:D1GP_(5679098995).jpg",
+      "runtimeUrls": [
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/D1GP%20%285679098995%29.jpg?width=2048"
+      ]
+    },
+    {
+      "assetId": "d1gp-masao-suenaga-rx8-2017",
+      "category": "D1GP",
+      "filename": "Drifting.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Drifting.jpg",
+      "runtimeUrls": [
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/Drifting.jpg?width=1920"
+      ]
+    }
+  ]
+}
