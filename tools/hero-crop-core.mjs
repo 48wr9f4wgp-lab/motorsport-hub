@@ -44,12 +44,12 @@ export function makeCrop(imageWidth,imageHeight,detection,family,{textSafeLeft=.
   return{family,role,crop,normalized,subjectFraction,textSafeScore,sourceSubjectFraction:detection.areaFraction??subjectArea/(imageWidth*imageHeight),detectionScore:Number(detection.score)||0};
 }
 export function evaluateCropForRole(crop,rolePolicy){
-  if(!crop)return{pass:false,reasons:['NO_VEHICLE_DETECTION']};
-  const reasons=[],minSubject=crop.family==='small'?Number(rolePolicy.minSmallSubjectFraction):Number(rolePolicy.minMediumSubjectFraction);
+  if(!crop)return{pass:false,reasons:['NO_VEHICLE_DETECTION'],rawTextSafeScore:null,effectiveTextSafeScore:null,veilCompensation:0};
+  const reasons=[],minSubject=crop.family==='small'?Number(rolePolicy.minSmallSubjectFraction):Number(rolePolicy.minMediumSubjectFraction),veilCompensation=clamp(Number(rolePolicy.veilCompensation)||0,0,.35),rawTextSafeScore=Number(crop.textSafeScore),effectiveTextSafeScore=clamp(rawTextSafeScore+veilCompensation,0,1);
   if(crop.subjectFraction<minSubject)reasons.push('SUBJECT_TOO_SMALL');
-  if(crop.textSafeScore<Number(rolePolicy.minTextSafeScore))reasons.push('TEXT_SAFE_VIOLATION');
+  if(effectiveTextSafeScore<Number(rolePolicy.minTextSafeScore))reasons.push('TEXT_SAFE_VIOLATION');
   if(crop.detectionScore<.32)reasons.push('DETECTION_CONFIDENCE_LOW');
-  return{pass:reasons.length===0,reasons};
+  return{pass:reasons.length===0,reasons,rawTextSafeScore,effectiveTextSafeScore,veilCompensation};
 }
 export function evaluateDetectionAcrossRoles({predictions,imageWidth,imageHeight,roles,minScore=.32,textSafeLeft=.42,subjectX=.69}){
   const detection=choosePrimaryDetection(predictions,imageWidth,imageHeight,{minScore});
@@ -58,7 +58,9 @@ export function evaluateDetectionAcrossRoles({predictions,imageWidth,imageHeight
   for(const r of roles||[]){
     const small=makeCrop(imageWidth,imageHeight,detection,'small',{role:r.id,textSafeLeft,subjectX}),medium=makeCrop(imageWidth,imageHeight,detection,'medium',{role:r.id,textSafeLeft,subjectX});
     const se=evaluateCropForRole(small,r),me=evaluateCropForRole(medium,r);
-    out[r.id]={pass:se.pass&&me.pass,reasons:[...new Set([...se.reasons,...me.reasons])],small,medium};
+    if(small)small.effectiveTextSafeScore=se.effectiveTextSafeScore;
+    if(medium)medium.effectiveTextSafeScore=me.effectiveTextSafeScore;
+    out[r.id]={pass:se.pass&&me.pass,reasons:[...new Set([...se.reasons,...me.reasons])],small,medium,smallEvaluation:se,mediumEvaluation:me};
   }
   return{detection,roles:out};
 }
