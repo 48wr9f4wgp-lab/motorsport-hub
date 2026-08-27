@@ -1,55 +1,49 @@
 {
   "schemaVersion": 2,
-  "auditedAt": "2026-08-27",
+  "auditedAt": "2026-08-28",
   "scope": "Wikimedia hero image URLs reachable from modules in category-registry.json on hardening/v9.3-codex-handoff",
   "assets": [
     {
-      "assetId": "f1-antonelli-monza-2025",
+      "assetId": "f1-mercedes-russell-japan-fp3-2025",
       "category": "F1",
-      "filename": "Andrea Kimi Antonelli 2025 Italian Grand Prix FP3.jpg",
+      "filename": "2025 Japan GP - Mercedes - George Russell - FP3.jpg",
       "runtimeUrls": [
-        "https://commons.wikimedia.org/wiki/Special:Redirect/file/Andrea_Kimi_Antonelli_2025_Italian_Grand_Prix_FP3.jpg?width=2048"
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/2025%20Japan%20GP%20-%20Mercedes%20-%20George%20Russell%20-%20FP3.jpg?width=2048",
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/2025%20Japan%20GP%20-%20Mercedes%20-%20George%20Russell%20-%20FP3.jpg?width=1280"
       ],
-      "sourcePage": "https://commons.wikimedia.org/wiki/File:Andrea_Kimi_Antonelli_2025_Italian_Grand_Prix_FP3.jpg",
-      "author": "Eustace Bagge",
-      "license": "CC BY 4.0",
-      "modificationNoticeRequired": true
-    },
-    {
-      "assetId": "f1-mercedes-w16-japan-2025",
-      "category": "F1",
-      "filename": "2025 Japan GP - Mercedes - W16 - Thursday.jpg",
-      "runtimeUrls": [
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/2025_Japan_GP_-_Mercedes_-_W16_-_Thursday.jpg/960px-2025_Japan_GP_-_Mercedes_-_W16_-_Thursday.jpg"
-      ],
-      "sourcePage": "https://commons.wikimedia.org/wiki/File:2025_Japan_GP_-_Mercedes_-_W16_-_Thursday.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:2025_Japan_GP_-_Mercedes_-_George_Russell_-_FP3.jpg",
       "author": "Liauzh",
       "license": "CC BY-SA 4.0",
-      "modificationNoticeRequired": true
+      "modificationNoticeRequired": true,
+      "reviewNote": "Action Hero accepted after subject-aware Small/Medium visual pilot on 2026-08-28."
     },
     {
-      "assetId": "f1-ferrari-sf25-japan-2025",
+      "assetId": "f1-ferrari-hamilton-japan-fp1-2025",
       "category": "F1",
-      "filename": "2025 Japan GP - Ferrari - SF-25 - Thursday.jpg",
+      "filename": "2025 Japan GP - Ferrari - Lewis Hamilton - FP1.jpg",
       "runtimeUrls": [
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/2025_Japan_GP_-_Ferrari_-_SF-25_-_Thursday.jpg/960px-2025_Japan_GP_-_Ferrari_-_SF-25_-_Thursday.jpg"
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/2025%20Japan%20GP%20-%20Ferrari%20-%20Lewis%20Hamilton%20-%20FP1.jpg?width=2048",
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/2025%20Japan%20GP%20-%20Ferrari%20-%20Lewis%20Hamilton%20-%20FP1.jpg?width=1280"
       ],
-      "sourcePage": "https://commons.wikimedia.org/wiki/File:2025_Japan_GP_-_Ferrari_-_SF-25_-_Thursday.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:2025_Japan_GP_-_Ferrari_-_Lewis_Hamilton_-_FP1.jpg",
       "author": "Liauzh",
       "license": "CC BY-SA 4.0",
-      "modificationNoticeRequired": true
+      "modificationNoticeRequired": true,
+      "reviewNote": "Action Hero accepted after subject-aware Small/Medium visual pilot on 2026-08-28."
     },
     {
-      "assetId": "f1-mclaren-mcl39-japan-2025",
+      "assetId": "f1-mclaren-piastri-japan-fp1-2025",
       "category": "F1",
-      "filename": "2025 Japan GP - McLaren - MCL39 - Thursday.jpg",
+      "filename": "2025 Japan GP - McLaren - Oscar Piastri - FP1.jpg",
       "runtimeUrls": [
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/2025_Japan_GP_-_McLaren_-_MCL39_-_Thursday.jpg/960px-2025_Japan_GP_-_McLaren_-_MCL39_-_Thursday.jpg"
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/2025%20Japan%20GP%20-%20McLaren%20-%20Oscar%20Piastri%20-%20FP1.jpg?width=2048",
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/2025%20Japan%20GP%20-%20McLaren%20-%20Oscar%20Piastri%20-%20FP1.jpg?width=1280"
       ],
-      "sourcePage": "https://commons.wikimedia.org/wiki/File:2025_Japan_GP_-_McLaren_-_MCL39_-_Thursday.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:2025_Japan_GP_-_McLaren_-_Oscar_Piastri_-_FP1.jpg",
       "author": "Liauzh",
       "license": "CC BY-SA 4.0",
-      "modificationNoticeRequired": true
+      "modificationNoticeRequired": true,
+      "reviewNote": "Action Hero accepted after subject-aware Small/Medium visual pilot on 2026-08-28."
     },
     {
       "assetId": "wec-toyota-no7-spa-2024",

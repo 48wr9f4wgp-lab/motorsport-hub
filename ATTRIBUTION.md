@@ -1,14 +1,19 @@
 # Motorsport Hub — Hero Image Attribution
 
 Last audited: 2026-08-27 JST
-Scope: current v9.5.3 hardening build / 12 category hero assets used by the Scriptable widget.
+Scope: current v10.0.2 hardening build / 12 category hero assets used by the Scriptable widget.
 
 All hero images are cropped/resized and darkened for widget presentation. Where the source license requires attribution or ShareAlike, redistribution must preserve those obligations. The machine-readable runtime inventory is `hero-assets.json` and is enforced by `tests/hero-manifest-gate.mjs`.
 
 ## Formula 1 (F1)
-- Primary: **Andrea Kimi Antonelli 2025 Italian Grand Prix FP3.jpg** — Author **Eustace Bagge** — **CC BY 4.0 International**.
-- Additional current manufacturer fallbacks: 2025 Japan GP Mercedes W16 / Ferrari SF-25 / McLaren MCL39 — Author **Liauzh** — **CC BY-SA 4.0 International**.
-- Primary file page: https://commons.wikimedia.org/wiki/File:Andrea_Kimi_Antonelli_2025_Italian_Grand_Prix_FP3.jpg
+- Current Action Hero set: **Lewis Hamilton / Ferrari SF-25 FP1**, **Oscar Piastri / McLaren MCL39 FP1**, and **George Russell / Mercedes W16 FP3** from the 2025 Japanese Grand Prix.
+- Author: **Liauzh**.
+- License: **CC BY-SA 4.0 International** for all three current runtime assets.
+- Runtime treatment: subject-aware crop, resize, and darkening; modification notice and ShareAlike obligations remain applicable.
+- File pages:
+  - https://commons.wikimedia.org/wiki/File:2025_Japan_GP_-_Ferrari_-_Lewis_Hamilton_-_FP1.jpg
+  - https://commons.wikimedia.org/wiki/File:2025_Japan_GP_-_McLaren_-_Oscar_Piastri_-_FP1.jpg
+  - https://commons.wikimedia.org/wiki/File:2025_Japan_GP_-_Mercedes_-_George_Russell_-_FP3.jpg
 
 ## FIA World Rally Championship (WRC)
 - **2025 Toyota GR Yaris Rally 1 Katsuta.jpg** and Ogier fallback.
