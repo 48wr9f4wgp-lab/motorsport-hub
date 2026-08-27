@@ -11,6 +11,8 @@ assert.match(wrc,/flattened WRC module/);
 assert.match(wrc,/CACHE_SCHEMA=1/);
 assert.match(wrc,/2026 FIA World Rally Championship for Drivers/);
 assert.match(wrc,/hold=4\*86400000/);
+assert.match(wrc,/Special:Redirect\/file\/2025%20Toyota%20GR%20Yaris%20Rally%201%20Ogier\.jpg\?width=2048/,'WRC must retain the high-resolution Ogier fallback');
+assert.doesNotMatch(wrc,/Ogier_%28cropped%29|645px-2025_Toyota_GR_Yaris_Rally_1_Ogier/,'broken low-resolution Ogier fallback must not return');
 assert.doesNotMatch(wrc,/eval\s*\(/,'flat WRC must not eval remote source');
 assert.doesNotMatch(wrc,/raw\.githubusercontent\.com/,'flat WRC must not fetch nested repo modules');
 
