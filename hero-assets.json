@@ -90,14 +90,16 @@
     {
       "assetId": "wrc-ogier-yaris-2025",
       "category": "WRC",
-      "filename": "2025 Toyota GR Yaris Rally 1 Ogier (cropped).jpg",
+      "filename": "2025 Toyota GR Yaris Rally 1 Ogier.jpg",
       "runtimeUrls": [
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/2025_Toyota_GR_Yaris_Rally_1_Ogier_%28cropped%29.jpg/645px-2025_Toyota_GR_Yaris_Rally_1_Ogier_%28cropped%29.jpg"
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/2025%20Toyota%20GR%20Yaris%20Rally%201%20Ogier.jpg?width=2048",
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/2025%20Toyota%20GR%20Yaris%20Rally%201%20Ogier.jpg?width=1280"
       ],
-      "sourcePage": "https://commons.wikimedia.org/wiki/File:2025_Toyota_GR_Yaris_Rally_1_Ogier_(cropped).jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:2025_Toyota_GR_Yaris_Rally_1_Ogier.jpg",
       "author": "TTTNIS",
       "license": "CC0 1.0",
-      "modificationNoticeRequired": false
+      "modificationNoticeRequired": false,
+      "reviewNote": "Replaced broken 645px cropped runtime URL with the 6048x4032 CC0 original source on 2026-08-27."
     },
     {
       "assetId": "supergt-au-toms-cc0",
