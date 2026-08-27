@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {choosePrimaryDetection,makeCrop,makeSceneFallbackCrop,evaluateCropForRole,evaluateDetectionAcrossRoles} from '../tools/hero-crop-core.mjs';
-import {evaluateVisualRegression} from '../tools/detect-hero-subjects.mjs';
+import {buildSubjectPredictions,evaluateVisualRegression} from '../tools/detect-hero-subjects.mjs';
 const roles=[
  {id:'IDENTITY',minSmallSubjectFraction:.18,minMediumSubjectFraction:.14,minTextSafeScore:.6},
  {id:'ACTION',minSmallSubjectFraction:.18,minMediumSubjectFraction:.14,minTextSafeScore:.6},
@@ -39,6 +39,11 @@ const strictEval=evaluateCropForRole(overlapCrop,{minSmallSubjectFraction:.18,mi
 assert.equal(strictEval.pass,false);assert(strictEval.reasons.includes('TEXT_SAFE_VIOLATION'));assert.equal(strictEval.rawTextSafeScore,.55);assert.equal(strictEval.effectiveTextSafeScore,.55);
 const veiledEval=evaluateCropForRole(overlapCrop,{minSmallSubjectFraction:.18,minMediumSubjectFraction:.14,minTextSafeScore:.6,veilCompensation:.08});
 assert.equal(veiledEval.pass,true,'accepted veil may compensate known subject overlap without changing raw geometry');assert.equal(veiledEval.rawTextSafeScore,.55);assert.equal(veiledEval.effectiveTextSafeScore,.63);assert.equal(veiledEval.veilCompensation,.08);
+const riderPolicy={subjectDetector:{minConfidence:.28,subjectClasses:['motorcycle'],riderFallback:{enabled:true,minPersonConfidence:.85,minPersonAreaFraction:.08,widthScale:2.3,heightScale:1.8,topLift:.1,confidencePenalty:.9}}};
+const riderRaw=[{class:'person',score:.993,bbox:[387,143,277,288]}];
+const rider=buildSubjectPredictions(riderRaw,riderPolicy,960,640);assert.equal(rider.mode,'RIDER_FALLBACK');assert.equal(rider.predictions.length,1);assert.equal(rider.predictions[0].class,'motorcycle');assert.equal(rider.predictions[0].synthetic,true);assert.equal(rider.predictions[0].sourceClass,'person');assert(rider.predictions[0].bbox[2]>277&&rider.predictions[0].bbox[3]>288);assert(rider.predictions[0].bbox[0]>=0&&rider.predictions[0].bbox[1]>=0);assert(rider.predictions[0].bbox[0]+rider.predictions[0].bbox[2]<=960.000001);assert(rider.predictions[0].bbox[1]+rider.predictions[0].bbox[3]<=640.000001);
+const direct=buildSubjectPredictions([{class:'motorcycle',score:.95,bbox:[70,150,700,440]},...riderRaw],riderPolicy,960,640);assert.equal(direct.mode,'DIRECT');assert.equal(direct.predictions[0].class,'motorcycle');assert(!direct.predictions[0].synthetic,'direct motorcycle detection must beat rider fallback');
+const weakPerson=buildSubjectPredictions([{class:'person',score:.7,bbox:[387,143,277,288]}],riderPolicy,960,640);assert.equal(weakPerson.mode,'NO_SUBJECT');assert.equal(weakPerson.predictions.length,0);
 const tiny=evaluateDetectionAcrossRoles({predictions:[{class:'car',score:.72,bbox:[1820,1180,55,30]}],imageWidth:2048,imageHeight:1365,roles});
 assert.equal(tiny.roles.ENVIRONMENT.pass,false);assert(tiny.roles.ENVIRONMENT.reasons.includes('SUBJECT_TOO_SMALL'));
 const none=evaluateDetectionAcrossRoles({predictions:[{class:'person',score:.99,bbox:[1,1,100,100]}],imageWidth:2048,imageHeight:1365,roles});
