@@ -1,0 +1,40 @@
+name: Dakar Photo Rotation Migration
+
+on:
+  push:
+    branches:
+      - 'hardening/v9.3-codex-handoff'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Apply migration when needed
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! grep -q "v9.5.1-hardening" dakar-widget.js; then
+            echo 'Dakar photo rotation already migrated.'
+            exit 0
+          fi
+          node tools/upgrade-dakar-photo-rotation.mjs
+          node --check dakar-widget.js
+          node tests/dakar-gate.mjs
+          node tests/tap-action-gate.mjs
+          node tests/hero-manifest-gate.mjs
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add dakar-widget.js hero-assets.json tests/tap-action-gate.mjs
+          git commit -m 'feat: rotate Dakar across three distinct hero photos'
+          git push origin HEAD:hardening/v9.3-codex-handoff
