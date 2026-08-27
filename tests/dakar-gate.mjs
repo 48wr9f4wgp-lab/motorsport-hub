@@ -7,10 +7,23 @@ import {fileURLToPath} from 'node:url';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const router=fs.readFileSync(path.join(root,'motorsport-hub.js'),'utf8');
 const moduleSrc=fs.readFileSync(path.join(root,'dakar-widget.js'),'utf8');
+const heroPolicy=JSON.parse(fs.readFileSync(path.join(root,'hero-selection-policy.json'),'utf8'));
 new Function(moduleSrc);
-for(const token of ['DAKAR dedicated rally-raid module','MH_LIFECYCLE_BAKED=1','CACHE_SCHEMA=1','SEASON=2027','PROLOGUE','STAGE 13','2027-01-15T00:00:00+03:00','dakar.com/fr/webview/rankings/stage-13/auto?year=2026','Dacia%20Sandrider%20GIMS%202024%201X7A2026.jpg','総合 CAR','GAP'])assert(moduleSrc.includes(token),`Dakar invariant missing: ${token}`);
+for(const token of ['DAKAR dedicated rally-raid module','MH_LIFECYCLE_BAKED=1','CACHE_SCHEMA=1','SEASON=2027','PROLOGUE','STAGE 13','2027-01-15T00:00:00+03:00','dakar.com/fr/webview/rankings/stage-13/auto?year=2026','Dacia%20Sandrider%20GIMS%202024%201X7A2026.jpg','HERO_CROP_BASELINE','HERO_CROPS','cropRect(img,W,H,crop)','motorsport-hero-v954-','総合 CAR','GAP'])assert(moduleSrc.includes(token),`Dakar invariant missing: ${token}`);
 assert(!moduleSrc.includes('raw.githubusercontent.com'),'Dakar module must not fetch nested repo source');
 assert(!/\beval\s*\(/.test(moduleSrc),'Dakar module must not eval remote source');
+
+const baselineVersion=moduleSrc.match(/const HERO_CROP_BASELINE='([^']+)'/)?.[1];
+assert.equal(baselineVersion,heroPolicy.visualRegression?.baselineVersion,'Dakar runtime Hero baseline version drift');
+const cropLiteral=moduleSrc.match(/const HERO_CROPS=(\{[\s\S]*?\});\nconst HERO_VARIANTS=/)?.[1];
+assert(cropLiteral,'Dakar runtime Hero crop map missing');
+const runtimeCrops=JSON.parse(cropLiteral);
+for(const [assetId,baseline] of Object.entries(heroPolicy.visualRegression?.assets||{})){
+ const runtime=runtimeCrops[assetId];assert(runtime,`Dakar runtime Hero crop missing ${assetId}`);
+ assert.deepEqual(runtime.small,baseline.smallCrop,`Dakar Small crop drift ${assetId}`);
+ assert.deepEqual(runtime.medium,baseline.mediumCrop,`Dakar Medium crop drift ${assetId}`);
+}
+assert.equal(Object.keys(runtimeCrops).length,Object.keys(heroPolicy.visualRegression?.assets||{}).length,'Dakar runtime Hero crop count drift');
 
 const FIXTURE=`<table><tr><th>P.</th><th>N°</th><th>Exp.</th><th>Pilote/Véhicule</th><th>Équipe</th><th>Temps</th><th>Écart</th></tr>
 <tr><td>1</td><td>299</td><td></td><td>The Dacia Sandriders (qat) NASSER AL-ATTIYAH (bel) FABIAN LURQUIN</td><td>The Dacia Sandriders</td><td>48h 56' 53''</td><td></td></tr>
