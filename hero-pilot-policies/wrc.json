@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "policyVersion": "1.0.0-wrc-pilot",
+  "policyVersion": "1.0.1-wrc-pilot",
   "category": "WRC",
   "mode": "ANALYSIS_ONLY_NO_RUNTIME_MUTATION",
   "subjectDetector": {
@@ -8,6 +8,7 @@
     "base": "lite_mobilenet_v2",
     "minConfidence": 0.30,
     "textSafeLeft": 0.42,
+    "subjectX": 0.76,
     "publicationPolicy": "ANALYSIS_ONLY_NO_RUNTIME_MUTATION",
     "fallback": "KEEP_CURRENT_RUNTIME_ON_FAILURE"
   },
