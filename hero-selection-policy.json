@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "policyVersion": "1.0.0",
+  "policyVersion": "1.1.0",
   "category": "DAKAR",
   "mode": "deterministic-build-time-pilot",
   "requireDistinctVariants": true,
@@ -9,6 +9,14 @@
     "CC BY 2.0",
     "CC BY-SA 4.0"
   ],
+  "subjectDetector": {
+    "engine": "@tensorflow-models/coco-ssd",
+    "base": "lite_mobilenet_v2",
+    "minConfidence": 0.32,
+    "textSafeLeft": 0.42,
+    "publicationPolicy": "ANALYSIS_ONLY_NO_RUNTIME_MUTATION",
+    "fallback": "KEEP_LKG_ON_DETECTION_OR_CROP_FAILURE"
+  },
   "weights": {
     "composition": 0.3,
     "subject": 0.3,
