@@ -21,7 +21,9 @@ assert.match(wrc,/source\.crop/);
 assert.match(moto,/preset\.crop/);
 
 for(const n of [0.18171806255976364,0.2921072355906169,0.19653893629709884,0.26584787438313173,0.30434782608695654,0.28471313476562504,0.2841728782653809,0.6956521739130435]){
-  assert(wrc.includes(String(n))||moto.includes(String(n)),`accepted crop scalar missing: ${n}`);
+  const token=String(n);
+  const compact=token.startsWith('0.')?token.slice(1):token;
+  assert(wrc.includes(token)||moto.includes(token)||wrc.includes(compact)||moto.includes(compact),`accepted crop scalar missing: ${n}`);
 }
 
 const fnSource=wrc.match(/function heroCropRect\(img,W,H,c\)\{[^\n]+\}/)?.[0];
