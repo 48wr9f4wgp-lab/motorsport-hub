@@ -7,27 +7,28 @@
       "category": "F1_ACTION",
       "filename": "2025 Japan GP - Ferrari - Lewis Hamilton - FP1.jpg",
       "sourcePage": "https://commons.wikimedia.org/wiki/File:2025_Japan_GP_-_Ferrari_-_Lewis_Hamilton_-_FP1.jpg",
-      "runtimeUrls": [
-        "https://commons.wikimedia.org/wiki/Special:Redirect/file/2025%20Japan%20GP%20-%20Ferrari%20-%20Lewis%20Hamilton%20-%20FP1.jpg?width=2048"
-      ]
+      "runtimeUrls": ["https://commons.wikimedia.org/wiki/Special:Redirect/file/2025%20Japan%20GP%20-%20Ferrari%20-%20Lewis%20Hamilton%20-%20FP1.jpg?width=2048"]
     },
     {
       "assetId": "f1-mclaren-piastri-japan-fp1-2025",
       "category": "F1_ACTION",
       "filename": "2025 Japan GP - McLaren - Oscar Piastri - FP1.jpg",
       "sourcePage": "https://commons.wikimedia.org/wiki/File:2025_Japan_GP_-_McLaren_-_Oscar_Piastri_-_FP1.jpg",
-      "runtimeUrls": [
-        "https://commons.wikimedia.org/wiki/Special:Redirect/file/2025%20Japan%20GP%20-%20McLaren%20-%20Oscar%20Piastri%20-%20FP1.jpg?width=2048"
-      ]
+      "runtimeUrls": ["https://commons.wikimedia.org/wiki/Special:Redirect/file/2025%20Japan%20GP%20-%20McLaren%20-%20Oscar%20Piastri%20-%20FP1.jpg?width=2048"]
     },
     {
-      "assetId": "f1-mercedes-russell-japan-fp2-2025",
+      "assetId": "f1-mercedes-antonelli-japan-fp2-2025",
       "category": "F1_ACTION",
-      "filename": "2025 Japan GP - Mercedes - George Russell - FP2.jpg",
-      "sourcePage": "https://commons.wikimedia.org/wiki/File:2025_Japan_GP_-_Mercedes_-_George_Russell_-_FP2.jpg",
-      "runtimeUrls": [
-        "https://commons.wikimedia.org/wiki/Special:Redirect/file/2025%20Japan%20GP%20-%20Mercedes%20-%20George%20Russell%20-%20FP2.jpg?width=2048"
-      ]
+      "filename": "2025 Japan GP - Mercedes - Kimi Antonelli - FP2.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:2025_Japan_GP_-_Mercedes_-_Kimi_Antonelli_-_FP2.jpg",
+      "runtimeUrls": ["https://commons.wikimedia.org/wiki/Special:Redirect/file/2025%20Japan%20GP%20-%20Mercedes%20-%20Kimi%20Antonelli%20-%20FP2.jpg?width=2048"]
+    },
+    {
+      "assetId": "f1-mercedes-russell-japan-fp3-2025",
+      "category": "F1_ACTION",
+      "filename": "2025 Japan GP - Mercedes - George Russell - FP3.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:2025_Japan_GP_-_Mercedes_-_George_Russell_-_FP3.jpg",
+      "runtimeUrls": ["https://commons.wikimedia.org/wiki/Special:Redirect/file/2025%20Japan%20GP%20-%20Mercedes%20-%20George%20Russell%20-%20FP3.jpg?width=2048"]
     }
   ]
 }
