@@ -23,7 +23,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
       - name: Install build-time subject detector
         run: npm install --no-save --no-package-lock @tensorflow/tfjs-node@4.22.0 @tensorflow-models/coco-ssd@2.2.3
       - name: Analyze WRC current Hero assets
@@ -37,7 +37,7 @@ jobs:
             --derivative-dir=hero-derived/wrc \
             --derived-manifest=hero-derived-manifest-wrc.json
       - name: Validate WRC pilot report integrity
-        run: node -e "const r=require('./hero-subject-report-wrc.json'); if(r.category!=='WRC'||r.summary.analyzed!==2||r.results.some(x=>x.error)) process.exit(1); console.log(r.summary)"
+        run: node -e "const r=require('./hero-subject-report-wrc.json'); if(r.category!=='WRC'||r.summary.analyzed!==2||r.summary.visualReviewCandidates!==2||r.summary.subjectAwareDerivatives!==2||r.results.some(x=>x.error)) process.exit(1); console.log(r.summary)"
       - name: Avoid Wikimedia burst between categories
         run: sleep 5
       - name: Analyze MotoGP current Hero assets
@@ -51,7 +51,7 @@ jobs:
             --derivative-dir=hero-derived/motogp \
             --derived-manifest=hero-derived-manifest-motogp.json
       - name: Validate MotoGP pilot report integrity
-        run: node -e "const r=require('./hero-subject-report-motogp.json'); if(r.category!=='MOTOGP'||r.summary.analyzed!==2||r.results.some(x=>x.error)) process.exit(1); console.log(r.summary)"
+        run: node -e "const r=require('./hero-subject-report-motogp.json'); if(r.category!=='MOTOGP'||r.summary.analyzed!==2||r.summary.visualReviewCandidates!==2||r.summary.subjectAwareDerivatives!==2||r.results.some(x=>x.error)) process.exit(1); console.log(r.summary)"
       - name: Print pilot summaries
         if: ${{ always() }}
         run: |
