@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {choosePrimaryDetection,makeCrop,makeSceneFallbackCrop,evaluateDetectionAcrossRoles} from '../tools/hero-crop-core.mjs';
+import {choosePrimaryDetection,makeCrop,makeSceneFallbackCrop,evaluateCropForRole,evaluateDetectionAcrossRoles} from '../tools/hero-crop-core.mjs';
 import {evaluateVisualRegression} from '../tools/detect-hero-subjects.mjs';
 const roles=[
  {id:'IDENTITY',minSmallSubjectFraction:.18,minMediumSubjectFraction:.14,minTextSafeScore:.6},
@@ -34,6 +34,11 @@ assert.equal(good.roles.ACTION.pass,true);
 const shifted=evaluateDetectionAcrossRoles({predictions,imageWidth:2048,imageHeight:1365,roles,subjectX:.76});
 assert.equal(shifted.roles.ACTION.pass,true);
 assert(shifted.roles.ACTION.small.textSafeScore>=good.roles.ACTION.small.textSafeScore-1e-9);
+const overlapCrop={family:'small',subjectFraction:.35,textSafeScore:.55,detectionScore:.9};
+const strictEval=evaluateCropForRole(overlapCrop,{minSmallSubjectFraction:.18,minMediumSubjectFraction:.14,minTextSafeScore:.6});
+assert.equal(strictEval.pass,false);assert(strictEval.reasons.includes('TEXT_SAFE_VIOLATION'));assert.equal(strictEval.rawTextSafeScore,.55);assert.equal(strictEval.effectiveTextSafeScore,.55);
+const veiledEval=evaluateCropForRole(overlapCrop,{minSmallSubjectFraction:.18,minMediumSubjectFraction:.14,minTextSafeScore:.6,veilCompensation:.08});
+assert.equal(veiledEval.pass,true,'accepted veil may compensate known subject overlap without changing raw geometry');assert.equal(veiledEval.rawTextSafeScore,.55);assert.equal(veiledEval.effectiveTextSafeScore,.63);assert.equal(veiledEval.veilCompensation,.08);
 const tiny=evaluateDetectionAcrossRoles({predictions:[{class:'car',score:.72,bbox:[1820,1180,55,30]}],imageWidth:2048,imageHeight:1365,roles});
 assert.equal(tiny.roles.ENVIRONMENT.pass,false);assert(tiny.roles.ENVIRONMENT.reasons.includes('SUBJECT_TOO_SMALL'));
 const none=evaluateDetectionAcrossRoles({predictions:[{class:'person',score:.99,bbox:[1,1,100,100]}],imageWidth:2048,imageHeight:1365,roles});
