@@ -1,7 +1,7 @@
-// Motorsport Hub v10.0.0-hardening — flattened F1 pilot module
+// Motorsport Hub v10.0.2-hardening — flattened F1 pilot module
 // Candidate replacement for the legacy wrapper waterfall. No runtime source rewriting.
 (async()=>{
-const V='10.0.0-hardening',K='f1',SEASON=2026,CACHE_SCHEMA=1,CACHE_MAX_AGE=72*3600000;
+const V='10.0.2-hardening',K='f1',SEASON=2026,CACHE_SCHEMA=1,CACHE_MAX_AGE=72*3600000;
 const SCHEDULE_SOURCE='https://api.jolpi.ca/ergast/f1/2026.json?limit=100';
 const STANDINGS_SOURCE='https://api.jolpi.ca/ergast/f1/2026/driverstandings.json';
 const CACHE_SOURCE='jolpi:f1-2026-schedule+standings';
@@ -17,14 +17,19 @@ const SNAP={race:'Italian Grand Prix',start:'2026-09-06T13:00:00Z',end:'2026-09-
 const FINAL_EVENT={race:'Abu Dhabi Grand Prix',start:'2026-12-06T13:00:00Z',end:'2026-12-06T17:00:00Z',circuit:'Yas Marina Circuit',seasonEnded:true,lifecycle:'SEASON_ENDED'};
 
 const HERO={
- MERCEDES:{urls:[
-  'https://commons.wikimedia.org/wiki/Special:Redirect/file/Andrea_Kimi_Antonelli_2025_Italian_Grand_Prix_FP3.jpg?width=2048',
-  'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/2025_Japan_GP_-_Mercedes_-_W16_-_Thursday.jpg/960px-2025_Japan_GP_-_Mercedes_-_W16_-_Thursday.jpg'
- ],focus:.46,shift:82},
- FERRARI:{urls:['https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/2025_Japan_GP_-_Ferrari_-_SF-25_-_Thursday.jpg/960px-2025_Japan_GP_-_Ferrari_-_SF-25_-_Thursday.jpg'],focus:.56,shift:30},
- MCLAREN:{urls:['https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/2025_Japan_GP_-_McLaren_-_MCL39_-_Thursday.jpg/960px-2025_Japan_GP_-_McLaren_-_MCL39_-_Thursday.jpg'],focus:.56,shift:30}
+ MERCEDES:{sources:[
+  {assetId:'f1-mercedes-russell-japan-fp3-2025',url:'https://commons.wikimedia.org/wiki/Special:Redirect/file/2025%20Japan%20GP%20-%20Mercedes%20-%20George%20Russell%20-%20FP3.jpg?width=2048',crop:{small:{x:.24071915447711945,y:0,w:.5625,h:1},medium:{x:.02548413233757015,y:.10416263483860641,w:.9173575437068939,h:.7563398750047178}}},
+  {assetId:'f1-mercedes-russell-japan-fp3-2025',url:'https://commons.wikimedia.org/wiki/Special:Redirect/file/2025%20Japan%20GP%20-%20Mercedes%20-%20George%20Russell%20-%20FP3.jpg?width=1280',crop:{small:{x:.24071915447711945,y:0,w:.5625,h:1},medium:{x:.02548413233757015,y:.10416263483860641,w:.9173575437068939,h:.7563398750047178}}}
+ ]},
+ FERRARI:{sources:[
+  {assetId:'f1-ferrari-hamilton-japan-fp1-2025',url:'https://commons.wikimedia.org/wiki/Special:Redirect/file/2025%20Japan%20GP%20-%20Ferrari%20-%20Lewis%20Hamilton%20-%20FP1.jpg?width=2048',crop:{small:{x:.2208995819091797,y:0,w:.5625,h:1},medium:{x:0,y:.07923786778860815,w:1,h:.8244766505636071}}},
+  {assetId:'f1-ferrari-hamilton-japan-fp1-2025',url:'https://commons.wikimedia.org/wiki/Special:Redirect/file/2025%20Japan%20GP%20-%20Ferrari%20-%20Lewis%20Hamilton%20-%20FP1.jpg?width=1280',crop:{small:{x:.2208995819091797,y:0,w:.5625,h:1},medium:{x:0,y:.07923786778860815,w:1,h:.8244766505636071}}}
+ ]},
+ MCLAREN:{sources:[
+  {assetId:'f1-mclaren-piastri-japan-fp1-2025',url:'https://commons.wikimedia.org/wiki/Special:Redirect/file/2025%20Japan%20GP%20-%20McLaren%20-%20Oscar%20Piastri%20-%20FP1.jpg?width=2048',crop:{small:{x:.26781560480594635,y:0,w:.5625,h:1},medium:{x:0,y:.10067674954348334,w:1,h:.8244766505636071}}},
+  {assetId:'f1-mclaren-piastri-japan-fp1-2025',url:'https://commons.wikimedia.org/wiki/Special:Redirect/file/2025%20Japan%20GP%20-%20McLaren%20-%20Oscar%20Piastri%20-%20FP1.jpg?width=1280',crop:{small:{x:.26781560480594635,y:0,w:.5625,h:1},medium:{x:0,y:.10067674954348334,w:1,h:.8244766505636071}}}
+ ]}
 };
-
 const col=(h,a=1)=>new Color(h,a),clone=o=>JSON.parse(JSON.stringify(o));
 async function json(url){const r=new Request(url);r.timeoutInterval=9;r.headers={'User-Agent':'MotorsportHub/10.0-hardening','Cache-Control':'no-cache'};return await r.loadJSON()}
 function validRanking(a){return Array.isArray(a)&&a.length>=3&&a.slice(0,5).every(r=>r&&Number(r.pos)>=1&&String(r.name||'').trim()&&Number.isFinite(Number(String(r.points||'').replace(/[^0-9.-]/g,''))))}
@@ -49,18 +54,19 @@ async function update(base){
 async function load(){const base=fallbackEvent(clone(SNAP));try{const d=await update(base);save(d);return{d,cached:false}}catch(_){const c=cache();return{d:fallbackEvent(c||base),cached:true}}}
 
 function smooth(t){return t*t*(3-2*t)}
-function cover(img,W,H,focus=.5,shift=0){const iw=img.size.width||1,ih=img.size.height||1,s=Math.max(W/iw,H/ih),dw=iw*s,dh=ih*s;return new Rect(-(dw-W)*focus+shift,-(dh-H)*.5,dw,dh)}
+function heroCropRect(img,W,H,c){const iw=img.size.width||1,ih=img.size.height||1,cw=Math.max(1,iw*c.w),ch=Math.max(1,ih*c.h),s=Math.max(W/cw,H/ch),vw=cw*s,vh=ch*s,ox=(vw-W)/2,oy=(vh-H)/2;return new Rect(-iw*c.x*s-ox,-ih*c.y*s-oy,iw*s,ih*s)}
 async function hero(d){
  const small=(config.widgetFamily||'medium')==='small',maker=String(d?.ranking?.[0]?.maker||'MERCEDES').toUpperCase(),h=HERO[maker]||HERO.MERCEDES;
- const p=fm.joinPath(DOC,`motorsport-hero-v1000-${small?'small':'medium'}-f1-${maker.toLowerCase()}.jpg`);if(fm.fileExists(p)){try{return fm.readImage(p)}catch(_){} }
- try{let img=null;for(const u of h.urls){try{const r=new Request(u);r.timeoutInterval=10;r.headers={'User-Agent':'Mozilla/5.0','Cache-Control':'no-cache'};img=await r.loadImage();if(img)break}catch(_){}}if(!img)return null;
-  const W=small?720:1380,H=small?720:640,ctx=new DrawContext();ctx.size=new Size(W,H);ctx.opaque=true;ctx.respectScreenScale=false;ctx.setFillColor(col(C.bg));ctx.fillRect(new Rect(0,0,W,H));ctx.drawImageInRect(img,cover(img,W,H,h.focus,small?h.shift*.4:h.shift));ctx.setFillColor(col('#030609',.10));ctx.fillRect(new Rect(0,0,W,H));
+ const p=fm.joinPath(DOC,`motorsport-hero-v1000-crop2-${small?'small':'medium'}-f1-${maker.toLowerCase()}.jpg`);if(fm.fileExists(p)){try{return fm.readImage(p)}catch(_){} }
+ try{let img=null,source=null;for(const src of h.sources){try{const r=new Request(src.url);r.timeoutInterval=10;r.headers={'User-Agent':'Mozilla/5.0','Cache-Control':'no-cache'};img=await r.loadImage();if(img){source=src;break}}catch(_){}}if(!img||!source)return null;
+  const W=small?720:1380,H=small?720:640,crop=small?source.crop.small:source.crop.medium,ctx=new DrawContext();ctx.size=new Size(W,H);ctx.opaque=true;ctx.respectScreenScale=false;ctx.setFillColor(col(C.bg));ctx.fillRect(new Rect(0,0,W,H));ctx.drawImageInRect(img,heroCropRect(img,W,H,crop));ctx.setFillColor(col('#030609',.10));ctx.fillRect(new Rect(0,0,W,H));
   for(let x=0;x<W;x+=3){const t=x/(W-1),a=.86*(1-smooth(t))+.07;ctx.setFillColor(col('#030609',a));ctx.fillRect(new Rect(x,0,4,H))}
   const rs=W*.76;for(let x=rs;x<W;x+=3){const t=(x-rs)/(W-rs),a=.08+.40*smooth(t);ctx.setFillColor(col('#020407',a));ctx.fillRect(new Rect(x,0,4,H))}
   const bs=H*.67,bh=H-bs;for(let i=0;i<56;i++){const y=bs+i*(bh/56),t=i/55,a=.015+.22*t*t;ctx.setFillColor(col('#020407',a));ctx.fillRect(new Rect(0,y,W,bh/56+1))}
   ctx.setFillColor(col(S.accent,.92));ctx.fillRect(new Rect(0,0,W,5));const out=ctx.getImage();try{fm.writeImage(p,out)}catch(_){}return out
  }catch(_){return null}
 }
+
 function T(st,s,z,c,w='regular',n=1){const t=st.addText(String(s??''));t.font=w==='heavy'?Font.heavySystemFont(z):w==='bold'?Font.boldSystemFont(z):w==='semibold'?Font.semiboldSystemFont(z):Font.systemFont(z);t.textColor=c;t.lineLimit=n;t.minimumScaleFactor=.66;return t}
 function base(bg){const w=new ListWidget();if(bg)w.backgroundImage=bg;else{const g=new LinearGradient();g.colors=[col(S.accent,.16),col(C.bg)];g.locations=[0,1];w.backgroundGradient=g}w.url=S.url;return w}
 function pill(st,label,accent=false){const p=st.addStack();p.backgroundColor=accent?col(S.accent,.20):col('#000000',.48);p.cornerRadius=8;p.setPadding(3,7,3,7);T(p,label,9.5,accent?col(S.accent):col(C.muted),'heavy');return p}
