@@ -30,7 +30,16 @@ jobs:
         env:
           TF_CPP_MIN_LOG_LEVEL: '2'
         run: node tools/detect-hero-subjects.mjs --mode=current --preview-dir=hero-crop-previews
+      - name: Print Hero subject report
+        if: ${{ always() }}
+        run: |
+          if [ -f hero-subject-report.json ]; then
+            cat hero-subject-report.json
+          else
+            echo 'hero-subject-report.json was not produced.'
+          fi
       - name: Upload pilot report and previews
+        if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
           name: dakar-hero-subject-pilot-${{ github.run_id }}
