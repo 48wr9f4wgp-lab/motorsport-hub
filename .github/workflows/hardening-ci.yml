@@ -48,6 +48,7 @@ jobs:
             tests/registry-gate.mjs
             tests/cache-hardening-gate.mjs
             tests/hero-manifest-gate.mjs
+            tests/hero-selection-gate.mjs
             tests/lifecycle-hardening-gate.mjs
             tests/integrity-gate.mjs
             tests/release-package-generator-gate.mjs
@@ -75,6 +76,10 @@ jobs:
           done
           exit $failed
 
+      - name: Generate Dakar Hero selection report
+        if: ${{ github.event_name == 'push' && github.ref_name == 'hardening/v9.3-codex-handoff' }}
+        run: node tools/hero-selection-engine.mjs --write
+
       - name: Build immutable release candidate package
         if: ${{ github.event_name == 'push' && github.ref_name == 'hardening/v9.3-codex-handoff' }}
         env:
@@ -91,6 +96,7 @@ jobs:
           path: |
             release-integrity.json
             scriptable-loader-v6.js
+            hero-selection-report.json
 
       - name: Sync tested runtime to hardening-live
         if: ${{ github.event_name == 'push' && github.ref_name == 'hardening/v9.3-codex-handoff' }}

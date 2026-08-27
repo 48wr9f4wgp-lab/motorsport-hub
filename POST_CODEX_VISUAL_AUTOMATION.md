@@ -1,22 +1,46 @@
-# Motorsport Hub — Post-Codex Visual Automation Plan
+# Motorsport Hub — Visual Automation Plan
 
-Status: **FORMALLY PLANNED / DO NOT IMPLEMENT DURING CURRENT HARDENING UNLESS NEEDED FOR A BLOCKER**
+Status: **PHASE 1 ACTIVE — DAKAR SELECTION GATE**
 
-This file is a required post-Codex work item. It exists because manual per-category Small/Medium visual QA and manual Hero recropping do not scale to 11–12+ categories.
+2026-08-27: the user explicitly approved starting Hero automation before Codex returns. This supersedes the earlier hold instruction for the limited Phase 1 scope below. It does **not** authorize main merge, public release, broad architecture rewrite, or uncontrolled automatic image publication.
 
 ## Objective
-After Codex re-audits and merges the hardening architecture, replace manual Hero maintenance and broad manual visual QA with an automated image/render pipeline.
+Replace manual Hero maintenance and broad manual Small/Medium visual QA with a deterministic, licensed, auditable image/render pipeline.
 
-The user requirement is explicit:
-- higher Hero image quality is desirable;
-- Hero updates must not require manual crop/focus tuning every time;
-- category/data updates must not cause random Hero reframing;
-- manual iPhone QA should be reduced to targeted release gates, not 11 categories × 2 sizes after every change.
+User requirements:
+- use higher-quality and more recent Hero images where they improve the widget;
+- do not require manual crop/focus tuning every time an image changes;
+- standings/data refresh must not randomly reframe the Hero;
+- bad new images must not replace a known-good Hero;
+- iPhone QA should become a targeted release gate rather than the primary regression system.
+
+## Phase 1 — Dakar deterministic Hero Selection Gate
+Implemented scope:
+1. Approved Hero candidates continue to come from `hero-assets.json`.
+2. `hero-selection-policy.json` adds deterministic machine-readable quality observations and role thresholds for Dakar.
+3. `tools/hero-selection-engine.mjs` evaluates license/source integrity, source resolution, subject visibility, text-safe score, composition, recency and role fit.
+4. Three explicit Hero roles are used: `IDENTITY`, `ACTION`, `ENVIRONMENT`.
+5. Distinct variants are required for the three Tap Action slots.
+6. A candidate below hard quality thresholds is not automatically promoted.
+7. If no better eligible distinct candidate exists, the role stays on its LKG (last-known-good) asset.
+8. `tests/hero-selection-gate.mjs` proves deterministic selection, license rejection, LKG hold and future promotion behavior.
+9. CI emits `hero-selection-report.json` into the immutable hardening artifact.
+
+Current Dakar device evidence from 2026-08-27 is intentionally encoded as pilot metadata, not represented as computer-vision output. In particular, the current H3 environmental shot has a very small vehicle in both Small and Medium. Under the new policy it is **not eligible for fresh automatic promotion**; it is retained only as the current LKG until a better approved ENVIRONMENT candidate exists.
+
+## What Phase 1 does not yet claim
+The following remain unimplemented and must not be described as complete:
+- automatic discovery of recent source images;
+- automatic license scraping/approval;
+- computer-vision subject detection;
+- automatic crop rectangle generation;
+- automatic veil generation from image statistics;
+- generated Small/Medium image derivatives at build time;
+- full visual regression image comparison;
+- 12-category rollout.
 
 ## Required Hero Rendering Engine
-Create one shared Hero Rendering Engine used by all categories.
-
-Pipeline target:
+The full shared Hero Rendering Engine target remains:
 1. Hero candidate is selected from approved/licensed asset inventory.
 2. Fetch highest practical source resolution (prefer >= 2048 px, use larger source when justified).
 3. Validate image dimensions, decode success and minimum quality threshold.
@@ -31,7 +55,7 @@ Pipeline target:
 Do not run expensive subject analysis on every Scriptable widget refresh. Prefer build/update-time preprocessing and store lightweight crop metadata or derived images for Scriptable consumption.
 
 ## Crop metadata target
-A generated record should be equivalent to:
+A generated record should remain equivalent in concept to:
 
 ```json
 {
@@ -46,7 +70,7 @@ A generated record should be equivalent to:
 }
 ```
 
-Exact schema can change after implementation research, but the concepts must remain machine-readable and deterministic.
+Exact schema can evolve, but the concepts must remain machine-readable and deterministic.
 
 ## Hero update policy
 Separate standings/event refresh from Hero refresh.
@@ -56,6 +80,7 @@ Separate standings/event refresh from Hero refresh.
 - A standings change must not automatically force a new Hero.
 - A Hero source change alone triggers crop regeneration.
 - Stable Hero composition is preferred over frequent novelty.
+- "Recent" is a ranking signal, not a bypass around quality or licensing gates.
 
 ## Image quality target
 Do not improve perceived quality by blindly increasing final bitmap size.
@@ -70,7 +95,7 @@ Goals:
 - keep Small/Medium visually sharper than current implementation where source quality allows it.
 
 ## License integration
-The image pipeline must integrate with `hero-assets.json` (or its successor):
+The image pipeline must remain integrated with `hero-assets.json` (or a documented successor):
 - exact source page;
 - author;
 - license;
@@ -80,57 +105,41 @@ The image pipeline must integrate with `hero-assets.json` (or its successor):
 Unverified assets must never enter the automatic candidate pool.
 
 ## Automated Visual QA target
-Replace the current broad manual matrix with automated/static checks wherever possible.
-
 Automate at minimum:
 - missing Hero/source asset;
 - invalid image decode;
 - crop outside source bounds;
-- subject clipped below defined threshold;
+- subject clipped/below defined threshold;
 - text-safe-area violation where deterministically measurable;
 - category accent/badge/data-field presence;
 - Small/Medium renderer completion;
 - long title/name fixture overflow risks;
 - malformed metadata separators;
-- cache/data/season/parser/boundary tests already covered by repository gates.
+- existing cache/data/season/parser/boundary gates.
 
-Investigate a Visual QA harness that can generate deterministic preview artifacts for all categories and sizes in one run. It does not have to replace final real-device QA, but it should make iPhone testing a spot-check rather than the primary regression system.
+Investigate deterministic preview artifacts for all categories and sizes. They do not replace final device QA, but should make iPhone testing a spot-check.
 
 ## Reduced real-device QA policy
-Until the automated visual pipeline exists, use risk-based device QA:
-
-### Required manually
-- a renderer/module whose layout code changed;
-- a new category with no prior device baseline;
+Required manually:
+- renderer/module layout changes;
+- a new category with no device baseline;
 - a new Hero/crop policy;
-- changes involving safe areas, font sizing, line limits, PTS alignment or countdown placement;
-- final RC representative spot-check.
+- safe-area/font/line-limit/alignment changes;
+- representative final RC spot-check.
 
-### Do not repeat manually after every unrelated change
-- categories whose renderer/Hero/layout did not change;
-- Small+Medium for every category when only data/cache/parser logic changed;
-- previously locked expansion categories when current changes do not touch renderer output.
+Do not repeat manually after unrelated data/cache/parser changes for categories whose renderer/Hero/layout is unchanged.
 
-## Current hardening evidence relevant to risk-based QA
-As of 2026-08-26, current hardening device evidence includes:
-- QA diagnostics: 11/11 LIVE after WEC parser fix;
-- F1 Small/Medium: PASS;
-- WRC Small/Medium: PASS;
-- MotoGP Small/Medium: PASS;
-- FDJ Small/Medium: PASS.
-
-Do not convert untested categories to PASS from this note. It only supports reducing redundant retests where no renderer-level risk exists.
-
-## Post-Codex execution order
-After Codex returns:
-1. Codex re-audits `hardening/v9.3-codex-handoff` against audited base.
-2. Run/fix all repository gates.
-3. Complete merge decision for hardening architecture.
-4. Remove remaining Router lifecycle source transforms by moving lifecycle into expansion modules.
-5. Implement Hero Rendering Engine + derived-asset pipeline.
-6. Implement automated Visual QA harness/fixtures.
-7. Re-baseline current categories once under the new pipeline.
-8. Only then expand Hero automation to Dakar/new categories.
+## Execution order from current state
+1. Dakar Phase 1 selection gate and CI report.
+2. Add automatic candidate-source discovery for recent licensed images, without auto-publishing them.
+3. Add build-time image validation and dimension/decode checks.
+4. Add deterministic subject/crop analysis and text-safe metrics.
+5. Generate Small/Medium derived Hero assets and LKG metadata.
+6. Add visual regression preview artifacts.
+7. Re-baseline Dakar once under the generated crop pipeline.
+8. Expand the proven engine to the other 11 categories.
+9. Codex final attack audit: architecture, performance, failure isolation and visual pipeline.
+10. Release Candidate gate; main/public release only after explicit approval.
 
 ## Non-goal
-Do not turn Hero selection into uncontrolled AI-generated or constantly changing visual output. The result must remain deterministic, licensed, cacheable, auditable, and visually stable.
+Do not turn Hero selection into uncontrolled AI-generated or constantly changing output. The result must remain deterministic, licensed, cacheable, auditable and visually stable.
