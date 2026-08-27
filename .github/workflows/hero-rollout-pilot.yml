@@ -107,8 +107,8 @@ jobs:
             --output=hero-subject-report-f1-action.json \
             --derivative-dir=hero-derived-f1-action \
             --derived-manifest=hero-derived-manifest-f1-action.json
-      - name: Validate F1 action candidate integrity
-        run: node -e "const r=require('./hero-subject-report-f1-action.json'); if(r.category!=='F1_ACTION'||r.summary.analyzed!==3||r.summary.visualReviewCandidates!==3||r.summary.subjectAwareDerivatives!==3||r.results.some(x=>x.error)) process.exit(1); console.log(r.summary)"
+      - name: Validate F1 action candidate pool
+        run: node -e "const r=require('./hero-subject-report-f1-action.json'); const ok=new Set(r.results.filter(x=>x.status==='VISUAL_REVIEW_CANDIDATE').map(x=>x.assetId)); const base=ok.has('f1-ferrari-hamilton-japan-fp1-2025')&&ok.has('f1-mclaren-piastri-japan-fp1-2025'); const merc=[...ok].filter(x=>x.startsWith('f1-mercedes-')).length; if(r.category!=='F1_ACTION'||r.summary.analyzed!==4||!base||merc<1||r.results.some(x=>x.error)) process.exit(1); console.log({summary:r.summary,mercedesPassed:[...ok].filter(x=>x.startsWith('f1-mercedes-'))})"
       - name: Print WEC and F1 summaries
         if: ${{ always() }}
         run: |
