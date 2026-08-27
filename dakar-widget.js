@@ -1,9 +1,9 @@
-// Motorsport Hub v9.5.2-hardening — DAKAR dedicated rally-raid module
+// Motorsport Hub v9.5.3-hardening — DAKAR dedicated rally-raid module
 // MH_LIFECYCLE_BAKED=1
 // 2027 next-stage route + CAR overall TOP3/time-gap surface. Pre-start overall uses official 2026 final classification.
-// Tap Action v2: tap widget to cycle three distinct persisted Hero photos; Medium DAKAR badge opens official site.
+// Tap Action v2.1: tap widget to cycle visually distinct persisted Hero photos (show car + Dakar action); Medium DAKAR badge opens official site.
 (async()=>{
-const V='9.5.2-hardening',K='dakar',SEASON=2027,CACHE_SCHEMA=1,CACHE_MAX_AGE=7*86400000;
+const V='9.5.3-hardening',K='dakar',SEASON=2027,CACHE_SCHEMA=1,CACHE_MAX_AGE=7*86400000;
 const FINAL_2026_SOURCE='https://www.dakar.com/fr/webview/rankings/stage-13/auto?year=2026';
 const S={label:'DAKAR',accent:'#D4A62A',url:'https://www.dakar.com/en/'};
 const C={bg:'#070705',text:'#F8F7F2',muted:'#C9C4B5',dim:'#9C9789',good:'#58DA8A',warn:'#FFB84D'};
@@ -14,14 +14,14 @@ const HERO_VARIANTS=[
   'https://commons.wikimedia.org/wiki/Special:Redirect/file/Dacia%20Sandrider%20GIMS%202024%201X7A2026.jpg?width=2048',
   'https://commons.wikimedia.org/wiki/Special:Redirect/file/Dacia%20Sandrider%20GIMS%202024%201X7A2026.jpg?width=1280'
  ],focus:.58,zoom:1,smallShift:18,mediumShift:70},
- {label:'PHOTO 2',filename:'Dacia Sandrider GIMS 2024 1X7A2028.jpg',urls:[
-  'https://commons.wikimedia.org/wiki/Special:Redirect/file/Dacia%20Sandrider%20GIMS%202024%201X7A2028.jpg?width=2048',
-  'https://commons.wikimedia.org/wiki/Special:Redirect/file/Dacia%20Sandrider%20GIMS%202024%201X7A2028.jpg?width=1280'
- ],focus:.56,zoom:1.03,smallShift:10,mediumShift:45},
- {label:'PHOTO 3',filename:'Dacia Sandrider GIMS 2024 1X7A2029.jpg',urls:[
-  'https://commons.wikimedia.org/wiki/Special:Redirect/file/Dacia%20Sandrider%20GIMS%202024%201X7A2029.jpg?width=2048',
-  'https://commons.wikimedia.org/wiki/Special:Redirect/file/Dacia%20Sandrider%20GIMS%202024%201X7A2029.jpg?width=1280'
- ],focus:.52,zoom:1.02,smallShift:20,mediumShift:70}
+ {label:'PHOTO 2',filename:'Dakar Rally 2021 - Stage 05 (50810898083).jpg',urls:[
+  'https://commons.wikimedia.org/wiki/Special:Redirect/file/Dakar%20Rally%202021%20-%20Stage%2005%20%2850810898083%29.jpg?width=2048',
+  'https://commons.wikimedia.org/wiki/Special:Redirect/file/Dakar%20Rally%202021%20-%20Stage%2005%20%2850810898083%29.jpg?width=1280'
+ ],focus:.50,zoom:1.02,smallShift:0,mediumShift:12},
+ {label:'PHOTO 3',filename:'Dakar Rally 2021 - Stage 10 (50832314671).jpg',urls:[
+  'https://commons.wikimedia.org/wiki/Special:Redirect/file/Dakar%20Rally%202021%20-%20Stage%2010%20%2850832314671%29.jpg?width=2048',
+  'https://commons.wikimedia.org/wiki/Special:Redirect/file/Dakar%20Rally%202021%20-%20Stage%2010%20%2850832314671%29.jpg?width=1280'
+ ],focus:.50,zoom:1.02,smallShift:0,mediumShift:0}
 ];
 function readUI(){try{if(!fm.fileExists(UI_STATE))return{heroVariant:0};const p=JSON.parse(fm.readString(UI_STATE)),i=Number(p?.heroVariant);return{heroVariant:Number.isInteger(i)&&i>=0&&i<HERO_VARIANTS.length?i:0}}catch(_){return{heroVariant:0}}}
 function saveUI(s){try{fm.writeString(UI_STATE,JSON.stringify({schemaVersion:1,heroVariant:s.heroVariant,updatedAt:Date.now()}))}catch(_){}}
@@ -62,12 +62,12 @@ const META={
  '226':{machine:'FORD RAPTOR',team:'FORD RACING'}
 };
 
-// Hero photo set: Alexander-93 Dacia Sandrider GIMS 2024 series. Exact source pages are tracked in hero-assets.json.
+// Hero photo set: current Dacia Sandrider design reference + two licensed Dakar action frames. Exact source pages are tracked in hero-assets.json.
 
 const col=(h,a=1)=>new Color(h,a),clone=o=>JSON.parse(JSON.stringify(o)),num=v=>{const m=String(v||'').replace(/,/g,'').match(/-?\d+(?:\.\d+)?/);return m?Number(m[0]):NaN};
 const clean=s=>String(s||'').replace(/<script[\s\S]*?<\/script>/gi,' ').replace(/<style[\s\S]*?<\/style>/gi,' ').replace(/<[^>]+>/g,' ').replace(/&nbsp;|&#160;/gi,' ').replace(/&amp;/gi,'&').replace(/&#39;|&apos;/gi,"'").replace(/\s+/g,' ').trim();
 function rows(h){const out=[];for(const tr of String(h||'').match(/<tr\b[\s\S]*?<\/tr>/gi)||[]){const a=[];let m,re=/<t[dh]\b[^>]*>([\s\S]*?)<\/t[dh]>/gi;while((m=re.exec(tr)))a.push(clean(m[1]));if(a.length)out.push(a)}return out}
-async function txt(url){const r=new Request(url);r.timeoutInterval=10;r.headers={'User-Agent':'Mozilla/5.0 MotorsportHub/9.5.2','Cache-Control':'no-cache'};return await r.loadString()}
+async function txt(url){const r=new Request(url);r.timeoutInterval=10;r.headers={'User-Agent':'Mozilla/5.0 MotorsportHub/9.5.3','Cache-Control':'no-cache'};return await r.loadString()}
 function nextStage(d){const now=Date.now();for(const e of CAL){const s=Date.parse(e.start),end=Date.parse(e.end);if(now<end)return{...d,...e,seasonEnded:false,lifecycle:now>=s?'ACTIVE':'UPCOMING'}}const last=CAL[CAL.length-1];return{...d,...last,seasonEnded:true,lifecycle:'SEASON_ENDED'}}
 function rankingContext(){const now=Date.now(),stage1=Date.parse(CAL.find(e=>e.stageId==='1').start);if(now<stage1)return{season:2026,label:'2026 FINAL',source:FINAL_2026_SOURCE};let completed=0;for(const e of CAL){if(e.stageId==='P')continue;if(now>=Date.parse(e.end))completed=Math.max(completed,Number(e.stageId));}if(completed<1)return{season:2026,label:'2026 FINAL',source:FINAL_2026_SOURCE};return{season:2027,label:`2027 AFTER S${completed}`,source:`https://www.dakar.com/fr/webview/rankings/stage-${completed}/auto?year=2027`}}
 function validRanking(a){return Array.isArray(a)&&a.length>=3&&a.slice(0,5).every(r=>r&&Number(r.pos)>=1&&String(r.name||'').trim()&&String(r.gap||'').trim())}
@@ -95,7 +95,7 @@ async function load(){const base=nextStage(clone(SNAP));try{const d=await update
 
 function smooth(t){return t*t*(3-2*t)}
 function cover(img,W,H,focus=.55,shift=0,zoom=1){const iw=img.size.width||1,ih=img.size.height||1,s=Math.max(W/iw,H/ih)*zoom,dw=iw*s,dh=ih*s;return new Rect(-(dw-W)*focus+shift,-(dh-H)*.5,dw,dh)}
-async function hero(){const small=(config.widgetFamily||'medium')==='small',variant=HERO_VARIANTS[UI.heroVariant]||HERO_VARIANTS[0],p=fm.joinPath(DOC,`motorsport-hero-v952-${small?'small':'medium'}-dakar-h${UI.heroVariant}.jpg`);if(fm.fileExists(p)){try{return fm.readImage(p)}catch(_){} }try{let img=null;for(const u of variant.urls){try{const r=new Request(`${u}&v=952`);r.timeoutInterval=10;r.headers={'User-Agent':'Mozilla/5.0','Cache-Control':'no-cache'};img=await r.loadImage();if(img)break}catch(_){}}if(!img)return null;const W=small?720:1380,H=small?720:640,ctx=new DrawContext();ctx.size=new Size(W,H);ctx.opaque=true;ctx.respectScreenScale=false;ctx.setFillColor(col(C.bg));ctx.fillRect(new Rect(0,0,W,H));ctx.drawImageInRect(img,cover(img,W,H,variant.focus,small?variant.smallShift:variant.mediumShift,variant.zoom));ctx.setFillColor(col('#060503',.12));ctx.fillRect(new Rect(0,0,W,H));for(let x=0;x<W;x+=3){const t=x/(W-1),a=.84*(1-smooth(t))+.055;ctx.setFillColor(col('#050403',a));ctx.fillRect(new Rect(x,0,4,H))}const rs=W*.74;for(let x=rs;x<W;x+=3){const t=(x-rs)/(W-rs),a=.07+.42*smooth(t);ctx.setFillColor(col('#050403',a));ctx.fillRect(new Rect(x,0,4,H))}const bs=H*.68,bh=H-bs;for(let i=0;i<56;i++){const y=bs+i*(bh/56),t=i/55,a=.02+.24*t*t;ctx.setFillColor(col('#040302',a));ctx.fillRect(new Rect(0,y,W,bh/56+1))}ctx.setFillColor(col(S.accent,.94));ctx.fillRect(new Rect(0,0,W,5));const out=ctx.getImage();try{fm.writeImage(p,out)}catch(_){}return out}catch(_){return null}}
+async function hero(){const small=(config.widgetFamily||'medium')==='small',variant=HERO_VARIANTS[UI.heroVariant]||HERO_VARIANTS[0],p=fm.joinPath(DOC,`motorsport-hero-v953-${small?'small':'medium'}-dakar-h${UI.heroVariant}.jpg`);if(fm.fileExists(p)){try{return fm.readImage(p)}catch(_){} }try{let img=null;for(const u of variant.urls){try{const r=new Request(`${u}&v=953`);r.timeoutInterval=10;r.headers={'User-Agent':'Mozilla/5.0','Cache-Control':'no-cache'};img=await r.loadImage();if(img)break}catch(_){}}if(!img)return null;const W=small?720:1380,H=small?720:640,ctx=new DrawContext();ctx.size=new Size(W,H);ctx.opaque=true;ctx.respectScreenScale=false;ctx.setFillColor(col(C.bg));ctx.fillRect(new Rect(0,0,W,H));ctx.drawImageInRect(img,cover(img,W,H,variant.focus,small?variant.smallShift:variant.mediumShift,variant.zoom));ctx.setFillColor(col('#060503',.12));ctx.fillRect(new Rect(0,0,W,H));for(let x=0;x<W;x+=3){const t=x/(W-1),a=.84*(1-smooth(t))+.055;ctx.setFillColor(col('#050403',a));ctx.fillRect(new Rect(x,0,4,H))}const rs=W*.74;for(let x=rs;x<W;x+=3){const t=(x-rs)/(W-rs),a=.07+.42*smooth(t);ctx.setFillColor(col('#050403',a));ctx.fillRect(new Rect(x,0,4,H))}const bs=H*.68,bh=H-bs;for(let i=0;i<56;i++){const y=bs+i*(bh/56),t=i/55,a=.02+.24*t*t;ctx.setFillColor(col('#040302',a));ctx.fillRect(new Rect(0,y,W,bh/56+1))}ctx.setFillColor(col(S.accent,.94));ctx.fillRect(new Rect(0,0,W,5));const out=ctx.getImage();try{fm.writeImage(p,out)}catch(_){}return out}catch(_){return null}}
 function T(st,s,z,c,w='regular',n=1){const t=st.addText(String(s??''));t.font=w==='heavy'?Font.heavySystemFont(z):w==='bold'?Font.boldSystemFont(z):w==='semibold'?Font.semiboldSystemFont(z):Font.systemFont(z);t.textColor=c;t.lineLimit=n;t.minimumScaleFactor=.64;return t}
 function base(bg){const w=new ListWidget();if(bg)w.backgroundImage=bg;else{const g=new LinearGradient();g.colors=[col(S.accent,.18),col(C.bg)];g.locations=[0,1];w.backgroundGradient=g}w.url=tapURL();return w}
 function pill(st,label,accent=false){const p=st.addStack();p.backgroundColor=accent?col(S.accent,.22):col('#000000',.50);p.cornerRadius=8;p.setPadding(3,7,3,7);T(p,label,accent?9.1:9.4,accent?col(S.accent):col(C.text),'heavy');return p}
