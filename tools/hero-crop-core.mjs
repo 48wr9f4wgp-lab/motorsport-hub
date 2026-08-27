@@ -31,7 +31,7 @@ export function makeCrop(imageWidth,imageHeight,detection,family,{textSafeLeft=.
   const minContextWidthFraction=role==='ENVIRONMENT'?(family==='small'?.64:.82):role==='IDENTITY'?(family==='small'?.46:.67):(family==='small'?.52:.72);
   const crop=containedCrop(imageWidth,imageHeight,[x,y,w,h],aspect,{minContextWidthFraction});
   const subject={x,y,w,h},safe={x:crop.x,y:crop.y,w:crop.w*textSafeLeft,h:crop.h};
-  const subjectArea=Math.max(1,w*h),subjectFraction=subjectArea/Math.max(1,crop.w*crop.h),safeOverlap=intersectionArea(subject,safe)/subjectArea,textSafeScore=clamp(1-safeOverlap,0,1);
+  const subjectArea=Math.max(1,w*h),visibleSubjectArea=intersectionArea(subject,crop),subjectFraction=clamp(visibleSubjectArea/Math.max(1,crop.w*crop.h),0,1),safeOverlap=intersectionArea(subject,safe)/subjectArea,textSafeScore=clamp(1-safeOverlap,0,1);
   const normalized={x:crop.x/imageWidth,y:crop.y/imageHeight,w:crop.w/imageWidth,h:crop.h/imageHeight};
   return{family,role,crop,normalized,subjectFraction,textSafeScore,sourceSubjectFraction:detection.areaFraction??subjectArea/(imageWidth*imageHeight),detectionScore:Number(detection.score)||0};
 }
