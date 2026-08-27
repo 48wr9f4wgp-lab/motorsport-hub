@@ -52,13 +52,13 @@ export function makeCrop(imageWidth,imageHeight,detection,family,{textSafeLeft=.
   const normalized={x:crop.x/imageWidth,y:crop.y/imageHeight,w:crop.w/imageWidth,h:crop.h/imageHeight};
   return{family,role,crop,normalized,subjectFraction,textSafeScore,sourceSubjectFraction:detection.areaFraction??subjectArea/(imageWidth*imageHeight),detectionScore:Number(detection.score)||0,cropMode:crop.oversizeSmallApplied?'BALANCED_OVERSIZE':'CONTAINED',oversizeSmallBalance:crop.oversizeSmallApplied?crop.oversizeSmallBalance:null};
 }
-export function evaluateCropForRole(crop,rolePolicy){
-  if(!crop)return{pass:false,reasons:['NO_VEHICLE_DETECTION'],rawTextSafeScore:null,effectiveTextSafeScore:null,veilCompensation:0};
-  const reasons=[],minSubject=crop.family==='small'?Number(rolePolicy.minSmallSubjectFraction):Number(rolePolicy.minMediumSubjectFraction),veilCompensation=clamp(Number(rolePolicy.veilCompensation)||0,0,.35),rawTextSafeScore=Number(crop.textSafeScore),effectiveTextSafeScore=clamp(rawTextSafeScore+veilCompensation,0,1);
+export function evaluateCropForRole(crop,rolePolicy,{minDetectionScore=.32}={}){
+  if(!crop)return{pass:false,reasons:['NO_VEHICLE_DETECTION'],rawTextSafeScore:null,effectiveTextSafeScore:null,veilCompensation:0,minDetectionScore:Number(minDetectionScore)};
+  const reasons=[],minSubject=crop.family==='small'?Number(rolePolicy.minSmallSubjectFraction):Number(rolePolicy.minMediumSubjectFraction),veilCompensation=clamp(Number(rolePolicy.veilCompensation)||0,0,.35),rawTextSafeScore=Number(crop.textSafeScore),effectiveTextSafeScore=clamp(rawTextSafeScore+veilCompensation,0,1),requiredDetectionScore=Number.isFinite(Number(minDetectionScore))?Number(minDetectionScore):.32;
   if(crop.subjectFraction<minSubject)reasons.push('SUBJECT_TOO_SMALL');
   if(effectiveTextSafeScore<Number(rolePolicy.minTextSafeScore))reasons.push('TEXT_SAFE_VIOLATION');
-  if(crop.detectionScore<.32)reasons.push('DETECTION_CONFIDENCE_LOW');
-  return{pass:reasons.length===0,reasons,rawTextSafeScore,effectiveTextSafeScore,veilCompensation};
+  if(crop.detectionScore<requiredDetectionScore)reasons.push('DETECTION_CONFIDENCE_LOW');
+  return{pass:reasons.length===0,reasons,rawTextSafeScore,effectiveTextSafeScore,veilCompensation,minDetectionScore:requiredDetectionScore};
 }
 export function evaluateDetectionAcrossRoles({predictions,imageWidth,imageHeight,roles,minScore=.32,textSafeLeft=.42,subjectX=.69,oversizeSmall=null}){
   const detection=choosePrimaryDetection(predictions,imageWidth,imageHeight,{minScore});
@@ -66,7 +66,7 @@ export function evaluateDetectionAcrossRoles({predictions,imageWidth,imageHeight
   const out={};
   for(const r of roles||[]){
     const small=makeCrop(imageWidth,imageHeight,detection,'small',{role:r.id,textSafeLeft,subjectX,oversizeSmall}),medium=makeCrop(imageWidth,imageHeight,detection,'medium',{role:r.id,textSafeLeft,subjectX,oversizeSmall});
-    const se=evaluateCropForRole(small,r),me=evaluateCropForRole(medium,r);
+    const se=evaluateCropForRole(small,r,{minDetectionScore:minScore}),me=evaluateCropForRole(medium,r,{minDetectionScore:minScore});
     if(small)small.effectiveTextSafeScore=se.effectiveTextSafeScore;
     if(medium)medium.effectiveTextSafeScore=me.effectiveTextSafeScore;
     out[r.id]={pass:se.pass&&me.pass,reasons:[...new Set([...se.reasons,...me.reasons])],small,medium,smallEvaluation:se,mediumEvaluation:me};
