@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "policyVersion": "1.2.1",
+  "policyVersion": "1.3.0",
   "category": "DAKAR",
   "mode": "deterministic-build-time-pilot",
   "requireDistinctVariants": true,
@@ -55,6 +55,30 @@
       "sceneFallbackPublicationPolicy": "VISUAL_REVIEW_ONLY"
     }
   ],
+  "visualRegression": {
+    "baselineVersion": "2026-08-28-dakar-phase6-v1",
+    "maxCropDelta": 0.015,
+    "assets": {
+      "dakar-dacia-sandrider-gims-2024": {
+        "role": "IDENTITY",
+        "mode": "SUBJECT_AWARE",
+        "smallCrop": {"x":0.3164511981010437,"y":0,"w":0.6671875,"h":1},
+        "mediumCrop": {"x":0,"y":0.27399526950812364,"w":1,"h":0.6951091199131113}
+      },
+      "dakar-2021-stage05-action": {
+        "role": "ACTION",
+        "mode": "SUBJECT_AWARE",
+        "smallCrop": {"x":0.27747356255849204,"y":0,"w":0.6653645833333334,"h":1},
+        "mediumCrop": {"x":0.05184776681964287,"y":0.36529250144958497,"w":0.9106100134842563,"h":0.6347074985504151}
+      },
+      "dakar-2021-stage10-action": {
+        "role": "ENVIRONMENT",
+        "mode": "SCENE_FOCUS",
+        "smallCrop": {"x":0.24666666666666662,"y":0,"w":0.6666666666666666,"h":1},
+        "mediumCrop": {"x":0,"y":0.30434782608695654,"w":1,"h":0.6956521739130435}
+      }
+    }
+  },
   "observations": [
     {
       "assetId": "dakar-dacia-sandrider-gims-2024",
