@@ -11,8 +11,11 @@ for(const family of ['small','medium']){
  const crop=makeCrop(2048,1365,detection,family,{role:'ACTION'});
  assert(crop.normalized.x>=0&&crop.normalized.y>=0);
  assert(crop.normalized.x+crop.normalized.w<=1.000001&&crop.normalized.y+crop.normalized.h<=1.000001);
+ assert(crop.subjectFraction>=0&&crop.subjectFraction<=1);
  assert(crop.textSafeScore>.6);
 }
+const clipped=makeCrop(3840,2562,{class:'truck',score:.97,bbox:[150,374,3422,1966],areaFraction:.68},'small',{role:'IDENTITY'});
+assert(clipped.subjectFraction>=0&&clipped.subjectFraction<=1);
 const good=evaluateDetectionAcrossRoles({predictions,imageWidth:2048,imageHeight:1365,roles});
 assert.equal(good.roles.ACTION.pass,true);
 const tiny=evaluateDetectionAcrossRoles({predictions:[{class:'car',score:.72,bbox:[1820,1180,55,30]}],imageWidth:2048,imageHeight:1365,roles});
