@@ -1,7 +1,7 @@
 # Motorsport Hub — Hero Image Attribution
 
-Last audited: 2026-08-26 JST
-Scope: current v9.5.0 hardening build / 12 category hero assets used by the Scriptable widget.
+Last audited: 2026-08-27 JST
+Scope: current v9.5.2 hardening build / 12 category hero assets used by the Scriptable widget.
 
 All hero images are cropped/resized and darkened for widget presentation. Where the source license requires attribution or ShareAlike, redistribution must preserve those obligations. The machine-readable runtime inventory is `hero-assets.json` and is enforced by `tests/hero-manifest-gate.mjs`.
 
@@ -71,19 +71,36 @@ All hero images are cropped/resized and darkened for widget presentation. Where 
 - License: **CC BY-SA 4.0 International**.
 - File page: https://commons.wikimedia.org/wiki/File:GT_World_Challenge_Europe_2024_N%C3%BCrburg_Nr._48_Auer,_Engel,_Morad_(1).jpg
 
-## Dakar Rally
+## Dakar Rally — Tap Action v2
+The widget now cycles three **distinct Dacia Sandrider photos**, not three crops of one file.
+
+### Hero 1
 - **Dacia Sandrider GIMS 2024 1X7A2026.jpg**.
-- Depiction: Dacia Sandrider, current-generation Ultimate T1+ rally-raid car model.
-- Source: Wikimedia Commons.
 - Author: **Alexander-93**.
-- License: **CC BY-SA 4.0 International**.
+- License: **CC BY-SA 4.0 International** — exact file page verified.
 - Original resolution: 5,378 × 3,588.
 - File page: https://commons.wikimedia.org/wiki/File:Dacia_Sandrider_GIMS_2024_1X7A2026.jpg
-- Public redistribution requirement: credit Alexander-93, link CC BY-SA 4.0, indicate crop/resize/darkening, and preserve applicable ShareAlike obligations.
+
+### Hero 2
+- **Dacia Sandrider GIMS 2024 1X7A2028.jpg**.
+- Commons category / author archive confirms this file belongs to the same Alexander-93 Dacia Sandrider GIMS 2024 photo series and was produced by Alexander-93.
+- Runtime inventory currently records **CC BY-SA 4.0**, matching the series license assumption.
+- File page: https://commons.wikimedia.org/wiki/File:Dacia_Sandrider_GIMS_2024_1X7A2028.jpg
+- **Public-release gate:** exact file-page license metadata must be re-opened and re-verified before final publication.
+
+### Hero 3
+- **Dacia Sandrider GIMS 2024 1X7A2029.jpg**.
+- Commons category / author archive confirms this file belongs to the same Alexander-93 Dacia Sandrider GIMS 2024 photo series and was produced by Alexander-93.
+- Runtime inventory currently records **CC BY-SA 4.0**, matching the series license assumption.
+- File page: https://commons.wikimedia.org/wiki/File:Dacia_Sandrider_GIMS_2024_1X7A2029.jpg
+- **Public-release gate:** exact file-page license metadata must be re-opened and re-verified before final publication.
+
+For all three Dakar Hero variants, widget presentation applies crop/resize/darkening. Public redistribution must include the applicable author/license attribution and modification notice.
 
 ## Audit decision
-- All runtime hero URLs reachable from the current 12-category Registry must have an exact `hero-assets.json` record.
-- Runtime/manifest set equality is enforced automatically.
+- All runtime hero URLs reachable from the current 12-category Registry have a `hero-assets.json` record and runtime/manifest set equality is enforced automatically.
 - Former SUPER GT public-distribution blocker remains closed.
-- Dakar v9.5.0 hero licensing: **PASS**.
-- Licensing/attribution audit: **PASS for the current 12-category hardening build**.
+- Dakar Tap Action v2 runtime inventory: **PASS**.
+- Dakar Hero 1 exact-page licensing: **PASS**.
+- Dakar Hero 2/3 exact-page license verification: **PENDING BEFORE PUBLIC RELEASE**.
+- Current hardening build may continue development/testing; **public licensing approval is not yet granted for the new three-photo Dakar rotation**.
