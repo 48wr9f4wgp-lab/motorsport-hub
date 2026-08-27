@@ -52,6 +52,7 @@ jobs:
             tests/image-probe-gate.mjs
             tests/hero-subject-crop-gate.mjs
             tests/hero-selection-gate.mjs
+            tests/hero-rollout-inventory-gate.mjs
             tests/lifecycle-hardening-gate.mjs
             tests/integrity-gate.mjs
             tests/release-package-generator-gate.mjs
@@ -83,6 +84,10 @@ jobs:
         if: ${{ github.event_name == 'push' && github.ref_name == 'hardening/v9.3-codex-handoff' }}
         run: node tools/hero-selection-engine.mjs --write
 
+      - name: Generate 12-category Hero rollout inventory
+        if: ${{ github.event_name == 'push' && github.ref_name == 'hardening/v9.3-codex-handoff' }}
+        run: node tools/build-hero-rollout-inventory.mjs --write
+
       - name: Build immutable release candidate package
         if: ${{ github.event_name == 'push' && github.ref_name == 'hardening/v9.3-codex-handoff' }}
         env:
@@ -100,6 +105,7 @@ jobs:
             release-integrity.json
             scriptable-loader-v6.js
             hero-selection-report.json
+            hero-rollout-inventory.json
 
       - name: Sync tested runtime to hardening-live
         if: ${{ github.event_name == 'push' && github.ref_name == 'hardening/v9.3-codex-handoff' }}
