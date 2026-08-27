@@ -54,7 +54,11 @@ assert(!dakar.includes('raw.githubusercontent.com'));assert(!/\beval\s*\(/.test(
 for(const token of ['F1','WEC','WRC','MotoGP','SUPER GT','FDJ','D1GP','SUPER FORMULA','INDYCAR','NASCAR','GTWC EUROPE','DAKAR'])assert(diagnostics.includes(token),`QA diagnostics missing ${token}`);
 assert(diagnostics.includes('12/12 LIVE'),'QA diagnostics not expanded to twelve routes');
 
-for(const token of ['Eustace Bagge','TTTNIS','Liauzh','MarcelX42','Rowan Harrison','Tokumeigakarinoaoshima','BWard 1997','Ben Goyette','TaurusEmerald','Lukas Raich','Alexander-93','CC0 1.0 Universal','CC BY 4.0','CC BY-SA 4.0','CC BY-SA 2.0'])assert(attribution.includes(token),`ATTRIBUTION.md audit record missing: ${token}`);
+for(const token of [
+ 'Lewis Hamilton / Ferrari SF-25 FP1','Oscar Piastri / McLaren MCL39 FP1','George Russell / Mercedes W16 FP3',
+ 'TTTNIS','Liauzh','MarcelX42','Rowan Harrison','Tokumeigakarinoaoshima','BWard 1997','Ben Goyette','TaurusEmerald','Lukas Raich','Alexander-93',
+ 'CC0 1.0 Universal','CC BY 4.0','CC BY-SA 4.0','CC BY-SA 2.0'
+])assert(attribution.includes(token),`ATTRIBUTION.md audit record missing: ${token}`);
 assert(!attribution.includes('RELEASE BLOCKER FOR PUBLIC DISTRIBUTION'));
 
 console.log('Motorsport Hub release gate: PASS');
