@@ -25,6 +25,14 @@ function containedCrop(imageWidth,imageHeight,bbox,aspect,{minContextWidthFracti
   return{x,y,w:cw,h:ch};
 }
 const intersectionArea=(a,b)=>{const x1=Math.max(a.x,b.x),y1=Math.max(a.y,b.y),x2=Math.min(a.x+a.w,b.x+b.w),y2=Math.min(a.y+a.h,b.y+b.h);return Math.max(0,x2-x1)*Math.max(0,y2-y1)};
+export function makeSceneFallbackCrop(imageWidth,imageHeight,family,{focusX=.58,focusY=.55}={}){
+  const aspect=family==='small'?1:1380/640;
+  let cw=imageWidth,ch=cw/aspect;
+  if(ch>imageHeight){ch=imageHeight;cw=ch*aspect}
+  const cx=clamp(Number(focusX)||.5,0,1)*imageWidth,cy=clamp(Number(focusY)||.5,0,1)*imageHeight;
+  const x=clamp(cx-cw/2,0,imageWidth-cw),y=clamp(cy-ch/2,0,imageHeight-ch);
+  return{family,role:'ENVIRONMENT',crop:{x,y,w:cw,h:ch},normalized:{x:x/imageWidth,y:y/imageHeight,w:cw/imageWidth,h:ch/imageHeight},subjectFraction:null,textSafeScore:null,sourceSubjectFraction:null,detectionScore:null,fallbackMode:'SCENE_FOCUS'};
+}
 export function makeCrop(imageWidth,imageHeight,detection,family,{textSafeLeft=.42,role='ACTION'}={}){
   if(!detection)return null;
   const [x,y,w,h]=detection.bbox,aspect=family==='small'?1:1380/640;
