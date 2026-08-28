@@ -1,32 +1,53 @@
 # Motorsport Hub — Codex Final Quality Pass Handoff
 
+Updated: 2026-08-28 JST
+
 ## Start here
 - Repository: `48wr9f4wgp-lab/motorsport-hub`
-- Branch: `hardening/v9.3-codex-handoff`
-- Original Codex-audited base: `a09d16e11aa0f65104ba895b74e09124d30b487b`
-- `main` has not been modified by this hardening line.
-- Current product scope: **12 motorsport categories + QA**.
-- Public release: **not performed / not authorized**.
+- Working branch: `hardening/v9.3-codex-handoff`
+- Main baseline: `a09d16e11aa0f65104ba895b74e09124d30b487b`
+- `main` has **not** been modified by this hardening line.
+- Product scope: **12 motorsport categories + QA**.
+- Public release / main merge: **not authorized / not performed**.
+- Latest runtime-equivalent automated-green evidence before documentation synchronization: `596794c7cd1dd28af026c420c6ac6a4f9f063442`, Hardening CI #180 + Release Readiness #1.
+- On start, resolve the actual branch HEAD and confirm current CI before changing anything.
 
-**Current verdict: 12-CATEGORY HARDENING CANDIDATE — AUTOMATED GREEN / DAKAR TARGETED DEVICE QA + CODEX FINAL QUALITY PASS PENDING**
+**Current verdict: RELEASE-CANDIDATE PREP — AUTOMATED HARDENING GREEN / FINAL HOSTILE AUDIT + ONE FINAL EXACT-PACKAGE DEVICE CHECK PENDING**
 
-Read first:
+Read in order:
 1. `CODEX_HANDOFF.md`
-2. `category-registry.json`
-3. `RC_QA.md`
-4. `RELEASE_AUDIT.md`
+2. `RC_QA.md`
+3. `RELEASE_AUDIT.md`
+4. `category-registry.json`
 5. `DEVICE_QA_POLICY.md`
-6. `POST_CODEX_VISUAL_AUTOMATION.md`
+6. `motorsport-hub.js`
+7. `.github/workflows/hardening-ci.yml`
+8. `.github/workflows/release-readiness.yml`
+9. `tools/prepare-main-release.mjs`
+10. `hero-assets.json`
 
 ---
 
-## Current direct-runtime architecture
-Router `motorsport-hub.js`, schema 5.
+## Non-negotiable repository rules
+1. **Do not reset this branch to `main`.** The hardening line is intentionally hundreds of commits ahead of the original baseline.
+2. **Do not run destructive `git reset --hard` / `git clean` against unknown local work.** Inspect `git status`, `git diff`, fetch, then reconcile.
+3. Preserve the direct runtime architecture unless a measured defect proves a change is necessary.
+4. Do not reintroduce the historical multi-wrapper waterfall or runtime source rewriting.
+5. Do not treat `main` as the current product source while auditing; audit the hardening branch.
+6. Do not merge or publish. Final `main` transformation and merge require explicit user approval after all gates.
+7. Do not weaken a deterministic gate merely to make CI green. Determine whether the gate or product contract is stale, then update the correct side with evidence.
+8. Do not casually redesign categories already accepted by risk-based Visual QA.
+9. Any runtime modification must finish with syntax/build/gates, render regression and relevant targeted verification.
+
+---
+
+## Current runtime architecture
+Router: `motorsport-hub.js`, schema 5.
 
 Manifest:
 `F1,WEC,WRC,SUPERGT,MOTOGP,FDJ,D1GP,SUPERFORMULA,INDYCAR,NASCAR,GTWCEU,DAKAR,QA`
 
-Direct category modules:
+Direct modules:
 - F1 → `f1-widget-flat-v1000.js`
 - WEC → `wec-widget-flat-v1000.js`
 - WRC → `wrc-widget-flat-v1000.js`
@@ -38,215 +59,186 @@ Direct category modules:
 - INDYCAR → `indycar-widget.js`
 - NASCAR → `nascar-widget.js`
 - GTWC Europe → `gtwc-europe-widget.js`
-- Dakar Rally → `dakar-widget.js`
+- Dakar → `dakar-widget.js`
 - QA → `motorsport-diagnostics-v890.js`
 
-No current route uses the historical v8.9 wrapper waterfall and Router no longer rewrites module source.
+The Router currently has a **hardening-only direct-device default source of `hardening-live`**. This was introduced after a physical-device defect proved that a hardening outer loader could otherwise end up loading a stale category module from `main`.
+
+### Critical release warning
+**Do not merge the current Router to main unchanged.**
+
+The final approved release must use `tools/prepare-main-release.mjs`, whose release transform changes only the intended release-sensitive state:
+- default Router source `hardening-live` → `main`;
+- category + QA registry statuses → final release status.
+
+`tests/main-release-readiness-gate.mjs` and `.github/workflows/release-readiness.yml` exercise this as a **non-mutating dry-run**. Normal CI must never call write mode.
 
 ---
 
-## Original Codex audit
-Base `a09d16e...` verdict: FAIL.
-- Critical 0
-- High 5
-- Medium 8
-- Low 3
+## Automated evidence to preserve
+Current Hardening CI includes:
+- full JS/MJS syntax audit;
+- release, boundary, Router and Registry gates;
+- cache schema gate;
+- Hero manifest / discovery / image probe / subject crop / selection / rollout / runtime crop gates;
+- lifecycle and immutable-integrity gates;
+- release-package generator gate;
+- diagnostics Loader-path gate;
+- **24/24 render smoke = 12 categories × Small/Medium**;
+- category-specific flat gates;
+- Dakar dedicated gate;
+- Tap Action gate;
+- immutable package build/upload;
+- synchronization of tested runtime to `hardening-live` only after green gates.
 
-Original targets included stale Router fallback, season-final bugs, deep remote wrapper waterfall, mutable remote code, Hero attribution gaps, unsafe caches, parser fragility, runtime source patches and silent invalid-parameter fallback.
+Release Readiness is read-only and re-runs the critical release contract plus the main finalizer dry-run.
 
-Re-audit current reachable code rather than assuming historical findings still reproduce.
+Latest known immutable artifact before docs-only synchronization:
+- Run: Hardening CI #180 / ID `33159393582`
+- Artifact ID: `9680972571`
+- Artifact: `motorsport-hub-immutable-33159393582`
+- Digest: `sha256:a2bcc498869dff20e76bd342147c5a8f1e0a0dde9e26e017a540be148b672ad0`
 
----
-
-## Structurally resolved / materially changed areas
-### Wrapper waterfall
-Removed from current Router; direct per-category modules are enforced by CI.
-
-### Runtime source rewriting
-Removed. Category lifecycle is module-owned.
-
-### Cache integrity
-All 12 Registry categories use cache schema 1 with schema/category/season/fetchedAt/source/ranking/event/data validation and invalid/stale rejection.
-
-### Lifecycle
-All categories have explicit stage/race lifecycle and half-open `[start,end)` active windows. Finale does not produce a historical phantom next event.
-
-### Parameter routing
-Unknown parameter fails explicitly; full-name aliases are machine-tested.
-
-### Hero inventory
-`hero-assets.json` represents runtime-reachable Wikimedia Hero URLs and exact set equality is CI-enforced.
+Do not assume this remains the final release artifact after Codex changes. Regenerate after the final fix commit.
 
 ---
 
-## Immutable release / RC-04 hardening
-Tool: `tools/generate-release-package.mjs`.
+## Hero / visual architecture already implemented
+This is not future work anymore. Current branch includes build-time tooling for:
+- approved Hero provenance / licensing catalog;
+- Wikimedia candidate discovery;
+- HTTP, MIME and real-dimension validation;
+- role scoring (`IDENTITY`, `ACTION`, `ENVIRONMENT`);
+- subject-aware Small/Medium crop generation;
+- text-safe / veil-aware scoring;
+- horizontal-car `BALANCED_OVERSIZE` Small cropping;
+- MotoGP-scoped `RIDER_FALLBACK`;
+- Dakar environment/LKG fallback;
+- visual regression baselines;
+- rejection/LKG behavior instead of blindly adopting a new image.
 
-Generated descriptor pins:
-- immutable 40-character commit SHA;
-- Router byte count + SHA-256;
-- every category module + QA byte count + SHA-256;
-- Router schema and exact category manifest;
-- release namespace.
+TensorFlow / COCO-SSD is **build-time only**. Do not move ML inference into Scriptable runtime without strong measured justification.
 
-Loader v6:
-- fixed release never fetches mutable `main`;
-- verifies Router syntax/markers/bytes/SHA-256;
-- Router verifies selected module bytes/SHA-256;
-- candidate/LKG/quarantine are release-namespaced;
-- corrupt/tampered/sourceRef mismatch fails closed;
-- offline path executes only verified immutable LKG.
+Notable current runtime Hero corrections:
+- F1: action set for Hamilton / Piastri / Russell;
+- WEC: approved crops for existing Toyota assets;
+- WRC: high-resolution Ogier fallback;
+- MotoGP: Bagnaia rider fallback + Bezzecchi direct crop;
+- SUPER GT: real 2024 Fuji MOTUL AUTECH Z action Hero, replacing showroom image;
+- FDJ: retained drift action Hero with approved crop;
+- D1GP: actual D1 Grand Prix action Hero, replacing unrelated King of Europe asset;
+- Dakar: persisted tap roles, subject-aware crop and safe environment fallback.
 
-Real-device Scriptable proof already completed on the 11-category predecessor using sourceRef `1f22919dc2a89053bff60f96b4c173ba6fb49076`:
-- online `IMMUTABLE ✓ · CANDIDATE · 1f22919dc2a8` — PASS
-- fully offline `IMMUTABLE ✓ · LKG · 1f22919dc2a8` — PASS
-
-The Dakar route uses exactly the same Registry-derived integrity packaging; no special unverified Loader path was introduced.
-
-Latest 12-category immutable artifact:
-- Hardening CI run #53 / ID `32960344219`
-- head `f8ccb14b69adeb538a59f061425fe73bc2ee582d`
-- SUCCESS
-- artifact ID `9603606992`
-- digest `sha256:2928a4b750bb66c752b5e7dbb046ddca97907f784db3dff347065c32bd660a98`
-- manifest includes `DAKAR`
-- 13 protected runtime files = 12 categories + QA
-- Dakar SHA-256 `4422b4ae4f6ebb3cb4e9bf0af1121833312b902985f9943dd417f8d1e007389a`, 15704 bytes.
-
-Codex should attack-test this implementation instead of replacing it without evidence. Focus on encoding/hash correctness, immutable ref propagation, cache isolation, downgrade semantics, candidate/LKG/quarantine and any bypass to mutable code.
+Read-only locked-category audit also reviewed SUPER FORMULA / INDYCAR / NASCAR / GTWC Europe. No runtime mutation was justified.
 
 ---
 
-## Dakar — 12th category
-Module: `dakar-widget.js`, v9.5.0-hardening.
+## Important real-device history
+Treat device findings as evidence, not anecdote.
 
-Product hierarchy is deliberately rally-raid specific.
+Passed/current evidence includes:
+- Dakar Tap Action + persisted state + visual path;
+- D1GP Small+Medium;
+- FDJ Small+Medium;
+- SUPER GT current red MOTUL Action Hero;
+- prior F1/WRC/MotoGP visual locks;
+- prior SUPER FORMULA/INDYCAR/NASCAR accepted visuals;
+- previous immutable Loader v6 online Candidate and fully-offline LKG on the older 11-category package.
 
-Small:
-- next stage
-- countdown
-- stage name
-- date + special distance
-- route
+### SUPER GT incident that must not regress
+The user saw a stale white/orange showroom image even after the repository had the new MOTUL Hero. Root causes exposed independent freshness layers:
+1. Hero image cache;
+2. category module cache;
+3. Router source default;
+4. user common Scriptable loader source;
+5. iOS Widget snapshot cache.
 
-Medium:
-- next stage + route + special distance
-- **overall CAR TOP3**
-- **GAP** rather than PTS
-- bib / machine / team metadata
+Fixes now include:
+- asset-aware SUPER GT Hero cache;
+- SUPER GT Router module cache key `supergt-flat-v1003`;
+- hardening Router source default `hardening-live`;
+- hardening source regression gate;
+- current common device loader using the hardening source;
+- physical re-add proved the current red MOTUL Hero.
 
-2027 lifecycle:
-- Prologue Jan 1
-- Stage 1 Jan 2
-- Stage 13 Jan 15
-- stage ranges are all-day until official exact start times are published
-- finale is `2027 FINISH / FINISH`.
-
-Before Stage 1, Medium uses the last completed official 2026 final CAR classification:
-1. Nasser Al-Attiyah
-2. Nani Roma +9:42
-3. Mattias Ekström +14:33
-
-After completed 2027 stages, the overall source moves to the completed 2027 stage CAR classification endpoint.
-
-Hero:
-- Dacia Sandrider GIMS 2024
-- Alexander-93
-- CC BY-SA 4.0
-- exact Commons source recorded.
-
-Dakar automated coverage includes:
-- Router/alias
-- parser fixture
-- cache schema
-- Prologue→Stage1 exact boundary
-- Stage13 finale
-- specialized Small/Medium surface
-- Hero inventory
-- immutable release descriptor inclusion
-- global 24-case render smoke.
-
-Targeted real-device checks still required before Codex starts:
-- `hardening-live` QA → 12/12 LIVE
-- one Dakar Small + Medium screenshot.
+Do not revert these freshness protections while simplifying code.
 
 ---
 
-## Current CI
-Workflow `.github/workflows/hardening-ci.yml`.
+## What Codex must do
+Perform a hostile final audit, not a cosmetic pass.
 
-Latest 12-category code run #53 is green.
-CI runs full syntax plus deterministic release/boundary/router/registry/cache/Hero/lifecycle/integrity/package/diagnostic/render gates, original-seven flat gates and Dakar dedicated gate.
+### A. Architecture / release engineering
+- Inspect direct Router/module architecture for unnecessary coupling, duplicate logic and hidden serial fetches.
+- Verify no historical wrapper chain is reachable.
+- Verify hardening source selection cannot accidentally read stale `main` during device QA.
+- Attack `prepare-main-release.mjs`; prove the main transform is minimal, deterministic and cannot silently ship `hardening-live` as the production default.
+- Review immutable Loader v6 Candidate/LKG/quarantine contract and package integrity generation.
+- Check all release-generated hashes/byte lengths and cache namespaces for stale-content hazards.
 
-Global render smoke is now **24 cases = 12 categories × Small/Medium**.
+### B. Runtime reliability / Scriptable compatibility
+- Profile or reason about memory and network usage for Small and Medium widget execution.
+- Look for Scriptable API compatibility problems, unhandled timeouts, repeated large-image decoding and avoidable allocations.
+- Verify offline behavior, cache corruption handling, source failure isolation and refresh scheduling.
+- Attack date/timezone transitions, lifecycle boundaries and season final states.
 
-Only after every gate passes does CI:
-1. generate immutable Loader v6 + release-integrity artifact;
-2. sync tested runtime to `hardening-live`.
+### C. Data correctness
+For every category, review parser identity assumptions and failure behavior. Prioritize false-positive parsing over cosmetic output.
+- F1
+- WEC
+- WRC
+- SUPER GT
+- MotoGP
+- FDJ
+- D1GP
+- SUPER FORMULA
+- INDYCAR
+- NASCAR
+- GTWC Europe
+- Dakar
 
-Routine 24-widget manual regression is retired.
+Do not replace official/factual data with invented fallback values to make tests pass.
 
----
+### D. Hero / visual reliability
+- Audit Hero provenance and exact runtime/manifest correspondence.
+- Verify crop metadata cannot produce invalid Rects or text collisions under source-dimension variation.
+- Check cache invalidation semantics when a Hero asset changes.
+- Ensure fallback paths cannot reintroduce superseded/unrelated imagery.
+- Preserve accepted Visual Locks unless a concrete defect is found.
 
-## Existing iPhone evidence
-Current direct-runtime visual locks:
-- F1 Small/Medium PASS
-- WRC Small/Medium PASS
-- MotoGP Small/Medium PASS
-- FDJ Small/Medium PASS
-
-Historical accepted SUPER FORMULA / INDYCAR / NASCAR visuals remain useful baselines.
-
-Dakar is a new information hierarchy, so it gets one targeted Small+Medium check only.
-
----
-
-## Codex Final Quality Pass — requested role
-Once Dakar targeted device QA passes, Codex should treat the 12-category product as one release candidate system.
-
-### Phase 1 — hostile final re-audit
-- compare audited base → current branch;
-- re-evaluate RC-01 through RC-16 on reachable code;
-- attack immutable release/downgrade/cache behavior;
-- stress parser false positives, lifecycle boundaries, corrupted caches and simultaneous Widget refreshes.
-
-### Phase 2 — performance / architecture
-- profile Scriptable startup/network/memory;
-- identify useful shared runtime extraction without reintroducing fragile wrappers;
-- reduce request/CPU/image cost;
-- improve failure isolation/observability.
-
-### Phase 3 — total product polish
-Review all 12 categories for premium quality:
-- information hierarchy consistency;
-- typography/spacing/readability;
-- long-name resilience;
-- data freshness semantics;
-- accessibility;
-- series-specific UI where it improves comprehension.
-
-### Phase 4 — Hero Rendering Engine
-Follow `POST_CODEX_VISUAL_AUTOMATION.md`, not manual crop tuning:
-- high-resolution Hero Asset Manager;
-- automatic subject-aware Small/Medium crop;
-- text-safe-area reservation;
-- automatic veil;
-- image-quality rejection;
-- LKG Hero fallback;
-- visual regression automation.
-
-Goal: Hero updates require no manual crop correction.
+### E. Tests
+- Search for stale assertions that verify yesterday's implementation rather than today's product contract.
+- Add regression tests for any defect found.
+- Keep 24-case render smoke passing.
+- Run the full deterministic gate suite after every final runtime change.
+- Run Release Readiness after final fixes.
 
 ---
 
-## Merge / release rules
-- Never overwrite `main` wholesale.
-- Keep fixes on hardening branch until green and reviewed.
-- Require CI green after Codex changes.
-- Public release/tag/Store action requires explicit user approval.
+## What Codex should NOT do
+- Do not reset to `main`.
+- Do not delete hardening work because it looks large.
+- Do not flatten all category modules into one giant file.
+- Do not reintroduce remote source rewriting or wrapper waterfalls.
+- Do not move TensorFlow to Scriptable runtime.
+- Do not manually retune every Hero without evidence.
+- Do not demand another 12×2 manual screenshot pass from the user.
+- Do not mark Release Approved.
+- Do not run the release finalizer in write mode.
+- Do not merge `main`.
 
-## Immediate remaining pre-Codex checks
-1. iPhone QA diagnostic → **12/12 LIVE**.
-2. Dakar Small + Medium screenshot → targeted visual review.
-3. Fix only defects found there.
-4. Then begin Codex Final Quality Pass.
+---
+
+## Exit criteria for Codex final pass
+Codex may declare its audit/fix pass complete only when:
+1. Findings are explicitly listed with severity and resolution.
+2. No known P0/P1 launch/control/data-integrity blocker remains.
+3. All changed runtime files pass syntax and deterministic gates.
+4. 24/24 render smoke remains green.
+5. Hardening CI is green on the final fix SHA.
+6. Release Readiness is green on the same final fix SHA.
+7. A new immutable 12-category artifact is generated from that SHA.
+8. `RC_QA.md`, `RELEASE_AUDIT.md` and this handoff are updated to the final tested SHA if code changed.
+9. The branch remains unmerged and `main` remains unchanged pending explicit approval.
+
+After Codex completes, the only planned manual gate should be **one consolidated physical-iPhone session on the exact final immutable artifact**: online Candidate / 12-category routing sanity / fully-offline verified LKG / obvious visual regression check. Then request explicit user approval before main finalization and merge.
