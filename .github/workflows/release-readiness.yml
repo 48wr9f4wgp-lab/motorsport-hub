@@ -10,6 +10,7 @@ on:
       - 'hero-assets.json'
       - 'tools/prepare-main-release.mjs'
       - 'tests/main-release-readiness-gate.mjs'
+      - 'tests/main-release-transformed-gate.mjs'
       - 'tests/release-gate.mjs'
       - 'tests/router-hardening-gate.mjs'
       - 'tests/registry-gate.mjs'
@@ -36,7 +37,7 @@ jobs:
         run: node --check tools/prepare-main-release.mjs
       - name: Verify non-mutating main-release transform
         run: node tests/main-release-readiness-gate.mjs
-      - name: Re-run critical RC deterministic gates
+      - name: Re-run critical hardening RC gates
         run: |
           set -euo pipefail
           node tests/release-gate.mjs
@@ -46,7 +47,20 @@ jobs:
           node tests/integrity-gate.mjs
           node tests/release-package-generator-gate.mjs
           node tests/render-smoke-gate.mjs
-      - name: Confirm working tree remained untouched
+      - name: Simulate approved release transform locally
+        run: |
+          set -euo pipefail
+          GITHUB_REF_NAME=release/validation node tools/prepare-main-release.mjs --write --status=RELEASED
+          node tests/main-release-transformed-gate.mjs
+          node tests/release-gate.mjs
+          node tests/router-hardening-gate.mjs
+          node tests/registry-gate.mjs
+          node tests/hero-manifest-gate.mjs
+          node tests/render-smoke-gate.mjs
+      - name: Restore hardening working tree after simulation
+        if: ${{ always() }}
+        run: git checkout -- motorsport-hub.js category-registry.json
+      - name: Confirm CI simulation left no working-tree mutation
         run: |
           git diff --exit-code
           git status --porcelain=v1 | tee /tmp/status.txt
