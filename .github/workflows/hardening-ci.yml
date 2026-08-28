@@ -33,7 +33,13 @@ jobs:
           set -euo pipefail
           python3 tools/apply-hero-runtime-crops.py
           python3 tools/apply-f1-wec-hero-runtime.py
-          python3 tools/apply-domestic-hero-runtime.py
+          if ! grep -q 'supergt-motul-autech-z-fuji-2024' supergt-widget-flat-v1000.js \
+             || ! grep -q 'fdj-drift-cc0' fdj-widget-flat-v1000.js \
+             || ! grep -q 'd1gp-rick-flores-2011' d1gp-widget-flat-v1000.js; then
+            python3 tools/apply-domestic-hero-runtime.py
+          else
+            echo 'Domestic Hero runtime already applied; skipping legacy applicator.'
+          fi
           python3 tools/apply-domestic-hero-provenance.py
           python3 tools/apply-supergt-asset-cache-key.py
           python3 tools/apply-hardening-live-router-default.py
