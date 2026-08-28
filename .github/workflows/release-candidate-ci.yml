@@ -24,6 +24,8 @@ jobs:
           node-version: '22'
       - name: Verify transformed production state
         run: node tests/main-release-transformed-gate.mjs
+      - name: Verify canonical loader distribution
+        run: node tests/loader-distribution-gate.mjs
       - name: Syntax audit
         run: |
           set -euo pipefail
