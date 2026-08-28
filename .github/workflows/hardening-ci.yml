@@ -34,6 +34,7 @@ jobs:
           python3 tools/apply-hero-runtime-crops.py
           python3 tools/apply-f1-wec-hero-runtime.py
           python3 tools/apply-domestic-hero-runtime.py
+          python3 tools/apply-domestic-hero-provenance.py
           accepted_patch_files=(
             wrc-widget-flat-v1000.js
             motogp-widget-flat-v1000.js
