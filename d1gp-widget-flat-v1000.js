@@ -1,7 +1,7 @@
-// Motorsport Hub v10.0.0-hardening — flattened D1GP module
-// Completed D1GP runtime: official 2026 ranking + accepted action hero + 40h lifecycle + validated cache.
+// Motorsport Hub v10.0.3-hardening — flattened D1GP module
+// Completed D1GP runtime: official 2026 ranking + verified D1 Grand Prix action Hero + 40h lifecycle + validated cache.
 (async()=>{
-const V='10.0.0-hardening',K='d1gp',SEASON=2026,CACHE_SCHEMA=1,CACHE_MAX_AGE=7*86400000;
+const V='10.0.3-hardening',K='d1gp',SEASON=2026,CACHE_SCHEMA=1,CACHE_MAX_AGE=7*86400000;
 const DATA_SOURCE='https://d1gp.co.jp/2026d1%E3%82%B0%E3%83%A9%E3%83%B3%E3%83%97%E3%83%AA%E3%82%B7%E3%83%AA%E3%83%BC%E3%82%BA%E3%83%A9%E3%83%B3%E3%82%AD%E3%83%B3%E3%82%B0/';
 const S={label:'D1GP',accent:'#FF2D6F',url:'https://d1gp.co.jp/'};
 const C={bg:'#06080B',text:'#F7F9FB',muted:'#B9C2CC',dim:'#8D98A4',good:'#58DA8A',warn:'#FFB84D'};
@@ -16,10 +16,10 @@ const CAL=[
  ['RD.7&8 AUTOPOLIS','2026-10-24T09:00:00+09:00','オートポリス',true],
  ['RD.9&10','2026-11-14T09:00:00+09:00','T.B.A',true]
 ];
-const HERO_URLS=[
- 'https://commons.wikimedia.org/wiki/Special:Redirect/file/King%20of%20Europe%20Round%203%20Lydden%20Hill%202014%20%2814356011899%29.jpg?width=2048',
- 'https://commons.wikimedia.org/wiki/Special:Redirect/file/King%20of%20Europe%20Round%203%20Lydden%20Hill%202014%20%2814356011899%29.jpg?width=1280'
-];
+const HERO={sources:[
+ {assetId:'d1gp-rick-flores-2011',url:'https://commons.wikimedia.org/wiki/Special:Redirect/file/D1GP%20%285679098995%29.jpg?width=2048',crop:{small:{x:.268100764952304,y:0,w:.665390138822403,h:1},medium:{x:.08660469293751288,y:.23443056344985963,w:.8626684779689151,h:.6012685060501098}}},
+ {assetId:'d1gp-rick-flores-2011',url:'https://commons.wikimedia.org/wiki/Special:Redirect/file/D1GP%20%285679098995%29.jpg?width=1280',crop:{small:{x:.268100764952304,y:0,w:.665390138822403,h:1},medium:{x:.08660469293751288,y:.23443056344985963,w:.8626684779689151,h:.6012685060501098}}}
+]};
 const col=(h,a=1)=>new Color(h,a),clone=o=>JSON.parse(JSON.stringify(o)),num=v=>{const m=String(v||'').replace(/,/g,'').match(/-?\d+(?:\.\d+)?/);return m?Number(m[0]):NaN};
 const clean=s=>String(s||'').replace(/<script[\s\S]*?<\/script>/gi,' ').replace(/<style[\s\S]*?<\/style>/gi,' ').replace(/<[^>]+>/g,' ').replace(/&nbsp;|&#160;/gi,' ').replace(/&amp;|&#038;/gi,'&').replace(/\s+/g,' ').trim();
 function rows(h){const out=[];for(const tr of String(h||'').match(/<tr\b[\s\S]*?<\/tr>/gi)||[]){const a=[];let m,re=/<t[dh]\b[^>]*>([\s\S]*?)<\/t[dh]>/gi;while((m=re.exec(tr)))a.push(clean(m[1]));if(a.length)out.push(a)}return out}
@@ -40,8 +40,9 @@ async function update(d){
 }
 async function load(){const base=nextEvent(clone(SNAP));try{const d=await update(base);save(d);return{d,cached:false}}catch(_){const c=cache();return{d:nextEvent(c||base),cached:true}}}
 function smooth(t){return t*t*(3-2*t)}
-function cover(img,W,H,focus=.52,shift=0){const iw=img.size.width||1,ih=img.size.height||1,s=Math.max(W/iw,H/ih),dw=iw*s,dh=ih*s;return new Rect(-(dw-W)*focus+shift,-(dh-H)*.5,dw,dh)}
-async function hero(){const small=(config.widgetFamily||'medium')==='small',p=fm.joinPath(DOC,`motorsport-hero-v1000-${small?'small':'medium'}-d1gp.jpg`);if(fm.fileExists(p)){try{return fm.readImage(p)}catch(_){} }try{let img=null;for(const u of HERO_URLS){try{const r=new Request(u);r.timeoutInterval=12;r.headers={'User-Agent':'Mozilla/5.0','Cache-Control':'no-cache'};img=await r.loadImage();if(img)break}catch(_){}}if(!img)return null;const W=small?720:1380,H=small?720:640,ctx=new DrawContext();ctx.size=new Size(W,H);ctx.opaque=true;ctx.respectScreenScale=false;ctx.setFillColor(col(C.bg));ctx.fillRect(new Rect(0,0,W,H));ctx.drawImageInRect(img,cover(img,W,H,.50,small?8:26));ctx.setFillColor(col('#030609',.08));ctx.fillRect(new Rect(0,0,W,H));for(let x=0;x<W;x+=3){const t=x/(W-1),a=.84*(1-smooth(t))+.06;ctx.setFillColor(col('#030609',a));ctx.fillRect(new Rect(x,0,4,H))}const rs=W*.76;for(let x=rs;x<W;x+=3){const t=(x-rs)/(W-rs),a=.10+.42*smooth(t);ctx.setFillColor(col('#020407',a));ctx.fillRect(new Rect(x,0,4,H))}const bs=H*.67,bh=H-bs;for(let i=0;i<56;i++){const y=bs+i*(bh/56),t=i/55,a=.01+.18*t*t;ctx.setFillColor(col('#020407',a));ctx.fillRect(new Rect(0,y,W,bh/56+1))}ctx.setFillColor(col(S.accent,.92));ctx.fillRect(new Rect(0,0,W,5));const out=ctx.getImage();try{fm.writeImage(p,out)}catch(_){}return out}catch(_){return null}}
+function heroCropRect(img,W,H,c){const iw=img.size.width||1,ih=img.size.height||1,cw=Math.max(1,iw*c.w),ch=Math.max(1,ih*c.h),s=Math.max(W/cw,H/ch),vw=cw*s,vh=ch*s,ox=(vw-W)/2,oy=(vh-H)/2;return new Rect(-iw*c.x*s-ox,-ih*c.y*s-oy,iw*s,ih*s)}
+async function hero(){const small=(config.widgetFamily||'medium')==='small',p=fm.joinPath(DOC,`motorsport-hero-v1000-crop3-${small?'small':'medium'}-d1gp.jpg`);if(fm.fileExists(p)){try{return fm.readImage(p)}catch(_){} }try{let img=null,source=null;for(const src of HERO.sources){try{const r=new Request(src.url);r.timeoutInterval=12;r.headers={'User-Agent':'Mozilla/5.0','Cache-Control':'no-cache'};img=await r.loadImage();if(img){source=src;break}}catch(_){}}if(!img||!source)return null;const W=small?720:1380,H=small?720:640,crop=small?source.crop.small:source.crop.medium,ctx=new DrawContext();ctx.size=new Size(W,H);ctx.opaque=true;ctx.respectScreenScale=false;ctx.setFillColor(col(C.bg));ctx.fillRect(new Rect(0,0,W,H));ctx.drawImageInRect(img,heroCropRect(img,W,H,crop));ctx.setFillColor(col('#030609',.08));ctx.fillRect(new Rect(0,0,W,H));for(let x=0;x<W;x+=3){const t=x/(W-1),a=.84*(1-smooth(t))+.06;ctx.setFillColor(col('#030609',a));ctx.fillRect(new Rect(x,0,4,H))}const rs=W*.76;for(let x=rs;x<W;x+=3){const t=(x-rs)/(W-rs),a=.10+.42*smooth(t);ctx.setFillColor(col('#020407',a));ctx.fillRect(new Rect(x,0,4,H))}const bs=H*.67,bh=H-bs;for(let i=0;i<56;i++){const y=bs+i*(bh/56),t=i/55,a=.01+.18*t*t;ctx.setFillColor(col('#020407',a));ctx.fillRect(new Rect(0,y,W,bh/56+1))}ctx.setFillColor(col(S.accent,.92));ctx.fillRect(new Rect(0,0,W,5));const out=ctx.getImage();try{fm.writeImage(p,out)}catch(_){}return out}catch(_){return null}}
+
 function T(st,s,z,c,w='regular',n=1){const t=st.addText(String(s??''));t.font=w==='heavy'?Font.heavySystemFont(z):w==='bold'?Font.boldSystemFont(z):w==='semibold'?Font.semiboldSystemFont(z):Font.systemFont(z);t.textColor=c;t.lineLimit=n;t.minimumScaleFactor=.68;return t}
 function base(bg){const w=new ListWidget();if(bg)w.backgroundImage=bg;else{const g=new LinearGradient();g.colors=[col(S.accent,.16),col(C.bg)];g.locations=[0,1];w.backgroundGradient=g}w.url=S.url;return w}
 function pill(st,label,accent=false){const p=st.addStack();p.backgroundColor=accent?col(S.accent,.20):col('#000000',.50);p.cornerRadius=8;p.setPadding(3,7,3,7);T(p,label,accent?9.5:9.1,accent?col(S.accent):col(C.text),'heavy');return p}

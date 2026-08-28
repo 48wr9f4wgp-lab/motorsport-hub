@@ -96,17 +96,18 @@
       "reviewNote": "Replaced broken 645px cropped runtime URL with the 6048x4032 CC0 original source on 2026-08-27."
     },
     {
-      "assetId": "supergt-au-toms-cc0",
+      "assetId": "supergt-motul-autech-z-fuji-2024",
       "category": "SUPERGT",
-      "filename": "Osaka Auto Messe 2025 (1) - No.36 au TOM'S GR Supra in 2024 SUPER GT.jpg",
+      "filename": "MOTUL AUTECH Z 2024 rd.2 FUJI.jpg",
       "runtimeUrls": [
-        "https://commons.wikimedia.org/wiki/Special:Redirect/file/Osaka%20Auto%20Messe%202025%20%281%29%20-%20No.36%20au%20TOM%27S%20GR%20Supra%20in%202024%20SUPER%20GT.jpg?width=2048",
-        "https://commons.wikimedia.org/wiki/Special:Redirect/file/Osaka%20Auto%20Messe%202025%20%281%29%20-%20No.36%20au%20TOM%27S%20GR%20Supra%20in%202024%20SUPER%20GT.jpg?width=1280"
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/MOTUL%20AUTECH%20Z%202024%20rd.2%20FUJI.jpg?width=2048",
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/MOTUL%20AUTECH%20Z%202024%20rd.2%20FUJI.jpg?width=1280"
       ],
-      "sourcePage": "https://commons.wikimedia.org/wiki/File:Osaka_Auto_Messe_2025_(1)_-_No.36_au_TOM%27S_GR_Supra_in_2024_SUPER_GT.jpg",
-      "author": "Tokumeigakarinoaoshima",
-      "license": "CC0 1.0",
-      "modificationNoticeRequired": false
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:MOTUL_AUTECH_Z_2024_rd.2_FUJI.jpg",
+      "author": "Abarabone1206",
+      "license": "CC BY 4.0",
+      "modificationNoticeRequired": true,
+      "reviewNote": "2024 SUPER GT race-action Hero accepted after subject-aware Small/Medium visual pilot on 2026-08-28."
     },
     {
       "assetId": "motogp-bezzecchi-malaysia-2025",
@@ -143,20 +144,22 @@
       "sourcePage": "https://commons.wikimedia.org/wiki/File:DRIFT-0ae1a2ba-2d7b-4d51-b082-b698f2fbb2f1.jpg",
       "author": "Pixabay source; attribution not required",
       "license": "CC0 1.0",
-      "modificationNoticeRequired": false
+      "modificationNoticeRequired": false,
+      "reviewNote": "Current drift action Hero retained with subject-aware Small/Medium crop accepted on 2026-08-28."
     },
     {
-      "assetId": "d1gp-action-lydden-2014",
+      "assetId": "d1gp-rick-flores-2011",
       "category": "D1GP",
-      "filename": "King of Europe Round 3 Lydden Hill 2014 (14356011899).jpg",
+      "filename": "D1GP (5679098995).jpg",
       "runtimeUrls": [
-        "https://commons.wikimedia.org/wiki/Special:Redirect/file/King%20of%20Europe%20Round%203%20Lydden%20Hill%202014%20%2814356011899%29.jpg?width=2048",
-        "https://commons.wikimedia.org/wiki/Special:Redirect/file/King%20of%20Europe%20Round%203%20Lydden%20Hill%202014%20%2814356011899%29.jpg?width=1280"
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/D1GP%20%285679098995%29.jpg?width=2048",
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/D1GP%20%285679098995%29.jpg?width=1280"
       ],
-      "sourcePage": "https://commons.wikimedia.org/wiki/File:King_of_Europe_Round_3_Lydden_Hill_2014_(14356011899).jpg",
-      "author": "Rowan Harrison",
-      "license": "CC BY-SA 2.0",
-      "modificationNoticeRequired": true
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:D1GP_(5679098995).jpg",
+      "author": "Rick Flores (Flickr: Ricky Flores)",
+      "license": "CC BY 2.0",
+      "modificationNoticeRequired": true,
+      "reviewNote": "Actual D1 Grand Prix action Hero accepted over the unrelated King of Europe asset after Small/Medium visual pilot on 2026-08-28."
     },
     {
       "assetId": "superformula-fraga-suzuka-2026",
