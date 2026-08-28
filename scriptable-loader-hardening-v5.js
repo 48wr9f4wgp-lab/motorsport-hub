@@ -4,7 +4,7 @@
   const ROUTER_REF='hardening-live';
   const URL=`https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/${ROUTER_REF}/motorsport-hub.js`;
   const ROUTER_SCHEMA=5;
-  const CATEGORY_MANIFEST='F1,WEC,WRC,SUPERGT,MOTOGP,FDJ,D1GP,SUPERFORMULA,INDYCAR,NASCAR,GTWCEU,QA';
+  const CATEGORY_MANIFEST='F1,WEC,WRC,SUPERGT,MOTOGP,FDJ,D1GP,SUPERFORMULA,INDYCAR,NASCAR,GTWCEU,DAKAR,QA';
   const fm=FileManager.local(),dir=fm.documentsDirectory();
   const candidatePath=fm.joinPath(dir,'motorsport-hub-hardening-router-v5-candidate.js');
   const lkgPath=fm.joinPath(dir,'motorsport-hub-hardening-router-v5-lkg.js');
