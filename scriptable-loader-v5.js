@@ -1,10 +1,10 @@
-// Motorsport Hub loader v5 — transactional router loader.
-// Migration target for Scriptable. Keep loader v4 installed until v5 passes device QA.
+// Motorsport Hub loader v5 — legacy transactional Router compatibility loader.
+// Canonical public distribution is the CI-generated immutable scriptable-loader-v6.js for a specific release SHA.
 (async()=>{
   const ROUTER_REF='main';
   const URL=`https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/${ROUTER_REF}/motorsport-hub.js`;
   const ROUTER_SCHEMA=5;
-  const CATEGORY_MANIFEST='F1,WEC,WRC,SUPERGT,MOTOGP,FDJ,D1GP,SUPERFORMULA,INDYCAR,NASCAR,GTWCEU,QA';
+  const CATEGORY_MANIFEST='F1,WEC,WRC,SUPERGT,MOTOGP,FDJ,D1GP,SUPERFORMULA,INDYCAR,NASCAR,GTWCEU,DAKAR,QA';
   const fm=FileManager.local();
   const dir=fm.documentsDirectory();
   const candidatePath=fm.joinPath(dir,'motorsport-hub-router-v5-candidate.js');
