@@ -1,5 +1,5 @@
 // Motorsport Hub v10.0.3-hardening — flattened Formula Drift Japan module
-// Completed FDJ runtime: accepted v8.7.1 visual treatment + 40h event lifecycle + validated cache. No remote source rewriting.
+// Completed FDJ runtime: accepted subject-aware action Hero crop + 40h event lifecycle + validated cache. No remote source rewriting.
 (async()=>{
 const V='10.0.3-hardening',K='fdj',SEASON=2026,CACHE_SCHEMA=1,CACHE_MAX_AGE=7*86400000;
 const DATA_SOURCE='https://formulad.jp/2026-fdj-standings/';

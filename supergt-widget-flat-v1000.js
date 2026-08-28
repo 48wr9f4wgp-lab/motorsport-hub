@@ -1,5 +1,5 @@
 // Motorsport Hub v10.0.3-hardening — flattened SUPER GT module
-// Completed GT500 runtime: official driver ranking + 2026 domestic tail + verified CC0 hero only + validated cache.
+// Completed GT500 runtime: official driver ranking + 2026 domestic tail + verified 2024 race-action Hero + validated cache.
 (async()=>{
 const V='10.0.3-hardening',K='supergt',SEASON=2026,CACHE_SCHEMA=1,CACHE_MAX_AGE=7*86400000;
 const DATA_SOURCE='https://supergt.net/driver_ranking?gt_class=gt500&series=2026';
@@ -21,7 +21,7 @@ const META={
  '16':{name:'野尻 智紀 / 佐藤 蓮',maker:'HONDA',machine:'PRELUDE-GT',team:'ARTA'},
  '14':{name:'福住 仁嶺 / 大嶋 和也',maker:'TOYOTA',machine:'GR Supra',team:'ROOKIE'}
 };
-// Exact Commons page verified: Tokumeigakarinoaoshima / CC0 1.0. No unattributed fallback is allowed.
+// Exact Commons page verified: Abarabone1206 / CC BY 4.0. 2024 SUPER GT Rd.2 Fuji action Hero.
 const HERO={sources:[
  {assetId:'supergt-motul-autech-z-fuji-2024',url:'https://commons.wikimedia.org/wiki/Special:Redirect/file/MOTUL%20AUTECH%20Z%202024%20rd.2%20FUJI.jpg?width=2048',crop:{small:{x:.15955494097645323,y:0,w:.6665637542451374,h:1},medium:{x:0,y:.18996898193473516,w:1,h:.6957595773674071}}},
  {assetId:'supergt-motul-autech-z-fuji-2024',url:'https://commons.wikimedia.org/wiki/Special:Redirect/file/MOTUL%20AUTECH%20Z%202024%20rd.2%20FUJI.jpg?width=1280',crop:{small:{x:.15955494097645323,y:0,w:.6665637542451374,h:1},medium:{x:0,y:.18996898193473516,w:1,h:.6957595773674071}}}

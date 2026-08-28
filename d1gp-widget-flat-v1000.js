@@ -1,5 +1,5 @@
 // Motorsport Hub v10.0.3-hardening — flattened D1GP module
-// Completed D1GP runtime: official 2026 ranking + accepted action hero + 40h lifecycle + validated cache.
+// Completed D1GP runtime: official 2026 ranking + verified D1 Grand Prix action Hero + 40h lifecycle + validated cache.
 (async()=>{
 const V='10.0.3-hardening',K='d1gp',SEASON=2026,CACHE_SCHEMA=1,CACHE_MAX_AGE=7*86400000;
 const DATA_SOURCE='https://d1gp.co.jp/2026d1%E3%82%B0%E3%83%A9%E3%83%B3%E3%83%97%E3%83%AA%E3%82%B7%E3%83%AA%E3%83%BC%E3%82%BA%E3%83%A9%E3%83%B3%E3%82%AD%E3%83%B3%E3%82%B0/';
