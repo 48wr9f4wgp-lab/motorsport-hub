@@ -1,4 +1,4 @@
-const TEST_MODE='auto',API='https://api.football-data.org/v4',TOKEN='clubpulse_football_data_token_v1',TTL=9e5,POST=36e6;
+const TEST_MODE='live',API='https://api.football-data.org/v4',TOKEN='clubpulse_football_data_token_v1',TTL=9e5,POST=36e6;
 
 const CLUBS={
 manutd:{id:'manutd',team:66,comp:'PL',name:'マンチェスター・ユナイテッド',short:'MAN UTD',jp:'マンU',badge:'MU',league:'プレミアリーグ',p:'#DA291C',s:'#5A0E0A',a:'#FF584F',venue:'オールド・トラッフォード'},
@@ -158,7 +158,7 @@ teamBlock(row,imgs.club,club.jp,club.short,club.badge,club.p,club.s);
 
 row.addSpacer();
 
-let mid=heavy(row,d.mode==='NEXT'?'VS':`${Number.isFinite(m.ourScore)?m.ourScore:'–'} - ${Number.isFinite(m.opponentScore)?m.opponentScore:'–'}`,d.mode==='NEXT'?13:22);
+let mid=heavy(row,d.mode==='NEXT'?'VS':`${Number.isFinite(m.ourScore)?m.ourScore:'–'} - ${Number.isFinite(m.opponentScore)?m.opponentScore:'–'}`,d.mode==='NEXT'?13:24);
 
 row.addSpacer();
 
@@ -201,13 +201,18 @@ text(f,`勝点 ${d.points??'–'}`,7,true,.72)
 function buildMedium(d,imgs){
 let w=new ListWidget();w.backgroundGradient=bg();w.setPadding(6,10,7,10);
 let line=w.addStack();line.size=new Size(0,2);line.backgroundColor=C(club.p);
+
 w.addSpacer(4);
 header(w,d,imgs.club);
+
 w.addSpacer(4);
 matchCard(w,d,imgs);
+
 w.addSpacer(4);
 footer(w,d);
+
 w.refreshAfterDate=new Date(Date.now()+TTL);
+
 return w
 }
 
