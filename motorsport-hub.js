@@ -1,4 +1,4 @@
-// Motorsport Hub v9.5.1-hardening — direct category module router
+// Motorsport Hub v9.5.2-hardening — direct category module router
 // H1: explicit parameter validation and full-name aliases.
 // H3: lifecycle behavior is owned directly by every category module.
 // H4: every current category routes directly to one completed/dedicated module. No legacy wrapper runtime or Router source rewriting remains.
@@ -10,7 +10,7 @@
 (async()=>{
 const ROUTER_SCHEMA=5;
 const CATEGORY_MANIFEST='F1,WEC,WRC,SUPERGT,MOTOGP,FDJ,D1GP,SUPERFORMULA,INDYCAR,NASCAR,GTWCEU,DAKAR,QA';
-const SOURCE_REF=String(globalThis.__MH_SOURCE_REF||'main');
+const SOURCE_REF=String(globalThis.__MH_SOURCE_REF||'hardening-live');
 const INTEGRITY=globalThis.__MH_RELEASE_INTEGRITY||null;
 const labels=['F1','WEC','WRC','SUPER GT','MotoGP','FDJ','D1GP','SUPER FORMULA','INDYCAR','NASCAR Cup','GTWC Europe','Dakar Rally','QA診断'];
 const params=['F1','WEC','WRC','SUPERGT','MOTOGP','FDJ','D1GP','SUPERFORMULA','INDYCAR','NASCAR','GTWCEU','DAKAR','QA'];
@@ -20,7 +20,7 @@ const ROUTES={
  F1:{file:'f1-widget-flat-v1000.js',key:'f1-flat-v1000',marker:'flattened F1 pilot module'},
  WEC:{file:'wec-widget-flat-v1000.js',key:'wec-flat-v1000',marker:'flattened WEC module'},
  WRC:{file:'wrc-widget-flat-v1000.js',key:'wrc-flat-v1000',marker:'flattened WRC module'},
- SUPERGT:{file:'supergt-widget-flat-v1000.js',key:'supergt-flat-v1000',marker:'flattened SUPER GT module'},
+ SUPERGT:{file:'supergt-widget-flat-v1000.js',key:'supergt-flat-v1003',marker:'flattened SUPER GT module'},
  MOTOGP:{file:'motogp-widget-flat-v1000.js',key:'motogp-flat-v1000',marker:'flattened MotoGP module'},
  FDJ:{file:'fdj-widget-flat-v1000.js',key:'fdj-flat-v1000',marker:'flattened Formula Drift Japan module'},
  D1GP:{file:'d1gp-widget-flat-v1000.js',key:'d1gp-flat-v1000',marker:'flattened D1GP module'},
@@ -94,7 +94,7 @@ async function fail(){await messageWidget('Motorsport Hub','最新版モジュ�
 if(!integrityConfigOK){await fail();return}
 
 let code='';
-if(globalThis.__MH_REMOTE_OFFLINE!==true){try{const r=new Request(`${URL}?v=951&t=${Date.now()}-${Math.random()}`);r.timeoutInterval=15;r.headers={'Cache-Control':'no-cache, no-store, max-age=0, must-revalidate','Pragma':'no-cache','Expires':'0','User-Agent':'MotorsportHubRouter/9.5.1-hardening'};code=await r.loadString();if(!valid(code))throw Error('invalid module');fm.writeString(cache,code)}catch(e){globalThis.__MH_REMOTE_OFFLINE=true}}
+if(globalThis.__MH_REMOTE_OFFLINE!==true){try{const r=new Request(`${URL}?v=952&t=${Date.now()}-${Math.random()}`);r.timeoutInterval=15;r.headers={'Cache-Control':'no-cache, no-store, max-age=0, must-revalidate','Pragma':'no-cache','Expires':'0','User-Agent':'MotorsportHubRouter/9.5.2-hardening'};code=await r.loadString();if(!valid(code))throw Error('invalid module');fm.writeString(cache,code)}catch(e){globalThis.__MH_REMOTE_OFFLINE=true}}
 if(!valid(code)){try{if(fm.fileExists(cache)){const c=fm.readString(cache);if(valid(c))code=c;else fm.remove(cache)}}catch(_){} }
 if(!valid(code)){await fail();return}
 globalThis.__MH_ROUTER_BOOT_OK=true;
