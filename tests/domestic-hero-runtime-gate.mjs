@@ -11,10 +11,14 @@ const modules={SUPERGT:read('supergt-widget-flat-v1000.js'),FDJ:read('fdj-widget
 for(const [id,src] of Object.entries(modules)){
   parse(id,src);
   assert(src.includes("const V='10.0.3-hardening'"),`${id}: runtime version drift`);
-  assert(src.includes('motorsport-hero-v1000-crop3-'),`${id}: fresh Hero cache namespace missing`);
   assert(src.includes('function heroCropRect('),`${id}: fixed normalized crop renderer missing`);
 }
 const sgt=modules.SUPERGT,fdj=modules.FDJ,d1=modules.D1GP;
+assert(sgt.includes("heroAssetId=HERO.sources[0]?.assetId||'supergt'"),'SUPERGT: cache key must derive from current Hero assetId');
+assert(sgt.includes("motorsport-hero-v1000-${small?'small':'medium'}-supergt-${heroAssetId}.jpg"),'SUPERGT: asset-aware Hero cache path missing');
+assert(!sgt.includes('motorsport-hero-v1000-crop3-'),'SUPERGT: stale fixed crop3 cache namespace must not survive asset replacement');
+assert(fdj.includes('motorsport-hero-v1000-crop3-'),'FDJ: accepted Hero cache namespace missing');
+assert(d1.includes('motorsport-hero-v1000-crop3-'),'D1GP: accepted Hero cache namespace missing');
 for(const token of ['supergt-motul-autech-z-fuji-2024','MOTUL%20AUTECH%20Z%202024%20rd.2%20FUJI.jpg?width=2048',"small:{x:.15955494097645323,y:0,w:.6665637542451374,h:1}","medium:{x:0,y:.18996898193473516,w:1,h:.6957595773674071}"])assert(sgt.includes(token),`SUPERGT Hero contract missing: ${token}`);
 assert(!sgt.includes('Osaka%20Auto%20Messe%202025'),'SUPERGT superseded showroom Hero still reachable');
 for(const token of ['fdj-drift-cc0','DRIFT-0ae1a2ba-2d7b-4d51-b082-b698f2fbb2f1.jpg?width=2048',"small:{x:.14733669779300687,y:.11229100644588468,w:.6106062036752701,h:.8141416049003601}","medium:{x:.09269440517425534,y:.31221205044195843,w:.67,h:.4142995169082126}"])assert(fdj.includes(token),`FDJ Hero contract missing: ${token}`);
