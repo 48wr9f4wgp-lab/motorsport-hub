@@ -1,0 +1,303 @@
+const TEST_MODE='auto',API='https://api.football-data.org/v4',TOKEN='clubpulse_football_data_token_v1',TTL=9e5,POST=36e6;
+
+const CLUBS={
+manutd:{id:'manutd',team:66,comp:'PL',name:'マンチェスター・ユナイテッド',short:'MAN UTD',jp:'マンU',badge:'MU',league:'プレミアリーグ',p:'#DA291C',s:'#5A0E0A',a:'#FF584F',venue:'オールド・トラッフォード'},
+arsenal:{id:'arsenal',team:57,comp:'PL',name:'アーセナル',short:'ARSENAL',jp:'アーセナル',badge:'ARS',league:'プレミアリーグ',p:'#D71920',s:'#6D0A0D',a:'#FF584F',venue:'エミレーツ・スタジアム'},
+barcelona:{id:'barcelona',team:81,comp:'PD',name:'バルセロナ',short:'BARÇA',jp:'バルサ',badge:'FCB',league:'ラ・リーガ',p:'#A50044',s:'#0B2D72',a:'#D94A6A',venue:'ホーム'}
+};
+
+const JP={
+'Arsenal FC':'アーセナル','Aston Villa FC':'アストン・ヴィラ','AFC Bournemouth':'ボーンマス','Brentford FC':'ブレントフォード','Brighton & Hove Albion FC':'ブライトン','Chelsea FC':'チェルシー','Coventry City FC':'コヴェントリー','Crystal Palace FC':'クリスタル・パレス','Everton FC':'エヴァートン','Fulham FC':'フラム','Hull City AFC':'ハル・シティ','Hull City FC':'ハル・シティ','Ipswich Town FC':'イプスウィッチ','Ipswich Town':'イプスウィッチ','Leeds United FC':'リーズ','Liverpool FC':'リヴァプール','Manchester City FC':'マンチェスター・シティ','Manchester United FC':'マンチェスター・ユナイテッド','Newcastle United FC':'ニューカッスル','Nottingham Forest FC':'ノッティンガム・フォレスト','Sunderland AFC':'サンダーランド','Tottenham Hotspur FC':'トッテナム','FC Barcelona':'バルセロナ','Real Madrid CF':'レアル・マドリード','Club Atlético de Madrid':'アトレティコ・マドリード','Athletic Club':'アスレティック・クラブ','Villarreal CF':'ビジャレアル','Real Sociedad de Fútbol':'レアル・ソシエダ','Sevilla FC':'セビージャ','Valencia CF':'バレンシア','Real Betis Balompié':'ベティス'
+};
+
+const COMP={PL:'プレミアリーグ',PD:'ラ・リーガ',CL:'チャンピオンズリーグ',EL:'ヨーロッパリーグ',FAC:'FAカップ',ELC:'チャンピオンシップ',CDR:'国王杯'};
+const VEN={'Old Trafford':'オールド・トラッフォード','Emirates Stadium':'エミレーツ・スタジアム','Anfield':'アンフィールド','Etihad Stadium':'エティハド・スタジアム','Stamford Bridge':'スタンフォード・ブリッジ','Tottenham Hotspur Stadium':'トッテナム・ホットスパー・スタジアム','Villa Park':'ヴィラ・パーク'};
+
+const clubKey=String(args.widgetParameter||'manutd').trim().toLowerCase().split(':')[0],club=CLUBS[clubKey]||CLUBS.manutd,family=config.widgetFamily||'medium',C=(h,a=1)=>new Color(h,a),pad=n=>String(n).padStart(2,'0');
+
+const fmt=(d,f)=>{let x=new DateFormatter();x.locale='ja_JP';x.dateFormat=f;return x.string(d)},kickoff=s=>fmt(new Date(s),'M/d(E) HH:mm'),updated=t=>fmt(new Date(t),'HH:mm')+'更新',addDays=(d,n)=>new Date(d.getTime()+n*864e5),ymd=d=>`${d.getUTCFullYear()}-${pad(d.getUTCMonth()+1)}-${pad(d.getUTCDate())}`;
+
+function files(){let fm=FileManager.local(),dir=fm.joinPath(fm.documentsDirectory(),'ClubPulse');if(!fm.fileExists(dir))fm.createDirectory(dir,true);return{fm,dir}}
+function cachePath(id){let x=files();return x.fm.joinPath(x.dir,`data_${id}.json`)}
+function loadCache(id){try{let x=files(),p=cachePath(id);return x.fm.fileExists(p)?JSON.parse(x.fm.readString(p)):null}catch{return null}}
+function saveCache(id,v){try{let x=files();x.fm.writeString(cachePath(id),JSON.stringify(v))}catch{}}
+
+async function getToken(){
+if(Keychain.contains(TOKEN))return Keychain.get(TOKEN);
+if(!config.runsInApp)return null;
+let a=new Alert();a.title='Club Pulse 初期設定';a.message='football-data.org のAPI Tokenを貼り付けてください。';a.addTextField('API Token','');a.addAction('保存');a.addCancelAction('キャンセル');
+if(await a.present()===-1)return null;
+let t=a.textFieldValue(0).trim();
+if(t)Keychain.set(TOKEN,t);
+return t||null
+}
+
+async function api(path,t){
+let r=new Request(API+path);r.headers={'X-Auth-Token':t};r.timeoutInterval=15;
+let j=await r.loadJSON(),s=r.response?.statusCode||200;
+if(s>=400||j?.error)throw new Error(j?.message||j?.error||`API ${s}`);
+return j
+}
+
+const teamName=t=>!t?'未定':JP[t.name]||JP[t.shortName]||t.shortName||t.name||t.tla||'未定',venueName=(v,h)=>VEN[v]||v||(h?club.venue:'アウェイ');
+
+function standing(j){let s=j?.standings||[],t=s.find(x=>x.type==='TOTAL')||s[0];return t?.table?.find(x=>x.team?.id===club.team)||null}
+function rawScore(m){for(let s of[m?.score?.fullTime,m?.score?.regularTime,m?.score?.halfTime])if(Number.isFinite(s?.home)&&Number.isFinite(s?.away))return s;return{home:null,away:null}}
+function scoreFor(m){let s=rawScore(m),home=m?.homeTeam?.id===club.team;return{ours:home?s.home:s.away,theirs:home?s.away:s.home,home}}
+function result(m){let s=scoreFor(m);if(!Number.isFinite(s.ours)||!Number.isFinite(s.theirs))return'D';return s.ours>s.theirs?'W':s.ours<s.theirs?'L':'D'}
+
+function mapMatch(m){
+if(!m)return null;
+let h=m.homeTeam?.id===club.team,opp=h?m.awayTeam:m.homeTeam,own=h?m.homeTeam:m.awayTeam,s=scoreFor(m);
+return{id:m.id,status:m.status,minute:m.status==='PAUSED'?'HT':Number.isFinite(m.minute)?`${m.minute}${m.injuryTime?`+${m.injuryTime}`:''}'`:'試合中',homeAway:h?'HOME':'AWAY',kickoff:kickoff(m.utcDate),utcDate:m.utcDate,venue:venueName(m.venue,h),competition:COMP[m.competition?.code]||m.competition?.name||'試合',opponentName:teamName(opp),opponentShort:opp?.tla||'OPP',opponentCrest:opp?.crest||null,clubCrest:own?.crest||null,ourScore:s.ours,opponentScore:s.theirs,result:m.status==='FINISHED'?result(m):null}
+}
+
+function mapData(mj,sj){
+let now=Date.now(),m=mj?.matches||[],fin=m.filter(x=>x.status==='FINISHED').sort((a,b)=>new Date(b.utcDate)-new Date(a.utcDate)),live=m.find(x=>['IN_PLAY','PAUSED','LIVE'].includes(x.status))||null,next=m.filter(x=>['SCHEDULED','TIMED'].includes(x.status)&&new Date(x.utcDate).getTime()>=now-144e5).sort((a,b)=>new Date(a.utcDate)-new Date(b.utcDate))[0]||null,last=fin[0]||null,post=last&&now-new Date(last.utcDate).getTime()<=POST?last:null,row=standing(sj),form=fin.slice(0,5).map(result);
+while(form.length<5)form.push('-');
+let L=mapMatch(live),N=mapMatch(next),P=mapMatch(post),crest=row?.team?.crest||L?.clubCrest||N?.clubCrest||P?.clubCrest||null;
+return{fetchedAt:Date.now(),mode:L?'LIVE':P?'POST':'NEXT',rank:row?.position??null,points:row?.points??null,form,clubCrest:crest,liveMatch:L,recentResult:P,nextMatch:N}
+}
+
+async function loadData(t){
+let c=loadCache(club.id);
+if(c&&Date.now()-c.fetchedAt<TTL)return{...c,stale:false};
+let d=new Date(),from=ymd(addDays(d,-120)),to=ymd(addDays(d,120));
+try{
+let[m,s]=await Promise.all([api(`/teams/${club.team}/matches?dateFrom=${from}&dateTo=${to}&limit=100`,t),api(`/competitions/${club.comp}/standings`,t)]),v=mapData(m,s);
+saveCache(club.id,v);
+return{...v,stale:false}
+}catch(e){if(c)return{...c,stale:true};throw e}
+}
+
+async function image(url,key){
+if(!url)return null;
+try{
+let x=files(),p=x.fm.joinPath(x.dir,`crest_${String(key).replace(/[^\w-]/g,'_')}.png`);
+if(x.fm.fileExists(p))return x.fm.readImage(p);
+let r=new Request(url);r.timeoutInterval=10;
+let i=await r.loadImage();x.fm.writeImage(p,i);return i
+}catch{return null}
+}
+
+function applyTestMode(d){
+if(TEST_MODE==='auto')return d;
+let base=d.nextMatch||d.liveMatch||d.recentResult;
+if(!base)return d;
+let m={...base};
+if(TEST_MODE==='live'){m.status='IN_PLAY';m.minute="67'";m.ourScore=2;m.opponentScore=1;return{...d,mode:'LIVE',liveMatch:m}}
+if(TEST_MODE==='post'){m.status='FINISHED';m.ourScore=2;m.opponentScore=1;m.result='W';return{...d,mode:'POST',recentResult:m}}
+return{...d,mode:'NEXT',nextMatch:m}
+}
+
+function text(p,s,n=8,b=false,a=1,h='#FFFFFF'){let t=p.addText(String(s));t.font=b?Font.boldSystemFont(n):Font.mediumSystemFont(n);t.textColor=C(h,a);t.lineLimit=1;t.minimumScaleFactor=.5;return t}
+function heavy(p,s,n=12,h='#FFFFFF'){let t=p.addText(String(s));t.font=Font.heavySystemFont(n);t.textColor=C(h);t.lineLimit=1;t.minimumScaleFactor=.5;return t}
+
+function gradient(colors,loc=[0,.5,1],horizontal=false){
+let g=new LinearGradient();g.startPoint=new Point(0,0);g.endPoint=horizontal?new Point(1,0):new Point(1,1);g.colors=colors;g.locations=loc;return g
+}
+
+function badge(p,fallback,img,size=28,p1=club.p,p2=club.s){
+let o=p.addStack();o.size=new Size(size+4,size+4);o.cornerRadius=(size+4)/2;o.backgroundColor=C('#FFFFFF',.05);o.centerAlignContent();
+let i=o.addStack();i.size=new Size(size,size);i.cornerRadius=size/2;i.centerAlignContent();
+if(img){let im=i.addImage(img);im.imageSize=new Size(size-1,size-1)}
+else{i.backgroundGradient=gradient([C(p1),C(p2)],[0,1]);let t=heavy(i,fallback,size<30?8:10);t.centerAlignText()}
+return o
+}
+
+function chip(p,r){
+let m={W:['勝','#63E283','#133922'],D:['分','#D2D2D7','#37373C'],L:['負','#FF6961','#4D1715'],'-':['–','#8E8E93','#25252A']}[r],s=p.addStack();
+s.setPadding(2,5,2,5);s.cornerRadius=6;s.backgroundColor=C(m[2]);text(s,m[0],7,true,1,m[1])
+}
+
+function bg(){return gradient([C('#050608'),C('#0B0C10'),C('#170909'),C(club.s,.95),C(club.p,.45)],[0,.38,.68,.88,1])}
+function cardBg(mode){return mode==='LIVE'?gradient([C(club.p,.96),C(club.s,.92),C('#090A0D')],[0,.42,1],true):gradient([C(club.s),C(club.p,.52),C('#100C12'),C('#090A0D')],[0,.22,.56,1],true)}
+
+function modeTitle(d,m){
+if(d.mode==='LIVE')return TEST_MODE==='live'?'試合中（テスト）':'試合中';
+if(d.mode==='POST')return`試合終了 · ${m.result==='W'?'勝利':m.result==='L'?'敗戦':'引分'}`;
+return`次の試合 · ${m.competition}`
+}
+
+function header(w,d,clubImg){
+let h=w.addStack();h.layoutHorizontally();h.centerAlignContent();
+badge(h,club.badge,clubImg,20);h.addSpacer(6);
+let l=h.addStack();l.layoutVertically();heavy(l,club.name,10);text(l,`${club.league} · ${updated(d.fetchedAt)}${d.stale?' · 保存データ':''}`,6,false,.5);
+h.addSpacer();
+let r=h.addStack();r.layoutVertically();
+let a=heavy(r,d.rank!=null?`${d.rank}位`:'–',15);a.rightAlignText();
+let b=text(r,`勝点 ${d.points??'–'}`,7,true,.62);b.rightAlignText()
+}
+
+function teamBlock(parent,img,name,sub,fallback,c1,c2){
+let s=parent.addStack();s.layoutVertically();s.centerAlignContent();
+badge(s,fallback,img,56,c1,c2);s.addSpacer(2);
+let n=heavy(s,name,13);n.centerAlignText();n.minimumScaleFactor=.5;
+if(sub){let q=text(s,sub,7,false,.60);q.centerAlignText();q.minimumScaleFactor=.48}
+}
+
+function matchCard(w,d,imgs){
+let m=d.mode==='LIVE'?d.liveMatch:d.mode==='POST'?d.recentResult:d.nextMatch,c=w.addStack();
+c.layoutVertically();c.setPadding(4,8,5,8);c.cornerRadius=15;c.backgroundGradient=cardBg(d.mode);
+
+if(!m){heavy(c,'次の試合は未取得',11);return}
+
+let top=c.addStack();top.layoutHorizontally();
+text(top,modeTitle(d,m),8,true,1,d.mode==='LIVE'?'#FFFFFF':'#FF6A62');
+top.addSpacer();
+
+d.mode==='LIVE'
+?heavy(top,m.minute||'試合中',10)
+:text(top,m.homeAway==='HOME'?'ホーム':'アウェイ',8,true,1,club.a);
+
+c.addSpacer(3);
+
+let row=c.addStack();row.layoutHorizontally();row.centerAlignContent();
+
+teamBlock(row,imgs.club,club.jp,club.short,club.badge,club.p,club.s);
+
+row.addSpacer();
+
+let mid=heavy(row,d.mode==='NEXT'?'VS':`${Number.isFinite(m.ourScore)?m.ourScore:'–'} - ${Number.isFinite(m.opponentScore)?m.opponentScore:'–'}`,d.mode==='NEXT'?13:22);
+
+row.addSpacer();
+
+teamBlock(row,imgs.opp,m.opponentName,m.opponentShort,m.opponentShort,'#4A5568','#20242D');
+
+c.addSpacer(3);
+
+let meta=c.addStack();meta.layoutHorizontally();meta.centerAlignContent();
+meta.addSpacer();
+
+text(meta,d.mode==='LIVE'?m.competition:m.kickoff,9,true,.94);
+
+meta.addSpacer(7);
+text(meta,'•',8,false,.28);
+meta.addSpacer(7);
+
+text(meta,m.venue,8,false,.68);
+
+meta.addSpacer();
+}
+
+function footer(w,d){
+let f=w.addStack();f.layoutHorizontally();f.centerAlignContent();
+f.setPadding(3,10,3,10);f.cornerRadius=9;
+f.backgroundGradient=gradient([C('#121317'),C(club.s,.72),C(club.p,.3)],[0,.5,1]);
+
+text(f,'直近5戦',7,false,.65);
+f.addSpacer(7);
+
+for(let r of d.form){
+chip(f,r);
+f.addSpacer(2)
+}
+
+f.addSpacer();
+
+text(f,`勝点 ${d.points??'–'}`,7,true,.72)
+}
+
+function buildMedium(d,imgs){
+let w=new ListWidget();w.backgroundGradient=bg();w.setPadding(6,10,7,10);
+let line=w.addStack();line.size=new Size(0,2);line.backgroundColor=C(club.p);
+w.addSpacer(4);
+header(w,d,imgs.club);
+w.addSpacer(4);
+matchCard(w,d,imgs);
+w.addSpacer(4);
+footer(w,d);
+w.refreshAfterDate=new Date(Date.now()+TTL);
+return w
+}
+
+function buildSmall(d,imgs){
+let w=new ListWidget();w.backgroundGradient=bg();w.setPadding(8,9,8,9);
+
+let h=w.addStack();h.layoutHorizontally();h.centerAlignContent();
+badge(h,club.badge,imgs.club,22);h.addSpacer(5);heavy(h,club.jp,10);h.addSpacer();heavy(h,d.rank!=null?`${d.rank}位`:'–',13);
+
+w.addSpacer(5);
+
+let m=d.mode==='LIVE'?d.liveMatch:d.mode==='POST'?d.recentResult:d.nextMatch;
+
+if(m){
+let c=w.addStack();c.layoutVertically();c.setPadding(5,6,5,6);c.cornerRadius=12;c.backgroundGradient=cardBg(d.mode);
+
+let t=c.addStack();t.layoutHorizontally();
+text(t,modeTitle(d,m),7,true,1,d.mode==='LIVE'?'#FFFFFF':'#FF6A62');
+t.addSpacer();
+
+if(d.mode==='LIVE')heavy(t,m.minute||'LIVE',8);
+
+c.addSpacer(4);
+
+let r=c.addStack();r.layoutHorizontally();r.centerAlignContent();
+
+badge(r,club.badge,imgs.club,32);
+r.addSpacer();
+
+heavy(r,d.mode==='NEXT'?'VS':`${Number.isFinite(m.ourScore)?m.ourScore:'–'}-${Number.isFinite(m.opponentScore)?m.opponentScore:'–'}`,d.mode==='NEXT'?13:15);
+
+r.addSpacer();
+
+badge(r,m.opponentShort,imgs.opp,32,'#4A5568','#20242D');
+
+c.addSpacer(4);
+
+let nm=heavy(c,m.opponentName,8);nm.centerAlignText();
+let md=text(c,d.mode==='LIVE'?m.competition:m.kickoff,7,false,.72);md.centerAlignText()
+}
+
+w.addSpacer(5);
+
+let f=w.addStack();f.layoutHorizontally();
+
+for(let r of d.form){
+chip(f,r);
+f.addSpacer(2)
+}
+
+w.refreshAfterDate=new Date(Date.now()+TTL);
+
+return w
+}
+
+function errorWidget(msg){
+let w=new ListWidget();w.backgroundColor=C('#0B0C10');w.setPadding(14,14,14,14);
+heavy(w,'Club Pulse',14);w.addSpacer(8);
+let t=text(w,msg,10,false,.7);t.lineLimit=5;
+return w
+}
+
+let tokenValue=await getToken(),widget;
+
+if(!tokenValue){
+widget=errorWidget('Scriptableで一度実行し、API Tokenを設定してください。')
+}else{
+try{
+let data=applyTestMode(await loadData(tokenValue)),
+match=data.mode==='LIVE'?data.liveMatch:data.mode==='POST'?data.recentResult:data.nextMatch,
+images={
+club:await image(data.clubCrest,club.team),
+opp:match?await image(match.opponentCrest,match.id):null
+};
+
+widget=family==='small'
+?buildSmall(data,images)
+:buildMedium(data,images)
+
+}catch(e){
+widget=errorWidget('データ取得失敗\n'+String(e))
+}
+}
+
+Script.setWidget(widget);
+
+if(config.runsInApp){
+family==='small'
+?await widget.presentSmall()
+:await widget.presentMedium()
+}
+
+Script.complete();
