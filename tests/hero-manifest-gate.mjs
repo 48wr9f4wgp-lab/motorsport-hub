@@ -30,15 +30,16 @@ for(const c of registry.categories){
     const asset=manifestByUrl.get(u);assert(asset,`${c.id}: runtime hero URL missing from hero-assets.json: ${u}`);assert.equal(asset.category,c.id,`${c.id}: hero manifest category mismatch for ${u}`);
   }
 }
-
 assert.equal(runtimeByUrl.size,manifestByUrl.size,'runtime/manifest hero URL counts differ');
 for(const[u,a]of manifestByUrl){assert(runtimeByUrl.has(u),`stale manifest URL is no longer reachable from current registry modules: ${a.assetId} ${u}`)}
 
 const directSources=registry.categories.map(c=>read(c.module)).join('\n');
-for(const forbidden of ['Fujimaki%20Group%20Suzuka','MOTUL%20AUTECH','front%20three-quarter%20view','Nissan%20Silvia%20S14%20Drift.jpg'])assert(!directSources.includes(forbidden),`historical/unreviewed hero leaked back into direct runtime: ${forbidden}`);
+for(const forbidden of ['Fujimaki%20Group%20Suzuka','front%20three-quarter%20view','Nissan%20Silvia%20S14%20Drift.jpg','Osaka%20Auto%20Messe%202025','King%20of%20Europe'])assert(!directSources.includes(forbidden),`historical/unreviewed hero leaked back into direct runtime: ${forbidden}`);
 
 const sgt=read('supergt-widget-flat-v1000.js');
-assert(sgt.includes('Tokumeigakarinoaoshima / CC0 1.0'),'SUPER GT verified-hero provenance marker missing');
-assert.equal((sgt.match(/Osaka%20Auto%20Messe%202025/g)||[]).length,2,'SUPER GT should expose only the two size variants of the verified CC0 hero');
+assert(sgt.includes('Abarabone1206 / CC BY 4.0'),'SUPER GT verified action-Hero provenance marker missing');
+assert.equal((sgt.match(/MOTUL%20AUTECH%20Z%202024%20rd\.2%20FUJI/g)||[]).length,2,'SUPER GT should expose exactly two size variants of the reviewed 2024 Fuji Hero');
+const d1=read('d1gp-widget-flat-v1000.js');
+assert.equal((d1.match(/D1GP%20%285679098995%29/g)||[]).length,2,'D1GP should expose exactly two size variants of the reviewed D1 Grand Prix Hero');
 
 console.log('Motorsport Hub hero manifest gate: PASS');
