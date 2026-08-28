@@ -36,7 +36,11 @@ jobs:
           python3 tools/apply-domestic-hero-runtime.py
           python3 tools/apply-domestic-hero-provenance.py
           python3 tools/apply-supergt-asset-cache-key.py
+          python3 tools/apply-hardening-live-router-default.py
           accepted_patch_files=(
+            motorsport-hub.js
+            category-registry.json
+            scriptable-loader-hardening-v5.js
             wrc-widget-flat-v1000.js
             motogp-widget-flat-v1000.js
             f1-widget-flat-v1000.js
@@ -50,13 +54,13 @@ jobs:
             tests/supergt-flat-gate.mjs
           )
           if git diff --quiet -- "${accepted_patch_files[@]}"; then
-            echo 'Accepted Hero runtime crops already applied.'
+            echo 'Accepted Hero/runtime routing changes already applied.'
           else
             git config user.name 'github-actions[bot]'
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
             git add "${accepted_patch_files[@]}"
             git diff --cached --check
-            git commit -m 'fix: key SUPER GT Hero cache by asset identity'
+            git commit -m 'fix: route hardening device tests to hardening-live'
             git push origin HEAD:hardening/v9.3-codex-handoff
           fi
 
@@ -83,6 +87,7 @@ jobs:
             tests/release-gate.mjs
             tests/boundary-gate.mjs
             tests/router-hardening-gate.mjs
+            tests/hardening-live-source-gate.mjs
             tests/registry-gate.mjs
             tests/cache-hardening-gate.mjs
             tests/hero-manifest-gate.mjs
@@ -158,6 +163,7 @@ jobs:
           green_sha="$(git rev-parse HEAD)"
           runtime_files=(
             motorsport-hub.js
+            scriptable-loader-hardening-v5.js
             f1-widget-flat-v1000.js
             wec-widget-flat-v1000.js
             wrc-widget-flat-v1000.js
