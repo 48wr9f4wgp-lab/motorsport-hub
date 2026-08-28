@@ -8,7 +8,13 @@ on:
       - 'motorsport-hub.js'
       - 'category-registry.json'
       - 'hero-assets.json'
+      - 'README.md'
+      - 'scriptable-loader.js'
+      - 'scriptable-loader-v5.js'
+      - 'scriptable-loader-v6-qa.js'
+      - 'tools/generate-release-package.mjs'
       - 'tools/prepare-main-release.mjs'
+      - 'tests/loader-distribution-gate.mjs'
       - 'tests/main-release-readiness-gate.mjs'
       - 'tests/main-release-transformed-gate.mjs'
       - 'tests/release-gate.mjs'
@@ -37,6 +43,8 @@ jobs:
         run: node --check tools/prepare-main-release.mjs
       - name: Verify non-mutating main-release transform
         run: node tests/main-release-readiness-gate.mjs
+      - name: Verify canonical loader distribution
+        run: node tests/loader-distribution-gate.mjs
       - name: Re-run critical hardening RC gates
         run: |
           set -euo pipefail
@@ -52,6 +60,7 @@ jobs:
           set -euo pipefail
           GITHUB_REF_NAME=release/validation node tools/prepare-main-release.mjs --write --status=RELEASED
           node tests/main-release-transformed-gate.mjs
+          node tests/loader-distribution-gate.mjs
           node tests/release-gate.mjs
           node tests/router-hardening-gate.mjs
           node tests/registry-gate.mjs
