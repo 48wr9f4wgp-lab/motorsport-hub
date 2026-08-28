@@ -35,6 +35,7 @@ jobs:
           python3 tools/apply-f1-wec-hero-runtime.py
           python3 tools/apply-domestic-hero-runtime.py
           python3 tools/apply-domestic-hero-provenance.py
+          python3 tools/apply-supergt-asset-cache-key.py
           accepted_patch_files=(
             wrc-widget-flat-v1000.js
             motogp-widget-flat-v1000.js
@@ -55,7 +56,7 @@ jobs:
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
             git add "${accepted_patch_files[@]}"
             git diff --cached --check
-            git commit -m 'feat: apply accepted domestic Hero runtime'
+            git commit -m 'fix: key SUPER GT Hero cache by asset identity'
             git push origin HEAD:hardening/v9.3-codex-handoff
           fi
 
