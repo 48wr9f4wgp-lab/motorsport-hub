@@ -1,170 +1,165 @@
 # Motorsport Hub — Release Audit
 
+Updated: 2026-08-28 JST
+
 ## Current decision
 - Branch: `hardening/v9.3-codex-handoff`
-- Original Codex-audited base: `a09d16e11aa0f65104ba895b74e09124d30b487b`
-- Current scope: **12 categories + QA**.
-- `main` has not been modified by this hardening line.
-- Public release / Store action: **not performed**.
+- Main baseline: `a09d16e11aa0f65104ba895b74e09124d30b487b`
+- Current verified hardening line: 12 categories + QA.
+- `main` remains unchanged by this hardening line.
+- Public release / Store action: not performed.
 
-**Decision: NOT RELEASE APPROVED — 12-CATEGORY AUTOMATED GREEN / DAKAR TARGETED DEVICE QA + CODEX FINAL QUALITY PASS PENDING**
+**Decision: NOT RELEASE APPROVED — AUTOMATED HARDENING + RELEASE-TRANSFORM DRY-RUN GREEN / CODEX FINAL AUDIT + FINAL CURRENT-PACKAGE DEVICE CHECK PENDING**
 
 ---
 
-## Current architecture
-Direct Router routes exactly one category module per selected category:
-- F1, WEC, WRC, SUPER GT, MotoGP, FDJ, D1GP
-- SUPER FORMULA, INDYCAR, NASCAR, GTWC Europe
-- **Dakar Rally**
-- QA
+## Architecture state
+The current Router selects exactly one direct category module:
+- F1
+- WEC
+- WRC
+- SUPER GT
+- MotoGP
+- FDJ
+- D1GP
+- SUPER FORMULA
+- INDYCAR
+- NASCAR Cup
+- GTWC Europe
+- Dakar Rally
+- QA diagnostics
 
-Current Router:
-- no legacy v8.9 wrapper waterfall;
+Current architecture properties:
+- no historical v8.9 wrapper waterfall;
 - no runtime source rewriting;
-- explicit invalid-parameter error;
+- explicit invalid-parameter failure;
 - schema/manifest handshake;
-- optional immutable SHA-256 release integrity enforcement.
+- optional immutable SHA-256 / byte-length release integrity enforcement;
+- schema-1 category data cache across all 12 categories;
+- green runtime files are the only files synchronized to `hardening-live`.
 
 Manifest:
 `F1,WEC,WRC,SUPERGT,MOTOGP,FDJ,D1GP,SUPERFORMULA,INDYCAR,NASCAR,GTWCEU,DAKAR,QA`
 
 ---
 
-## Original audit finding status
+## Original hardening finding status
 | Finding | Current state |
 | --- | --- |
-| RC-01 stale Router/LKG misrouting | release-namespaced immutable Loader v6 candidate/LKG/quarantine; old mismatched Router not accepted; prior iPhone candidate/LKG PASS |
-| RC-02 historical next-event display | explicit lifecycle / deterministic boundaries for current modules |
-| RC-03 serial wrapper waterfall | **structurally removed** |
-| RC-04 mutable/unverified release source | immutable SHA/bytes verification implemented, automated tamper tests PASS, previous real iPhone Candidate+LKG PASS; Codex hostile re-audit remains |
-| RC-05 Hero inventory | exact runtime/manifest URL-set Gate PASS; Dakar added with exact Commons license record |
+| RC-01 stale Router / LKG misrouting | immutable release-namespaced Loader + current hardening source-path regression gate; stale main fallback found on device and corrected |
+| RC-02 historical next-event display | explicit lifecycle and deterministic boundaries in current modules |
+| RC-03 serial wrapper waterfall | **closed structurally** |
+| RC-04 mutable/unverified release source | SHA-256 + byte-length immutable package, Candidate/LKG architecture, tamper gates; final current-package device repetition still pending |
+| RC-05 Hero inventory/provenance | exact runtime/manifest gate + author/license/source metadata; expanded build-time selection tooling |
 | RC-06 unsafe data cache | schema-1 cache across all 12 categories |
-| RC-07 parser false positives | series-specific identity/parsing gates materially improved; Codex should re-attack current pages |
-| RC-08 runtime source rewrite | **closed in current Router architecture** |
-| RC-09/16 lifecycle/end-boundary inconsistency | half-open contracts; Dakar has dedicated stage boundary Gate |
-| RC-10 invalid parameter → F1 | explicit fail path + alias tests |
-| RC-11 docs drift | current RC/Handoff/Audit being synchronized to 12 categories |
-| RC-12 duplicated category integration | Registry + CI-generated manifest/integrity packaging reduce integration drift; architectural consolidation still a Codex quality-review topic |
-| RC-13 timezone compatibility | still suitable for Codex/device compatibility review |
-| RC-14 preview exception edge | low-priority Codex review |
-| RC-15 long/unknown metadata | risk-based visual/fixture review remains useful |
+| RC-07 parser false positives | category-specific identity/parsing gates materially improved; Codex should still attack live-source failure modes |
+| RC-08 runtime source rewrite | **closed** |
+| RC-09/16 lifecycle/end-boundary inconsistency | explicit lifecycle contracts; Dakar stage boundaries separately gated |
+| RC-10 invalid parameter → F1 | explicit configuration error + aliases tested |
+| RC-11 docs drift | RC / Audit being synchronized in this finalization pass |
+| RC-12 duplicated integration drift | Registry, direct modules, immutable package and rollout inventory reduce drift; Codex architecture review still required |
+| RC-13 timezone compatibility | remains in final Codex/device compatibility scope |
+| RC-14 preview exception edge | remains low-priority final Codex review scope |
+| RC-15 long/unknown metadata | automated render smoke + risk-based device review; final audit should still attack pathological strings |
 
 ---
 
 ## Latest automated evidence
-Hardening CI Dakar integration run:
-- Run #53 / ID `32960344219`
-- Head `f8ccb14b69adeb538a59f061425fe73bc2ee582d`
-- **SUCCESS**
+### Hardening CI
+- Run #180
+- Run ID `33159393582`
+- Head `596794c7cd1dd28af026c420c6ac6a4f9f063442`
+- Result: **SUCCESS**
+- Global render smoke: **24/24 PASS**
 
-Global functional smoke:
-- **24/24 PASS = 12 categories × Small/Medium**
+### Release Readiness
+- Run #1
+- Run ID `33159393670`
+- Same head: `596794c7cd1dd28af026c420c6ac6a4f9f063442`
+- Result: **SUCCESS**
+- Repository permission: **read-only**
+- Final main transformation is tested in dry-run and working-tree mutation is forbidden in this workflow.
 
-Dakar dedicated Gate covers:
-- CAR ranking parser fixture;
-- schema-1 cache;
-- pre-start `2026 FINAL` overall;
-- Small next-stage-only hierarchy;
-- Medium `総合 CAR / GAP` hierarchy;
-- exact Prologue→Stage1 boundary;
-- final Stage13 behavior.
-
-CI only synchronizes runtime to `hardening-live` after all deterministic gates pass.
-
----
-
-## Immutable 12-category packaging
-Latest code-run artifact:
-- `motorsport-hub-immutable-f8ccb14b69adeb538a59f061425fe73bc2ee582d`
-- Artifact ID `9603606992`
-- digest `sha256:2928a4b750bb66c752b5e7dbb046ddca97907f784db3dff347065c32bd660a98`
-
-Inspected release manifest:
-- includes `DAKAR`
-- 13 integrity-protected runtime files = 12 categories + QA
-- `dakar-widget.js` SHA-256 `4422b4ae4f6ebb3cb4e9bf0af1121833312b902985f9943dd417f8d1e007389a`
-- bytes `15704`
-
-Therefore Dakar is inside the same immutable release trust boundary as every other category.
-
-Previous Loader v6 architecture was already verified on iPhone:
-- online immutable Candidate — PASS
-- fully offline verified LKG — PASS
-
-Dakar does not create a separate Loader/fallback path.
+### Immutable package
+- Artifact: `motorsport-hub-immutable-33159393582`
+- Artifact ID: `9680972571`
+- Digest: `sha256:a2bcc498869dff20e76bd342147c5a8f1e0a0dde9e26e017a540be148b672ad0`
+- Source/head: `596794c7cd1dd28af026c420c6ac6a4f9f063442`
 
 ---
 
-## Dakar audit contract
-Dakar uses a rally-raid-specific model instead of fake championship points.
+## Release-source safety
+Hardening direct-device Router intentionally defaults to `hardening-live`, not `main`. This was introduced after a real-device defect showed that an outer hardening loader could still end up executing a stale `main` category module.
 
-### Small
-- next stage / countdown
-- stage name
-- date + SS distance
-- route
+Therefore the current hardening Router **must never be merged to main unchanged**.
 
-### Medium
-- next stage / route / SS distance
-- overall **CAR TOP3**
-- **GAP** column
-- bib / machine / team metadata
+`tools/prepare-main-release.mjs` provides the only intended final transform:
+- Router default `hardening-live` → `main`;
+- all category + QA registry statuses → final release state.
 
-2027 encoded lifecycle:
-- Prologue Jan 1
-- Stage 1 Jan 2
-- Stage 13 Jan 15
-- half-open stage ranges
-- finale `2027 FINISH / FINISH`.
+The transform is currently exercised only in dry-run by `tests/main-release-readiness-gate.mjs` and `.github/workflows/release-readiness.yml`.
 
-Pre-start completed-overall baseline:
-1. Nasser Al-Attiyah
-2. Nani Roma +9:42
-3. Mattias Ekström +14:33
-
-After completed 2027 stages, source rolls to the completed 2027 stage CAR overall endpoint.
-
-Hero:
-- Dacia Sandrider GIMS 2024
-- Alexander-93
-- CC BY-SA 4.0
-- exact source page / redistribution obligations recorded.
+Normal CI does not run write mode. Final write mode is intentionally restricted to explicit `--write --status=RELEASED` execution after user approval.
 
 ---
 
-## Data/cache/legal status
-All 12 Registry categories record `dataCacheSchema: 1`.
+## Hero / visual hardening status
+The hardening line now contains a build-time Hero Selection/QA foundation rather than recurring manual-only image tuning:
+- provenance and license catalog;
+- candidate discovery;
+- HTTP/MIME/real-dimension validation;
+- subject detection and role scoring;
+- text-safe / veil-aware checks;
+- balanced horizontal-vehicle Small crop;
+- MotoGP rider fallback;
+- Dakar environment/LKG fallback;
+- Small/Medium derived preview artifacts;
+- visual regression baselines;
+- runtime fixed approved crop metadata;
+- asset-aware cache invalidation where required.
 
-Hero runtime URLs are checked against `hero-assets.json` by exact set equality.
+Notable corrected runtime assets:
+- F1 action set for Ferrari / McLaren / Mercedes;
+- WRC high-resolution Ogier fallback;
+- SUPER GT real 2024 Fuji MOTUL action Hero rather than showroom imagery;
+- D1GP actual D1 Grand Prix Hero rather than King of Europe imagery.
 
-Current Dakar Hero is legally verified but is intentionally only the initial asset. Higher-quality action imagery and automatic framing are deferred to the post-Codex Hero Rendering Engine rather than manual recurring crop fixes.
-
----
-
-## Device evidence
-Previously passed on hardening direct-runtime:
-- 11/11 dependency diagnostic before Dakar
-- F1 Small/Medium
-- WRC Small/Medium
-- MotoGP Small/Medium
-- FDJ Small/Medium
-- immutable Loader v6 online Candidate
-- immutable Loader v6 fully-offline verified LKG
-
-Routine 24-widget manual QA is retired by `DEVICE_QA_POLICY.md`.
-
-Because Dakar is new, remaining targeted checks are:
-1. `hardening-live` dependency diagnostic → **12/12 LIVE**.
-2. one Dakar Small + Medium visual review.
+A separate read-only Locked Hero Audit reviewed SUPER FORMULA, INDYCAR, NASCAR and GTWC Europe. No runtime mutation was justified.
 
 ---
 
-## Final blockers before RC approval
-1. Dakar targeted iPhone live + visual checks.
-2. Codex final hostile re-audit / performance / architecture / total-quality pass over all 12 categories.
-3. Post-Codex fixes must return CI to green.
-4. Final README / CHANGELOG synchronization.
-5. Explicit user approval before any public release.
+## Real-device evidence and incident closure
+Physical iPhone evidence currently includes:
+- Dakar Tap Action/persistence and current visual path — PASS;
+- D1GP Small+Medium — PASS;
+- FDJ Small+Medium — PASS;
+- SUPER GT current MOTUL Hero — PASS after end-to-end investigation;
+- prior F1/WRC/MotoGP and older locked-category visual evidence;
+- previous immutable Loader v6 Candidate + fully-offline LKG PASS on the 11-category package.
+
+The SUPER GT incident exposed several independent freshness layers:
+1. Hero image cache;
+2. category module cache;
+3. Router source default;
+4. Scriptable common loader source;
+5. iOS Widget snapshot cache.
+
+The runtime path was corrected, the Router now has a dedicated hardening source gate, SUPER GT has a bumped module cache key, and the user ultimately observed the current red MOTUL Action Hero on-device.
+
+The only deliberately retained device blocker is a **single consolidated verification of the final 12-category immutable package after Codex fixes**, including online Candidate and fully-offline verified LKG.
+
+---
+
+## Remaining release blockers
+1. Codex final hostile audit over the exact current branch and release-finalizer contract.
+2. Any resulting fixes must return Hardening CI + Release Readiness to green.
+3. Generate the exact final immutable package.
+4. Perform one consolidated iPhone Candidate / 12-category routing / offline LKG verification against that package.
+5. Synchronize final docs/changelog after the final tested SHA is known.
+6. Obtain explicit user approval.
+7. Only then run the main finalizer, re-run final tests on the transformed release commit, and merge to `main`.
 
 ## Release decision
 **NOT RELEASE APPROVED.**
+
+No current blocker justifies more per-category manual screenshot work before Codex. The next quality gate is the final hostile code/architecture audit, followed by one final exact-package device session and explicit merge approval.
