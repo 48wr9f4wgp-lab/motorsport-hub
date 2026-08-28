@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import {execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
@@ -9,6 +10,13 @@ const statusArg=process.argv.find(x=>x.startsWith('--status='));
 const targetStatus=(statusArg?statusArg.slice('--status='.length):'RELEASE_CANDIDATE').trim();
 const allowedStatuses=new Set(['RELEASE_CANDIDATE','RELEASED']);
 if(!allowedStatuses.has(targetStatus)) throw new Error(`Unsupported --status: ${targetStatus}`);
+
+const currentBranch=()=>String(process.env.GITHUB_REF_NAME||execFileSync('git',['rev-parse','--abbrev-ref','HEAD'],{cwd:root,encoding:'utf8'})).trim();
+if(write){
+  if(targetStatus!=='RELEASED') throw new Error('--write requires --status=RELEASED; RC dry-run must remain non-mutating');
+  const branch=currentBranch();
+  if(!branch.startsWith('release/')) throw new Error(`--write is restricted to a dedicated release/* branch; current branch: ${branch}`);
+}
 
 const routerPath=path.join(root,'motorsport-hub.js');
 const registryPath=path.join(root,'category-registry.json');
@@ -47,10 +55,9 @@ if(routerAfter!==routerBefore)changed.push('motorsport-hub.js');
 if(JSON.stringify(registryAfter)!==JSON.stringify(registryBefore))changed.push('category-registry.json');
 
 if(write){
-  if(targetStatus!=='RELEASED') throw new Error('--write requires --status=RELEASED; RC dry-run must remain non-mutating');
   fs.writeFileSync(routerPath,routerAfter);
   fs.writeFileSync(registryPath,JSON.stringify(registryAfter)+'\n');
-  console.log(`Main release finalizer wrote: ${changed.join(', ')||'no changes'}`);
+  console.log(`Main release finalizer wrote on ${currentBranch()}: ${changed.join(', ')||'no changes'}`);
 }else{
   console.log(JSON.stringify({mode:'DRY_RUN',targetStatus,changed,routerDefault:'main',categories:registryAfter.categories.length,qa:true,supergtCacheKey:supergt.moduleCacheKey}));
 }
