@@ -31,7 +31,7 @@ check('launcher loads stable UI',has(files.launcher,'club-pulse-ui-patch.js'));
 check('launcher loads competition registry',has(files.launcher,'club-pulse-competition-logo-patch.js'));
 check('launcher keeps legacy Man U state renderer',has(files.launcher,'club-pulse-manutd-theme-patch.js'));
 check('launcher loads shared theme registry',has(files.launcher,'THEME_REGISTRY_PATCH')&&has(files.launcher,'club-pulse-theme-registry-patch.js'));
-check('launcher loads theme registry v3 cache',has(files.launcher,'ClubPulseThemeRegistryPatch_v3.js')&&has(files.launcher,"'themes3'"));
+check('launcher loads theme registry v4 cache',has(files.launcher,'ClubPulseThemeRegistryPatch_v4.js')&&has(files.launcher,"'themes4'"));
 check('launcher theme order is UI -> competition -> ManU state renderer -> shared themes -> top layout',has(files.launcher,"patches=x+'\\n'+y+'\\n'+z+'\\n'+tr+'\\n'+u"));
 check('launcher loads resilience v2',has(files.launcher,'ClubPulseResiliencePatch_v2.js')&&has(files.launcher,"'resilience2'"));
 check('launcher keeps remote-to-local fallback',has(files.launcher,'if(F.fileExists(file))return F.readString(file)'));
@@ -56,8 +56,11 @@ check('shared themes customize tokens/components only',has(files.themes,'bg=func
 check('Man U theme has red black gold identity',has(files.themes,"key:'manutd'")&&has(files.themes,"'#A40D18'")&&has(files.themes,"accent:'#F5C451'"));
 check('Barcelona theme has Blaugrana identity',has(files.themes,"'#A50044'")&&has(files.themes,"'#004D98'")&&has(files.themes,"accent:'#EDBB00'"));
 check('Barcelona registry matches theme palette',has(files.clubs,"p:'#A50044'")&&has(files.clubs,"s:'#004D98'")&&has(files.clubs,"a:'#EDBB00'"));
-check('Real theme has pearl royal-blue gold identity',has(files.themes,"accent:'#FEBE10'")&&has(files.themes,"border:'#F8F4E8'")&&has(files.clubs,"p:'#F8F7F2'")&&has(files.clubs,"s:'#00529F'")&&has(files.clubs,"a:'#FEBE10'"));
-check('Real theme gets pearl crest treatment',has(files.themes,"t.key==='realmadrid'?'#FFFFFF':t.accent"));
+check('Real theme is white gold blue',has(files.themes,"bg:['#F8F7F2','#FFFFFF','#E7ECF6','#B8C7DF','#E6C766']")&&has(files.themes,"next:['#0B3D91','#092F73','#071B41','#08111F']")&&has(files.themes,"accent:'#FEBE10'"));
+check('Real registry matches white royal-blue gold',has(files.clubs,"p:'#F8F7F2'")&&has(files.clubs,"s:'#00529F'")&&has(files.clubs,"a:'#FEBE10'"));
+check('Real uses navy ink on pearl surfaces',has(files.themes,"ink:'#0B2C5F'")&&has(files.themes,"buildHeaderSmall=function")&&has(files.themes,"t.key==='realmadrid'?t.ink:t.text"));
+check('Real footer is pearl with gold trim',has(files.themes,"C('#FFFFFF',.99)")&&has(files.themes,"C('#EDF1F8',.99)")&&has(files.themes,"t.key==='realmadrid'?.72:.32"));
+check('Real crest gets strong pearl treatment',has(files.themes,"t.key==='realmadrid'?'#FFFFFF':t.accent")&&has(files.themes,"t.key==='realmadrid'?1.1:.8"));
 check('Man U footer has dedicated red treatment',has(files.themes,"t.key==='manutd'")&&has(files.themes,"'#8F0C15'"));
 
 // Man U legacy state behavior retained while visual identity is shared.
