@@ -26,10 +26,12 @@ for(const [name,src] of Object.entries(files))syntax(name,src);
 // Launcher composition / ordering.
 check('launcher loads club registry',has(files.launcher,'CLUB_REGISTRY_PATCH'));
 check('launcher injects registry before parameter resolution',has(files.launcher,"PM='const param=String(args.widgetParameter'")&&has(files.launcher,"c=c.slice(0,pk)+cr+'\\n'+c.slice(pk)"));
+check('launcher loads club registry v2 cache',has(files.launcher,'ClubPulseClubRegistryPatch_v2.js')&&has(files.launcher,"'clubs2'"));
 check('launcher loads stable UI',has(files.launcher,'club-pulse-ui-patch.js'));
 check('launcher loads competition registry',has(files.launcher,'club-pulse-competition-logo-patch.js'));
 check('launcher keeps frozen Man U theme',has(files.launcher,'club-pulse-manutd-theme-patch.js'));
 check('launcher loads shared theme registry',has(files.launcher,'THEME_REGISTRY_PATCH')&&has(files.launcher,'club-pulse-theme-registry-patch.js'));
+check('launcher loads theme registry v2 cache',has(files.launcher,'ClubPulseThemeRegistryPatch_v2.js')&&has(files.launcher,"'themes2'"));
 check('launcher theme order is UI -> competition -> ManU -> shared themes -> top layout',has(files.launcher,"patches=x+'\\n'+y+'\\n'+z+'\\n'+tr+'\\n'+u"));
 check('launcher loads resilience v2',has(files.launcher,'ClubPulseResiliencePatch_v2.js')&&has(files.launcher,"'resilience2'"));
 check('launcher keeps remote-to-local fallback',has(files.launcher,'if(F.fileExists(file))return F.readString(file)'));
@@ -41,7 +43,8 @@ check('registry defines Real Madrid team 86',has(files.clubs,"CLUBS.realmadrid")
 check('registry has Barcelona aliases',has(files.clubs,"barca:'barcelona'")&&has(files.clubs,"fcb:'barcelona'"));
 check('registry has Real Madrid aliases',has(files.clubs,"rma:'realmadrid'")&&has(files.clubs,"madrid:'realmadrid'"));
 check('registry defines home venue fallbacks',has(files.clubs,'カンプ・ノウ')&&has(files.clubs,'サンティアゴ・ベルナベウ'));
-check('registry adds crest scale for both clubs',has(files.clubs,'81:.91')&&has(files.clubs,'86:.92'));
+check('registry uses tuned crest scales',has(files.clubs,'81:.96')&&has(files.clubs,'86:1.06'));
+check('registry normalizes Malaga to Japanese',has(files.clubs,"'Málaga CF':'マラガ'")&&has(files.clubs,"'Málaga':'マラガ'"));
 
 // Shared theme architecture.
 check('shared themes include Barcelona',has(files.themes,'81:{')&&has(files.themes,"key:'barcelona'"));
@@ -50,8 +53,10 @@ check('shared themes do not duplicate Man U',!has(files.themes,'66:{'));
 check('shared theme lookup is data-driven',has(files.themes,'CP_CLUB_THEME_REGISTRY[club?.team]'));
 check('shared themes reuse canonical match renderers',!has(files.themes,'buildMatchMedium=function')&&!has(files.themes,'buildMatchSmall=function'));
 check('shared themes customize tokens/components only',has(files.themes,'bg=function')&&has(files.themes,'cardBg=function')&&has(files.themes,'badge=function')&&has(files.themes,'buildHeaderMedium=function'));
-check('Barcelona theme has blaugrana/gold identity',has(files.themes,"'#A50044'")||has(files.clubs,"p:'#A50044'"));
-check('Real theme has navy/gold identity',has(files.themes,"accent:'#D9B85B'")&&has(files.clubs,"s:'#172A62'"));
+check('Barcelona theme has Blaugrana identity',has(files.themes,"'#A50044'")&&has(files.themes,"'#004D98'")&&has(files.themes,"accent:'#EDBB00'"));
+check('Barcelona registry matches theme palette',has(files.clubs,"p:'#A50044'")&&has(files.clubs,"s:'#004D98'")&&has(files.clubs,"a:'#EDBB00'"));
+check('Real theme has pearl royal-blue gold identity',has(files.themes,"accent:'#FEBE10'")&&has(files.themes,"border:'#F8F4E8'")&&has(files.clubs,"p:'#F8F7F2'")&&has(files.clubs,"s:'#00529F'")&&has(files.clubs,"a:'#FEBE10'"));
+check('Real theme gets pearl crest treatment',has(files.themes,"t.key==='realmadrid'?'#FFFFFF':t.accent"));
 
 // Man U freeze / existing behavior.
 check('Man U theme remains scoped to team 66',has(files.manutd,'club?.team===66'));
