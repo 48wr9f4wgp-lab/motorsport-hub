@@ -12,6 +12,8 @@ const src=JSON.parse(fs.readFileSync(sourcePath,'utf8'));
 if(src.schemaVersion!==1||!src.categories||typeof src.categories!=='object')throw new Error('hero-refresh-sources schema drift');
 const queries=src.categories[category];
 if(!Array.isArray(queries)||!queries.length)throw new Error(`Unknown refresh category: ${category}`);
+const relevance=src.relevance?.[category];
+if(!relevance||!Array.isArray(relevance.requiredAny)||!relevance.requiredAny.length)throw new Error(`${category}: relevance contract missing`);
 const year=new Date().getUTCFullYear(),prevYear=year-1;
 const searchQueries=queries.map(q=>String(q).replaceAll('{year}',String(year)).replaceAll('{prevYear}',String(prevYear)));
 const config={
@@ -26,7 +28,11 @@ const config={
   allowedLicenses:Array.isArray(src.allowedLicenses)?src.allowedLicenses:[],
   maxCandidates:Number(src.maxCandidatesPerCategory)||4,
   cadence:src.cadence||'WEEKLY',
-  publicationPolicy:src.publicationPolicy||'DISCOVERY_AND_VALIDATION_ONLY_NO_RUNTIME_MUTATION'
+  publicationPolicy:src.publicationPolicy||'DISCOVERY_AND_VALIDATION_ONLY_NO_RUNTIME_MUTATION',
+  relevance:{
+    requiredAny:relevance.requiredAny.map(String),
+    forbiddenAny:[...(Array.isArray(src.globalForbiddenContext)?src.globalForbiddenContext:[]),...(Array.isArray(relevance.forbiddenAny)?relevance.forbiddenAny:[])].map(String)
+  }
 };
 fs.writeFileSync(outputPath,JSON.stringify(config,null,2)+'\n');
 console.log(`Hero refresh config written: ${path.relative(root,outputPath)} (${category}, ${searchQueries.length} queries)`);
