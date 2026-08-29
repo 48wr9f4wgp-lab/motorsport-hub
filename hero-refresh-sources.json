@@ -3,7 +3,7 @@
   "source": "wikimedia-commons-action-api",
   "apiUrl": "https://commons.wikimedia.org/w/api.php",
   "cadence": "WEEKLY",
-  "publicationPolicy": "DISCOVERY_AND_VALIDATION_ONLY_NO_RUNTIME_MUTATION",
+  "publicationPolicy": "CI_GATED_LIVE_HERO_CHANNEL",
   "resultsPerQuery": 12,
   "thumbWidth": 2048,
   "minSourceLongEdge": 2048,
