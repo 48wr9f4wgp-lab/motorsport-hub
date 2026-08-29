@@ -24,13 +24,14 @@ const CP_CLUB_THEME_REGISTRY={
   },
   86:{
     key:'realmadrid',
-    // Real Madrid: pearl white is the primary surface; royal blue structures the match card; gold trims the hierarchy.
-    text:'#FAF9F3',muted:'#667792',accent:'#FEBE10',accentSoft:'#A47C00',
-    bg:['#F8F7F2','#FFFFFF','#E7ECF6','#B8C7DF','#E6C766'],
-    next:['#0B3D91','#092F73','#071B41','#08111F'],
-    live:['#1558A8','#0D4088','#082754','#08101D'],
-    post:['#0D438F','#0A326F','#071E48','#080F1C'],
-    border:'#F8F4E8',sideBorder:'#FEBE10',ink:'#0B2C5F',inkMuted:'#60708A'
+    // Real Madrid v5: royal/navy blue is the dominant field, pearl white supplies identity and legibility,
+    // and crest gold defines hierarchy/trim. Avoid large flat white surfaces.
+    text:'#FAFCFF',muted:'#C7D3E6',accent:'#FEBE10',accentSoft:'#FFE39A',
+    bg:['#020712','#061A3A','#0A3475','#0B3D91','#05162F'],
+    next:['#0F4FA7','#0B377B','#071F48','#030B18'],
+    live:['#1760BC','#0E478F','#092957','#030B18'],
+    post:['#0E468F','#0A3370','#071F49','#030A17'],
+    border:'#FEBE10',sideBorder:'#FEBE10'
   }
 };
 
@@ -52,7 +53,6 @@ const CP_THEME_BASE_BG=bg,
 bg=function(){
   let t=CP_ACTIVE_THEME();
   if(!t)return CP_THEME_BASE_BG();
-  if(t.key==='realmadrid')return gradient(t.bg.map((x,i)=>C(x,i<3?.99:.96)),[0,.33,.61,.84,1]);
   return gradient(t.bg.map((x,i)=>C(x,i===0?1:.98)),[0,.30,.58,.82,1])
 };
 
@@ -70,7 +70,7 @@ badge=function(p,fallback,img,size=28,p1=club.p,p2=club.s,scale=1){
   o.size=new Size(size+5,size+5);
   o.cornerRadius=(size+5)/2;
   o.backgroundColor=C(t.key==='realmadrid'?'#FFFFFF':t.accent,t.key==='realmadrid'?.94:.07);
-  o.borderWidth=t.key==='realmadrid'?1.1:.8;
+  o.borderWidth=t.key==='realmadrid'?1.15:.8;
   o.borderColor=C(t.border,t.key==='realmadrid'?.98:.58);
   o.centerAlignContent();
   let i=o.addStack();
@@ -82,7 +82,7 @@ badge=function(p,fallback,img,size=28,p1=club.p,p2=club.s,scale=1){
     im.imageSize=new Size(z,z)
   }else{
     i.backgroundGradient=gradient([C(club.s),C(club.p,t.key==='realmadrid'?.18:.72)],[0,1]);
-    let tx=heavy(i,fallback,size<30?8:10,t.key==='realmadrid'?t.ink:t.text);tx.centerAlignText()
+    let tx=heavy(i,fallback,size<30?8:10,t.text);tx.centerAlignText()
   }
   return o
 };
@@ -93,10 +93,10 @@ sidePill=function(parent,m,small=false){
   let p=parent.addStack(),label=sideTag(m);
   p.setPadding(2,small?6:7,2,small?6:7);
   p.cornerRadius=8;
-  p.backgroundColor=C(t.key==='realmadrid'?'#F8F7F2':'#080B13',t.key==='realmadrid'?.98:.94);
-  p.borderWidth=.9;
+  p.backgroundColor=C(t.key==='realmadrid'?'#07152D':'#080B13',.95);
+  p.borderWidth=t.key==='realmadrid'?1:.9;
   p.borderColor=C(t.sideBorder,.90);
-  text(p,label,small?6.8:6.8,true,1,t.key==='realmadrid'?t.ink:t.text);
+  text(p,label,small?6.8:6.8,true,1,t.text);
   return p
 };
 
@@ -123,12 +123,12 @@ buildHeaderMedium=function(w,d,img){
   badge(h,club.badge,img,20,club.p,club.s,CREST_SCALE[club.team]||.91);
   h.addSpacer(7);
   let l=h.addStack();l.layoutVertically();
-  heavy(l,club.name,10.5,t.key==='realmadrid'?t.ink:t.text);
-  text(l,`${updated(d.fetchedAt)}${d.stale?' · 保存データ':''}`,6.6,false,.78,t.key==='realmadrid'?t.inkMuted:t.muted);
+  heavy(l,club.name,10.5,t.text);
+  text(l,`${updated(d.fetchedAt)}${d.stale?' · 保存データ':''}`,6.6,false,.78,t.muted);
   h.addSpacer();
   let r=h.addStack();r.layoutVertically();r.centerAlignContent();
-  let rk=heavy(r,d.rank!=null?`${d.rank}位`:'–',12.5,t.key==='realmadrid'?t.ink:t.text);rk.rightAlignText();
-  let pt=semibold(r,`勝点 ${d.points??'–'}`,7.2,.94,t.key==='realmadrid'?'#8A6800':t.accentSoft);pt.rightAlignText()
+  let rk=heavy(r,d.rank!=null?`${d.rank}位`:'–',12.5,t.text);rk.rightAlignText();
+  let pt=semibold(r,`勝点 ${d.points??'–'}`,7.2,.94,t.accentSoft);pt.rightAlignText()
 };
 
 buildHeaderSmall=function(w,d,img){
@@ -137,9 +137,9 @@ buildHeaderSmall=function(w,d,img){
   let h=w.addStack();h.layoutHorizontally();h.centerAlignContent();
   badge(h,club.badge,img,18,club.p,club.s,CREST_SCALE[club.team]||.91);
   h.addSpacer(5);
-  heavy(h,club.jp,8.5,t.key==='realmadrid'?t.ink:t.text);
+  heavy(h,club.jp,8.5,t.text);
   h.addSpacer();
-  let rk=heavy(h,d.rank!=null?`${d.rank}位`:'–',9.5,t.key==='realmadrid'?t.ink:t.text);rk.rightAlignText()
+  let rk=heavy(h,d.rank!=null?`${d.rank}位`:'–',9.5,t.text);rk.rightAlignText()
 };
 
 buildFooterMedium=function(w,d){
@@ -149,9 +149,9 @@ buildFooterMedium=function(w,d){
   f.setPadding(2,8,2,8);f.cornerRadius=9;
   if(t.key==='barcelona')f.backgroundGradient=gradient([C('#07090F',.99),C('#004D98',.78),C('#A50044',.48)],[0,.58,1]);
   else if(t.key==='manutd')f.backgroundGradient=gradient([C('#060708',.99),C('#21080A',.92),C('#8F0C15',.48)],[0,.63,1]);
-  else f.backgroundGradient=gradient([C('#FFFFFF',.99),C('#EDF1F8',.99),C('#D8E2F1',.96)],[0,.58,1]);
-  f.borderWidth=.7;f.borderColor=C(t.accent,t.key==='realmadrid'?.72:.32);
-  text(f,'最新',6.8,true,.98,t.key==='realmadrid'?t.ink:t.text);f.addSpacer(2);text(f,'→',7,true,1,t.accent);f.addSpacer(6);
+  else f.backgroundGradient=gradient([C('#030A18',.99),C('#0A3475',.90),C('#0B3D91',.70)],[0,.60,1]);
+  f.borderWidth=t.key==='realmadrid'?.9:.5;f.borderColor=C(t.accent,t.key==='realmadrid'?.72:.32);
+  text(f,'最新',6.8,true,.98,t.text);f.addSpacer(2);text(f,'→',7,true,1,t.accent);f.addSpacer(6);
   for(let i=0;i<d.form.length;i++){formChip(f,d.form[i],i===0,false);if(i<d.form.length-1)f.addSpacer(3)}
   f.addSpacer()
 };
@@ -160,9 +160,13 @@ buildFooterSmall=function(w,d){
   let t=CP_ACTIVE_THEME();
   if(!t)return CP_THEME_BASE_FOOTER_SMALL(w,d);
   let f=w.addStack();f.layoutHorizontally();f.centerAlignContent();
-  if(t.key==='realmadrid'){f.setPadding(2,5,2,5);f.cornerRadius=8;f.backgroundColor=C('#F8F7F2',.96);f.borderWidth=.6;f.borderColor=C(t.accent,.62)}else f.setPadding(1,1,1,1);
+  if(t.key==='realmadrid'){
+    f.setPadding(2,5,2,5);f.cornerRadius=8;
+    f.backgroundGradient=gradient([C('#030A18',.98),C('#0A3475',.88)],[0,1]);
+    f.borderWidth=.7;f.borderColor=C(t.accent,.62)
+  }else f.setPadding(1,1,1,1);
   f.addSpacer();
-  text(f,'最新',7.6,true,.99,t.key==='realmadrid'?t.ink:t.text);f.addSpacer(2);text(f,'→',7.6,true,1,t.accent);f.addSpacer(5);
+  text(f,'最新',7.6,true,.99,t.text);f.addSpacer(2);text(f,'→',7.6,true,1,t.accent);f.addSpacer(5);
   for(let i=0;i<d.form.length;i++){formChip(f,d.form[i],i===0,true);if(i<d.form.length-1)f.addSpacer(3)}
   f.addSpacer()
 };
@@ -175,7 +179,7 @@ buildMedium=function(d,imgs){
   let w=new ListWidget();
   w.backgroundGradient=bg();
   w.setPadding(5,10,8,10);
-  let line=w.addStack();line.size=new Size(0,1.5);line.backgroundColor=C(t.accent,t.key==='realmadrid'?.94:.72);
+  let line=w.addStack();line.size=new Size(0,t.key==='realmadrid'?1.8:1.5);line.backgroundColor=C(t.accent,t.key==='realmadrid'?.94:.72);
   w.addSpacer(2);
   buildHeaderMedium(w,d,imgs.club);
   w.addSpacer(2);
@@ -192,7 +196,7 @@ buildSmall=function(d,imgs){
   let w=new ListWidget();
   w.backgroundGradient=bg();
   w.setPadding(8,8,8,8);
-  if(t.key==='realmadrid'){let line=w.addStack();line.size=new Size(0,1.3);line.backgroundColor=C(t.accent,.92);w.addSpacer(3)}
+  if(t.key==='realmadrid'){let line=w.addStack();line.size=new Size(0,1.4);line.backgroundColor=C(t.accent,.92);w.addSpacer(3)}
   buildHeaderSmall(w,d,imgs.club);
   w.addSpacer(t.key==='realmadrid'?4:5);
   buildMatchSmall(w,d,imgs);
