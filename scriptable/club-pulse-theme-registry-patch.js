@@ -4,21 +4,23 @@
 const CP_CLUB_THEME_REGISTRY={
   81:{
     key:'barcelona',
-    text:'#F7F1E8',muted:'#C8C4D3',accent:'#EDBB00',accentSoft:'#F6D85E',
-    bg:['#040611','#07152E','#101D54','#4B0B3B','#8A083D'],
-    next:['#7D0B3C','#3F0A37','#101535','#070A12'],
-    live:['#A30D4C','#5D0A40','#111942','#070A12'],
-    post:['#760A38','#3A0A30','#111632','#070A12'],
+    // Blaugrana: garnet + deep Barça blue, with crest gold as the highlight.
+    text:'#FFF5E6',muted:'#C3CBE0',accent:'#EDBB00',accentSoft:'#FFD84A',
+    bg:['#02050D','#051A3D','#004D98','#650039','#A50044'],
+    next:['#A50044','#650039','#14275B','#061B3E'],
+    live:['#C30D55','#7A0747','#164B91','#061A3A'],
+    post:['#760033','#47012E','#11366F','#06162F'],
     border:'#EDBB00',sideBorder:'#EDBB00'
   },
   86:{
     key:'realmadrid',
-    text:'#F7F5EF',muted:'#C8CBD8',accent:'#D9B85B',accentSoft:'#F0D98A',
-    bg:['#03050B','#081027','#111D46','#18285E','#251A45'],
-    next:['#172A62','#101D45','#0B1025','#06080E'],
-    live:['#26458D','#172E68','#0C1532','#06080E'],
-    post:['#1B326F','#142653','#0B132C','#06080E'],
-    border:'#D9B85B',sideBorder:'#D9B85B'
+    // Real Madrid: clean pearl/white identity over royal blue and restrained gold.
+    text:'#FAF9F3',muted:'#C8D5EA',accent:'#FEBE10',accentSoft:'#F8F4E8',
+    bg:['#02050B','#071833','#0A2D63','#124785','#41350D'],
+    next:['#0C3374','#081F4E','#080D19','#30280D'],
+    live:['#1558A8','#0C3A7E','#091427','#44370D'],
+    post:['#0D3D85','#09285D','#09111F','#352B0D'],
+    border:'#F8F4E8',sideBorder:'#FEBE10'
   }
 };
 
@@ -53,9 +55,9 @@ badge=function(p,fallback,img,size=28,p1=club.p,p2=club.s,scale=1){
   let o=p.addStack();
   o.size=new Size(size+5,size+5);
   o.cornerRadius=(size+5)/2;
-  o.backgroundColor=C(t.accent,.07);
+  o.backgroundColor=C(t.key==='realmadrid'?'#FFFFFF':t.accent,t.key==='realmadrid'?.065:.07);
   o.borderWidth=.8;
-  o.borderColor=C(t.border,.58);
+  o.borderColor=C(t.border,t.key==='realmadrid'?.72:.58);
   o.centerAlignContent();
   let i=o.addStack();
   i.size=new Size(size,size);
@@ -65,7 +67,7 @@ badge=function(p,fallback,img,size=28,p1=club.p,p2=club.s,scale=1){
     let im=i.addImage(img),z=Math.round((size-1)*scale);
     im.imageSize=new Size(z,z)
   }else{
-    i.backgroundGradient=gradient([C(club.s),C(club.p,.72)],[0,1]);
+    i.backgroundGradient=gradient([C(club.s),C(club.p,t.key==='realmadrid'?.24:.72)],[0,1]);
     let tx=heavy(i,fallback,size<30?8:10,t.text);tx.centerAlignText()
   }
   return o
@@ -77,9 +79,9 @@ sidePill=function(parent,m,small=false){
   let p=parent.addStack(),label=sideTag(m);
   p.setPadding(2,small?6:7,2,small?6:7);
   p.cornerRadius=8;
-  p.backgroundColor=C('#090B12',.94);
+  p.backgroundColor=C('#080B13',.94);
   p.borderWidth=.9;
-  p.borderColor=C(t.sideBorder,.78);
+  p.borderColor=C(t.sideBorder,.82);
   text(p,label,small?6.8:6.8,true,1,t.text);
   return p
 };
@@ -92,7 +94,7 @@ formChip=function(parent,r,latest=false,small=false){
   p.cornerRadius=latest?9:8;
   p.backgroundColor=C(z[2],.99);
   p.borderWidth=latest?1:.5;
-  p.borderColor=latest?C(t.accent,.9):C(z[1],.38);
+  p.borderColor=latest?C(t.accent,.95):C(z[1],.38);
   text(p,z[0],small?7.5:7,true,1,z[1]);
   return p
 };
@@ -112,7 +114,7 @@ buildHeaderMedium=function(w,d,img){
   h.addSpacer();
   let r=h.addStack();r.layoutVertically();r.centerAlignContent();
   let rk=heavy(r,d.rank!=null?`${d.rank}位`:'–',12.5,t.text);rk.rightAlignText();
-  let pt=semibold(r,`勝点 ${d.points??'–'}`,7.2,.82,t.accentSoft);pt.rightAlignText()
+  let pt=semibold(r,`勝点 ${d.points??'–'}`,7.2,.86,t.accentSoft);pt.rightAlignText()
 };
 
 buildFooterMedium=function(w,d){
@@ -120,8 +122,9 @@ buildFooterMedium=function(w,d){
   if(!t)return CP_THEME_BASE_FOOTER_MEDIUM(w,d);
   let f=w.addStack();f.layoutHorizontally();f.centerAlignContent();
   f.setPadding(2,8,2,8);f.cornerRadius=9;
-  f.backgroundGradient=gradient([C('#07090F',.99),C(club.s,.82),C(club.p,.22)],[0,.64,1]);
-  f.borderWidth=.5;f.borderColor=C(t.accent,.28);
+  if(t.key==='barcelona')f.backgroundGradient=gradient([C('#07090F',.99),C('#004D98',.78),C('#A50044',.48)],[0,.58,1]);
+  else f.backgroundGradient=gradient([C('#070A10',.99),C('#00529F',.62),C('#F8F4E8',.10)],[0,.66,1]);
+  f.borderWidth=.5;f.borderColor=C(t.accent,.32);
   text(f,'最新',6.8,true,.98,t.text);f.addSpacer(2);text(f,'→',7,true,1,t.accent);f.addSpacer(6);
   for(let i=0;i<d.form.length;i++){formChip(f,d.form[i],i===0,false);if(i<d.form.length-1)f.addSpacer(3)}
   f.addSpacer()
