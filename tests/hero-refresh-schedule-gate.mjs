@@ -17,6 +17,10 @@ assert(Number(src.minSourceLongEdge)>=2048);
 assert(Number(src.maxCandidatesPerCategory)>=1&&Number(src.maxCandidatesPerCategory)<=6);
 assert(Array.isArray(src.allowedLicenses)&&src.allowedLicenses.includes('CC BY-SA 4.0')&&src.allowedLicenses.includes('CC0 1.0'));
 assert(Array.isArray(src.globalForbiddenContext)&&src.globalForbiddenContext.includes('museum')&&src.globalForbiddenContext.includes('replica'));
+for(const term of ['safety car','pace car','race control','course car'])assert(src.globalForbiddenContext.includes(term),`race-only global exclusion missing: ${term}`);
+assert(src.relevance.NASCAR.requiredAny.includes('nascar cup')&&src.relevance.NASCAR.requiredAny.includes('nascar cup series'),'NASCAR refresh must require Cup identity');
+assert(!src.relevance.NASCAR.requiredAny.includes('nascar'),'generic NASCAR identity is too broad for Cup Hero publication');
+assert(src.relevance.NASCAR.forbiddenAny.includes('american speedfest')&&src.relevance.NASCAR.forbiddenAny.includes('brands hatch'),'known non-Cup NASCAR context exclusion missing');
 
 for(const id of expected){
   const qs=src.categories[id],rel=src.relevance[id];
