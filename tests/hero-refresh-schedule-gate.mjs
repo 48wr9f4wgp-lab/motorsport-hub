@@ -12,13 +12,17 @@ assert.equal(src.schemaVersion,1);
 assert.equal(src.cadence,'WEEKLY');
 assert.equal(src.publicationPolicy,'DISCOVERY_AND_VALIDATION_ONLY_NO_RUNTIME_MUTATION');
 assert.deepEqual(Object.keys(src.categories),expected);
+assert.deepEqual(Object.keys(src.relevance),expected);
 assert(Number(src.minSourceLongEdge)>=2048);
 assert(Number(src.maxCandidatesPerCategory)>=1&&Number(src.maxCandidatesPerCategory)<=6);
 assert(Array.isArray(src.allowedLicenses)&&src.allowedLicenses.includes('CC BY-SA 4.0')&&src.allowedLicenses.includes('CC0 1.0'));
+assert(Array.isArray(src.globalForbiddenContext)&&src.globalForbiddenContext.includes('museum')&&src.globalForbiddenContext.includes('replica'));
 
 for(const id of expected){
-  const qs=src.categories[id];
+  const qs=src.categories[id],rel=src.relevance[id];
   assert(Array.isArray(qs)&&qs.length>=3,`${id}: refresh queries missing`);
+  assert(rel&&Array.isArray(rel.requiredAny)&&rel.requiredAny.length>=1,`${id}: required relevance terms missing`);
+  assert(Array.isArray(rel.forbiddenAny),`${id}: forbidden relevance terms missing`);
   const tmp=path.join(os.tmpdir(),`mh-hero-refresh-${id.toLowerCase()}.json`);
   execFileSync(process.execPath,[path.join(root,'tools/build-hero-refresh-config.mjs'),`--category=${id}`,`--output=${tmp}`],{cwd:root,stdio:'pipe'});
   const cfg=JSON.parse(fs.readFileSync(tmp,'utf8'));
@@ -26,6 +30,8 @@ for(const id of expected){
   assert.equal(cfg.cadence,'WEEKLY');
   assert.equal(cfg.publicationPolicy,'DISCOVERY_AND_VALIDATION_ONLY_NO_RUNTIME_MUTATION');
   assert(cfg.searchQueries.every(q=>!q.includes('{year}')&&!q.includes('{prevYear}')));
+  assert.deepEqual(cfg.relevance.requiredAny,rel.requiredAny);
+  assert(cfg.relevance.forbiddenAny.length>=src.globalForbiddenContext.length);
   fs.rmSync(tmp,{force:true});
   if(id==='DAKAR')assert(fs.existsSync(path.join(root,'hero-selection-policy.json')),'DAKAR policy missing');
   else assert(fs.existsSync(path.join(root,'hero-pilot-policies',`${id.toLowerCase()}.json`)),`${id}: pilot policy missing`);
