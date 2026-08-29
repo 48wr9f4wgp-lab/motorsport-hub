@@ -1,0 +1,32 @@
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import {execFileSync} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
+
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'mh-channel-')),arts=path.join(tmp,'artifacts'),prev=path.join(tmp,'prev'),out=path.join(tmp,'out'),dir=path.join(arts,'hero-refresh-WEC-test'),previews=path.join(dir,'hero-crop-previews');
+fs.mkdirSync(previews,{recursive:true});fs.mkdirSync(prev,{recursive:true});
+const year=new Date().getUTCFullYear(),title=`File:24 Hours of Le Mans ${year} Hypercar action.jpg`,runtimeUrl='https://upload.wikimedia.org/example.jpg';
+fs.writeFileSync(path.join(previews,'wec-small.jpg'),Buffer.from('small-jpeg-fixture'));fs.writeFileSync(path.join(previews,'wec-medium.jpg'),Buffer.from('medium-jpeg-fixture'));
+fs.writeFileSync(path.join(dir,'hero-discovery-report.json'),JSON.stringify({candidates:[{title,eligibleForReview:true,sourcePage:'https://commons.wikimedia.org/wiki/File:Le_Mans_Action.jpg',runtimeUrl,author:'Tester',license:'CC BY 4.0',sourceYear:year,dateRaw:`${year}-06-14`}]}));
+const crop=(subject,safe)=>({subjectFraction:subject,textSafeScore:safe,effectiveTextSafeScore:safe,detectionScore:.92});
+fs.writeFileSync(path.join(dir,'hero-subject-report.json'),JSON.stringify({results:[{title,runtimeUrl,status:'VISUAL_REVIEW_CANDIDATE',recommendedRole:'ACTION',selectedDetection:{score:.92},roleResults:{ACTION:{pass:true,small:crop(.34,.84),medium:crop(.31,.81)}},derivatives:{small:{path:'hero-crop-previews/wec-small.jpg'},medium:{path:'hero-crop-previews/wec-medium.jpg'}}}]}));
+execFileSync(process.execPath,[path.join(root,'tools/build-hero-channel.mjs'),`--artifacts=${arts}`,`--previous-dir=${prev}`,`--output-dir=${out}`],{cwd:root,stdio:'pipe'});
+const channel=JSON.parse(fs.readFileSync(path.join(out,'channel.json'),'utf8')),report=JSON.parse(fs.readFileSync(path.join(out,'promotion-report.json'),'utf8'));
+assert(channel.categories.WEC,'strong WEC candidate should promote');
+assert.equal(channel.categories.WEC.license,'CC BY 4.0');
+assert(channel.categories.WEC.qualityScore>=.72);
+assert(channel.categories.WEC.images.small.url.includes('/hero-live/hero-channel/assets/WEC/'));
+assert(fs.existsSync(path.join(out,'assets','WEC',path.basename(channel.categories.WEC.images.small.url))));
+assert.deepEqual(report.promoted,['WEC']);
+
+const weakDir=path.join(arts,'hero-refresh-F1-test');fs.mkdirSync(path.join(weakDir,'hero-crop-previews'),{recursive:true});
+fs.writeFileSync(path.join(weakDir,'hero-discovery-report.json'),JSON.stringify({candidates:[{title:'File:Formula One weak.jpg',eligibleForReview:true,sourcePage:'https://commons.wikimedia.org/wiki/File:F1_Weak.jpg',runtimeUrl,author:'Tester',license:'CC BY 4.0',sourceYear:year,dateRaw:`${year}-05-01`}]}));
+fs.writeFileSync(path.join(weakDir,'hero-subject-report.json'),JSON.stringify({results:[{title:'File:Formula One weak.jpg',status:'VISUAL_REVIEW_CANDIDATE',recommendedRole:'ACTION',selectedDetection:{score:.40},roleResults:{ACTION:{pass:true,small:crop(.20,.8),medium:crop(.18,.8)}},derivatives:{small:{path:'hero-crop-previews/x-small.jpg'},medium:{path:'hero-crop-previews/x-medium.jpg'}}}]}));
+execFileSync(process.execPath,[path.join(root,'tools/build-hero-channel.mjs'),`--artifacts=${arts}`,`--previous-dir=${prev}`,`--output-dir=${out}`],{cwd:root,stdio:'pipe'});
+const channel2=JSON.parse(fs.readFileSync(path.join(out,'channel.json'),'utf8'));
+assert.equal(channel2.categories.F1,undefined,'weak candidate must not promote');
+console.log('Motorsport Hub Hero channel promotion gate: PASS');
+fs.rmSync(tmp,{recursive:true,force:true});
