@@ -56,6 +56,7 @@ async function load(){const base=fallbackEvent(clone(SNAP));try{const d=await up
 function smooth(t){return t*t*(3-2*t)}
 function heroCropRect(img,W,H,c){const iw=img.size.width||1,ih=img.size.height||1,cw=Math.max(1,iw*c.w),ch=Math.max(1,ih*c.h),s=Math.max(W/cw,H/ch),vw=cw*s,vh=ch*s,ox=(vw-W)/2,oy=(vh-H)/2;return new Rect(-iw*c.x*s-ox,-ih*c.y*s-oy,iw*s,ih*s)}
 async function hero(d){
+ const __mhDynamicHero=globalThis.__MH_HERO_OVERRIDE_IMAGE;if(__mhDynamicHero)return __mhDynamicHero;
  const small=(config.widgetFamily||'medium')==='small',maker=String(d?.ranking?.[0]?.maker||'MERCEDES').toUpperCase(),h=HERO[maker]||HERO.MERCEDES;
  const p=fm.joinPath(DOC,`motorsport-hero-v1000-crop2-${small?'small':'medium'}-f1-${maker.toLowerCase()}.jpg`);if(fm.fileExists(p)){try{return fm.readImage(p)}catch(_){} }
  try{let img=null,source=null;for(const src of h.sources){try{const r=new Request(src.url);r.timeoutInterval=10;r.headers={'User-Agent':'Mozilla/5.0','Cache-Control':'no-cache'};img=await r.loadImage();if(img){source=src;break}}catch(_){}}if(!img||!source)return null;
