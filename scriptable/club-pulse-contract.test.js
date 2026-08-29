@@ -31,7 +31,7 @@ check('launcher loads stable UI',has(files.launcher,'club-pulse-ui-patch.js'));
 check('launcher loads competition registry',has(files.launcher,'club-pulse-competition-logo-patch.js'));
 check('launcher keeps legacy Man U state renderer',has(files.launcher,'club-pulse-manutd-theme-patch.js'));
 check('launcher loads shared theme registry',has(files.launcher,'THEME_REGISTRY_PATCH')&&has(files.launcher,'club-pulse-theme-registry-patch.js'));
-check('launcher loads theme registry v6 cache',has(files.launcher,'ClubPulseThemeRegistryPatch_v6.js')&&has(files.launcher,"'themes6'"));
+check('launcher loads theme registry v7 cache',has(files.launcher,'ClubPulseThemeRegistryPatch_v7.js')&&has(files.launcher,"'themes7'"));
 check('launcher theme order is UI -> competition -> ManU state renderer -> shared themes -> top layout',has(files.launcher,"patches=x+'\\n'+y+'\\n'+z+'\\n'+tr+'\\n'+u"));
 check('launcher loads resilience v2',has(files.launcher,'ClubPulseResiliencePatch_v2.js')&&has(files.launcher,"'resilience2'"));
 check('launcher keeps remote-to-local fallback',has(files.launcher,'if(F.fileExists(file))return F.readString(file)'));
@@ -46,24 +46,24 @@ check('registry defines home venue fallbacks',has(files.clubs,'カンプ・ノ�
 check('registry uses tuned crest scales',has(files.clubs,'81:.96')&&has(files.clubs,'86:1.06'));
 check('registry normalizes Malaga to Japanese',has(files.clubs,"'Málaga CF':'マラガ'")&&has(files.clubs,"'Málaga':'マラガ'"));
 
-// Shared theme architecture.
+// Shared premium theme architecture.
 check('shared themes include Manchester United',has(files.themes,'66:{')&&has(files.themes,"key:'manutd'"));
 check('shared themes include Barcelona',has(files.themes,'81:{')&&has(files.themes,"key:'barcelona'"));
 check('shared themes include Real Madrid',has(files.themes,'86:{')&&has(files.themes,"key:'realmadrid'"));
 check('shared theme lookup is data-driven',has(files.themes,'CP_CLUB_THEME_REGISTRY[club?.team]'));
 check('shared themes reuse canonical match renderers',!has(files.themes,'buildMatchMedium=function')&&!has(files.themes,'buildMatchSmall=function'));
 check('shared themes customize tokens/components only',has(files.themes,'bg=function')&&has(files.themes,'cardBg=function')&&has(files.themes,'badge=function')&&has(files.themes,'buildHeaderMedium=function'));
-check('Man U theme has red black gold identity',has(files.themes,"key:'manutd'")&&has(files.themes,"'#A40D18'")&&has(files.themes,"accent:'#F5C451'"));
-check('Barcelona theme has Blaugrana identity',has(files.themes,"'#A50044'")&&has(files.themes,"'#004D98'")&&has(files.themes,"accent:'#EDBB00'"));
-check('Barcelona registry matches theme palette',has(files.clubs,"p:'#A50044'")&&has(files.clubs,"s:'#004D98'")&&has(files.clubs,"a:'#EDBB00'"));
-check('Real theme is navy white gold v6',has(files.themes,"bg:['#020712','#061A3A','#0A3475','#0B3D91','#05162F']")&&has(files.themes,"next:['#0F4FA7','#0B377B','#071F48','#030B18']")&&has(files.themes,"text:'#FAFCFF'")&&has(files.themes,"accent:'#FEBE10'"));
+check('theme v7 uses restrained surface/glow/panel tokens',has(files.themes,"surface:'#07080A'")&&has(files.themes,"glow:'#641019'")&&has(files.themes,"surface:'#070A12'")&&has(files.themes,"glow:'#5A1038'")&&has(files.themes,"surface:'#070A10'")&&has(files.themes,"glow:'#123D78'"));
+check('Man U premium identity is black red gold',has(files.themes,"key:'manutd'")&&has(files.themes,"glow:'#641019'")&&has(files.themes,"accent:'#D6B45A'"));
+check('Barcelona premium identity is navy garnet gold',has(files.themes,"key:'barcelona'")&&has(files.themes,"panel:'#0C1427'")&&has(files.themes,"glow:'#5A1038'")&&has(files.themes,"accent:'#D7B04A'"));
+check('Barcelona registry remains canonical club palette source',has(files.clubs,"p:'#A50044'")&&has(files.clubs,"s:'#004D98'")&&has(files.clubs,"a:'#EDBB00'"));
+check('Real premium identity is navy royal-blue white gold',has(files.themes,"key:'realmadrid'")&&has(files.themes,"text:'#FBFCFF'")&&has(files.themes,"glow:'#123D78'")&&has(files.themes,"panel:'#0A172A'")&&has(files.themes,"accent:'#D8B557'"));
 check('Real registry remains white royal-blue gold identity source',has(files.clubs,"p:'#F8F7F2'")&&has(files.clubs,"s:'#00529F'")&&has(files.clubs,"a:'#FEBE10'"));
-check('Real avoids flat-white widget background',!has(files.themes,"bg:['#F8F7F2','#FFFFFF','#E7ECF6','#B8C7DF','#E6C766']"));
-check('Real crest has no white plate',!has(files.themes,"t.key==='realmadrid'?'#FFFFFF':t.accent")&&has(files.themes,"t.key==='realmadrid'?'#061A3A':t.accent")&&has(files.themes,"t.key==='realmadrid'?.48:.07")&&has(files.themes,"t.key==='realmadrid'?.9:.8"));
-check('Real fallback crest surface stays navy',has(files.themes,"t.key==='realmadrid'?gradient([C('#061A3A'),C('#0B3D91',.78)]"));
-check('Real side pill is navy with gold trim',has(files.themes,"t.key==='realmadrid'?'#07152D':'#080B13'")&&has(files.themes,'sideBorder'));
-check('Real footer is navy with gold trim',has(files.themes,"C('#030A18',.99)")&&has(files.themes,"C('#0A3475',.90)")&&has(files.themes,"t.key==='realmadrid'?.9:.5"));
-check('Man U footer has dedicated red treatment',has(files.themes,"t.key==='manutd'")&&has(files.themes,"'#8F0C15'"));
+check('club crest treatment has no circular plate',has(files.themes,"o.backgroundColor=C('#000000',0)")&&has(files.themes,'o.borderWidth=0')&&has(files.themes,"i.backgroundColor=C('#000000',0)"));
+check('footer is flat instead of another gradient',has(files.themes,'f.backgroundColor=C(t.panelDeep,.94)')&&!has(files.themes,"if(t.key==='barcelona')f.backgroundGradient"));
+check('widget shell uses one restrained three-stop glow',has(files.themes,'return cpThemeGradient([t.surface,t.panel,t.glow],.99)'));
+check('match panel uses one restrained dark undertone',has(files.themes,'return cpThemeGradient([t.panelDeep,t.panel,tint]'));
+check('secondary pills remain flat',has(files.themes,'p.backgroundColor=C(t.panelDeep,.96)'));
 
 // Man U legacy state behavior retained while visual identity is shared.
 check('Man U legacy renderer remains scoped to team 66',has(files.manutd,'club?.team===66'));
@@ -93,4 +93,4 @@ check('resilience keeps no-cache QA',has(files.resilience,"qa==='nocache'")&&has
 check('resilience schedules retry',has(files.resilience,'refreshAfterDate')&&has(files.resilience,'5*60*1000'));
 
 if(failed){console.error(`\nClub Pulse contract QA FAILED: ${failed} check(s)`);process.exit(1)}
-console.log('\nClub Pulse three-club shared-theme contract QA PASSED');
+console.log('\nClub Pulse premium three-club shared-theme contract QA PASSED');
