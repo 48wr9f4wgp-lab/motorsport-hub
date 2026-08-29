@@ -98,6 +98,7 @@ jobs:
             tests/cache-hardening-gate.mjs
             tests/hero-manifest-gate.mjs
             tests/hero-discovery-gate.mjs
+            tests/hero-refresh-schedule-gate.mjs
             tests/image-probe-gate.mjs
             tests/hero-subject-crop-gate.mjs
             tests/hero-selection-gate.mjs
