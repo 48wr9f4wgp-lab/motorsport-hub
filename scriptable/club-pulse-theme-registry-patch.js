@@ -34,7 +34,8 @@ const CP_THEME_BASE_BG=bg,
       CP_THEME_BASE_FORM=formChip,
       CP_THEME_BASE_HEADER_MEDIUM=buildHeaderMedium,
       CP_THEME_BASE_FOOTER_MEDIUM=buildFooterMedium,
-      CP_THEME_BASE_FOOTER_SMALL=buildFooterSmall;
+      CP_THEME_BASE_FOOTER_SMALL=buildFooterSmall,
+      CP_THEME_BASE_BUILD_MEDIUM=buildMedium;
 
 bg=function(){
   let t=CP_ACTIVE_THEME();
@@ -137,4 +138,23 @@ buildFooterSmall=function(w,d){
   text(f,'最新',7.6,true,.99,t.text);f.addSpacer(2);text(f,'→',7.6,true,1,t.accent);f.addSpacer(5);
   for(let i=0;i<d.form.length;i++){formChip(f,d.form[i],i===0,true);if(i<d.form.length-1)f.addSpacer(3)}
   f.addSpacer()
+};
+
+// Shared themed clubs keep the canonical match renderer, but use a tighter composition
+// so the footer has a visible bottom inset on real Medium widgets.
+buildMedium=function(d,imgs){
+  let t=CP_ACTIVE_THEME();
+  if(!t)return CP_THEME_BASE_BUILD_MEDIUM(d,imgs);
+  let w=new ListWidget();
+  w.backgroundGradient=bg();
+  w.setPadding(5,10,8,10);
+  let line=w.addStack();line.size=new Size(0,1.5);line.backgroundColor=C(t.accent,.72);
+  w.addSpacer(2);
+  buildHeaderMedium(w,d,imgs.club);
+  w.addSpacer(2);
+  buildMatchMedium(w,d,imgs);
+  w.addSpacer(2);
+  buildFooterMedium(w,d);
+  w.refreshAfterDate=new Date(Date.now()+refreshDelay(d));
+  return w
 };
