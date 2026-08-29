@@ -1,0 +1,24 @@
+name: Club Pulse Contract QA
+
+on:
+  push:
+    branches: [club-pulse-runtime]
+    paths:
+      - 'scriptable/**'
+      - '.github/workflows/club-pulse-contract.yml'
+  pull_request:
+    paths:
+      - 'scriptable/**'
+      - '.github/workflows/club-pulse-contract.yml'
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run Club Pulse contract checks
+        run: node scriptable/club-pulse-contract.test.js
