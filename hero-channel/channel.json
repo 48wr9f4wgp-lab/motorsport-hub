@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-29T12:52:36.699Z",
+  "publicationPolicy": "CI_GATED_LIVE_HERO_CHANNEL",
+  "categories": {
+    "WEC": {
+      "category": "WEC",
+      "assetId": "auto-28736576071f-24-Heures-du-Mans-2026-Hypercar-No.-51-Ferrari-499P-",
+      "version": "e0340bbbf1bca564",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:24_Heures_du_Mans_2026_Hypercar_No._51_Ferrari_499P_(back).jpg",
+      "sourceTitle": "File:24 Heures du Mans 2026 Hypercar No. 51 Ferrari 499P (back).jpg",
+      "author": "T GOUREAU",
+      "license": "CC BY-SA 4.0",
+      "sourceYear": 2026,
+      "sourceDate": "2026-06-07 11:00:41",
+      "role": "IDENTITY",
+      "qualityScore": 0.9319,
+      "promotedAt": "2026-08-29T12:52:36.697Z",
+      "images": {
+        "small": {
+          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WEC/auto-28736576071f-24-Heures-du-Mans-2026-Hypercar-No.-51-Ferrari-499P--small.jpg",
+          "width": 720,
+          "height": 720
+        },
+        "medium": {
+          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WEC/auto-28736576071f-24-Heures-du-Mans-2026-Hypercar-No.-51-Ferrari-499P--medium.jpg",
+          "width": 1380,
+          "height": 640
+        }
+      }
+    },
+    "WRC": {
+      "category": "WRC",
+      "assetId": "auto-eab23333e862-Ford-Puma-WRC.jpg",
+      "version": "f196661cd24b46f6",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Ford_Puma_WRC.jpg",
+      "sourceTitle": "File:Ford Puma WRC.jpg",
+      "author": "Geonich",
+      "license": "CC BY 4.0",
+      "sourceYear": 2026,
+      "sourceDate": "2026-06-27 13:35:45",
+      "role": "IDENTITY",
+      "qualityScore": 0.9574,
+      "promotedAt": "2026-08-29T12:52:36.699Z",
+      "images": {
+        "small": {
+          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WRC/auto-eab23333e862-Ford-Puma-WRC.jpg-small.jpg",
+          "width": 720,
+          "height": 720
+        },
+        "medium": {
+          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WRC/auto-eab23333e862-Ford-Puma-WRC.jpg-medium.jpg",
+          "width": 1380,
+          "height": 640
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-29T12:52:36.699Z",
+  "thresholds": {
+    "minScore": 0.72,
+    "minDetection": 0.55,
+    "minSmallSubject": 0.14,
+    "minMediumSubject": 0.1,
+    "minTextSafe": 0.68
+  },
+  "promoted": [
+    "WEC",
+    "WRC"
+  ],
+  "categories": {
+    "WEC": {
+      "assetId": "auto-28736576071f-24-Heures-du-Mans-2026-Hypercar-No.-51-Ferrari-499P-",
+      "qualityScore": 0.9319,
+      "sourceYear": 2026,
+      "sourceTitle": "File:24 Heures du Mans 2026 Hypercar No. 51 Ferrari 499P (back).jpg"
+    },
+    "WRC": {
+      "assetId": "auto-eab23333e862-Ford-Puma-WRC.jpg",
+      "qualityScore": 0.9574,
+      "sourceYear": 2026,
+      "sourceTitle": "File:Ford Puma WRC.jpg"
+    }
+  }
+}
