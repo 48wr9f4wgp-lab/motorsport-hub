@@ -62,6 +62,7 @@ async function load(){const base=nextEvent(clone(SNAP));try{const d=await update
 function smooth(t){return t*t*(3-2*t)}
 function cover(img,W,H,focus=.54,shift=0){const iw=img.size.width||1,ih=img.size.height||1,s=Math.max(W/iw,H/ih),dw=iw*s,dh=ih*s;return new Rect(-(dw-W)*focus+shift,-(dh-H)*.5,dw,dh)}
 async function hero(){
+ const __mhDynamicHero=globalThis.__MH_HERO_OVERRIDE_IMAGE;if(__mhDynamicHero)return __mhDynamicHero;
  const small=(config.widgetFamily||'medium')==='small',p=fm.joinPath(DOC,`motorsport-hero-v900-${small?'small':'medium'}-superformula.jpg`);
  if(fm.fileExists(p)){try{return fm.readImage(p)}catch(_){} }
  try{
