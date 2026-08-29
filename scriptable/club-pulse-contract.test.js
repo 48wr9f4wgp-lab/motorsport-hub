@@ -39,6 +39,7 @@ check('launcher loads stable UI patch', has(files.launcher, 'club-pulse-ui-patch
 check('launcher loads competition logo patch', has(files.launcher, 'club-pulse-competition-logo-patch.js'));
 check('launcher loads Manchester United theme patch', has(files.launcher, 'club-pulse-manutd-theme-patch.js'));
 check('launcher loads top-layout patch', has(files.launcher, 'club-pulse-top-layout-patch.js'));
+check('launcher loads top-layout v2 cache', has(files.launcher, 'ClubPulseTopLayoutPatch_v2.js') && has(files.launcher, "'toplayout2'"));
 check('launcher loads LIVE context patch', has(files.launcher, 'club-pulse-live-context-patch.js'));
 check('launcher loads resilience patch', has(files.launcher, 'club-pulse-resilience-patch.js'));
 check('launcher exposes only resilience compatibility submenu', has(files.launcher, 'Club Pulse 耐障害QA') && has(files.launcher, '通信障害・保存あり') && has(files.launcher, '通信障害・保存なし') && !has(files.launcher, 'LIVE 67分 2-1'));
@@ -87,8 +88,11 @@ check('POST QA synchronizes latest form result', has(files.theme, 'CP_FORM_VIEW'
 check('top-layout patch is Man U scoped', has(files.topLayout, 'if(!CP_MU_IS())return CP_TOP_LAYOUT_BASE_MATCH_MEDIUM') && has(files.topLayout, 'if(!CP_MU_IS())return CP_TOP_LAYOUT_BASE_MATCH_SMALL'));
 check('top-layout patch groups state and competition on left rail', has(files.topLayout, 'cpMuTopInfoRail') && has(files.topLayout, 'competitionPill(left,m,small)'));
 check('top-layout patch keeps home/away on right rail', has(files.topLayout, 'sidePill(top,m,small)'));
-check('top-layout patch adds breathing room before crests', has(files.topLayout, 'c.addSpacer(4)') && has(files.topLayout, 'c.addSpacer(6)'));
-check('top-layout patch aligns Medium header inward', has(files.topLayout, 'h.setPadding(1,3,0,3)'));
+check('top-layout patch compacts Medium card vertically', has(files.topLayout, 'c.setPadding(4,10,3,10)') && has(files.topLayout, 'c.addSpacer(2)'));
+check('top-layout patch compacts Small card vertically', has(files.topLayout, 'c.setPadding(5,7,4,7)') && has(files.topLayout, 'logoSize:38'));
+check('top-layout patch owns bounded Medium widget spacing', has(files.topLayout, 'buildMedium=function') && has(files.topLayout, 'w.setPadding(4,10,4,10)') && has(files.topLayout, 'w.addSpacer(1)'));
+check('top-layout patch owns bounded Small widget spacing', has(files.topLayout, 'buildSmall=function') && has(files.topLayout, 'w.setPadding(7,8,7,8)') && has(files.topLayout, 'w.addSpacer(1)'));
+check('top-layout patch aligns Medium header inward without extra vertical padding', has(files.topLayout, 'h.setPadding(0,3,0,3)'));
 
 if (failed) {
   console.error(`\nClub Pulse contract QA FAILED: ${failed} check(s)`);
