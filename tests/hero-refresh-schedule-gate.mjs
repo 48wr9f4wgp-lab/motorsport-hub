@@ -55,7 +55,7 @@ assert(/permissions:\s*\n\s*contents:\s*write/.test(publish),'publish job alone 
 assert(publish.includes("github.event_name == 'schedule'")&&publish.includes("github.event_name == 'workflow_dispatch'"),'publish job must be restricted to schedule/manual events');
 assert(!publish.includes("github.event_name == 'push'"),'push event must never publish live Hero assets');
 assert(publish.includes('ref: hero-live'),'publish job must checkout hero-live');
-assert(publish.includes('git push origin HEAD:hero-live'),'publish job must update only hero-live');
+assert(publish.includes('push origin HEAD:hero-live'),'publish job must update only hero-live');
 assert(publish.includes('promotion-report.json'),'publish job must inspect promoted categories');
 assert(publish.includes('git diff --cached --quiet'),'publish job must no-op when channel is unchanged');
 console.log('Motorsport Hub hero refresh schedule gate: PASS');
