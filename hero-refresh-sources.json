@@ -16,6 +16,7 @@
     "CC BY-SA 4.0",
     "CC0 1.0"
   ],
+  "globalForbiddenContext": ["museum", "replica", "scale model", "diecast", "toy", "signage", "poster", "logo", "video game", "simulator"],
   "categories": {
     "F1": ["Formula 1 {year} race car", "{year} Formula One Grand Prix", "Formula 1 {prevYear} race car"],
     "WEC": ["FIA WEC {year} Hypercar", "Le Mans {year} Hypercar", "FIA WEC {prevYear} Hypercar"],
@@ -29,5 +30,19 @@
     "NASCAR": ["NASCAR Cup Series {year}", "NASCAR Cup {year} race", "NASCAR Cup Series {prevYear}"],
     "GTWCEU": ["GT World Challenge Europe {year}", "GTWC Europe {year}", "GT World Challenge Europe {prevYear}"],
     "DAKAR": ["Dakar Rally {year}", "Dakar Rally {prevYear}", "Dacia Sandrider Dakar", "Ford Raptor Dakar"]
+  },
+  "relevance": {
+    "F1": {"requiredAny":["formula 1","formula one","f1","grand prix"],"forbiddenAny":["super formula","formula 2","formula 3","formula e","kart"]},
+    "WEC": {"requiredAny":["fia wec","world endurance championship","wec","24 heures du mans","24 hours of le mans","hypercar","lmgt3"],"forbiddenAny":[]},
+    "WRC": {"requiredAny":["world rally championship","wrc","rally1"],"forbiddenAny":["rallycross","sim racing"]},
+    "SUPERGT": {"requiredAny":["super gt","gt500","gt300"],"forbiddenAny":["auto salon","auto messe","motor show"]},
+    "MOTOGP": {"requiredAny":["motogp","moto gp"],"forbiddenAny":["moto2","moto3","world superbike","wsbk"]},
+    "FDJ": {"requiredAny":["formula drift japan","fd japan","fdj"],"forbiddenAny":[]},
+    "D1GP": {"requiredAny":["d1 grand prix","d1gp"],"forbiddenAny":["king of europe"]},
+    "SUPERFORMULA": {"requiredAny":["super formula","superformula"],"forbiddenAny":["formula 1","formula one"]},
+    "INDYCAR": {"requiredAny":["indycar","indy car","ntt indycar"],"forbiddenAny":["indy nxt","indy lights"]},
+    "NASCAR": {"requiredAny":["nascar cup","nascar cup series","nascar"],"forbiddenAny":["xfinity","craftsman truck"]},
+    "GTWCEU": {"requiredAny":["gt world challenge europe","gtwc europe","world challenge europe"],"forbiddenAny":[]},
+    "DAKAR": {"requiredAny":["dakar"],"forbiddenAny":[]}
   }
 }
