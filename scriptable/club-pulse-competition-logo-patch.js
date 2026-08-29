@@ -46,13 +46,13 @@ function cpCompetitionLogoImage(m){
 }
 function competitionPill(parent,m,small=false){
   let label=competitionReadable(m,small),z=competitionStyle(label),p=parent.addStack();
-  p.layoutHorizontally();p.centerAlignContent();p.setPadding(small?2:2.5,small?5:7,small?2:2.5,small?5:7);p.cornerRadius=8;p.backgroundColor=C(z.bg,.94);p.borderWidth=.8;p.borderColor=C(z.bd,.72);
+  p.layoutHorizontally();p.centerAlignContent();p.setPadding(small?2:2.5,small?5:7,small?2:2.5,small?5:7);p.cornerRadius=9;p.backgroundColor=C(z.bg,.94);p.borderWidth=.8;p.borderColor=C(z.bd,.82);
   let logo=cpCompetitionLogoImage(m);
   if(logo){
-    let plate=p.addStack(),box=small?16:19,sz=small?12.5:15;
-    plate.size=new Size(box,box);plate.cornerRadius=small?4:5;plate.backgroundColor=C('#F4F4F6',.94);plate.centerAlignContent();
+    let plate=p.addStack(),box=small?19:24,sz=small?15:19;
+    plate.size=new Size(box,box);plate.cornerRadius=box/2;plate.backgroundColor=C('#FFFFFF',1);plate.borderWidth=1;plate.borderColor=C('#FFFFFF',1);plate.centerAlignContent();
     let im=plate.addImage(logo);im.imageSize=new Size(sz,sz);im.centerAlignImage();
     p.addSpacer(small?4:5)
   }
-  text(p,label,small?7.2:7.0,true,1,z.fg)
+  text(p,label,small?7.3:7.2,true,1,z.fg)
 }
