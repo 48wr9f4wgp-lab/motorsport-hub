@@ -21,7 +21,11 @@ Validated on real iPhone Small/Medium widgets:
 - no-cache error fallback
 - recovery to normal state
 
-The current Man U visual baseline should be frozen except for clear regressions.
+Latest layout note:
+- The final Medium vertical-bounds correction was verified in Scriptable after the footer-overflow fix.
+- Small had already passed the same functional/visual matrix before that correction, but the final post-correction Small regression screenshot has not yet been captured. Treat that as the first visual check when work resumes; do not call the final layout fully re-verified until that check passes.
+
+The current Man U visual baseline should otherwise be frozen except for clear regressions.
 
 ## Current architecture
 
@@ -67,9 +71,9 @@ A later patch can silently invalidate assumptions from an earlier patch. Static 
 
 ### Current Man U product quality
 
-Status: **PASS / freeze baseline**
+Status: **PASS with one pending post-correction Small visual regression check**
 
-The widget is now coherent enough for daily use and as a reference implementation for other clubs.
+The widget is coherent enough for daily use and as a reference implementation for other clubs. No further Man U design work should be done unless the pending Small check reveals an actual regression.
 
 ### Current multi-club architecture
 
