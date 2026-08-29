@@ -20,16 +20,26 @@ const markerByFile={
 };
 async function runRouter(parameter){
  const requests=[];let completed=0,setWidget=0;
- class Request{constructor(url){this.url=url;this.headers={};requests.push(url)}async loadString(){for(const[file,marker]of Object.entries(markerByFile))if(this.url.includes(file))return`// Motorsport Hub ${marker}\n(async()=>{Script.complete()})();`;throw new Error('unexpected module')}}
+ class Request{
+  constructor(url){this.url=url;this.headers={};requests.push(url)}
+  async loadString(){for(const[file,marker]of Object.entries(markerByFile))if(this.url.includes(file))return`// Motorsport Hub ${marker}\n(async()=>{Script.complete()})();`;throw new Error('unexpected string request')}
+  async loadJSON(){if(this.url.includes('/hero-live/hero-channel/channel.json'))return{schemaVersion:1,generatedAt:new Date().toISOString(),categories:{}};throw new Error('unexpected json request')}
+ }
  const fm=makeFM(),ctx={args:{widgetParameter:parameter},config:{runsInWidget:true,widgetFamily:'medium'},FileManager:{local:()=>fm},Request,ListWidget,Color,Font,Date,Math,Script:{complete(){completed++},setWidget(){setWidget++}}};ctx.globalThis=ctx;vm.createContext(ctx);await vm.runInContext(router,ctx);return{requests,completed,setWidget,ctx};
 }
 
 const directCases=[
  ['F1','f1-widget-flat-v1000.js'],['Formula 1','f1-widget-flat-v1000.js'],['WEC','wec-widget-flat-v1000.js'],['WRC','wrc-widget-flat-v1000.js'],['SUPERGT','supergt-widget-flat-v1000.js'],['SUPER GT','supergt-widget-flat-v1000.js'],['MotoGP','motogp-widget-flat-v1000.js'],['FDJ','fdj-widget-flat-v1000.js'],['Formula Drift Japan','fdj-widget-flat-v1000.js'],['D1GP','d1gp-widget-flat-v1000.js'],['D1 Grand Prix','d1gp-widget-flat-v1000.js'],['SUPERFORMULA','superformula-widget.js'],['SF','superformula-widget.js'],['INDYCAR','indycar-widget.js'],['INDY','indycar-widget.js'],['NASCAR','nascar-widget.js'],['NASCAR Cup Series','nascar-widget.js'],['GT World Challenge Europe','gtwc-europe-widget.js'],['GTWC Europe','gtwc-europe-widget.js'],['DAKAR','dakar-widget.js'],['Dakar Rally','dakar-widget.js']
 ];
-for(const[parameter,file]of directCases){const r=await runRouter(parameter);assert.equal(r.requests.length,1,`${parameter} should make exactly one repo module request`);assert(r.requests[0].includes(file),`${parameter} must route to ${file}`)}
+for(const[parameter,file]of directCases){
+ const r=await runRouter(parameter),moduleRequests=r.requests.filter(x=>x.includes(file)),heroRequests=r.requests.filter(x=>x.includes('/hero-live/hero-channel/channel.json'));
+ assert.equal(moduleRequests.length,1,`${parameter} should make exactly one category-module request`);
+ if(file==='dakar-widget.js')assert.equal(heroRequests.length,0,'Dakar must keep its dedicated Hero runtime and skip the generic channel');
+ else assert.equal(heroRequests.length,1,`${parameter} should make exactly one allowlisted Hero-channel manifest request`);
+ assert(r.requests.every(x=>x.includes('raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/')),`${parameter}: unexpected network origin`);
+}
 {
- const r=await runRouter('INDYCARR');assert.equal(r.requests.length,0,'unknown widget parameter must not fetch a module');assert.equal(r.setWidget,1,'unknown widget parameter should render an explicit configuration error widget');
+ const r=await runRouter('INDYCARR');assert.equal(r.requests.length,0,'unknown widget parameter must not fetch a module or Hero channel');assert.equal(r.setWidget,1,'unknown widget parameter should render an explicit configuration error widget');
 }
 
 assert.match(router,/MH_ROUTER_SCHEMA=5/);assert.match(router,/MH_CATEGORY_MANIFEST=F1,WEC,WRC,SUPERGT,MOTOGP,FDJ,D1GP,SUPERFORMULA,INDYCAR,NASCAR,GTWCEU,DAKAR,QA/);
