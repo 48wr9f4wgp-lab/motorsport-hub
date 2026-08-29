@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "source": "wikimedia-commons-action-api",
+  "apiUrl": "https://commons.wikimedia.org/w/api.php",
+  "cadence": "WEEKLY",
+  "publicationPolicy": "DISCOVERY_AND_VALIDATION_ONLY_NO_RUNTIME_MUTATION",
+  "resultsPerQuery": 12,
+  "thumbWidth": 2048,
+  "minSourceLongEdge": 2048,
+  "maxCandidatesPerCategory": 4,
+  "allowedLicenses": [
+    "CC BY 2.0",
+    "CC BY 4.0",
+    "CC BY-SA 2.0",
+    "CC BY-SA 3.0",
+    "CC BY-SA 4.0",
+    "CC0 1.0"
+  ],
+  "categories": {
+    "F1": ["Formula 1 {year} race car", "{year} Formula One Grand Prix", "Formula 1 {prevYear} race car"],
+    "WEC": ["FIA WEC {year} Hypercar", "Le Mans {year} Hypercar", "FIA WEC {prevYear} Hypercar"],
+    "WRC": ["World Rally Championship {year} Rally1", "WRC {year} Rally1", "WRC {prevYear} Rally1"],
+    "SUPERGT": ["SUPER GT {year} GT500", "Super GT {year} race", "SUPER GT {prevYear} GT500"],
+    "MOTOGP": ["MotoGP {year} race", "MotoGP {year} Ducati Aprilia Yamaha Honda KTM", "MotoGP {prevYear} race"],
+    "FDJ": ["Formula Drift Japan {year}", "FDJ Japan drift {year}", "Formula Drift Japan {prevYear}"],
+    "D1GP": ["D1 Grand Prix {year}", "D1GP {year}", "D1 Grand Prix drift {prevYear}"],
+    "SUPERFORMULA": ["Super Formula {year} Japan", "SUPER FORMULA {year}", "Super Formula {prevYear}"],
+    "INDYCAR": ["IndyCar {year} race", "NTT IndyCar Series {year}", "IndyCar {prevYear} race"],
+    "NASCAR": ["NASCAR Cup Series {year}", "NASCAR Cup {year} race", "NASCAR Cup Series {prevYear}"],
+    "GTWCEU": ["GT World Challenge Europe {year}", "GTWC Europe {year}", "GT World Challenge Europe {prevYear}"],
+    "DAKAR": ["Dakar Rally {year}", "Dakar Rally {prevYear}", "Dacia Sandrider Dakar", "Ford Raptor Dakar"]
+  }
+}
