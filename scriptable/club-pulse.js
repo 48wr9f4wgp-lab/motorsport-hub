@@ -56,34 +56,10 @@ function mapData(mj,sj){
   return{provider:PROVIDER,fetchedAt:Date.now(),mode:L?'LIVE':P?'POST':'NEXT',rank:row?.position??null,points:row?.points??null,form,clubCrest:crest,liveMatch:L,recentResult:P,nextMatch:N};
 }
 
-const providers={
-  footballData:{
-    async load(token){
-      let d=new Date(),from=ymd(addDays(d,-120)),to=ymd(addDays(d,120));
-      let[m,s]=await Promise.all([api(`/teams/${club.team}/matches?dateFrom=${from}&dateTo=${to}&limit=100`,token),api(`/competitions/${club.comp}/standings`,token)]);
-      return mapData(m,s);
-    }
-  }
-};
-function cacheTTL(c){
-  if(!c)return 0;
-  if(c.mode==='LIVE')return TTL_LIVE;
-  let n=c.nextMatch?.utcDate?new Date(c.nextMatch.utcDate).getTime():0;
-  if(n&&Math.abs(n-Date.now())<=2*60*60*1000)return TTL_NEAR;
-  return TTL_FAR;
-}
-async function loadData(t){
-  let c=loadCache(club.id),ttl=cacheTTL(c);
-  if(c&&Date.now()-c.fetchedAt<ttl)return{...c,stale:false};
-  try{let v=await providers[PROVIDER].load(t);saveCache(club.id,v);return{...v,stale:false}}
-  catch(e){if(c)return{...c,stale:true};throw e}
-}
-function refreshDelay(d){
-  if(d.mode==='LIVE')return TTL_LIVE;
-  let n=d.nextMatch?.utcDate?new Date(d.nextMatch.utcDate).getTime():0;
-  if(n&&Math.abs(n-Date.now())<=2*60*60*1000)return TTL_NEAR;
-  return TTL_FAR;
-}
+const providers={footballData:{async load(token){let d=new Date(),from=ymd(addDays(d,-120)),to=ymd(addDays(d,120));let[m,s]=await Promise.all([api(`/teams/${club.team}/matches?dateFrom=${from}&dateTo=${to}&limit=100`,token),api(`/competitions/${club.comp}/standings`,token)]);return mapData(m,s)}}};
+function cacheTTL(c){if(!c)return 0;if(c.mode==='LIVE')return TTL_LIVE;let n=c.nextMatch?.utcDate?new Date(c.nextMatch.utcDate).getTime():0;if(n&&Math.abs(n-Date.now())<=2*60*60*1000)return TTL_NEAR;return TTL_FAR}
+async function loadData(t){let c=loadCache(club.id),ttl=cacheTTL(c);if(c&&Date.now()-c.fetchedAt<ttl)return{...c,stale:false};try{let v=await providers[PROVIDER].load(t);saveCache(club.id,v);return{...v,stale:false}}catch(e){if(c)return{...c,stale:true};throw e}}
+function refreshDelay(d){if(d.mode==='LIVE')return TTL_LIVE;let n=d.nextMatch?.utcDate?new Date(d.nextMatch.utcDate).getTime():0;if(n&&Math.abs(n-Date.now())<=2*60*60*1000)return TTL_NEAR;return TTL_FAR}
 
 async function image(url,key){if(!url)return null;try{let x=files(),p=x.fm.joinPath(x.dir,`crest_${String(key).replace(/[^\w-]/g,'_')}.png`);if(x.fm.fileExists(p))return x.fm.readImage(p);let r=new Request(url);r.timeoutInterval=10;let i=await r.loadImage();x.fm.writeImage(p,i);return i}catch{return null}}
 function applyTestMode(d){if(TEST_MODE==='auto')return d;let base=d.nextMatch||d.liveMatch||d.recentResult;if(!base)return d;let m={...base};if(TEST_MODE==='live'){m.status='IN_PLAY';m.minute="67'";m.ourScore=2;m.opponentScore=1;return{...d,mode:'LIVE',liveMatch:m}}if(TEST_MODE==='post'){m.status='FINISHED';m.ourScore=2;m.opponentScore=1;m.result='W';return{...d,mode:'POST',recentResult:m}}return{...d,mode:'NEXT',nextMatch:m}}
@@ -102,7 +78,7 @@ function metaLine(d,m){return d.mode==='NEXT'?`${m.kickoff} ・ ${m.venue}`:`${m
 function centerMainText(d,m){return d.mode==='NEXT'?'VS':`${Number.isFinite(m.ourScore)?m.ourScore:'–'}-${Number.isFinite(m.opponentScore)?m.opponentScore:'–'}`}
 function sideTag(m){return m.homeAway==='HOME'?'ホーム':'アウェイ'}
 function pill(parent,label){let p=parent.addStack();p.setPadding(2,6,2,6);p.cornerRadius=7;p.backgroundColor=C(club.p,.14);text(p,label,7,true,.9,club.a);return p}
-function renderTeamBlock(parent,opt){let s=parent.addStack();s.layoutVertically();s.centerAlignContent();badge(s,opt.fallback,opt.img,opt.logoSize,opt.p1,opt.p2,opt.scale||1);s.addSpacer(opt.nameGap??2);let nm=heavy(s,opt.name,opt.nameSize||12);nm.centerAlignText();if(opt.sub){let sb=text(s,opt.sub,opt.subSize||7,false,.56);sb.centerAlignText()}return s}
+function renderTeamBlock(parent,opt){let s=parent.addStack();if(opt.width)s.size=new Size(opt.width,0);s.layoutVertically();let logo=s.addStack();logo.layoutHorizontally();logo.addSpacer();badge(logo,opt.fallback,opt.img,opt.logoSize,opt.p1,opt.p2,opt.scale||1);logo.addSpacer();s.addSpacer(opt.nameGap??2);let name=s.addStack();name.layoutHorizontally();name.addSpacer();let nm=heavy(name,opt.name,opt.nameSize||12);nm.centerAlignText();name.addSpacer();if(opt.sub){let sub=s.addStack();sub.layoutHorizontally();sub.addSpacer();let sb=text(sub,opt.sub,opt.subSize||7,false,.56);sb.centerAlignText();sub.addSpacer()}return s}
 
 function buildHeaderMedium(w,d,clubImg){let h=w.addStack();h.layoutHorizontally();h.centerAlignContent();badge(h,club.badge,clubImg,20,club.p,club.s,CREST_SCALE[club.team]||1.06);h.addSpacer(6);let l=h.addStack();l.layoutVertically();heavy(l,club.name,10.5);text(l,`${club.league} · ${updated(d.fetchedAt)}${d.stale?' · 保存データ':''}`,6.2,false,.54);h.addSpacer();let r=h.addStack();r.layoutVertically();let rk=heavy(r,d.rank!=null?`${d.rank}位`:'–',15.5);rk.rightAlignText();let pt=semibold(r,`勝点 ${d.points??'–'}`,7.2,.68);pt.rightAlignText()}
 function buildFooterMedium(w,d){let f=w.addStack();f.layoutHorizontally();f.centerAlignContent();f.setPadding(2,8,2,8);f.cornerRadius=9;f.backgroundGradient=gradient([C('#121317'),C(club.s,.70),C(club.p,.28)],[0,.5,1]);text(f,'直近5戦',6.7,false,.66);f.addSpacer(7);for(let i=0;i<d.form.length;i++){chip(f,d.form[i],true);if(i<d.form.length-1)f.addSpacer(3)}f.addSpacer()}
@@ -110,18 +86,18 @@ function buildMatchMedium(w,d,imgs){
   let m=d.mode==='LIVE'?d.liveMatch:d.mode==='POST'?d.recentResult:d.nextMatch,c=w.addStack();c.layoutVertically();c.setPadding(4,9,4,9);c.cornerRadius=16;c.backgroundGradient=cardBg(d.mode);if(!m){heavy(c,'試合データ未取得',11);return}
   let top=c.addStack();top.layoutHorizontally();top.centerAlignContent();text(top,statusTitle(d,m),8,true,1,statusAccent(d));top.addSpacer();if(d.mode==='LIVE')heavy(top,m.minute||'LIVE',10);else pill(top,sideTag(m));c.addSpacer(2);
   let outer=c.addStack();outer.layoutHorizontally();outer.centerAlignContent();outer.addSpacer();let row=outer.addStack();row.layoutHorizontally();row.centerAlignContent();
-  renderTeamBlock(row,{img:imgs.club,name:club.jp,sub:club.short,fallback:club.badge,logoSize:56,nameSize:11.5,subSize:5.5,p1:club.p,p2:club.s,scale:CREST_SCALE[club.team]||1.08,nameGap:1});row.addSpacer(24);let mid=heavy(row,centerMainText(d,m),d.mode==='NEXT'?14:22);mid.centerAlignText();row.addSpacer(24);renderTeamBlock(row,{img:imgs.opp,name:m.opponentName,sub:m.opponentShort,fallback:m.opponentShort,logoSize:56,nameSize:11.5,subSize:5.5,p1:'#4A5568',p2:'#20242D',scale:CREST_SCALE[m.opponentId]||CREST_SCALE.opponent_default||1.08,nameGap:1});outer.addSpacer();c.addSpacer(2);
+  renderTeamBlock(row,{img:imgs.club,name:club.jp,sub:club.short,fallback:club.badge,logoSize:56,nameSize:11.5,subSize:5.5,p1:club.p,p2:club.s,scale:CREST_SCALE[club.team]||1.08,nameGap:1,width:92});row.addSpacer(20);let mid=heavy(row,centerMainText(d,m),d.mode==='NEXT'?14:22);mid.centerAlignText();row.addSpacer(20);renderTeamBlock(row,{img:imgs.opp,name:m.opponentName,sub:m.opponentShort,fallback:m.opponentShort,logoSize:56,nameSize:11.5,subSize:5.5,p1:'#4A5568',p2:'#20242D',scale:CREST_SCALE[m.opponentId]||CREST_SCALE.opponent_default||1.08,nameGap:1,width:92});outer.addSpacer();c.addSpacer(2);
   let meta=c.addStack();meta.layoutHorizontally();meta.centerAlignContent();meta.addSpacer();let mt=semibold(meta,metaLine(d,m),8.7,.92);mt.centerAlignText();meta.addSpacer();
 }
 function buildMedium(d,imgs){let w=new ListWidget();w.backgroundGradient=bg();w.setPadding(5,10,6,10);let line=w.addStack();line.size=new Size(0,1.5);line.backgroundColor=C(club.p);w.addSpacer(3);buildHeaderMedium(w,d,imgs.club);w.addSpacer(3);buildMatchMedium(w,d,imgs);w.addSpacer(3);buildFooterMedium(w,d);w.refreshAfterDate=new Date(Date.now()+refreshDelay(d));return w}
 
 function buildHeaderSmall(w,d,clubImg){let h=w.addStack();h.layoutHorizontally();h.centerAlignContent();badge(h,club.badge,clubImg,18,club.p,club.s,CREST_SCALE[club.team]||1.06);h.addSpacer(5);heavy(h,club.jp,8.5);h.addSpacer();let rk=heavy(h,d.rank!=null?`${d.rank}位`:'–',9.5);rk.rightAlignText()}
 function buildMatchSmall(w,d,imgs){
-  let m=d.mode==='LIVE'?d.liveMatch:d.mode==='POST'?d.recentResult:d.nextMatch,c=w.addStack();c.layoutVertically();c.setPadding(5,6,5,6);c.cornerRadius=14;c.backgroundGradient=cardBg(d.mode);if(!m){heavy(c,'試合データ未取得',9);return}
-  let top=c.addStack();top.layoutHorizontally();text(top,statusTitle(d,m),7.2,true,1,statusAccent(d));top.addSpacer();if(d.mode==='LIVE')heavy(top,m.minute||'LIVE',8.5);c.addSpacer(4);
-  let outer=c.addStack();outer.layoutHorizontally();outer.centerAlignContent();outer.addSpacer();let row=outer.addStack();row.layoutHorizontally();row.centerAlignContent();badge(row,club.badge,imgs.club,42,club.p,club.s,CREST_SCALE[club.team]||1.08);row.addSpacer(14);let sc=heavy(row,centerMainText(d,m),d.mode==='NEXT'?13.5:16.5);sc.centerAlignText();row.addSpacer(14);badge(row,m.opponentShort,imgs.opp,42,'#4A5568','#20242D',CREST_SCALE[m.opponentId]||CREST_SCALE.opponent_default||1.08);outer.addSpacer();c.addSpacer(4);
-  let opp=c.addStack();opp.layoutHorizontally();opp.centerAlignContent();opp.addSpacer();let on=heavy(opp,m.opponentName,8.2);on.centerAlignText();opp.addSpacer();
-  let meta=c.addStack();meta.layoutHorizontally();meta.centerAlignContent();meta.addSpacer();let mt=semibold(meta,d.mode==='NEXT'?m.kickoff:m.competition,7.2,.88);mt.centerAlignText();meta.addSpacer();
+  let m=d.mode==='LIVE'?d.liveMatch:d.mode==='POST'?d.recentResult:d.nextMatch,c=w.addStack();c.layoutVertically();c.setPadding(5,5,5,5);c.cornerRadius=14;c.backgroundGradient=cardBg(d.mode);if(!m){heavy(c,'試合データ未取得',9);return}
+  let top=c.addStack();top.layoutHorizontally();text(top,statusTitle(d,m),7.2,true,1,statusAccent(d));top.addSpacer();if(d.mode==='LIVE')heavy(top,m.minute||'LIVE',8.5);c.addSpacer(3);
+  let outer=c.addStack();outer.layoutHorizontally();outer.centerAlignContent();outer.addSpacer();let row=outer.addStack();row.layoutHorizontally();row.centerAlignContent();
+  renderTeamBlock(row,{img:imgs.club,name:club.jp,fallback:club.badge,logoSize:40,nameSize:7.2,p1:club.p,p2:club.s,scale:CREST_SCALE[club.team]||1.08,nameGap:1,width:56});row.addSpacer(7);let sc=heavy(row,centerMainText(d,m),d.mode==='NEXT'?13.5:16.5);sc.centerAlignText();row.addSpacer(7);renderTeamBlock(row,{img:imgs.opp,name:m.opponentName,fallback:m.opponentShort,logoSize:40,nameSize:7.2,p1:'#4A5568',p2:'#20242D',scale:CREST_SCALE[m.opponentId]||CREST_SCALE.opponent_default||1.08,nameGap:1,width:56});outer.addSpacer();c.addSpacer(3);
+  let meta=c.addStack();meta.layoutHorizontally();meta.centerAlignContent();meta.addSpacer();let mt=semibold(meta,d.mode==='NEXT'?m.kickoff:m.competition,7.1,.88);mt.centerAlignText();meta.addSpacer();
 }
 function buildFooterSmall(w,d){let f=w.addStack();f.layoutHorizontally();f.centerAlignContent();f.addSpacer();for(let i=0;i<d.form.length;i++){chip(f,d.form[i],true);if(i<d.form.length-1)f.addSpacer(4)}f.addSpacer()}
 function buildSmall(d,imgs){let w=new ListWidget();w.backgroundGradient=bg();w.setPadding(8,8,8,8);buildHeaderSmall(w,d,imgs.club);w.addSpacer(5);buildMatchSmall(w,d,imgs);w.addSpacer(5);buildFooterSmall(w,d);w.refreshAfterDate=new Date(Date.now()+refreshDelay(d));return w}
