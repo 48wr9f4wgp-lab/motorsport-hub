@@ -1,6 +1,7 @@
 const CP_MU_THEME={gold:'#E7B93F',goldSoft:'#F3D77B',ivory:'#F7F1E3',red:'#DA291C',redDeep:'#720810',black:'#050506'};
 const CP_MU_IS=()=>club?.team===66;
 const CP_MU_BASE_BG=bg,CP_MU_BASE_CARD_BG=cardBg,CP_MU_BASE_BADGE=badge,CP_MU_BASE_SIDE=sidePill,CP_MU_BASE_FORM=formChip;
+const CP_FORM_VIEW=d=>{let f=[...(d?.form||[])];if(String(qa||'').toLowerCase()==='post'){let r=d?.recentResult?.result||'W';if(f.length)f[0]=r;else f=[r,'-','-','-','-']}return f};
 
 bg=function(){
   if(!CP_MU_IS())return CP_MU_BASE_BG();
@@ -37,17 +38,19 @@ buildHeaderMedium=function(w,d,img){
 };
 
 buildFooterMedium=function(w,d){
+  let form=CP_FORM_VIEW(d);
   if(!CP_MU_IS()){
-    let f=w.addStack();f.layoutHorizontally();f.centerAlignContent();f.setPadding(2,8,2,8);f.cornerRadius=9;f.backgroundGradient=gradient([C('#090A0D',.99),C('#101116',.98),C(club.s,.28)],[0,.62,1]);text(f,'最新',6.8,true,.98,'#F4F4F6');f.addSpacer(2);text(f,'→',6.8,true,1,club.a);f.addSpacer(6);for(let i=0;i<d.form.length;i++){formChip(f,d.form[i],i===0,false);if(i<d.form.length-1)f.addSpacer(3)}f.addSpacer();return
+    let f=w.addStack();f.layoutHorizontally();f.centerAlignContent();f.setPadding(2,8,2,8);f.cornerRadius=9;f.backgroundGradient=gradient([C('#090A0D',.99),C('#101116',.98),C(club.s,.28)],[0,.62,1]);text(f,'最新',6.8,true,.98,'#F4F4F6');f.addSpacer(2);text(f,'→',6.8,true,1,club.a);f.addSpacer(6);for(let i=0;i<form.length;i++){formChip(f,form[i],i===0,false);if(i<form.length-1)f.addSpacer(3)}f.addSpacer();return
   }
-  let f=w.addStack();f.layoutHorizontally();f.centerAlignContent();f.setPadding(2,8,2,8);f.cornerRadius=9;f.backgroundGradient=gradient([C('#070709',.99),C('#0D0D10',.99),C('#3B080C',.64)],[0,.62,1]);f.borderWidth=.5;f.borderColor=C(CP_MU_THEME.gold,.25);text(f,'最新',6.8,true,.98,CP_MU_THEME.ivory);f.addSpacer(2);text(f,'→',7,true,1,CP_MU_THEME.gold);f.addSpacer(6);for(let i=0;i<d.form.length;i++){formChip(f,d.form[i],i===0,false);if(i<d.form.length-1)f.addSpacer(3)}f.addSpacer()
+  let f=w.addStack();f.layoutHorizontally();f.centerAlignContent();f.setPadding(2,8,2,8);f.cornerRadius=9;f.backgroundGradient=gradient([C('#070709',.99),C('#0D0D10',.99),C('#3B080C',.64)],[0,.62,1]);f.borderWidth=.5;f.borderColor=C(CP_MU_THEME.gold,.25);text(f,'最新',6.8,true,.98,CP_MU_THEME.ivory);f.addSpacer(2);text(f,'→',7,true,1,CP_MU_THEME.gold);f.addSpacer(6);for(let i=0;i<form.length;i++){formChip(f,form[i],i===0,false);if(i<form.length-1)f.addSpacer(3)}f.addSpacer()
 };
 
 buildFooterSmall=function(w,d){
+  let form=CP_FORM_VIEW(d);
   if(!CP_MU_IS()){
-    let f=w.addStack();f.layoutHorizontally();f.centerAlignContent();f.setPadding(1,1,1,1);f.addSpacer();text(f,'最新',7.6,true,.99,'#F7F7F8');f.addSpacer(2);text(f,'→',7.6,true,1,club.a);f.addSpacer(5);for(let i=0;i<d.form.length;i++){formChip(f,d.form[i],i===0,true);if(i<d.form.length-1)f.addSpacer(3)}f.addSpacer();return
+    let f=w.addStack();f.layoutHorizontally();f.centerAlignContent();f.setPadding(1,1,1,1);f.addSpacer();text(f,'最新',7.6,true,.99,'#F7F7F8');f.addSpacer(2);text(f,'→',7.6,true,1,club.a);f.addSpacer(5);for(let i=0;i<form.length;i++){formChip(f,form[i],i===0,true);if(i<form.length-1)f.addSpacer(3)}f.addSpacer();return
   }
-  let f=w.addStack();f.layoutHorizontally();f.centerAlignContent();f.setPadding(1,1,1,1);f.addSpacer();text(f,'最新',7.6,true,.99,CP_MU_THEME.ivory);f.addSpacer(2);text(f,'→',7.6,true,1,CP_MU_THEME.gold);f.addSpacer(5);for(let i=0;i<d.form.length;i++){formChip(f,d.form[i],i===0,true);if(i<d.form.length-1)f.addSpacer(3)}f.addSpacer()
+  let f=w.addStack();f.layoutHorizontally();f.centerAlignContent();f.setPadding(1,1,1,1);f.addSpacer();text(f,'最新',7.6,true,.99,CP_MU_THEME.ivory);f.addSpacer(2);text(f,'→',7.6,true,1,CP_MU_THEME.gold);f.addSpacer(5);for(let i=0;i<form.length;i++){formChip(f,form[i],i===0,true);if(i<form.length-1)f.addSpacer(3)}f.addSpacer()
 };
 
 buildMatchMedium=function(w,d,imgs){
