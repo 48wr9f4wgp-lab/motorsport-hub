@@ -1,6 +1,18 @@
 name: Motorsport Hub Hero Refresh Discovery
 
 on:
+  push:
+    branches:
+      - 'hardening/v9.3-codex-handoff'
+    paths:
+      - 'hero-refresh-sources.json'
+      - 'tools/build-hero-refresh-config.mjs'
+      - 'tools/commons-hero-discovery.mjs'
+      - 'tools/validate-discovered-hero-images.mjs'
+      - 'tools/detect-hero-subjects.mjs'
+      - 'hero-selection-policy.json'
+      - 'hero-pilot-policies/**'
+      - '.github/workflows/hero-discovery.yml'
   schedule:
     - cron: '17 3 * * 1'
   workflow_dispatch:
