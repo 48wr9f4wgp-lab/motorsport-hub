@@ -80,7 +80,7 @@ check('Man U theme preserves non-ManU base theme', has(files.theme, 'if(!CP_MU_I
 check('Man U theme adds gold accent', has(files.theme, "gold:'#E7B93F'"));
 check('Man U theme overrides both Small and Medium match cards', has(files.theme, 'buildMatchSmall=function') && has(files.theme, 'buildMatchMedium=function'));
 check('Man U theme keeps competition colors delegated', !has(files.theme, 'competitionPill=function'));
-check('POST QA synchronizes latest form result', has(files.theme, "d.mode==='POST'") && has(files.theme, 'd.form[0]=m.result'));
+check('POST QA synchronizes latest form result', has(files.theme, 'CP_FORM_VIEW') && has(files.theme, "toLowerCase()==='post'") && has(files.theme, 'f[0]=r'));
 
 if (failed) {
   console.error(`\nClub Pulse contract QA FAILED: ${failed} check(s)`);
