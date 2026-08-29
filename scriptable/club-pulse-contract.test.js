@@ -39,7 +39,7 @@ check('launcher loads competition logo patch', has(files.launcher, 'club-pulse-c
 check('launcher loads Manchester United theme patch', has(files.launcher, 'club-pulse-manutd-theme-patch.js'));
 check('launcher loads LIVE context patch', has(files.launcher, 'club-pulse-live-context-patch.js'));
 check('launcher loads resilience patch', has(files.launcher, 'club-pulse-resilience-patch.js'));
-check('launcher keeps QA menu out of remote runtime', !has(files.launcher, 'presentSheet(') && !has(files.launcher, 'presentAlert('));
+check('launcher exposes only resilience compatibility submenu', has(files.launcher, 'Club Pulse 耐障害QA') && has(files.launcher, '通信障害・保存あり') && has(files.launcher, '通信障害・保存なし') && !has(files.launcher, 'LIVE 67分 2-1'));
 check('launcher has remote-to-local fallback', has(files.launcher, 'if(F.fileExists(file))return F.readString(file)'));
 check('launcher injects patches before runtime marker', has(files.launcher, "M='if(config.runsInApp&&!getLiveToken())await setupLiveToken();'"));
 check('launcher inject order is UI -> competition -> theme -> live -> resilience', has(files.launcher, "+'\\n'+x+'\\n'+y+'\\n'+z+'\\n'+q+'\\n'+r+'\\n'"));
