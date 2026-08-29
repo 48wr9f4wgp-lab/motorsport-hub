@@ -6,6 +6,8 @@ const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const htmlText=v=>String(v||'').replace(/<[^>]*>/g,' ').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/&#39;/g,"'").replace(/&quot;/g,'"').replace(/\s+/g,' ').trim();
 const meta=(ii,key)=>htmlText(ii?.extmetadata?.[key]?.value);
 const wikiFilePage=title=>`https://commons.wikimedia.org/wiki/${encodeURIComponent(String(title).replace(/ /g,'_')).replace(/%3A/i,':')}`;
+const norm=v=>String(v||'').normalize('NFKC').toLowerCase().replace(/[_-]+/g,' ').replace(/\s+/g,' ').trim();
+const hasAny=(text,terms)=>(terms||[]).some(t=>text.includes(norm(t)));
 
 export function normalizePage(page,query,config){
  const ii=page?.imageinfo?.[0];
@@ -45,6 +47,12 @@ export function evaluateCandidate(c,config){
   if(!c.author)reasons.push('AUTHOR_MISSING');
   if(!c.sourcePage)reasons.push('SOURCE_PAGE_MISSING');
   if(!c.runtimeUrl)reasons.push('RUNTIME_URL_MISSING');
+  const required=config.relevance?.requiredAny||[],forbidden=config.relevance?.forbiddenAny||[];
+  if(required.length||forbidden.length){
+   const text=norm([c.title,c.description,c.credit].filter(Boolean).join(' '));
+   if(required.length&&!hasAny(text,required))reasons.push('CATEGORY_RELEVANCE_MISMATCH');
+   if(forbidden.length&&hasAny(text,forbidden))reasons.push('CATEGORY_FORBIDDEN_CONTEXT');
+  }
  }
  return{eligibleForReview:reasons.length===0,reasons};
 }
@@ -78,7 +86,7 @@ export async function discover(config,fetchImpl=fetch){
   const u=new URL(config.apiUrl);
   const params={action:'query',format:'json',formatversion:'2',generator:'search',gsrsearch:query,gsrnamespace:'6',gsrlimit:String(config.resultsPerQuery),gsrsort:'create_timestamp_desc',prop:'imageinfo',iiprop:'url|size|mime|timestamp|extmetadata',iiurlwidth:String(config.thumbWidth),iiextmetadatafilter:'LicenseShortName|Artist|Credit|ImageDescription|DateTimeOriginal',origin:'*'};
   for(const [k,v] of Object.entries(params))u.searchParams.set(k,v);
-  const r=await fetchImpl(u,{headers:{'User-Agent':'MotorsportHub-HeroDiscovery/1.0 (non-publishing QA tool)'}});
+  const r=await fetchImpl(u,{headers:{'User-Agent':'MotorsportHub-HeroDiscovery/1.1 (non-publishing QA tool)'}});
   if(!r.ok)throw Error(`Commons API ${r.status} for ${query}`);
   responses.push({query,payload:await r.json()});
  }
