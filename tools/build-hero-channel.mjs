@@ -21,7 +21,8 @@ function quality(row,role,meta){
  const detection=Number(row.selectedDetection?.score)||0;
  const subject=(Number(rr.small.subjectFraction)+Number(rr.medium.subjectFraction))/2;
  const safe=(Number(rr.small.effectiveTextSafeScore??rr.small.textSafeScore)+Number(rr.medium.effectiveTextSafeScore??rr.medium.textSafeScore))/2;
- const recency=Number(meta.sourceYear)>=currentYear?1:Number(meta.sourceYear)>=currentYear-1?.75:0;
+ const sourceYear=Number(meta.sourceYear)||0;
+ const recency=sourceYear>=currentYear?1:(sourceYear>=currentYear-1?.75:0);
  return clamp01(.35*detection+.35*Math.min(1,subject/.30)+.20*safe+.10*recency);
 }
 function eligible(row,meta){
