@@ -2,6 +2,16 @@
 // New clubs should add tokens here instead of cloning renderer/theme files.
 
 const CP_CLUB_THEME_REGISTRY={
+  66:{
+    key:'manutd',
+    // Manchester United: saturated club red, near-black, and restrained crest gold.
+    text:'#FFF4E8',muted:'#CFC5BE',accent:'#F5C451',accentSoft:'#FFE08A',
+    bg:['#020203','#080506','#190406','#4D070C','#A40D18'],
+    next:['#A10E18','#5C080E','#1A080A','#07080A'],
+    live:['#C51521','#760A12','#26070A','#07080A'],
+    post:['#850B14','#4C070C','#1B080A','#07080A'],
+    border:'#F5C451',sideBorder:'#F5C451'
+  },
   81:{
     key:'barcelona',
     // Blaugrana: garnet + deep Barça blue, with crest gold as the highlight.
@@ -124,6 +134,7 @@ buildFooterMedium=function(w,d){
   let f=w.addStack();f.layoutHorizontally();f.centerAlignContent();
   f.setPadding(2,8,2,8);f.cornerRadius=9;
   if(t.key==='barcelona')f.backgroundGradient=gradient([C('#07090F',.99),C('#004D98',.78),C('#A50044',.48)],[0,.58,1]);
+  else if(t.key==='manutd')f.backgroundGradient=gradient([C('#060708',.99),C('#21080A',.92),C('#8F0C15',.48)],[0,.63,1]);
   else f.backgroundGradient=gradient([C('#070A10',.99),C('#00529F',.62),C('#F8F4E8',.10)],[0,.66,1]);
   f.borderWidth=.5;f.borderColor=C(t.accent,.32);
   text(f,'最新',6.8,true,.98,t.text);f.addSpacer(2);text(f,'→',7,true,1,t.accent);f.addSpacer(6);
