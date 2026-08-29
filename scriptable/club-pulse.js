@@ -12,7 +12,13 @@ const JP={'Arsenal FC':'アーセナル','Aston Villa FC':'アストン・ヴィ
 const COMP={PL:'プレミアリーグ',PD:'ラ・リーガ',CL:'チャンピオンズリーグ',EL:'ヨーロッパリーグ',ECL:'カンファレンスリーグ',FAC:'FAカップ',CDR:'国王杯'};
 const VEN={'Old Trafford':'オールド・トラッフォード','Emirates Stadium':'エミレーツ・スタジアム','Anfield':'アンフィールド','Etihad Stadium':'エティハド・スタジアム','Stamford Bridge':'スタンフォード・ブリッジ','Tottenham Hotspur Stadium':'トッテナム・ホットスパー・スタジアム','Villa Park':'ヴィラ・パーク'};
 const CREST_SCALE={66:1.08,57:1.05,81:1.05,40:1.12,opponent_default:1.08};
-const param=String(args.widgetParameter||'manutd').trim().toLowerCase(),parts=param.split(':'),raw=parts[0]||'manutd',qa=parts[1]||'auto',club=CLUBS[ALIASES[raw]||raw]||CLUBS.manutd,family=config.widgetFamily||'medium';
+const param=String(args.widgetParameter||'manutd').trim().toLowerCase(),parts=param.split(':'),raw=parts[0]||'manutd',club=CLUBS[ALIASES[raw]||raw]||CLUBS.manutd,family=config.widgetFamily||'medium';
+let qa=parts[1]||'auto';
+if(config.runsInApp&&qa==='auto'){
+  let a=new Alert();a.title='Club Pulse QA';a.message='実機確認したい状態を選択';
+  ['通常','LIVE 67分 2-1','試合終了 2-1勝利','CL次戦','FA杯次戦','EFL杯次戦'].forEach(x=>a.addAction(x));a.addCancelAction('キャンセル');
+  let i=await a.presentSheet();if(i>=0)qa=['auto','live','post','cl','fa','efl'][i];
+}
 const C=(h,a=1)=>new Color(h,a),pad=n=>String(n).padStart(2,'0'),fmt=(d,f)=>{let x=new DateFormatter();x.locale='ja_JP';x.dateFormat=f;return x.string(d)},kickoff=s=>fmt(new Date(s),'M/d(E) HH:mm'),updated=t=>fmt(new Date(t),'HH:mm')+'更新',addDays=(d,n)=>new Date(d.getTime()+n*864e5),ymd=d=>`${d.getUTCFullYear()}-${pad(d.getUTCMonth()+1)}-${pad(d.getUTCDate())}`;
 function files(){let fm=FileManager.local(),dir=fm.joinPath(fm.documentsDirectory(),'ClubPulse');if(!fm.fileExists(dir))fm.createDirectory(dir,true);return{fm,dir}}
 function path(name){let x=files();return x.fm.joinPath(x.dir,name)}
