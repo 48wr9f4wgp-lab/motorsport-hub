@@ -24,8 +24,8 @@ const CP_CLUB_THEME_REGISTRY={
   },
   86:{
     key:'realmadrid',
-    // Real Madrid v5: royal/navy blue is the dominant field, pearl white supplies identity and legibility,
-    // and crest gold defines hierarchy/trim. Avoid large flat white surfaces.
+    // Real Madrid v6: royal/navy blue is the dominant field, white belongs to the crest/text itself,
+    // and restrained gold trim carries the premium identity. Avoid white crest plates and flat white surfaces.
     text:'#FAFCFF',muted:'#C7D3E6',accent:'#FEBE10',accentSoft:'#FFE39A',
     bg:['#020712','#061A3A','#0A3475','#0B3D91','#05162F'],
     next:['#0F4FA7','#0B377B','#071F48','#030B18'],
@@ -69,9 +69,9 @@ badge=function(p,fallback,img,size=28,p1=club.p,p2=club.s,scale=1){
   let o=p.addStack();
   o.size=new Size(size+5,size+5);
   o.cornerRadius=(size+5)/2;
-  o.backgroundColor=C(t.key==='realmadrid'?'#FFFFFF':t.accent,t.key==='realmadrid'?.94:.07);
-  o.borderWidth=t.key==='realmadrid'?1.15:.8;
-  o.borderColor=C(t.border,t.key==='realmadrid'?.98:.58);
+  o.backgroundColor=C(t.key==='realmadrid'?'#061A3A':t.accent,t.key==='realmadrid'?.48:.07);
+  o.borderWidth=t.key==='realmadrid'?.9:.8;
+  o.borderColor=C(t.border,t.key==='realmadrid'?.80:.58);
   o.centerAlignContent();
   let i=o.addStack();
   i.size=new Size(size,size);
@@ -81,7 +81,7 @@ badge=function(p,fallback,img,size=28,p1=club.p,p2=club.s,scale=1){
     let im=i.addImage(img),z=Math.round((size-1)*scale);
     im.imageSize=new Size(z,z)
   }else{
-    i.backgroundGradient=gradient([C(club.s),C(club.p,t.key==='realmadrid'?.18:.72)],[0,1]);
+    i.backgroundGradient=t.key==='realmadrid'?gradient([C('#061A3A'),C('#0B3D91',.78)],[0,1]):gradient([C(club.s),C(club.p,.72)],[0,1]);
     let tx=heavy(i,fallback,size<30?8:10,t.text);tx.centerAlignText()
   }
   return o
