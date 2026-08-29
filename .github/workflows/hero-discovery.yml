@@ -10,6 +10,7 @@ on:
       - 'tools/commons-hero-discovery.mjs'
       - 'tools/validate-discovered-hero-images.mjs'
       - 'tools/detect-hero-subjects.mjs'
+      - 'tools/build-hero-channel.mjs'
       - 'hero-selection-policy.json'
       - 'hero-pilot-policies/**'
       - '.github/workflows/hero-discovery.yml'
@@ -92,3 +93,48 @@ jobs:
             hero-image-validation-report.json
             hero-subject-report.json
             hero-crop-previews/
+
+  build-promotion-candidate:
+    needs: discover-and-validate
+    if: ${{ needs.discover-and-validate.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Download all category refresh evidence
+        uses: actions/download-artifact@v4
+        with:
+          pattern: hero-refresh-*-${{ github.run_id }}
+          path: refresh-artifacts
+      - name: Load previous live Hero channel as LKG
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p hero-channel-previous
+          if git ls-remote --exit-code --heads origin hero-live >/dev/null 2>&1; then
+            git fetch origin hero-live:refs/remotes/origin/hero-live
+            if git cat-file -e origin/hero-live:hero-channel/channel.json 2>/dev/null; then
+              mkdir -p /tmp/hero-live-export
+              git archive origin/hero-live hero-channel | tar -x -C /tmp/hero-live-export
+              cp -R /tmp/hero-live-export/hero-channel/. hero-channel-previous/
+            fi
+          fi
+      - name: Build conservative promotion candidate
+        run: node tools/build-hero-channel.mjs --artifacts=refresh-artifacts --previous-dir=hero-channel-previous --output-dir=hero-channel-candidate
+      - name: Validate candidate channel structure
+        run: |
+          node --check tools/build-hero-channel.mjs
+          node tests/hero-channel-promotion-gate.mjs
+          cat hero-channel-candidate/promotion-report.json
+      - name: Upload promotion candidate for audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: hero-channel-candidate-${{ github.run_id }}
+          retention-days: 14
+          if-no-files-found: error
+          path: hero-channel-candidate/
