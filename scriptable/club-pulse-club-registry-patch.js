@@ -4,14 +4,14 @@
 CLUBS.barcelona={
   id:'barcelona',team:81,comp:'PD',
   name:'バルセロナ',short:'BAR',jp:'バルサ',badge:'FCB',league:'ラ・リーガ',
-  p:'#A50044',s:'#0B2D72',a:'#EDBB00',
+  p:'#A50044',s:'#004D98',a:'#EDBB00',
   venue:'カンプ・ノウ',liveSearch:'Barcelona'
 };
 
 CLUBS.realmadrid={
   id:'realmadrid',team:86,comp:'PD',
   name:'レアル・マドリード',short:'RMA',jp:'レアル',badge:'RMA',league:'ラ・リーガ',
-  p:'#F4F4F4',s:'#172A62',a:'#D9B85B',
+  p:'#F8F7F2',s:'#00529F',a:'#FEBE10',
   venue:'サンティアゴ・ベルナベウ',liveSearch:'Real Madrid'
 };
 
@@ -20,7 +20,14 @@ Object.assign(ALIASES,{
   real:'realmadrid',rma:'realmadrid',madrid:'realmadrid','real-madrid':'realmadrid',realmadridcf:'realmadrid'
 });
 
-Object.assign(CREST_SCALE,{81:.91,86:.92});
+// Crest artwork has different transparent padding by provider.
+// Keep scaling data-driven rather than special-casing renderers.
+Object.assign(CREST_SCALE,{81:.96,86:1.06});
+
+// Japanese UI should not mix English/Spanish opponent labels where a stable mapping is known.
+Object.assign(JP,{
+  'Málaga CF':'マラガ','Málaga':'マラガ','Malaga CF':'マラガ','Malaga':'マラガ'
+});
 
 Object.assign(VEN,{
   'Camp Nou':'カンプ・ノウ',
