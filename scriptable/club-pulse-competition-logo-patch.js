@@ -20,11 +20,11 @@ async function cpCacheLogo(url,key){
   try{let fm=files().fm,p=cpCompPath(key);if(fm.fileExists(p))return;let r=new Request(url);r.timeoutInterval=10;let i=await r.loadImage();fm.writeImage(p,i)}catch{}
 }
 async function cpPreloadKnownCompetitionLogos(){
-  for(let [key,v] of Object.entries(CP_COMP_ASSETS))await cpCacheLogo(`${CP_COMP_CDN}${v.id}.png`,key)
+  await Promise.all(Object.entries(CP_COMP_ASSETS).map(([key,v])=>cpCacheLogo(`${CP_COMP_CDN}${v.id}.png`,key)))
 }
 async function cpCacheDataCompetitionLogos(d){
   if(!d)return;
-  for(let m of [d.liveMatch,d.recentResult,d.nextMatch])if(m?.competitionLogo)await cpCacheLogo(m.competitionLogo,cpCompetitionKey(m)||`dyn_${String(m.competitionShort||'cup').replace(/[^\w-]/g,'_')}`)
+  await Promise.all([d.liveMatch,d.recentResult,d.nextMatch].filter(m=>m?.competitionLogo).map(m=>cpCacheLogo(m.competitionLogo,cpCompetitionKey(m)||`dyn_${String(m.competitionShort||'cup').replace(/[^\w-]/g,'_')}`)))
 }
 const cpMapMatchBase=mapMatch;
 mapMatch=function(m){let x=cpMapMatchBase(m);if(x)x.competitionLogo=m?.competition?.emblem||null;return x};
