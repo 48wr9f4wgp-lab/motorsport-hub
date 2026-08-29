@@ -2,22 +2,27 @@ const TEST_MODE='auto';
 const PROVIDER='footballData';
 const API='https://api.football-data.org/v4';
 const TOKEN='clubpulse_football_data_token_v1';
+const LIVE_API='https://v3.football.api-sports.io';
+const LIVE_TOKEN='clubpulse_api_football_token_v1';
 const TTL_FAR=15*60*1000,TTL_NEAR=2*60*1000,TTL_LIVE=2*60*1000,POST=10*60*60*1000;
 
 const CLUBS={
-  manutd:{id:'manutd',team:66,comp:'PL',name:'マンチェスター・ユナイテッド',short:'MAN UTD',jp:'マンU',badge:'MU',league:'プレミアリーグ',p:'#DA291C',s:'#5A0E0A',a:'#FF6A62',venue:'オールド・トラッフォード'},
-  arsenal:{id:'arsenal',team:57,comp:'PL',name:'アーセナル',short:'ARS',jp:'アーセナル',badge:'ARS',league:'プレミアリーグ',p:'#D71920',s:'#6D0A0D',a:'#FF6A62',venue:'エミレーツ・スタジアム'},
-  barcelona:{id:'barcelona',team:81,comp:'PD',name:'バルセロナ',short:'BAR',jp:'バルサ',badge:'FCB',league:'ラ・リーガ',p:'#A50044',s:'#0B2D72',a:'#D94A6A',venue:'ホーム'}
+  manutd:{id:'manutd',team:66,comp:'PL',name:'マンチェスター・ユナイテッド',short:'MAN UTD',jp:'マンU',badge:'MU',league:'プレミアリーグ',p:'#DA291C',s:'#5A0E0A',a:'#FF6A62',venue:'オールド・トラッフォード',liveSearch:'Manchester United'},
+  arsenal:{id:'arsenal',team:57,comp:'PL',name:'アーセナル',short:'ARS',jp:'アーセナル',badge:'ARS',league:'プレミアリーグ',p:'#D71920',s:'#6D0A0D',a:'#FF6A62',venue:'エミレーツ・スタジアム',liveSearch:'Arsenal'},
+  barcelona:{id:'barcelona',team:81,comp:'PD',name:'バルセロナ',short:'BAR',jp:'バルサ',badge:'FCB',league:'ラ・リーガ',p:'#A50044',s:'#0B2D72',a:'#D94A6A',venue:'ホーム',liveSearch:'Barcelona'}
 };
+const ALIASES={mu:'manutd',mun:'manutd',manu:'manutd','man-united':'manutd',ars:'arsenal',gunners:'arsenal',barca:'barcelona',fcb:'barcelona'};
 
 const JP={
-  'Arsenal FC':'アーセナル','Aston Villa FC':'アストン・ヴィラ','AFC Bournemouth':'ボーンマス','Brentford FC':'ブレントフォード','Brighton & Hove Albion FC':'ブライトン','Chelsea FC':'チェルシー','Crystal Palace FC':'クリスタル・パレス','Everton FC':'エヴァートン','Fulham FC':'フラム','Ipswich Town FC':'イプスウィッチ','Ipswich Town':'イプスウィッチ','Leeds United FC':'リーズ','Liverpool FC':'リヴァプール','Manchester City FC':'マンチェスター・シティ','Manchester United FC':'マンチェスター・ユナイテッド','Newcastle United FC':'ニューカッスル','Nottingham Forest FC':'ノッティンガム・フォレスト','Sunderland AFC':'サンダーランド','Tottenham Hotspur FC':'トッテナム','FC Barcelona':'バルセロナ','Real Madrid CF':'レアル・マドリード','Club Atlético de Madrid':'アトレティコ・マドリード','Athletic Club':'アスレティック・クラブ','Villarreal CF':'ビジャレアル','Real Sociedad de Fútbol':'レアル・ソシエダ','Sevilla FC':'セビージャ','Valencia CF':'バレンシア','Real Betis Balompié':'ベティス'
+  'Arsenal FC':'アーセナル','Aston Villa FC':'アストン・ヴィラ','AFC Bournemouth':'ボーンマス','Brentford FC':'ブレントフォード','Brighton & Hove Albion FC':'ブライトン','Chelsea FC':'チェルシー','Crystal Palace FC':'クリスタル・パレス','Everton FC':'エヴァートン','Fulham FC':'フラム','Ipswich Town FC':'イプスウィッチ','Ipswich Town':'イプスウィッチ','Leeds United FC':'リーズ','Liverpool FC':'リヴァプール','Manchester City FC':'マンチェスター・シティ','Manchester United FC':'マンチェスター・ユナイテッド','Manchester United':'マンチェスター・ユナイテッド','Newcastle United FC':'ニューカッスル','Nottingham Forest FC':'ノッティンガム・フォレスト','Sunderland AFC':'サンダーランド','Tottenham Hotspur FC':'トッテナム','FC Barcelona':'バルセロナ','Barcelona':'バルセロナ','Real Madrid CF':'レアル・マドリード','Club Atlético de Madrid':'アトレティコ・マドリード','Athletic Club':'アスレティック・クラブ','Villarreal CF':'ビジャレアル','Real Sociedad de Fútbol':'レアル・ソシエダ','Sevilla FC':'セビージャ','Valencia CF':'バレンシア','Real Betis Balompié':'ベティス'
 };
 const COMP={PL:'プレミアリーグ',PD:'ラ・リーガ',CL:'チャンピオンズリーグ',EL:'ヨーロッパリーグ',FAC:'FAカップ',ELC:'チャンピオンシップ',CDR:'国王杯'};
 const VEN={'Old Trafford':'オールド・トラッフォード','Emirates Stadium':'エミレーツ・スタジアム','Anfield':'アンフィールド','Etihad Stadium':'エティハド・スタジアム','Stamford Bridge':'スタンフォード・ブリッジ','Tottenham Hotspur Stadium':'トッテナム・ホットスパー・スタジアム','Villa Park':'ヴィラ・パーク'};
 const CREST_SCALE={66:1.08,57:1.05,81:1.05,40:1.12,opponent_default:1.08};
 
-const clubKey=String(args.widgetParameter||'manutd').trim().toLowerCase().split(':')[0];
+const param=String(args.widgetParameter||'manutd').trim().toLowerCase();
+const rawClub=param.split(':')[0]||'manutd';
+const clubKey=ALIASES[rawClub]||rawClub;
 const club=CLUBS[clubKey]||CLUBS.manutd;
 const family=config.widgetFamily||'medium';
 const C=(h,a=1)=>new Color(h,a),pad=n=>String(n).padStart(2,'0');
@@ -26,8 +31,11 @@ const kickoff=s=>fmt(new Date(s),'M/d(E) HH:mm'),updated=t=>fmt(new Date(t),'HH:
 
 function files(){let fm=FileManager.local(),dir=fm.joinPath(fm.documentsDirectory(),'ClubPulse');if(!fm.fileExists(dir))fm.createDirectory(dir,true);return{fm,dir}}
 function cachePath(id){let x=files();return x.fm.joinPath(x.dir,`data_${id}.json`)}
+function liveMapPath(){let x=files();return x.fm.joinPath(x.dir,'live_team_ids.json')}
 function loadCache(id){try{let x=files(),p=cachePath(id);return x.fm.fileExists(p)?JSON.parse(x.fm.readString(p)):null}catch{return null}}
 function saveCache(id,v){try{let x=files();x.fm.writeString(cachePath(id),JSON.stringify(v))}catch{}}
+function loadLiveMap(){try{let x=files(),p=liveMapPath();return x.fm.fileExists(p)?JSON.parse(x.fm.readString(p)):{} }catch{return{}}}
+function saveLiveMap(v){try{let x=files();x.fm.writeString(liveMapPath(),JSON.stringify(v))}catch{}}
 
 async function getToken(){
   if(Keychain.contains(TOKEN))return Keychain.get(TOKEN);
@@ -36,7 +44,9 @@ async function getToken(){
   if(await a.present()===-1)return null;
   let t=a.textFieldValue(0).trim();if(t)Keychain.set(TOKEN,t);return t||null;
 }
+function getLiveToken(){try{return Keychain.contains(LIVE_TOKEN)?Keychain.get(LIVE_TOKEN):null}catch{return null}}
 async function api(path,t){let r=new Request(API+path);r.headers={'X-Auth-Token':t};r.timeoutInterval=15;let j=await r.loadJSON(),s=r.response?.statusCode||200;if(s>=400||j?.error)throw new Error(j?.message||j?.error||`API ${s}`);return j}
+async function liveApi(path,t){let r=new Request(LIVE_API+path);r.headers={'x-apisports-key':t};r.timeoutInterval=12;let j=await r.loadJSON(),s=r.response?.statusCode||200;if(s>=400||j?.errors&&Object.keys(j.errors).length)throw new Error(`LIVE API ${s}`);return j}
 
 const teamName=t=>!t?'未定':JP[t.name]||JP[t.shortName]||t.shortName||t.name||t.tla||'未定';
 const venueName=(v,h)=>VEN[v]||v||(h?club.venue:'アウェイ');
@@ -60,6 +70,19 @@ const providers={footballData:{async load(token){let d=new Date(),from=ymd(addDa
 function cacheTTL(c){if(!c)return 0;if(c.mode==='LIVE')return TTL_LIVE;let n=c.nextMatch?.utcDate?new Date(c.nextMatch.utcDate).getTime():0;if(n&&Math.abs(n-Date.now())<=2*60*60*1000)return TTL_NEAR;return TTL_FAR}
 async function loadData(t){let c=loadCache(club.id),ttl=cacheTTL(c);if(c&&Date.now()-c.fetchedAt<ttl)return{...c,stale:false};try{let v=await providers[PROVIDER].load(t);saveCache(club.id,v);return{...v,stale:false}}catch(e){if(c)return{...c,stale:true};throw e}}
 function refreshDelay(d){if(d.mode==='LIVE')return TTL_LIVE;let n=d.nextMatch?.utcDate?new Date(d.nextMatch.utcDate).getTime():0;if(n&&Math.abs(n-Date.now())<=2*60*60*1000)return TTL_NEAR;return TTL_FAR}
+function shouldCheckLive(d){if(d.mode==='LIVE')return true;let n=d.nextMatch?.utcDate?new Date(d.nextMatch.utcDate).getTime():0;if(!n)return false;let delta=n-Date.now();return delta<=3*60*60*1000&&delta>=-4*60*60*1000}
+async function resolveLiveTeamId(token){let map=loadLiveMap();if(map[club.id])return map[club.id];let j=await liveApi(`/teams?search=${encodeURIComponent(club.liveSearch)}`,token),rows=j?.response||[];if(!rows.length)return null;let q=club.liveSearch.toLowerCase(),best=rows.find(x=>String(x?.team?.name||'').toLowerCase()===q)||rows[0],id=best?.team?.id||null;if(id){map[club.id]=id;saveLiveMap(map)}return id}
+function mapLiveFixture(f,teamId){
+  if(!f)return null;
+  let h=f?.teams?.home?.id===teamId,opp=h?f.teams.away:f.teams.home,own=h?f.teams.home:f.teams.away,st=f?.fixture?.status||{},elapsed=st.elapsed;
+  return{id:f?.fixture?.id||`live-${club.id}`,status:'IN_PLAY',minute:st.short==='HT'?'HT':Number.isFinite(elapsed)?`${elapsed}'`:'LIVE',homeAway:h?'HOME':'AWAY',kickoff:kickoff(f?.fixture?.date||new Date().toISOString()),utcDate:f?.fixture?.date||new Date().toISOString(),venue:venueName(f?.fixture?.venue?.name,h),competition:f?.league?.name||club.league,opponentName:teamName(opp),opponentShort:opp?.code||'OPP',opponentId:opp?.id||null,opponentCrest:opp?.logo||null,clubCrest:own?.logo||null,ourScore:h?f?.goals?.home:f?.goals?.away,opponentScore:h?f?.goals?.away:f?.goals?.home,result:null};
+}
+async function applyLiveOverlay(d){
+  let token=getLiveToken();
+  if(!token||!shouldCheckLive(d))return{...d,liveProvider:'unconfigured'};
+  try{let teamId=await resolveLiveTeamId(token);if(!teamId)return{...d,liveProvider:'team-unresolved'};let j=await liveApi(`/fixtures?live=all&team=${teamId}`,token),f=(j?.response||[])[0];if(!f)return{...d,liveProvider:'ready'};let m=mapLiveFixture(f,teamId);return{...d,mode:'LIVE',liveMatch:m,clubCrest:m.clubCrest||d.clubCrest,liveProvider:'apiFootball',liveFetchedAt:Date.now()}}
+  catch(e){return{...d,liveProvider:'error',liveError:String(e)}}
+}
 
 async function image(url,key){if(!url)return null;try{let x=files(),p=x.fm.joinPath(x.dir,`crest_${String(key).replace(/[^\w-]/g,'_')}.png`);if(x.fm.fileExists(p))return x.fm.readImage(p);let r=new Request(url);r.timeoutInterval=10;let i=await r.loadImage();x.fm.writeImage(p,i);return i}catch{return null}}
 function applyTestMode(d){if(TEST_MODE==='auto')return d;let base=d.nextMatch||d.liveMatch||d.recentResult;if(!base)return d;let m={...base};if(TEST_MODE==='live'){m.status='IN_PLAY';m.minute="67'";m.ourScore=2;m.opponentScore=1;return{...d,mode:'LIVE',liveMatch:m}}if(TEST_MODE==='post'){m.status='FINISHED';m.ourScore=2;m.opponentScore=1;m.result='W';return{...d,mode:'POST',recentResult:m}}return{...d,mode:'NEXT',nextMatch:m}}
@@ -103,4 +126,4 @@ function buildFooterSmall(w,d){let f=w.addStack();f.layoutHorizontally();f.cente
 function buildSmall(d,imgs){let w=new ListWidget();w.backgroundGradient=bg();w.setPadding(8,8,8,8);buildHeaderSmall(w,d,imgs.club);w.addSpacer(5);buildMatchSmall(w,d,imgs);w.addSpacer(5);buildFooterSmall(w,d);w.refreshAfterDate=new Date(Date.now()+refreshDelay(d));return w}
 
 function errorWidget(msg){let w=new ListWidget();w.backgroundColor=C('#0B0C10');w.setPadding(14,14,14,14);heavy(w,'Club Pulse',14);w.addSpacer(8);let t=text(w,msg,10,false,.72);t.lineLimit=6;return w}
-let tokenValue=await getToken(),widget;if(!tokenValue)widget=errorWidget('Scriptableで一度実行し、API Tokenを設定してください。');else try{let data=applyTestMode(await loadData(tokenValue)),match=data.mode==='LIVE'?data.liveMatch:data.mode==='POST'?data.recentResult:data.nextMatch,images={club:await image(data.clubCrest,club.team),opp:match?await image(match.opponentCrest,match.id):null};widget=family==='small'?buildSmall(data,images):buildMedium(data,images)}catch(e){widget=errorWidget('データ取得失敗\n'+String(e))}Script.setWidget(widget);if(config.runsInApp)family==='small'?await widget.presentSmall():await widget.presentMedium();Script.complete();
+let tokenValue=await getToken(),widget;if(!tokenValue)widget=errorWidget('Scriptableで一度実行し、API Tokenを設定してください。');else try{let data=applyTestMode(await applyLiveOverlay(await loadData(tokenValue))),match=data.mode==='LIVE'?data.liveMatch:data.mode==='POST'?data.recentResult:data.nextMatch,images={club:await image(data.clubCrest,club.team),opp:match?await image(match.opponentCrest,match.opponentId||match.id):null};widget=family==='small'?buildSmall(data,images):buildMedium(data,images)}catch(e){widget=errorWidget('データ取得失敗\n'+String(e))}Script.setWidget(widget);if(config.runsInApp)family==='small'?await widget.presentSmall():await widget.presentMedium();Script.complete();
