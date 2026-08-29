@@ -11,12 +11,19 @@ on:
       - 'tools/validate-discovered-hero-images.mjs'
       - 'tools/detect-hero-subjects.mjs'
       - 'tools/build-hero-channel.mjs'
+      - 'tools/validate-hero-channel-publish.mjs'
       - 'hero-selection-policy.json'
       - 'hero-pilot-policies/**'
+      - 'tests/hero-channel-promotion-gate.mjs'
+      - 'tests/hero-refresh-schedule-gate.mjs'
       - '.github/workflows/hero-discovery.yml'
   schedule:
     - cron: '17 3 * * 1'
   workflow_dispatch:
+
+concurrency:
+  group: motorsport-hero-refresh
+  cancel-in-progress: false
 
 permissions:
   contents: read
@@ -126,10 +133,12 @@ jobs:
           fi
       - name: Build conservative promotion candidate
         run: node tools/build-hero-channel.mjs --artifacts=refresh-artifacts --previous-dir=hero-channel-previous --output-dir=hero-channel-candidate
-      - name: Validate candidate channel structure
+      - name: Validate candidate channel and LKG preservation
         run: |
           node --check tools/build-hero-channel.mjs
+          node --check tools/validate-hero-channel-publish.mjs
           node tests/hero-channel-promotion-gate.mjs
+          node tools/validate-hero-channel-publish.mjs --candidate=hero-channel-candidate --previous=hero-channel-previous
           cat hero-channel-candidate/promotion-report.json
       - name: Upload promotion candidate for audit
         uses: actions/upload-artifact@v4
@@ -138,3 +147,67 @@ jobs:
           retention-days: 14
           if-no-files-found: error
           path: hero-channel-candidate/
+
+  publish-live-channel:
+    needs: build-promotion-candidate
+    if: ${{ needs.build-promotion-candidate.result == 'success' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout validated publisher source
+        uses: actions/checkout@v4
+        with:
+          path: source
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Download validated channel candidate
+        uses: actions/download-artifact@v4
+        with:
+          name: hero-channel-candidate-${{ github.run_id }}
+          path: hero-channel-candidate
+      - name: Checkout current live Hero channel
+        uses: actions/checkout@v4
+        with:
+          ref: hero-live
+          path: hero-live-worktree
+          fetch-depth: 1
+      - name: Revalidate candidate against current live LKG
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p hero-channel-previous
+          if [ -d hero-live-worktree/hero-channel ]; then
+            cp -R hero-live-worktree/hero-channel/. hero-channel-previous/
+          fi
+          node source/tools/validate-hero-channel-publish.mjs \
+            --candidate=hero-channel-candidate \
+            --previous=hero-channel-previous
+      - name: Detect publishable promotions
+        id: promotions
+        shell: bash
+        run: |
+          set -euo pipefail
+          count="$(node -e "const r=require('./hero-channel-candidate/promotion-report.json');process.stdout.write(String((r.promoted||[]).length))")"
+          echo "count=$count" >> "$GITHUB_OUTPUT"
+          if [ "$count" -gt 0 ]; then echo 'has_updates=true' >> "$GITHUB_OUTPUT"; else echo 'has_updates=false' >> "$GITHUB_OUTPUT"; fi
+      - name: Atomically publish validated Hero channel commit
+        if: ${{ steps.promotions.outputs.has_updates == 'true' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf hero-live-worktree/hero-channel
+          mkdir -p hero-live-worktree/hero-channel
+          cp -R hero-channel-candidate/. hero-live-worktree/hero-channel/
+          git -C hero-live-worktree add -A hero-channel
+          if git -C hero-live-worktree diff --cached --quiet -- hero-channel; then
+            echo 'Hero channel already matches validated candidate.'
+            exit 0
+          fi
+          git -C hero-live-worktree diff --cached --check
+          git -C hero-live-worktree config user.name 'github-actions[bot]'
+          git -C hero-live-worktree config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git -C hero-live-worktree commit -m "hero: publish gated weekly refresh ${{ github.run_id }}"
+          git -C hero-live-worktree push origin HEAD:hero-live
