@@ -42,18 +42,23 @@ jobs:
           fi
           python3 tools/apply-domestic-hero-provenance.py
           python3 tools/apply-supergt-asset-cache-key.py
+          python3 tools/apply-hero-channel-runtime.py
           python3 tools/apply-hardening-live-router-default.py
           accepted_patch_files=(
             motorsport-hub.js
             category-registry.json
             scriptable-loader-hardening-v5.js
-            wrc-widget-flat-v1000.js
-            motogp-widget-flat-v1000.js
             f1-widget-flat-v1000.js
             wec-widget-flat-v1000.js
+            wrc-widget-flat-v1000.js
             supergt-widget-flat-v1000.js
+            motogp-widget-flat-v1000.js
             fdj-widget-flat-v1000.js
             d1gp-widget-flat-v1000.js
+            superformula-widget.js
+            indycar-widget.js
+            nascar-widget.js
+            gtwc-europe-widget.js
             hero-assets.json
             ATTRIBUTION.md
             tests/release-gate.mjs
@@ -66,7 +71,7 @@ jobs:
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
             git add "${accepted_patch_files[@]}"
             git diff --cached --check
-            git commit -m 'fix: route hardening device tests to hardening-live'
+            git commit -m 'feat: enable controlled live Hero channel runtime'
             git push origin HEAD:hardening/v9.3-codex-handoff
           fi
 
@@ -99,6 +104,7 @@ jobs:
             tests/hero-manifest-gate.mjs
             tests/hero-discovery-gate.mjs
             tests/hero-refresh-schedule-gate.mjs
+            tests/hero-channel-runtime-gate.mjs
             tests/image-probe-gate.mjs
             tests/hero-subject-crop-gate.mjs
             tests/hero-selection-gate.mjs
