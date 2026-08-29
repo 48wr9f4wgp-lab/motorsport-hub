@@ -1,37 +1,81 @@
-name: Motorsport Hub Hero Discovery
+name: Motorsport Hub Hero Refresh Discovery
 
 on:
+  schedule:
+    - cron: '17 3 * * 1'
   workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  discover-dakar:
+  discover-and-validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        category:
+          - F1
+          - WEC
+          - WRC
+          - SUPERGT
+          - MOTOGP
+          - FDJ
+          - D1GP
+          - SUPERFORMULA
+          - INDYCAR
+          - NASCAR
+          - GTWCEU
+          - DAKAR
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Discover recent Wikimedia Commons candidates
-        run: node tools/commons-hero-discovery.mjs --write
+      - name: Build category refresh config
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools/build-hero-refresh-config.mjs \
+            --category='${{ matrix.category }}' \
+            --output=hero-refresh-config.json
+      - name: Discover recent licensed Wikimedia Commons candidates
+        run: node tools/commons-hero-discovery.mjs --config=hero-refresh-config.json --output=hero-discovery-report.json --write
       - name: Probe discovered image bytes and dimensions
-        run: node tools/validate-discovered-hero-images.mjs
+        run: node tools/validate-discovered-hero-images.mjs --input=hero-discovery-report.json --output=hero-image-validation-report.json
       - name: Install build-time subject detector
         run: npm install --no-save --no-package-lock @tensorflow/tfjs-node@4.22.0 @tensorflow-models/coco-ssd@2.2.3
-      - name: Detect vehicle subject and generate crop candidates
+      - name: Detect race subject and generate Small/Medium crop candidates
+        shell: bash
         env:
           TF_CPP_MIN_LOG_LEVEL: '2'
-        run: node tools/detect-hero-subjects.mjs --mode=discovery --preview-dir=hero-crop-previews
-      - name: Upload discovery reports
+        run: |
+          set -euo pipefail
+          category='${{ matrix.category }}'
+          lower="$(printf '%s' "$category" | tr '[:upper:]' '[:lower:]')"
+          if [ "$category" = 'DAKAR' ]; then
+            policy='hero-selection-policy.json'
+          else
+            policy="hero-pilot-policies/${lower}.json"
+          fi
+          node tools/detect-hero-subjects.mjs \
+            --mode=discovery \
+            --policy="$policy" \
+            --discovery=hero-discovery-report.json \
+            --validation=hero-image-validation-report.json \
+            --output=hero-subject-report.json \
+            --preview-dir=hero-crop-previews \
+            --limit=4
+      - name: Upload category refresh evidence
+        if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
-          name: dakar-hero-discovery-${{ github.run_id }}
+          name: hero-refresh-${{ matrix.category }}-${{ github.run_id }}
           retention-days: 14
           if-no-files-found: error
           path: |
+            hero-refresh-config.json
             hero-discovery-report.json
             hero-image-validation-report.json
             hero-subject-report.json
