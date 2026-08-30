@@ -17,12 +17,12 @@ function syntax(name,src){try{new Function(`return (async()=>{\n${src}\n})`);che
 for(const [name,src] of Object.entries(files))syntax(name,src);
 
 check('launcher injects both registries before parameter resolution',has(files.launcher,"c=c.slice(0,pk)+cr+'\\n'+ec+'\\n'+c.slice(pk)"));
-check('launcher loads canonical design system v2',has(files.launcher,'ClubPulseDesignSystemPatch_v2.js')&&has(files.launcher,"'design-system2'"));
-check('launcher pins canonical design-system v2 commit',has(files.launcher,'d6a60170b621b284d22b7135e2fbf2b41d5330e1'));
+check('launcher loads canonical design system v3',has(files.launcher,'ClubPulseDesignSystemPatch_v3.js')&&has(files.launcher,"'design-system3'"));
+check('launcher pins canonical design-system v3 commit',has(files.launcher,'b594900aa9ab2fdd83d12ffbc009b41e0517d64a'));
 check('launcher uses premium visual v2',has(files.launcher,'ClubPulsePremiumVisualPatch_v2.js')&&has(files.launcher,"'premium2'"));
 check('launcher uses readability v4 cache and tag',has(files.launcher,'ClubPulseReadabilityGuardPatch_v4.js')&&has(files.launcher,"'readability4'"));
-check('launcher loads final polish v1',has(files.launcher,'ClubPulseFinalPolishPatch_v1.js')&&has(files.launcher,"'final-polish1'"));
-check('launcher pins final polish v1 commit',has(files.launcher,'613e57e3a4941df85f654c833fd4914e4d2445d6'));
+check('launcher loads final polish v2',has(files.launcher,'ClubPulseFinalPolishPatch_v2.js')&&has(files.launcher,"'final-polish2'"));
+check('launcher pins final polish v2 commit',has(files.launcher,'3e330f2ea3ec8cf797e7a3d96ac66e8aa156e75b'));
 check('canonical load order includes final polish after readability',has(files.launcher,"+u+'\\n'+i+'\\n'+ds+'\\n'+pv+'\\n'+rg+'\\n'+fp+'\\n'+q+'\\n'+r"));
 check('launcher retains remote-to-local fallback',has(files.launcher,'if(F.fileExists(file))return F.readString(file)'));
 check('launcher retains QA persistence',has(files.launcher,'ClubPulseQAOverride_v1.json')&&has(files.launcher,'15*60*1000'));
@@ -41,7 +41,7 @@ check('Barcelona canonical purple identity',has(files.design,"key:'barcelona',to
 check('Real canonical pearl identity',has(files.design,"key:'realmadrid',tone:'pearl-white'")&&has(files.design,"cardSurface:'#FFFDF8'")&&has(files.design,"cardPearl:'#E9E3D6'"));
 check('Bayern canonical crest-color identity with stronger blue edge',has(files.design,"key:'bayern',tone:'crest-red-blue-white'")&&has(files.design,"cardPanel:'#C8102E'")&&has(files.design,"border:'#0073C9'")&&has(files.design,"cardBorder:'#2D86D3'")&&has(files.design,"sideBorder:'#2D86D3'"));
 check('PSG and Man City have distinct blue families',has(files.design,"key:'psg',tone:'paris-royal-blue'")&&has(files.design,"cardSurface:'#04172F'")&&has(files.design,"key:'mancity',tone:'sky-blue'")&&has(files.design,"cardGlow:'#56A8C9'"));
-check('Milan is lifted Rossoneri-to-charcoal',has(files.design,"key:'milan',tone:'rossoneri-charcoal'")&&has(files.design,"cardSurface:'#7A0B16'")&&has(files.design,"cardGlow:'#34363C'"));
+check('Milan is Rossoneri-to-gunmetal with a lighter opponent side',has(files.design,"key:'milan',tone:'rossoneri-gunmetal'")&&has(files.design,"cardSurface:'#7A0B16'")&&has(files.design,"cardPanel:'#342124'")&&has(files.design,"cardGlow:'#4B4F57'"));
 check('design system has no decorative line tokens',!has(files.design,'linePrimary')&&!has(files.design,'lineSecondary'));
 
 check('premium renderer derives club targets from canonical definitions',has(files.premium,'Object.values(CP_THEME_DEFINITIONS||{})')&&has(files.premium,'CP_PREMIUM_GENERIC_KEYS'));
@@ -60,8 +60,8 @@ check('unified competition pill restores competition crest',has(files.readabilit
 check('competition crest keeps white identity plate only inside league pill',has(files.readability,"plate.backgroundColor=C('#FFFFFF',1)")&&has(files.readability,'plate.cornerRadius=q.logoBox/2'));
 check('Barcelona competition pill uses same crest treatment',has(files.readability,'cpBarcelonaCompetitionPill=function')&&has(files.readability,'cpUnifiedCompetitionPill(parent,m,small,true)'));
 
-check('final polish only scopes Juventus crest and Bayern side pill',has(files.finalPolish,"toUpperCase()!=='JUV'")&&has(files.finalPolish,"club?.team!==5"));
-check('Juventus halo is near invisible',has(files.finalPolish,"backgroundColor=C('#F3F5F8',.045)")&&has(files.finalPolish,"backgroundColor=C('#F6F7F9',.025)")&&has(files.finalPolish,"borderColor=C('#FFFFFF',.055)"));
+check('final polish bypasses the old Juventus rescue renderer',has(files.finalPolish,"toUpperCase()==='JUV'")&&has(files.finalPolish,"typeof CP_RG_BASE_BADGE==='function'")&&has(files.finalPolish,'return CP_RG_BASE_BADGE'));
+check('final polish contains no Juventus background tile',!has(files.finalPolish,"backgroundColor=C('#F3F5F8'")&&!has(files.finalPolish,"backgroundColor=C('#F6F7F9'"));
 check('Bayern side pill uses stronger canonical blue',has(files.finalPolish,"t?.sideBorder||'#2D86D3'")&&has(files.finalPolish,'p.borderWidth=.9')&&has(files.finalPolish,".86)"));
 
 check('Man U state renderer stays scoped',has(files.manutd,'club?.team===66'));
