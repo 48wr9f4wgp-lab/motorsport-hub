@@ -10,7 +10,7 @@ const outputDir=path.resolve(arg('output-dir',path.join(root,'hero-channel-candi
 const previousDir=path.resolve(arg('previous-dir',path.join(root,'hero-channel-previous')));
 const currentYear=new Date().getUTCFullYear();
 const categories=['F1','WEC','WRC','SUPERGT','MOTOGP','FDJ','D1GP','SUPERFORMULA','INDYCAR','NASCAR','GTWCEU'];
-const minScore=0.72,minDetection=.55,minSmallSubject=.14,minMediumSubject=.10,minTextSafe=.68;
+const minScore=0.72,minDetection=.55,minSmallSubject=.14,minMediumSubject=.10,minTextSafe=.68,minLkgQualityGain=.02;
 const sha=v=>crypto.createHash('sha256').update(v).digest('hex');
 const slug=v=>String(v||'').replace(/^File:/,'').replace(/[^A-Za-z0-9._-]+/g,'-').replace(/^-+|-+$/g,'').slice(0,52)||'hero';
 const readJSON=p=>{try{return JSON.parse(fs.readFileSync(p,'utf8'))}catch(_){return null}};
@@ -49,6 +49,8 @@ for(const dir of artifactDirs()){
  const category=categoryFromDir(dir);if(!category)continue;const best=bestForDir(dir,category);if(!best)continue;
  const {row,meta,q}=best,prev=next.categories[category];const sourceTime=parseDate(meta.dateRaw)||Date.UTC(Number(meta.sourceYear)||0,0,1),prevTime=parseDate(prev?.sourceDate)||Date.UTC(Number(prev?.sourceYear)||0,0,1);
  if(prev&&sourceTime<=prevTime)continue;
+ const prevQuality=Number(prev?.qualityScore);
+ if(prev&&Number.isFinite(prevQuality)&&q<prevQuality+minLkgQualityGain)continue;
  const smallSrc=path.join(dir,row.derivatives.small.path),mediumSrc=path.join(dir,row.derivatives.medium.path);if(!fs.existsSync(smallSrc)||!fs.existsSync(mediumSrc))continue;
  const assetId=`auto-${sha(meta.sourcePage).slice(0,12)}-${slug(row.title)}`,catDir=path.join(outputDir,'assets',category);fs.rmSync(catDir,{recursive:true,force:true});fs.mkdirSync(catDir,{recursive:true});
  const smallName=`${assetId}-small.jpg`,mediumName=`${assetId}-medium.jpg`,smallDst=path.join(catDir,smallName),mediumDst=path.join(catDir,mediumName);fs.copyFileSync(smallSrc,smallDst);fs.copyFileSync(mediumSrc,mediumDst);
@@ -57,5 +59,5 @@ for(const dir of artifactDirs()){
 }
 if(promoted.length)next.generatedAt=new Date().toISOString();
 fs.writeFileSync(path.join(outputDir,'channel.json'),JSON.stringify(next,null,2)+'\n');
-fs.writeFileSync(path.join(outputDir,'promotion-report.json'),JSON.stringify({schemaVersion:1,generatedAt:new Date().toISOString(),thresholds:{minScore,minDetection,minSmallSubject,minMediumSubject,minTextSafe},promoted,categories:Object.fromEntries(Object.entries(next.categories).map(([k,v])=>[k,{assetId:v.assetId,qualityScore:v.qualityScore,sourceYear:v.sourceYear,sourceTitle:v.sourceTitle}]))},null,2)+'\n');
+fs.writeFileSync(path.join(outputDir,'promotion-report.json'),JSON.stringify({schemaVersion:1,generatedAt:new Date().toISOString(),thresholds:{minScore,minDetection,minSmallSubject,minMediumSubject,minTextSafe,minLkgQualityGain},promoted,categories:Object.fromEntries(Object.entries(next.categories).map(([k,v])=>[k,{assetId:v.assetId,qualityScore:v.qualityScore,sourceYear:v.sourceYear,sourceTitle:v.sourceTitle}]))},null,2)+'\n');
 console.log(JSON.stringify({promoted,totalLive:Object.keys(next.categories).length}));
