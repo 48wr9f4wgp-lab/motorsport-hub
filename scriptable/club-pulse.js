@@ -25,7 +25,7 @@ function cpQaClear(){try{if(F.fileExists(QAP))F.remove(QAP)}catch{}}
 })();
 async function core(){if(!F.fileExists(CP)){let r=new Request(CORE+'?v=1');r.timeoutInterval=10;let s=await r.loadString();if(!s||s.length<1000)throw new Error('Invalid core');F.writeString(CP,s)}return F.readString(CP)}
 async function getRemote(url,file,min,tag){try{let r=new Request(url+'?v='+tag+'-'+Date.now());r.timeoutInterval=10;let s=await r.loadString();if(!s||s.length<min)throw new Error('Invalid patch');F.writeString(file,s);return s}catch(e){if(F.fileExists(file))return F.readString(file);throw e}}
-let c=await core(),cr=await getRemote(CLUB_REGISTRY_PATCH,CRP,300,'clubs2'),x=await getRemote(PATCH,PP,300,'ui8'),y=await getRemote(COMP_PATCH,LP,300,'comp3'),z=await getRemote(THEME_PATCH,TP,300,'mutheme3'),tr=await getRemote(THEME_REGISTRY_PATCH,TRP,300,'themes7-lines'),u=await getRemote(TOP_LAYOUT_PATCH,TLP,300,'toplayout2'),q=await getRemote(LIVE_CONTEXT_PATCH,LCP,250,'livectx1'),r=await getRemote(RESILIENCE_PATCH,RP,300,'resilience2');
+let c=await core(),cr=await getRemote(CLUB_REGISTRY_PATCH,CRP,300,'clubs2'),x=await getRemote(PATCH,PP,300,'ui8'),y=await getRemote(COMP_PATCH,LP,300,'comp3'),z=await getRemote(THEME_PATCH,TP,300,'mutheme3'),tr=await getRemote(THEME_REGISTRY_PATCH,TRP,300,'themes7'),u=await getRemote(TOP_LAYOUT_PATCH,TLP,300,'toplayout2'),q=await getRemote(LIVE_CONTEXT_PATCH,LCP,250,'livectx1'),r=await getRemote(RESILIENCE_PATCH,RP,300,'resilience2');
 const PM='const param=String(args.widgetParameter',pk=c.indexOf(PM);
 if(pk<0)throw new Error('Club registry injection marker missing');
 c=c.slice(0,pk)+cr+'\n'+c.slice(pk);
