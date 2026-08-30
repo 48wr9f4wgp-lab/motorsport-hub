@@ -1,6 +1,6 @@
-// Club Pulse identity color override v5
+// Club Pulse identity color override v6
 // Readability-first identity: no decorative streaks/rails. Club differentiation comes from the inner surface palette.
-// Real Madrid: pearl white / royal blue / restrained gold. Barcelona: strong warm purple with explicit readable match metadata.
+// Real Madrid: pearl white / royal blue / restrained gold. Barcelona: strong warm purple with high-contrast readable match content.
 
 const CP_IDENTITY_BASE_CARD_BG=cardBg,
       CP_IDENTITY_BASE_MATCH_MEDIUM=buildMatchMedium,
@@ -70,57 +70,101 @@ function cpRealTeamBlock(parent,opt,small=false){
   return s
 }
 
+function cpBarcelonaCompetitionPill(parent,m,small=false){
+  let label=competitionReadable(m,small),p=parent.addStack();
+  p.setPadding(small?2.4:3,small?6.5:9,small?2.4:3,small?6.5:9);
+  p.cornerRadius=8;
+  p.backgroundColor=C('#171923',.98);
+  p.borderWidth=.9;
+  p.borderColor=C('#D9DCE5',.54);
+  text(p,label,small?7.4:7.4,true,1,'#FFFFFF')
+}
+
+function cpBarcelonaSidePill(parent,m,small=false){
+  let p=parent.addStack(),label=sideTag(m);
+  p.setPadding(small?2.2:2.4,small?6.5:8,small?2.2:2.4,small?6.5:8);
+  p.cornerRadius=8;
+  p.backgroundColor=C('#11131B',.98);
+  p.borderWidth=.9;
+  p.borderColor=C('#E1BD61',.76);
+  text(p,label,small?7.1:7.2,true,1,'#FFFFFF')
+}
+
+function cpBarcelonaTeamBlock(parent,opt,small=false){
+  let s=parent.addStack();
+  if(opt.width)s.size=new Size(opt.width,0);
+  s.layoutVertically();
+  let logo=s.addStack();logo.layoutHorizontally();logo.addSpacer();
+  let holder=logo.addStack();
+  holder.size=new Size(opt.logoSize,opt.logoSize);
+  holder.backgroundColor=C('#000000',0);
+  holder.centerAlignContent();
+  if(opt.img){
+    let im=holder.addImage(opt.img),z=Math.round(opt.logoSize*(opt.scale||1));
+    im.imageSize=new Size(z,z)
+  }else{
+    let fb=heavy(holder,opt.fallback,small?8:9.5,'#FFFFFF');fb.centerAlignText()
+  }
+  logo.addSpacer();
+  s.addSpacer(opt.nameGap??2);
+  let name=s.addStack();name.layoutHorizontally();name.addSpacer();
+  let nm=heavy(name,opt.name,opt.nameSize||(small?9.6:12.2),'#FFFFFF');
+  nm.centerAlignText();nm.minimumScaleFactor=.78;
+  name.addSpacer();
+  return s
+}
+
 function cpBarcelonaMatchMedium(w,d,imgs){
   let t=CP_ACTIVE_THEME(),m=d.mode==='LIVE'?d.liveMatch:d.mode==='POST'?d.recentResult:d.nextMatch,c=w.addStack();
   c.layoutVertically();c.setPadding(5,10,6,10);c.cornerRadius=16;c.backgroundGradient=cardBg(d.mode);
-  c.borderWidth=.7;c.borderColor=C(t.border,.48);
+  c.borderWidth=.9;c.borderColor=C('#8664B1',.68);
   if(!m){heavy(c,'試合データ未取得',11,'#FFFFFF');return}
   let top=c.addStack();top.layoutHorizontally();top.centerAlignContent();
-  text(top,statusTitle(d,m),8.2,true,1,d.mode==='LIVE'?'#FFE2EC':'#FFFFFF');
-  top.addSpacer(6);competitionPill(top,m);
+  text(top,statusTitle(d,m),8.5,true,1,'#FFFFFF');
+  top.addSpacer(6);cpBarcelonaCompetitionPill(top,m);
   if(d.mode==='POST'){top.addSpacer(5);resultPill(top,m)}
   top.addSpacer();
-  if(d.mode==='LIVE')heavy(top,m.minute||'LIVE',10,'#FFFFFF');
-  else if(d.mode==='POST'){let ft=heavy(top,'FT',10,'#E8E1F0');ft.rightAlignText()}
-  else sidePill(top,m);
+  if(d.mode==='LIVE')heavy(top,m.minute||'LIVE',10.3,'#FFFFFF');
+  else if(d.mode==='POST'){let ft=heavy(top,'FT',10,'#F4EFF8');ft.rightAlignText()}
+  else cpBarcelonaSidePill(top,m);
   c.addSpacer(4);
   let outer=c.addStack();outer.layoutHorizontally();outer.centerAlignContent();outer.addSpacer();
   let row=outer.addStack();row.layoutHorizontally();row.centerAlignContent();
-  renderTeamBlock(row,{img:imgs.club,name:club.jp,sub:'',fallback:club.badge,logoSize:55,nameSize:11.5,subSize:0,p1:club.p,p2:club.s,scale:CREST_SCALE[club.team]||.91,nameGap:2,width:92});
-  row.addSpacer(d.mode==='POST'?15:19);
-  let mid=heavy(row,centerMainText(d,m),d.mode==='POST'?27:d.mode==='NEXT'?14.5:22,'#FFFFFF');mid.centerAlignText();
-  row.addSpacer(d.mode==='POST'?15:19);
-  renderTeamBlock(row,{img:imgs.opp,name:m.opponentName,sub:'',fallback:m.opponentShort,logoSize:55,nameSize:11.5,subSize:0,p1:'#4A5568',p2:'#20242D',scale:CREST_SCALE[m.opponentId]||CREST_SCALE.opponent_default||.90,nameGap:2,width:92});
+  cpBarcelonaTeamBlock(row,{img:imgs.club,name:club.jp,fallback:club.badge,logoSize:58,nameSize:12.2,scale:CREST_SCALE[club.team]||.96,nameGap:2,width:94});
+  row.addSpacer(d.mode==='POST'?14:18);
+  let mid=heavy(row,centerMainText(d,m),d.mode==='POST'?27:d.mode==='NEXT'?15:22.5,'#FFFFFF');mid.centerAlignText();
+  row.addSpacer(d.mode==='POST'?14:18);
+  cpBarcelonaTeamBlock(row,{img:imgs.opp,name:m.opponentName,fallback:m.opponentShort,logoSize:58,nameSize:11.8,scale:CREST_SCALE[m.opponentId]||CREST_SCALE.opponent_default||.90,nameGap:2,width:96});
   outer.addSpacer();
   c.addSpacer(5);
   let meta=c.addStack();meta.layoutHorizontally();meta.addSpacer();
-  let mt=semibold(meta,metaLine(d,m),9.6,1,'#F8F7FB');mt.centerAlignText();mt.minimumScaleFactor=.84;meta.addSpacer()
+  let mt=semibold(meta,metaLine(d,m),9.8,1,'#FFFFFF');mt.centerAlignText();mt.minimumScaleFactor=.88;meta.addSpacer()
 }
 
 function cpBarcelonaMatchSmall(w,d,imgs){
   let t=CP_ACTIVE_THEME(),m=d.mode==='LIVE'?d.liveMatch:d.mode==='POST'?d.recentResult:d.nextMatch,c=w.addStack();
   c.layoutVertically();c.setPadding(6,6,6,6);c.cornerRadius=14;c.backgroundGradient=cardBg(d.mode);
-  c.borderWidth=.7;c.borderColor=C(t.border,.48);
+  c.borderWidth=.9;c.borderColor=C('#8664B1',.68);
   if(!m){heavy(c,'試合データ未取得',10,'#FFFFFF');return}
   let top=c.addStack();top.layoutHorizontally();top.centerAlignContent();
-  text(top,d.mode==='NEXT'?'次戦':statusTitle(d,m),8.2,true,1,d.mode==='LIVE'?'#FFE2EC':'#FFFFFF');
-  top.addSpacer(5);competitionPill(top,m,true);top.addSpacer();
-  if(d.mode==='LIVE')heavy(top,m.minute||'LIVE',9.5,'#FFFFFF');
-  else if(d.mode==='POST'){resultPill(top,m,true);top.addSpacer(4);heavy(top,'FT',8.2,'#E8E1F0')}
-  else sidePill(top,m,true);
+  text(top,d.mode==='NEXT'?'次戦':statusTitle(d,m),8.4,true,1,'#FFFFFF');
+  top.addSpacer(5);cpBarcelonaCompetitionPill(top,m,true);top.addSpacer();
+  if(d.mode==='LIVE')heavy(top,m.minute||'LIVE',9.7,'#FFFFFF');
+  else if(d.mode==='POST'){resultPill(top,m,true);top.addSpacer(4);heavy(top,'FT',8.4,'#F4EFF8')}
+  else cpBarcelonaSidePill(top,m,true);
   c.addSpacer(5);
   let outer=c.addStack();outer.layoutHorizontally();outer.centerAlignContent();outer.addSpacer();
   let row=outer.addStack();row.layoutHorizontally();row.centerAlignContent();
-  renderTeamBlock(row,{img:imgs.club,name:smallTeamName(club.jp,true),fallback:club.badge,logoSize:40,nameSize:9.2,p1:club.p,p2:club.s,scale:CREST_SCALE[club.team]||.91,nameGap:2,width:48});
-  row.addSpacer(4);
+  cpBarcelonaTeamBlock(row,{img:imgs.club,name:smallTeamName(club.jp,true),fallback:club.badge,logoSize:42,nameSize:9.6,scale:CREST_SCALE[club.team]||.96,nameGap:2,width:50},true);
+  row.addSpacer(3);
   let scoreBox=row.addStack();scoreBox.size=new Size(32,22);scoreBox.layoutHorizontally();scoreBox.centerAlignContent();scoreBox.addSpacer();
-  let sc=heavy(scoreBox,centerMainText(d,m),d.mode==='POST'?16:d.mode==='NEXT'?13.5:15,'#FFFFFF');sc.centerAlignText();scoreBox.addSpacer();
-  row.addSpacer(4);
-  renderTeamBlock(row,{img:imgs.opp,name:smallTeamName(m.opponentName),fallback:m.opponentShort,logoSize:40,nameSize:9.2,p1:'#4A5568',p2:'#20242D',scale:CREST_SCALE[m.opponentId]||CREST_SCALE.opponent_default||.90,nameGap:2,width:48});
+  let sc=heavy(scoreBox,centerMainText(d,m),d.mode==='POST'?16:d.mode==='NEXT'?14:15.2,'#FFFFFF');sc.centerAlignText();scoreBox.addSpacer();
+  row.addSpacer(3);
+  cpBarcelonaTeamBlock(row,{img:imgs.opp,name:smallTeamName(m.opponentName),fallback:m.opponentShort,logoSize:42,nameSize:9.4,scale:CREST_SCALE[m.opponentId]||CREST_SCALE.opponent_default||.90,nameGap:2,width:50},true);
   outer.addSpacer();
   c.addSpacer(4);
   let meta=c.addStack();meta.layoutHorizontally();meta.addSpacer();
-  let mt=semibold(meta,m.kickoff,9.2,1,'#F8F7FB');mt.centerAlignText();mt.minimumScaleFactor=.90;meta.addSpacer()
+  let mt=semibold(meta,m.kickoff,9.4,1,'#FFFFFF');mt.centerAlignText();mt.minimumScaleFactor=.92;meta.addSpacer()
 }
 
 buildMatchMedium=function(w,d,imgs){
