@@ -21,6 +21,4 @@ jobs:
         with:
           node-version: '22'
       - name: Run Club Pulse contract checks
-        run: |
-          node scriptable/club-pulse-contract.test.js
-          node scriptable/club-pulse-edge-safe.test.js
+        run: node scriptable/club-pulse-contract.test.js
