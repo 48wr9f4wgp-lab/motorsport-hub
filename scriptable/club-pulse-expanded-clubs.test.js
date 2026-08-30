@@ -9,11 +9,12 @@ const design=read('club-pulse-design-system-patch.js');
 const premium=read('club-pulse-premium-visual-patch.js');
 const leagues=read('club-pulse-league-expansion-patch.js');
 const readability=read('club-pulse-readability-guard-patch.js');
+const finalPolish=read('club-pulse-final-polish-patch.js');
 let failed=0;
 function check(name,ok){if(ok)console.log(`✓ ${name}`);else{console.error(`✗ ${name}`);failed++}}
 function has(src,x){return src.includes(x)}
 function syntax(name,src){try{new Function(`return (async()=>{\n${src}\n})`);check(`${name}: syntax`,true)}catch(e){console.error(e.message);check(`${name}: syntax`,false)}}
-syntax('extra clubs',clubs);syntax('extra themes fallback',themes);syntax('design system',design);syntax('premium visual',premium);syntax('league expansion',leagues);syntax('readability guard',readability);
+syntax('extra clubs',clubs);syntax('extra themes fallback',themes);syntax('design system',design);syntax('premium visual',premium);syntax('league expansion',leagues);syntax('readability guard',readability);syntax('final polish',finalPolish);
 
 check('Bayern team id',has(clubs,"id:'bayern',team:5,comp:'BL1'"));
 check('PSG team id',has(clubs,"id:'psg',team:524,comp:'FL1'"));
@@ -24,7 +25,7 @@ check('home venues',has(clubs,'アリアンツ・アレーナ')&&has(clubs,'パ�
 check('provider names normalize in registry',has(clubs,"'AS Monaco FC':'モナコ'")&&has(clubs,"'Coventry City FC':'コヴェントリー'")&&has(clubs,"'FC Schalke 04':'シャルケ'")&&has(clubs,"'Juventus FC':'ユベントス'"));
 
 check('canonical design system owns four expanded themes',has(design,"5:{")&&has(design,"524:{")&&has(design,"98:{")&&has(design,"65:{"));
-check('Bayern uses crest red-blue-white identity',has(design,"key:'bayern',tone:'crest-red-blue-white'")&&has(design,"cardPanel:'#C8102E'")&&has(design,"border:'#0066B2'")&&has(design,"sideBorder:'#F7F9FC'"));
+check('Bayern uses red field with stronger crest-blue details',has(design,"key:'bayern',tone:'crest-red-blue-white'")&&has(design,"cardPanel:'#C8102E'")&&has(design,"border:'#0073C9'")&&has(design,"cardBorder:'#2D86D3'")&&has(design,"sideBorder:'#2D86D3'"));
 check('PSG uses dark Paris royal-blue family',has(design,"key:'psg',tone:'paris-royal-blue'")&&has(design,"cardSurface:'#04172F'")&&has(design,"cardGlow:'#0A3C73'")&&has(design,"accent:'#E33D45'"));
 check('Milan Rossoneri left-red right-charcoal identity',has(design,"key:'milan',tone:'rossoneri-charcoal'")&&has(design,"cardSurface:'#7A0B16'")&&has(design,"cardPanel:'#342124'")&&has(design,"cardGlow:'#34363C'"));
 check('Milan opponent side is neutral charcoal',!has(design,"cardGlow:'#5A0A12'")&&!has(design,"cardGlow:'#650B14'"));
@@ -47,13 +48,17 @@ check('pill metrics come from canonical tokens',has(readability,"typeof CP_DESIG
 check('unified competition pill restores league logo',has(readability,'function cpUnifiedCompetitionPill')&&has(readability,"typeof cpCompetitionLogoImage==='function'")&&has(readability,'plate.size=new Size(q.logoBox,q.logoBox)'));
 check('Barcelona competition pill uses same crest renderer',has(readability,'cpBarcelonaCompetitionPill=function')&&has(readability,'cpUnifiedCompetitionPill(parent,m,small,true)'));
 check('Real and Barcelona opponent blocks normalize display names',has(readability,'cpRealTeamBlock=function')&&has(readability,'cpBarcelonaTeamBlock=function'));
-check('Juventus rescue is selective and subtle',has(readability,"new Set(['JUV'])")&&has(readability,"backgroundColor=C('#F3F5F8',.10)")&&has(readability,"backgroundColor=C('#F6F7F9',.08)"));
 
-check('launcher downloads canonical design system v1',has(launcher,'ClubPulseDesignSystemPatch_v1.js')&&has(launcher,"'design-system1'"));
+check('final polish keeps Juventus rescue selective',has(finalPolish,"toUpperCase()!=='JUV'"));
+check('Juventus rescue is now nearly invisible',has(finalPolish,"backgroundColor=C('#F3F5F8',.045)")&&has(finalPolish,"backgroundColor=C('#F6F7F9',.025)")&&has(finalPolish,"borderColor=C('#FFFFFF',.055)"));
+check('Bayern side chip reinforces blue without changing red field',has(finalPolish,"club?.team!==5")&&has(finalPolish,"t?.sideBorder||'#2D86D3'")&&has(finalPolish,"p.borderWidth=.9"));
+
+check('launcher downloads canonical design system v2',has(launcher,'ClubPulseDesignSystemPatch_v2.js')&&has(launcher,"'design-system2'"));
 check('launcher downloads premium visual v2',has(launcher,'ClubPulsePremiumVisualPatch_v2.js')&&has(launcher,"'premium2'"));
 check('launcher downloads readability v4',has(launcher,'ClubPulseReadabilityGuardPatch_v4.js')&&has(launcher,"'readability4'"));
-check('design/premium/readability order is canonical',has(launcher,"+u+'\\n'+i+'\\n'+ds+'\\n'+pv+'\\n'+rg+'\\n'+q+'\\n'+r"));
+check('launcher downloads final polish v1',has(launcher,'ClubPulseFinalPolishPatch_v1.js')&&has(launcher,"'final-polish1'"));
+check('design/premium/readability/final-polish order is canonical',has(launcher,"+u+'\\n'+i+'\\n'+ds+'\\n'+pv+'\\n'+rg+'\\n'+fp+'\\n'+q+'\\n'+r"));
 check('launcher documents all seven parameters',has(launcher,'manutd, realmadrid, barcelona, bayern, psg, milan, and mancity'));
 
 if(failed){console.error(`\nExpanded club QA FAILED: ${failed}`);process.exit(1)}
-console.log('\nExpanded canonical seven-club design-system QA PASSED');
+console.log('\nExpanded frozen seven-club visual QA PASSED');
