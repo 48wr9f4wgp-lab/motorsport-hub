@@ -1,4 +1,4 @@
-// Club Pulse extra club registry v1.
+// Club Pulse extra club registry v2.
 // Injected before core parameter resolution. Adds Bayern, PSG, AC Milan, and Manchester City without touching the frozen core.
 
 CLUBS.bayern={
@@ -43,7 +43,11 @@ Object.assign(JP,{
   'FC Bayern München':'バイエルン・ミュンヘン','Bayern München':'バイエルン・ミュンヘン','Bayern Munich':'バイエルン・ミュンヘン',
   'Paris Saint-Germain FC':'パリ・サンジェルマン','Paris Saint-Germain':'パリ・サンジェルマン','Paris SG':'パリ・サンジェルマン',
   'AC Milan':'ACミラン','Milan':'ACミラン',
-  'Manchester City FC':'マンチェスター・シティ','Manchester City':'マンチェスター・シティ'
+  'Manchester City FC':'マンチェスター・シティ','Manchester City':'マンチェスター・シティ',
+  'AS Monaco FC':'モナコ','AS Monaco':'モナコ','Monaco':'モナコ',
+  'Coventry City FC':'コヴェントリー','Coventry City':'コヴェントリー',
+  'FC Schalke 04':'シャルケ','Schalke 04':'シャルケ','Schalke':'シャルケ',
+  'Juventus FC':'ユベントス','Juventus':'ユベントス'
 });
 
 Object.assign(VEN,{
