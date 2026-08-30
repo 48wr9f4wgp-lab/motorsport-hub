@@ -37,13 +37,16 @@ check('Japanese display registry fixes live stale English labels',has(readabilit
 check('Rayo gets explicit short display name',has(readability,"'ラージョ・バジェカーノ':'ラージョ'"));
 check('long labels use ellipsis only as fallback',has(readability,'CP_TEAM_DISPLAY_NAMES[n]||n')&&has(readability,"n.slice(0,max-1)+'…'"));
 check('pill metrics are common',has(readability,'CP_PILL_METRICS')&&has(readability,'competitionPill=function')&&has(readability,'sidePill=function'));
-check('Barcelona pill geometry is normalized too',has(readability,'cpBarcelonaCompetitionPill=function')&&has(readability,'cpBarcelonaSidePill=function'));
+check('unified competition pill restores league logo',has(readability,'function cpUnifiedCompetitionPill')&&has(readability,"typeof cpCompetitionLogoImage==='function'")&&has(readability,'plate.size=new Size(q.logoBox,q.logoBox)'));
+check('competition logo dimensions match readable baseline',has(readability,'logoBox:24')&&has(readability,'logoSize:19')&&has(readability,'logoBox:19')&&has(readability,'logoSize:15'));
+check('Barcelona competition pill uses same crest renderer',has(readability,'cpBarcelonaCompetitionPill=function')&&has(readability,'cpUnifiedCompetitionPill(parent,m,small,true)'));
+check('home-away chips share height family',has(readability,'sideV:6.2')&&has(readability,'sideV:4.8')&&has(readability,'cpBarcelonaSidePill=function'));
 check('Real and Barcelona opponent blocks normalize display names',has(readability,'cpRealTeamBlock=function')&&has(readability,'cpBarcelonaTeamBlock=function'));
 check('Juventus rescue is selective and subtle',has(readability,"new Set(['JUV'])")&&has(readability,"backgroundColor=C('#F3F5F8',.10)")&&has(readability,"backgroundColor=C('#F6F7F9',.08)"));
-check('no opaque global crest plate',!has(readability,"backgroundColor=C('#FFFFFF',1)")&&!has(readability,"backgroundColor=C('#D7DEE8',.20)"));
+check('no opaque global crest plate outside competition identity',!has(readability,"backgroundColor=C('#D7DEE8',.20)"));
 
-check('launcher downloads readability v2',has(launcher,'ClubPulseReadabilityGuardPatch_v2.js')&&has(launcher,"'readability2'"));
-check('launcher pins current readability commit',has(launcher,'26f2dfe816980ce68f9f2a95ac0bd5e14980b152'));
+check('launcher downloads readability v3',has(launcher,'ClubPulseReadabilityGuardPatch_v3.js')&&has(launcher,"'readability3'"));
+check('launcher pins current readability commit',has(launcher,'494a717a797dd000dd3c45b7ed4e7971dd0075a6'));
 check('readability remains after identity in patch order',has(launcher,"+u+'\\n'+i+'\\n'+rg+'\\n'+q+'\\n'+r"));
 check('launcher documents all seven parameters',has(launcher,'manutd, realmadrid, barcelona, bayern, psg, milan, and mancity'));
 
