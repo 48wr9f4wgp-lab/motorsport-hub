@@ -48,6 +48,9 @@ jobs:
             tests/hero-selection-gate.mjs
             tests/hero-rollout-inventory-gate.mjs
             tests/hero-runtime-crop-gate.mjs
+            tests/hero-channel-runtime-gate.mjs
+            tests/hero-channel-promotion-gate.mjs
+            tests/hero-refresh-schedule-gate.mjs
             tests/f1-wec-hero-runtime-gate.mjs
             tests/domestic-hero-runtime-gate.mjs
             tests/lifecycle-hardening-gate.mjs
