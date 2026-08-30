@@ -10,7 +10,7 @@
 (async()=>{
 const ROUTER_SCHEMA=5;
 const CATEGORY_MANIFEST='F1,WEC,WRC,SUPERGT,MOTOGP,FDJ,D1GP,SUPERFORMULA,INDYCAR,NASCAR,GTWCEU,DAKAR,QA';
-const SOURCE_REF=String(globalThis.__MH_SOURCE_REF||'hardening-live');
+const SOURCE_REF=String(globalThis.__MH_SOURCE_REF||'main');
 const INTEGRITY=globalThis.__MH_RELEASE_INTEGRITY||null;
 const labels=['F1','WEC','WRC','SUPER GT','MotoGP','FDJ','D1GP','SUPER FORMULA','INDYCAR','NASCAR Cup','GTWC Europe','Dakar Rally','QA診断'];
 const params=['F1','WEC','WRC','SUPERGT','MOTOGP','FDJ','D1GP','SUPERFORMULA','INDYCAR','NASCAR','GTWCEU','DAKAR','QA'];
