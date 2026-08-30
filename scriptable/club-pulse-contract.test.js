@@ -26,7 +26,7 @@ for(const [name,src] of Object.entries(files))syntax(name,src);
 
 // Launcher composition / ordering.
 check('launcher loads club registry',has(files.launcher,'CLUB_REGISTRY_PATCH'));
-check('launcher injects registry before parameter resolution',has(files.launcher,"PM='const param=String(args.widgetParameter'")&&has(files.launcher,"c=c.slice(0,pk)+cr+'\\n'+c.slice(pk)"));
+check('launcher injects registries before parameter resolution',has(files.launcher,"PM='const param=String(args.widgetParameter'")&&has(files.launcher,"c=c.slice(0,pk)+cr+'\\n'+ec+'\\n'+c.slice(pk)"));
 check('launcher loads club registry v2 cache',has(files.launcher,'ClubPulseClubRegistryPatch_v2.js')&&has(files.launcher,"'clubs2'"));
 check('launcher loads stable UI',has(files.launcher,'club-pulse-ui-patch.js'));
 check('launcher loads competition registry',has(files.launcher,'club-pulse-competition-logo-patch.js'));
@@ -35,7 +35,7 @@ check('launcher loads shared theme registry',has(files.launcher,'THEME_REGISTRY_
 check('launcher loads theme registry v11 cache',has(files.launcher,'ClubPulseThemeRegistryPatch_v11.js')&&has(files.launcher,"'themes11'"));
 check('launcher loads identity v6 cache',has(files.launcher,'ClubPulseIdentityColorPatch_v6.js')&&has(files.launcher,"'identity6'"));
 check('launcher has no decorative edge patch',!has(files.launcher,'EDGE_SAFE_PATCH')&&!has(files.launcher,'ClubPulseEdgeSafeIdentityPatch'));
-check('launcher theme order remains stable',has(files.launcher,"patches=x+'\\n'+y+'\\n'+z+'\\n'+tr+'\\n'+u+'\\n'+i+'\\n'+q+'\\n'+r"));
+check('launcher theme order remains stable with expansion modules',has(files.launcher,"patches=x+'\\n'+y+'\\n'+le+'\\n'+z+'\\n'+tr+'\\n'+et+'\\n'+u+'\\n'+i+'\\n'+q+'\\n'+r"));
 check('launcher loads resilience v2',has(files.launcher,'ClubPulseResiliencePatch_v2.js')&&has(files.launcher,"'resilience2'"));
 check('launcher keeps remote-to-local fallback',has(files.launcher,'if(F.fileExists(file))return F.readString(file)'));
 check('launcher keeps QA override persistence',has(files.launcher,'ClubPulseQAOverride_v1.json')&&has(files.launcher,'15*60*1000'));
