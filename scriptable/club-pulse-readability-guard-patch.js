@@ -1,5 +1,5 @@
-// Club Pulse readability guard v3.
-// Seven-club presentation contract: stable Japanese display names, shared pill dimensions,
+// Club Pulse readability guard v4.
+// Seven-club presentation contract: stable Japanese display names, shared token-driven pill dimensions,
 // visible competition identity, and selective low-contrast crest rescue without global decoration.
 
 const CP_STANDARD_TEAM_IDS=new Set([66,81,86,5,524,98,65]);
@@ -97,8 +97,8 @@ if(CP_RG_BASE_BARCA_TEAM){
   }
 }
 
-// Shared pill geometry for all seven clubs. Competition pills keep the league crest as a first-class cue.
-const CP_PILL_METRICS={
+// Shared pill geometry comes from the canonical design system, with safe legacy fallback.
+const CP_PILL_METRICS=typeof CP_DESIGN_TOKENS==='object'&&CP_DESIGN_TOKENS.pill?CP_DESIGN_TOKENS.pill:{
   medium:{v:2.5,h:7,font:7.2,r:9,logoBox:24,logoSize:19,gap:5,sideV:6.2},
   small:{v:2.0,h:5,font:7.3,r:9,logoBox:19,logoSize:15,gap:4,sideV:4.8}
 };
