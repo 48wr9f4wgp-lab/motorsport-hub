@@ -27,8 +27,8 @@ check('provider names normalize in registry',has(clubs,"'AS Monaco FC':'モナ�
 check('canonical design system owns four expanded themes',has(design,"5:{")&&has(design,"524:{")&&has(design,"98:{")&&has(design,"65:{"));
 check('Bayern uses red field with stronger crest-blue details',has(design,"key:'bayern',tone:'crest-red-blue-white'")&&has(design,"cardPanel:'#C8102E'")&&has(design,"border:'#0073C9'")&&has(design,"cardBorder:'#2D86D3'")&&has(design,"sideBorder:'#2D86D3'"));
 check('PSG uses dark Paris royal-blue family',has(design,"key:'psg',tone:'paris-royal-blue'")&&has(design,"cardSurface:'#04172F'")&&has(design,"cardGlow:'#0A3C73'")&&has(design,"accent:'#E33D45'"));
-check('Milan Rossoneri left-red right-charcoal identity',has(design,"key:'milan',tone:'rossoneri-charcoal'")&&has(design,"cardSurface:'#7A0B16'")&&has(design,"cardPanel:'#342124'")&&has(design,"cardGlow:'#34363C'"));
-check('Milan opponent side is neutral charcoal',!has(design,"cardGlow:'#5A0A12'")&&!has(design,"cardGlow:'#650B14'"));
+check('Milan Rossoneri resolves into neutral gunmetal on opponent side',has(design,"key:'milan',tone:'rossoneri-gunmetal'")&&has(design,"cardSurface:'#7A0B16'")&&has(design,"cardPanel:'#342124'")&&has(design,"cardGlow:'#4B4F57'"));
+check('Milan opponent side is not red',!has(design,"cardGlow:'#5A0A12'")&&!has(design,"cardGlow:'#650B14'"));
 check('Man City uses distinct lighter sky-blue family',has(design,"key:'mancity',tone:'sky-blue'")&&has(design,"cardSurface:'#18516F'")&&has(design,"cardGlow:'#56A8C9'")&&has(design,"cardBorder:'#A7DDF0'"));
 check('PSG and Man City no longer share similar blue endpoints',has(design,"cardGlow:'#0A3C73'")&&has(design,"cardGlow:'#56A8C9'"));
 check('canonical themes stay line-free',!has(design,'linePrimary')&&!has(design,'lineSecondary'));
@@ -49,14 +49,13 @@ check('unified competition pill restores league logo',has(readability,'function 
 check('Barcelona competition pill uses same crest renderer',has(readability,'cpBarcelonaCompetitionPill=function')&&has(readability,'cpUnifiedCompetitionPill(parent,m,small,true)'));
 check('Real and Barcelona opponent blocks normalize display names',has(readability,'cpRealTeamBlock=function')&&has(readability,'cpBarcelonaTeamBlock=function'));
 
-check('final polish keeps Juventus rescue selective',has(finalPolish,"toUpperCase()!=='JUV'"));
-check('Juventus rescue is now nearly invisible',has(finalPolish,"backgroundColor=C('#F3F5F8',.045)")&&has(finalPolish,"backgroundColor=C('#F6F7F9',.025)")&&has(finalPolish,"borderColor=C('#FFFFFF',.055)"));
+check('final polish removes Juventus rescue tile',has(finalPolish,"toUpperCase()==='JUV'")&&has(finalPolish,'return CP_RG_BASE_BADGE')&&!has(finalPolish,"backgroundColor=C('#F3F5F8'"));
 check('Bayern side chip reinforces blue without changing red field',has(finalPolish,"club?.team!==5")&&has(finalPolish,"t?.sideBorder||'#2D86D3'")&&has(finalPolish,"p.borderWidth=.9"));
 
-check('launcher downloads canonical design system v2',has(launcher,'ClubPulseDesignSystemPatch_v2.js')&&has(launcher,"'design-system2'"));
+check('launcher downloads canonical design system v3',has(launcher,'ClubPulseDesignSystemPatch_v3.js')&&has(launcher,"'design-system3'"));
 check('launcher downloads premium visual v2',has(launcher,'ClubPulsePremiumVisualPatch_v2.js')&&has(launcher,"'premium2'"));
 check('launcher downloads readability v4',has(launcher,'ClubPulseReadabilityGuardPatch_v4.js')&&has(launcher,"'readability4'"));
-check('launcher downloads final polish v1',has(launcher,'ClubPulseFinalPolishPatch_v1.js')&&has(launcher,"'final-polish1'"));
+check('launcher downloads final polish v2',has(launcher,'ClubPulseFinalPolishPatch_v2.js')&&has(launcher,"'final-polish2'"));
 check('design/premium/readability/final-polish order is canonical',has(launcher,"+u+'\\n'+i+'\\n'+ds+'\\n'+pv+'\\n'+rg+'\\n'+fp+'\\n'+q+'\\n'+r"));
 check('launcher documents all seven parameters',has(launcher,'manutd, realmadrid, barcelona, bayern, psg, milan, and mancity'));
 
