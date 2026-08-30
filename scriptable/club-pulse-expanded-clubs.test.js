@@ -48,7 +48,7 @@ check('Real and Barcelona opponent blocks normalize display names',has(readabili
 check('Juventus rescue is selective and subtle',has(readability,"new Set(['JUV'])")&&has(readability,"backgroundColor=C('#F3F5F8',.10)")&&has(readability,"backgroundColor=C('#F6F7F9',.08)"));
 
 check('launcher downloads premium visual v1',has(launcher,'ClubPulsePremiumVisualPatch_v1.js')&&has(launcher,"'premium1'"));
-check('launcher pins premium visual commit',has(launcher,'8c79947b6624f7640ee4dfc0d12abfc80db0ed20'));
+check('launcher pins premium visual commit',has(launcher,'ec90bc43c40662a003e60c9e4210bc27043d978b'));
 check('launcher downloads readability v3',has(launcher,'ClubPulseReadabilityGuardPatch_v3.js')&&has(launcher,"'readability3'"));
 check('premium stays between identity and readability in patch order',has(launcher,"+u+'\\n'+i+'\\n'+pv+'\\n'+rg+'\\n'+q+'\\n'+r"));
 check('launcher documents all seven parameters',has(launcher,'manutd, realmadrid, barcelona, bayern, psg, milan, and mancity'));
