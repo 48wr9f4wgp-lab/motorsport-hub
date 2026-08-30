@@ -14,7 +14,7 @@ const oldAsset='auto-old-wrc-action',oldSmall=`${oldAsset}-small.jpg`,oldMedium=
 fs.mkdirSync(path.join(prev,'assets','WRC'),{recursive:true});
 fs.writeFileSync(path.join(prev,'assets','WRC',oldSmall),Buffer.from('old-small-jpeg'));
 fs.writeFileSync(path.join(prev,'assets','WRC',oldMedium),Buffer.from('old-medium-jpeg'));
-const oldWrc={category:'WRC',assetId:oldAsset,version:'oldwrc1234567890',sourcePage:'https://commons.wikimedia.org/wiki/File:Old_WRC_Action.jpg',sourceTitle:'File:Old WRC Action.jpg',author:'Tester',license:'CC BY 4.0',sourceYear:year-1,sourceDate:`${year-1}-06-01`,role:'ACTION',qualityScore:.8,promotedAt:`${year-1}-06-02T00:00:00.000Z`,images:{small:{url:`${liveBase}/WRC/${oldSmall}`,width:720,height:720},medium:{url:`${liveBase}/WRC/${oldMedium}`,width:1380,height:640}}};
+const oldWrc={category:'WRC',assetId:oldAsset,version:'oldwrc1234567890',sourcePage:'https://commons.wikimedia.org/wiki/File:Old_WRC_Action.jpg',sourceTitle:'File:Old WRC Action.jpg',author:'Tester',license:'CC BY 4.0',sourceYear:year-1,sourceDate:`${year-1}-06-01`,role:'ACTION',qualityScore:.95,promotedAt:`${year-1}-06-02T00:00:00.000Z`,images:{small:{url:`${liveBase}/WRC/${oldSmall}`,width:720,height:720},medium:{url:`${liveBase}/WRC/${oldMedium}`,width:1380,height:640}}};
 fs.writeFileSync(path.join(prev,'channel.json'),JSON.stringify({schemaVersion:1,generatedAt:`${year-1}-06-02T00:00:00.000Z`,publicationPolicy:'CI_GATED_LIVE_HERO_CHANNEL',categories:{WRC:oldWrc}},null,2));
 fs.writeFileSync(path.join(prev,'promotion-report.json'),JSON.stringify({schemaVersion:1,promoted:[]}));
 
@@ -31,15 +31,24 @@ assert(channel.categories.WEC.qualityScore>=.72);
 assert(channel.categories.WEC.images.small.url.includes('/hero-live/hero-channel/assets/WEC/'));
 assert(fs.existsSync(path.join(out,'assets','WEC',path.basename(channel.categories.WEC.images.small.url))));
 assert.deepEqual(report.promoted,['WEC']);
+assert.equal(report.thresholds.minLkgQualityGain,.02,'promotion report must expose LKG quality margin');
 assert.deepEqual(channel.categories.WRC,oldWrc,'unpromoted WRC LKG entry must be preserved byte-for-byte at metadata level');
 assert(fs.existsSync(path.join(out,'assets','WRC',oldSmall))&&fs.existsSync(path.join(out,'assets','WRC',oldMedium)),'unpromoted WRC LKG image pair must be preserved');
+
+const lkgDir=path.join(arts,'hero-refresh-WRC-test'),lkgPreviews=path.join(lkgDir,'hero-crop-previews');fs.mkdirSync(lkgPreviews,{recursive:true});
+fs.writeFileSync(path.join(lkgPreviews,'wrc-small.jpg'),Buffer.from('newer-but-weaker-small'));fs.writeFileSync(path.join(lkgPreviews,'wrc-medium.jpg'),Buffer.from('newer-but-weaker-medium'));
+const newerWrcTitle=`File:WRC ${year} newer but weaker action.jpg`;
+fs.writeFileSync(path.join(lkgDir,'hero-discovery-report.json'),JSON.stringify({candidates:[{title:newerWrcTitle,eligibleForReview:true,sourcePage:'https://commons.wikimedia.org/wiki/File:WRC_Newer_Weaker.jpg',runtimeUrl,author:'Tester',license:'CC BY 4.0',sourceYear:year,dateRaw:`${year}-07-01`}]}));
+const weakerCrop=(subject,safe)=>({subjectFraction:subject,textSafeScore:safe,effectiveTextSafeScore:safe,detectionScore:.90});
+fs.writeFileSync(path.join(lkgDir,'hero-subject-report.json'),JSON.stringify({results:[{title:newerWrcTitle,status:'VISUAL_REVIEW_CANDIDATE',recommendedRole:'ACTION',selectedDetection:{score:.90},roleResults:{ACTION:{pass:true,small:weakerCrop(.30,.80),medium:weakerCrop(.30,.80)}},derivatives:{small:{path:'hero-crop-previews/wrc-small.jpg'},medium:{path:'hero-crop-previews/wrc-medium.jpg'}}}]}));
 
 const weakDir=path.join(arts,'hero-refresh-F1-test');fs.mkdirSync(path.join(weakDir,'hero-crop-previews'),{recursive:true});
 fs.writeFileSync(path.join(weakDir,'hero-discovery-report.json'),JSON.stringify({candidates:[{title:'File:Formula One weak.jpg',eligibleForReview:true,sourcePage:'https://commons.wikimedia.org/wiki/File:F1_Weak.jpg',runtimeUrl,author:'Tester',license:'CC BY 4.0',sourceYear:year,dateRaw:`${year}-05-01`}]}));
 fs.writeFileSync(path.join(weakDir,'hero-subject-report.json'),JSON.stringify({results:[{title:'File:Formula One weak.jpg',status:'VISUAL_REVIEW_CANDIDATE',recommendedRole:'ACTION',selectedDetection:{score:.40},roleResults:{ACTION:{pass:true,small:crop(.20,.8),medium:crop(.18,.8)}},derivatives:{small:{path:'hero-crop-previews/x-small.jpg'},medium:{path:'hero-crop-previews/x-medium.jpg'}}}]}));
 execFileSync(process.execPath,[path.join(root,'tools/build-hero-channel.mjs'),`--artifacts=${arts}`,`--previous-dir=${prev}`,`--output-dir=${out}`],{cwd:root,stdio:'pipe'});
-const channel2=JSON.parse(fs.readFileSync(path.join(out,'channel.json'),'utf8'));
+const channel2=JSON.parse(fs.readFileSync(path.join(out,'channel.json'),'utf8')),report2=JSON.parse(fs.readFileSync(path.join(out,'promotion-report.json'),'utf8'));
 assert.equal(channel2.categories.F1,undefined,'weak candidate must not promote');
-assert.deepEqual(channel2.categories.WRC,oldWrc,'weak unrelated candidate must not clear existing LKG');
+assert.deepEqual(channel2.categories.WRC,oldWrc,'newer candidate below LKG quality margin must not replace existing WRC LKG');
+assert(!report2.promoted.includes('WRC'),'newer-but-weaker WRC must not be reported as promoted');
 console.log('Motorsport Hub Hero channel promotion gate: PASS');
 fs.rmSync(tmp,{recursive:true,force:true});
