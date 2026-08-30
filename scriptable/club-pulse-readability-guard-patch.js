@@ -1,75 +1,132 @@
-// Club Pulse readability guard v1.
-// Applies only to the four expanded clubs. Keeps the shared visual language simple while preventing
-// dark crests and long opponent labels from disappearing on compact widget surfaces.
+// Club Pulse readability guard v2.
+// Seven-club presentation contract: stable Japanese display names, shared pill dimensions,
+// and selective low-contrast crest rescue without global plates or decorative lines.
 
-const CP_READABILITY_EXTRA_TEAMS=new Set([5,524,98,65]);
-const CP_READABILITY_RESCUE_BADGES=new Set(['JUV']);
-const CP_READABILITY_BASE_BADGE=badge;
-const CP_READABILITY_BASE_RENDER_TEAM=renderTeamBlock;
-const CP_READABILITY_BASE_SMALL_TEAM_NAME=smallTeamName;
+const CP_STANDARD_TEAM_IDS=new Set([66,81,86,5,524,98,65]);
+const CP_LOW_CONTRAST_CRESTS=new Set(['JUV']);
+const CP_RG_BASE_BADGE=badge;
+const CP_RG_BASE_RENDER_TEAM=renderTeamBlock;
+const CP_RG_BASE_SMALL_TEAM_NAME=smallTeamName;
+const CP_RG_BASE_REAL_TEAM=typeof cpRealTeamBlock==='function'?cpRealTeamBlock:null;
+const CP_RG_BASE_BARCA_TEAM=typeof cpBarcelonaTeamBlock==='function'?cpBarcelonaTeamBlock:null;
 
-function cpReadabilityIsExtra(){return CP_READABILITY_EXTRA_TEAMS.has(club?.team)}
+function cpRgActive(){return CP_STANDARD_TEAM_IDS.has(club?.team)}
 
-const CP_TEAM_SHORT_NAMES={
-  'マンチェスター・ユナイテッド':'マンU',
-  'マンチェスター・シティ':'マンC',
-  'パリ・サンジェルマン':'PSG',
-  'バイエルン・ミュンヘン':'バイエルン',
-  'ACミラン':'ミラン',
-  'ラージョ・バジェカーノ':'ラージョ',
-  'アトレティコ・マドリード':'アトレティコ',
-  'レアル・ソシエダ':'ソシエダ',
-  'アスレティック・クラブ':'アスレティック',
-  'ノッティンガム・フォレスト':'フォレスト',
-  'ニューカッスル・ユナイテッド':'ニューカッスル',
-  'ニューカッスル':'ニューカッスル',
-  'コヴェントリー':'コヴェントリー',
-  'シャルケ':'シャルケ',
-  'ユベントス':'ユベントス',
-  'モナコ':'モナコ'
+const CP_TEAM_DISPLAY_NAMES={
+  // Premier League / England
+  'Manchester United FC':'マンU','Manchester United':'マンU','マンチェスター・ユナイテッド':'マンU',
+  'Manchester City FC':'マンC','Manchester City':'マンC','マンチェスター・シティ':'マンC',
+  'Coventry City FC':'コヴェントリー','Coventry City':'コヴェントリー','コヴェントリー':'コヴェントリー',
+  'Ipswich Town FC':'イプスウィッチ','Ipswich Town':'イプスウィッチ','イプスウィッチ':'イプスウィッチ',
+  'Nottingham Forest FC':'フォレスト','Nottingham Forest':'フォレスト','ノッティンガム・フォレスト':'フォレスト',
+  'Newcastle United FC':'ニューカッスル','Newcastle United':'ニューカッスル','ニューカッスル':'ニューカッスル',
+  // Spain
+  'Rayo Vallecano de Madrid':'ラージョ','Rayo Vallecano':'ラージョ','ラージョ・バジェカーノ':'ラージョ',
+  'Club Atlético de Madrid':'アトレティコ','Atletico Madrid':'アトレティコ','アトレティコ・マドリード':'アトレティコ',
+  'Real Sociedad de Fútbol':'ソシエダ','Real Sociedad':'ソシエダ','レアル・ソシエダ':'ソシエダ',
+  'Athletic Club':'アスレティック','アスレティック・クラブ':'アスレティック',
+  'Málaga CF':'マラガ','Málaga':'マラガ','マラガ':'マラガ',
+  // France
+  'Paris Saint-Germain FC':'PSG','Paris Saint-Germain':'PSG','Paris SG':'PSG','パリ・サンジェルマン':'PSG',
+  'AS Monaco FC':'モナコ','AS Monaco':'モナコ','Monaco':'モナコ','モナコ':'モナコ',
+  // Germany
+  'FC Bayern München':'バイエルン','Bayern München':'バイエルン','Bayern Munich':'バイエルン','バイエルン・ミュンヘン':'バイエルン',
+  'FC Schalke 04':'シャルケ','Schalke 04':'シャルケ','Schalke':'シャルケ','シャルケ':'シャルケ',
+  // Italy
+  'AC Milan':'ミラン','Milan':'ミラン','ACミラン':'ミラン',
+  'Juventus FC':'ユベントス','Juventus':'ユベントス','ユベントス':'ユベントス'
 };
 
-function cpCompactOpponentName(name,small=false){
+function cpDisplayTeamName(name,small=false){
   let n=String(name||'').trim();
   if(!n)return'未定';
-  n=CP_TEAM_SHORT_NAMES[n]||n;
-  let max=small?7:10;
+  n=CP_TEAM_DISPLAY_NAMES[n]||n;
+  const max=small?7:10;
   return n.length>max?n.slice(0,max-1)+'…':n
 }
 
-// Low-contrast crest rescue is deliberately selective: no global white circles.
-// Dark marks such as Juventus receive a soft cool-gray rounded plate only when needed.
+// Selective crest rescue: a faint neutral halo only for genuinely dark marks.
+// No opaque white/gray tile and no global circular plate.
 badge=function(p,fallback,img,size=28,p1=club.p,p2=club.s,scale=1){
-  if(!cpReadabilityIsExtra()||!img||!CP_READABILITY_RESCUE_BADGES.has(String(fallback||'').toUpperCase())){
-    return CP_READABILITY_BASE_BADGE(p,fallback,img,size,p1,p2,scale)
+  if(!cpRgActive()||!img||!CP_LOW_CONTRAST_CRESTS.has(String(fallback||'').toUpperCase())){
+    return CP_RG_BASE_BADGE(p,fallback,img,size,p1,p2,scale)
   }
   let o=p.addStack();
-  o.size=new Size(size+4,size+4);
-  o.cornerRadius=Math.max(9,Math.round(size*.24));
-  o.backgroundColor=C('#D7DEE8',.20);
-  o.borderWidth=.6;
-  o.borderColor=C('#F8FAFC',.18);
+  o.size=new Size(size+2,size+2);
+  o.cornerRadius=Math.max(8,Math.round(size*.20));
+  o.backgroundColor=C('#F3F5F8',.10);
+  o.borderWidth=.4;
+  o.borderColor=C('#FFFFFF',.10);
   o.centerAlignContent();
   let i=o.addStack();
   i.size=new Size(size,size);
-  i.cornerRadius=Math.max(8,Math.round(size*.20));
-  i.backgroundColor=C('#CBD5E1',.24);
+  i.cornerRadius=Math.max(7,Math.round(size*.18));
+  i.backgroundColor=C('#F6F7F9',.08);
   i.centerAlignContent();
-  let im=i.addImage(img),z=Math.round((size-5)*Math.min(scale||1,1));
+  let im=i.addImage(img),z=Math.round((size-2)*Math.min(scale||1,1));
   im.imageSize=new Size(z,z);
   im.centerAlignImage();
   return o
 };
 
-// Medium labels use stable Japanese short names instead of letting arbitrary provider strings shrink to unreadable text.
+function cpNormalizeOpponentOpt(opt,small=false){
+  if(!opt||opt.fallback===club.badge)return opt;
+  return {...opt,name:cpDisplayTeamName(opt.name,small)}
+}
+
 renderTeamBlock=function(parent,opt){
-  if(!cpReadabilityIsExtra()||opt?.fallback===club.badge)return CP_READABILITY_BASE_RENDER_TEAM(parent,opt);
-  let next={...opt,name:cpCompactOpponentName(opt?.name,false)};
-  return CP_READABILITY_BASE_RENDER_TEAM(parent,next)
+  if(!cpRgActive())return CP_RG_BASE_RENDER_TEAM(parent,opt);
+  return CP_RG_BASE_RENDER_TEAM(parent,cpNormalizeOpponentOpt(opt,false))
 };
 
 smallTeamName=function(name,isClub=false){
-  if(!cpReadabilityIsExtra())return CP_READABILITY_BASE_SMALL_TEAM_NAME(name,isClub);
+  if(!cpRgActive())return CP_RG_BASE_SMALL_TEAM_NAME(name,isClub);
   if(isClub)return club.jp||club.short||'';
-  return cpCompactOpponentName(name,true)
+  return cpDisplayTeamName(name,true)
 };
+
+// Real Madrid and Barcelona use dedicated team renderers; normalize their opponent labels too.
+if(CP_RG_BASE_REAL_TEAM){
+  cpRealTeamBlock=function(parent,opt,small=false){
+    return CP_RG_BASE_REAL_TEAM(parent,cpNormalizeOpponentOpt(opt,small),small)
+  }
+}
+if(CP_RG_BASE_BARCA_TEAM){
+  cpBarcelonaTeamBlock=function(parent,opt,small=false){
+    return CP_RG_BASE_BARCA_TEAM(parent,cpNormalizeOpponentOpt(opt,small),small)
+  }
+}
+
+// Shared pill geometry for all seven clubs. Color identity remains club/competition specific.
+const CP_PILL_METRICS={
+  medium:{v:2.6,h:8.0,font:7.2,r:8},
+  small:{v:2.3,h:6.5,font:7.0,r:8}
+};
+
+competitionPill=function(parent,m,small=false){
+  let label=competitionReadable(m,small),z=competitionStyle(label),q=small?CP_PILL_METRICS.small:CP_PILL_METRICS.medium,p=parent.addStack();
+  p.setPadding(q.v,q.h,q.v,q.h);p.cornerRadius=q.r;p.backgroundColor=C(z.bg,.94);p.borderWidth=.8;p.borderColor=C(z.bd,.72);
+  text(p,label,q.font,true,1,z.fg)
+};
+
+sidePill=function(parent,m,small=false){
+  let q=small?CP_PILL_METRICS.small:CP_PILL_METRICS.medium,p=parent.addStack(),label=sideTag(m);
+  p.setPadding(q.v,q.h,q.v,q.h);p.cornerRadius=q.r;p.backgroundColor=C('#121318',.94);p.borderWidth=.8;p.borderColor=C(club.a,.62);
+  text(p,label,q.font,true,1,'#F6F7F9')
+};
+
+// Barcelona keeps its purple/gold identity, but uses the exact same pill geometry.
+if(typeof cpBarcelonaCompetitionPill==='function'){
+  cpBarcelonaCompetitionPill=function(parent,m,small=false){
+    let label=competitionReadable(m,small),q=small?CP_PILL_METRICS.small:CP_PILL_METRICS.medium,p=parent.addStack();
+    p.setPadding(q.v,q.h,q.v,q.h);p.cornerRadius=q.r;p.backgroundColor=C('#171923',.98);p.borderWidth=.8;p.borderColor=C('#D9DCE5',.54);
+    text(p,label,q.font,true,1,'#FFFFFF')
+  }
+}
+if(typeof cpBarcelonaSidePill==='function'){
+  cpBarcelonaSidePill=function(parent,m,small=false){
+    let q=small?CP_PILL_METRICS.small:CP_PILL_METRICS.medium,p=parent.addStack(),label=sideTag(m);
+    p.setPadding(q.v,q.h,q.v,q.h);p.cornerRadius=q.r;p.backgroundColor=C('#11131B',.98);p.borderWidth=.8;p.borderColor=C('#E1BD61',.76);
+    text(p,label,q.font,true,1,'#FFFFFF')
+  }
+}
