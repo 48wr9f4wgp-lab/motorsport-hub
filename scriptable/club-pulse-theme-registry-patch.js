@@ -1,5 +1,5 @@
 // Shared visual theme registry for multi-club rollout.
-// Premium v9: readability first. The outer shell is shared and club identity lives in simple inner surfaces only.
+// Premium v10: readability first. The outer shell is shared and club identity lives in simple inner surfaces only.
 // No decorative streaks, rails, glow bands, or lines may cross information areas.
 
 const CP_COMMON_SHELL={surface:'#0B1020',panel:'#111827',glow:'#0D1424',text:'#F8FAFC',muted:'#B8C2D1',rail:'#0A0F1C',border:'#334155'};
@@ -8,9 +8,9 @@ const CP_CLUB_THEME_REGISTRY={
   66:{
     key:'manutd',
     text:'#FFF8F2',muted:'#C9C1BE',accent:'#D6B45A',accentSoft:'#F0D58A',
-    surface:'#07080A',glow:'#3B0B10',panel:'#13090C',panelDeep:'#0A0F1C',
-    cardSurface:'#0A090A',cardPanel:'#1B080C',cardGlow:'#3A0710',
-    border:'#6F2630',sideBorder:'#D6B45A'
+    surface:'#07080A',glow:'#B5121B',panel:'#13090C',panelDeep:'#0A0F1C',
+    cardSurface:'#3A070B',cardPanel:'#B5121B',cardGlow:'#DA291C',
+    border:'#9D2A33',sideBorder:'#D6B45A'
   },
   81:{
     key:'barcelona',
@@ -42,7 +42,7 @@ function cpCommonShellGradient(){
   return g
 }
 
-// Inner card: subtle low-contrast club surface only. No decorative line layer.
+// Inner card: subtle club surface only. No decorative line layer.
 function cpSimpleCardGradient(t,mode){
   let a=t.cardSurface||t.panelDeep,
       b=t.cardPanel||t.panel,
