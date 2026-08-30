@@ -32,6 +32,7 @@ on:
       - 'tests/hero-channel-promotion-gate.mjs'
       - 'tests/hero-refresh-schedule-gate.mjs'
       - '.github/workflows/hero-discovery.yml'
+      - '.github/workflows/release-candidate-ci.yml'
       - '.github/workflows/release-readiness.yml'
   workflow_dispatch:
 
