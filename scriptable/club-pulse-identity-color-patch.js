@@ -1,6 +1,6 @@
-// Club Pulse identity color override v3
-// Shared shell is fixed dark for readability. Club identity is expressed only inside the match surface and edge-safe streaks.
-// Real Madrid: pearl white / royal blue / restrained gold. Barcelona: stronger warm purple / garnet / restrained blue.
+// Club Pulse identity color override v4
+// Readability-first identity: no decorative streaks/rails. Club differentiation comes from the inner surface palette.
+// Real Madrid: pearl white / royal blue / restrained gold. Barcelona: strong warm purple. Manchester United is handled by shared deep-crimson tokens.
 
 const CP_IDENTITY_BASE_CARD_BG=cardBg,
       CP_IDENTITY_BASE_MATCH_MEDIUM=buildMatchMedium,
@@ -9,57 +9,36 @@ const CP_IDENTITY_BASE_CARD_BG=cardBg,
 (function(){
   let barca=CP_CLUB_THEME_REGISTRY?.[81],real=CP_CLUB_THEME_REGISTRY?.[86];
   if(barca){
-    barca.cardSurface='#130A2B';
-    barca.cardPanel='#2A1457';
-    barca.cardGlow='#4C1D95';
-    barca.linePrimary='#7C3AED';
-    barca.lineSecondary='#BE185D';
-    barca.linePrimaryAlpha=.46;
-    barca.lineSecondaryAlpha=.30;
-    barca.border='#7043C2';
+    barca.cardSurface='#150A2E';
+    barca.cardPanel='#30145B';
+    barca.cardGlow='#3F1C70';
+    barca.border='#5D3A8F';
     barca.sideBorder='#D7B04A';
   }
   if(real){
     real.cardSurface='#FAFAF8';
-    real.cardPanel='#F0F2F6';
-    real.cardGlow='#E1E7F0';
+    real.cardPanel='#F1F3F7';
+    real.cardGlow='#E8ECF3';
     real.cardText='#142443';
     real.cardMuted='#65728A';
     real.cardAccent='#2453A4';
     real.cardBorder='#C6A454';
-    real.linePrimary='#2F6FC5';
-    real.lineSecondary='#B9903D';
-    real.linePrimaryAlpha=.30;
-    real.lineSecondaryAlpha=.22;
   }
 })();
 
-// White Real card gets the same safe-edge identity treatment as dark club cards.
-function cpRealCardGradient(t,mode){
-  let small=(config.widgetFamily||'medium')==='small',p1=.070,p2=.930,w=small?.034:.028,
-      a1=t.linePrimaryAlpha??.30,a2=t.lineSecondaryAlpha??.22,g=new LinearGradient();
-  g.startPoint=new Point(0,.18);
-  g.endPoint=new Point(1,.82);
-  g.colors=[
-    C(t.cardSurface),C(t.cardPanel),
-    C(t.linePrimary,a1*.22),C(t.linePrimary,a1),C(t.linePrimary,a1*.28),C(t.cardPanel),
-    C(t.cardPanel),
-    C(t.lineSecondary,a2*.22),C(t.lineSecondary,a2),C(t.lineSecondary,a2*.28),C(t.cardPanel),
-    C(mode==='LIVE'?t.cardGlow:t.cardSurface)
-  ];
-  g.locations=[
-    0,p1-w*1.8,
-    p1-w,p1,p1+w,p1+w*1.8,
-    .50,
-    p2-w*1.8,p2-w,p2,p2+w,p2+w*1.8,
-    1
-  ];
+// Real keeps a clean pearl-white information surface with only a very subtle tonal falloff.
+function cpRealSimpleCardGradient(t,mode){
+  let g=new LinearGradient();
+  g.startPoint=new Point(0,0);
+  g.endPoint=new Point(1,1);
+  g.colors=[C(t.cardSurface),C(t.cardPanel),C(mode==='LIVE'?t.cardGlow:t.cardSurface)];
+  g.locations=[0,.62,1];
   return g
 }
 
 cardBg=function(mode){
   let t=CP_ACTIVE_THEME();
-  if(t?.key==='realmadrid'&&t.cardSurface)return cpRealCardGradient(t,mode);
+  if(t?.key==='realmadrid'&&t.cardSurface)return cpRealSimpleCardGradient(t,mode);
   return CP_IDENTITY_BASE_CARD_BG(mode)
 };
 
