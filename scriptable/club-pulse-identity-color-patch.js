@@ -1,6 +1,6 @@
-// Club Pulse identity color override v4
+// Club Pulse identity color override v5
 // Readability-first identity: no decorative streaks/rails. Club differentiation comes from the inner surface palette.
-// Real Madrid: pearl white / royal blue / restrained gold. Barcelona: strong warm purple. Manchester United is handled by shared deep-crimson tokens.
+// Real Madrid: pearl white / royal blue / restrained gold. Barcelona: strong warm purple with explicit readable match metadata.
 
 const CP_IDENTITY_BASE_CARD_BG=cardBg,
       CP_IDENTITY_BASE_MATCH_MEDIUM=buildMatchMedium,
@@ -9,10 +9,10 @@ const CP_IDENTITY_BASE_CARD_BG=cardBg,
 (function(){
   let barca=CP_CLUB_THEME_REGISTRY?.[81],real=CP_CLUB_THEME_REGISTRY?.[86];
   if(barca){
-    barca.cardSurface='#150A2E';
-    barca.cardPanel='#30145B';
-    barca.cardGlow='#3F1C70';
-    barca.border='#5D3A8F';
+    barca.cardSurface='#160B34';
+    barca.cardPanel='#32145F';
+    barca.cardGlow='#452078';
+    barca.border='#65449A';
     barca.sideBorder='#D7B04A';
   }
   if(real){
@@ -70,9 +70,64 @@ function cpRealTeamBlock(parent,opt,small=false){
   return s
 }
 
+function cpBarcelonaMatchMedium(w,d,imgs){
+  let t=CP_ACTIVE_THEME(),m=d.mode==='LIVE'?d.liveMatch:d.mode==='POST'?d.recentResult:d.nextMatch,c=w.addStack();
+  c.layoutVertically();c.setPadding(5,10,6,10);c.cornerRadius=16;c.backgroundGradient=cardBg(d.mode);
+  c.borderWidth=.7;c.borderColor=C(t.border,.48);
+  if(!m){heavy(c,'試合データ未取得',11,'#FFFFFF');return}
+  let top=c.addStack();top.layoutHorizontally();top.centerAlignContent();
+  text(top,statusTitle(d,m),8.2,true,1,d.mode==='LIVE'?'#FFE2EC':'#FFFFFF');
+  top.addSpacer(6);competitionPill(top,m);
+  if(d.mode==='POST'){top.addSpacer(5);resultPill(top,m)}
+  top.addSpacer();
+  if(d.mode==='LIVE')heavy(top,m.minute||'LIVE',10,'#FFFFFF');
+  else if(d.mode==='POST'){let ft=heavy(top,'FT',10,'#E8E1F0');ft.rightAlignText()}
+  else sidePill(top,m);
+  c.addSpacer(4);
+  let outer=c.addStack();outer.layoutHorizontally();outer.centerAlignContent();outer.addSpacer();
+  let row=outer.addStack();row.layoutHorizontally();row.centerAlignContent();
+  renderTeamBlock(row,{img:imgs.club,name:club.jp,sub:'',fallback:club.badge,logoSize:55,nameSize:11.5,subSize:0,p1:club.p,p2:club.s,scale:CREST_SCALE[club.team]||.91,nameGap:2,width:92});
+  row.addSpacer(d.mode==='POST'?15:19);
+  let mid=heavy(row,centerMainText(d,m),d.mode==='POST'?27:d.mode==='NEXT'?14.5:22,'#FFFFFF');mid.centerAlignText();
+  row.addSpacer(d.mode==='POST'?15:19);
+  renderTeamBlock(row,{img:imgs.opp,name:m.opponentName,sub:'',fallback:m.opponentShort,logoSize:55,nameSize:11.5,subSize:0,p1:'#4A5568',p2:'#20242D',scale:CREST_SCALE[m.opponentId]||CREST_SCALE.opponent_default||.90,nameGap:2,width:92});
+  outer.addSpacer();
+  c.addSpacer(5);
+  let meta=c.addStack();meta.layoutHorizontally();meta.addSpacer();
+  let mt=semibold(meta,metaLine(d,m),9.6,1,'#F8F7FB');mt.centerAlignText();mt.minimumScaleFactor=.84;meta.addSpacer()
+}
+
+function cpBarcelonaMatchSmall(w,d,imgs){
+  let t=CP_ACTIVE_THEME(),m=d.mode==='LIVE'?d.liveMatch:d.mode==='POST'?d.recentResult:d.nextMatch,c=w.addStack();
+  c.layoutVertically();c.setPadding(6,6,6,6);c.cornerRadius=14;c.backgroundGradient=cardBg(d.mode);
+  c.borderWidth=.7;c.borderColor=C(t.border,.48);
+  if(!m){heavy(c,'試合データ未取得',10,'#FFFFFF');return}
+  let top=c.addStack();top.layoutHorizontally();top.centerAlignContent();
+  text(top,d.mode==='NEXT'?'次戦':statusTitle(d,m),8.2,true,1,d.mode==='LIVE'?'#FFE2EC':'#FFFFFF');
+  top.addSpacer(5);competitionPill(top,m,true);top.addSpacer();
+  if(d.mode==='LIVE')heavy(top,m.minute||'LIVE',9.5,'#FFFFFF');
+  else if(d.mode==='POST'){resultPill(top,m,true);top.addSpacer(4);heavy(top,'FT',8.2,'#E8E1F0')}
+  else sidePill(top,m,true);
+  c.addSpacer(5);
+  let outer=c.addStack();outer.layoutHorizontally();outer.centerAlignContent();outer.addSpacer();
+  let row=outer.addStack();row.layoutHorizontally();row.centerAlignContent();
+  renderTeamBlock(row,{img:imgs.club,name:smallTeamName(club.jp,true),fallback:club.badge,logoSize:40,nameSize:9.2,p1:club.p,p2:club.s,scale:CREST_SCALE[club.team]||.91,nameGap:2,width:48});
+  row.addSpacer(4);
+  let scoreBox=row.addStack();scoreBox.size=new Size(32,22);scoreBox.layoutHorizontally();scoreBox.centerAlignContent();scoreBox.addSpacer();
+  let sc=heavy(scoreBox,centerMainText(d,m),d.mode==='POST'?16:d.mode==='NEXT'?13.5:15,'#FFFFFF');sc.centerAlignText();scoreBox.addSpacer();
+  row.addSpacer(4);
+  renderTeamBlock(row,{img:imgs.opp,name:smallTeamName(m.opponentName),fallback:m.opponentShort,logoSize:40,nameSize:9.2,p1:'#4A5568',p2:'#20242D',scale:CREST_SCALE[m.opponentId]||CREST_SCALE.opponent_default||.90,nameGap:2,width:48});
+  outer.addSpacer();
+  c.addSpacer(4);
+  let meta=c.addStack();meta.layoutHorizontally();meta.addSpacer();
+  let mt=semibold(meta,m.kickoff,9.2,1,'#F8F7FB');mt.centerAlignText();mt.minimumScaleFactor=.90;meta.addSpacer()
+}
+
 buildMatchMedium=function(w,d,imgs){
   let t=CP_ACTIVE_THEME();
-  if(!t||t.key!=='realmadrid')return CP_IDENTITY_BASE_MATCH_MEDIUM(w,d,imgs);
+  if(!t)return CP_IDENTITY_BASE_MATCH_MEDIUM(w,d,imgs);
+  if(t.key==='barcelona')return cpBarcelonaMatchMedium(w,d,imgs);
+  if(t.key!=='realmadrid')return CP_IDENTITY_BASE_MATCH_MEDIUM(w,d,imgs);
   let m=d.mode==='LIVE'?d.liveMatch:d.mode==='POST'?d.recentResult:d.nextMatch,c=w.addStack();
   c.layoutVertically();c.setPadding(4,9,4,9);c.cornerRadius=16;c.backgroundGradient=cardBg(d.mode);
   c.borderWidth=.8;c.borderColor=C(t.cardBorder,.48);
@@ -100,7 +155,9 @@ buildMatchMedium=function(w,d,imgs){
 
 buildMatchSmall=function(w,d,imgs){
   let t=CP_ACTIVE_THEME();
-  if(!t||t.key!=='realmadrid')return CP_IDENTITY_BASE_MATCH_SMALL(w,d,imgs);
+  if(!t)return CP_IDENTITY_BASE_MATCH_SMALL(w,d,imgs);
+  if(t.key==='barcelona')return cpBarcelonaMatchSmall(w,d,imgs);
+  if(t.key!=='realmadrid')return CP_IDENTITY_BASE_MATCH_SMALL(w,d,imgs);
   let m=d.mode==='LIVE'?d.liveMatch:d.mode==='POST'?d.recentResult:d.nextMatch,c=w.addStack();
   c.layoutVertically();c.setPadding(6,6,6,6);c.cornerRadius=14;c.backgroundGradient=cardBg(d.mode);
   c.borderWidth=.8;c.borderColor=C(t.cardBorder,.48);
