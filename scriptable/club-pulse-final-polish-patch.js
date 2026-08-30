@@ -1,27 +1,15 @@
-// Club Pulse final polish v1.
-// Scope is intentionally narrow: Bayern blue accent visibility and a subtler Juventus crest rescue.
+// Club Pulse final polish v2.
+// Scope remains narrow: Bayern blue accent visibility and Milan/Juventus contrast via the card background itself.
 
 const CP_FP_BASE_BADGE=badge;
 const CP_FP_BASE_SIDE_PILL=sidePill;
 
 badge=function(p,fallback,img,size=28,p1=club.p,p2=club.s,scale=1){
-  if(!img||String(fallback||'').toUpperCase()!=='JUV')return CP_FP_BASE_BADGE(p,fallback,img,size,p1,p2,scale);
-  let o=p.addStack();
-  o.size=new Size(size+2,size+2);
-  o.cornerRadius=Math.max(8,Math.round(size*.20));
-  o.backgroundColor=C('#F3F5F8',.045);
-  o.borderWidth=.35;
-  o.borderColor=C('#FFFFFF',.055);
-  o.centerAlignContent();
-  let i=o.addStack();
-  i.size=new Size(size,size);
-  i.cornerRadius=Math.max(7,Math.round(size*.18));
-  i.backgroundColor=C('#F6F7F9',.025);
-  i.centerAlignContent();
-  let im=i.addImage(img),z=Math.round((size-2)*Math.min(scale||1,1));
-  im.imageSize=new Size(z,z);
-  im.centerAlignImage();
-  return o
+  // Juventus no longer gets a dedicated rescue tile. Milan's lighter gunmetal opponent side provides the contrast.
+  if(img&&String(fallback||'').toUpperCase()==='JUV'&&typeof CP_RG_BASE_BADGE==='function'){
+    return CP_RG_BASE_BADGE(p,fallback,img,size,p1,p2,scale)
+  }
+  return CP_FP_BASE_BADGE(p,fallback,img,size,p1,p2,scale)
 };
 
 sidePill=function(parent,m,small=false){
