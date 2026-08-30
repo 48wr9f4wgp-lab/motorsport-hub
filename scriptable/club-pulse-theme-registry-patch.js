@@ -125,7 +125,7 @@ sidePill=function(parent,m,small=false){
   let p=parent.addStack(),label=sideTag(m);
   p.setPadding(2,small?6:7,2,small?6:7);
   p.cornerRadius=8;
-  p.backgroundColor=C(CP_COMMON_SHELL.rail,.96);
+  p.backgroundColor=C(t.panelDeep,.96);
   p.borderWidth=.8;
   p.borderColor=C(t.sideBorder,.72);
   text(p,label,small?6.8:6.8,true,1,CP_COMMON_SHELL.text);
