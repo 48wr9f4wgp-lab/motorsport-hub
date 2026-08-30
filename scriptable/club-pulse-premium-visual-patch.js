@@ -1,5 +1,5 @@
 // Club Pulse premium visual pass v1.
-// Shared design language: restrained tonal surfaces + thin metallic edge. No decorative streaks.
+// Shared design language: restrained tonal surfaces + thin metallic edge. No decorative bands cross content.
 // Real Madrid gets a pearl-white finish; extra clubs receive the same premium card-frame treatment.
 
 const CP_PREMIUM_BASE_CARD_BG=cardBg,
