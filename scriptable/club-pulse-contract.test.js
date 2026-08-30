@@ -17,8 +17,8 @@ for(const [name,src] of Object.entries(files))syntax(name,src);
 
 // Launcher composition and cache versioning.
 check('launcher injects both registries before parameter resolution',has(files.launcher,"c=c.slice(0,pk)+cr+'\\n'+ec+'\\n'+c.slice(pk)"));
-check('launcher uses readability v2 cache and tag',has(files.launcher,'ClubPulseReadabilityGuardPatch_v2.js')&&has(files.launcher,"'readability2'"));
-check('launcher pins readability v2 commit',has(files.launcher,'26f2dfe816980ce68f9f2a95ac0bd5e14980b152'));
+check('launcher uses readability v3 cache and tag',has(files.launcher,'ClubPulseReadabilityGuardPatch_v3.js')&&has(files.launcher,"'readability3'"));
+check('launcher pins readability v3 commit',has(files.launcher,'494a717a797dd000dd3c45b7ed4e7971dd0075a6'));
 check('readability loads after identity',has(files.launcher,"+u+'\\n'+i+'\\n'+rg+'\\n'+q+'\\n'+r"));
 check('launcher retains remote-to-local fallback',has(files.launcher,'if(F.fileExists(file))return F.readString(file)'));
 check('launcher retains QA persistence',has(files.launcher,'ClubPulseQAOverride_v1.json')&&has(files.launcher,'15*60*1000'));
@@ -49,11 +49,14 @@ check('generic opponent renderer is normalized',has(files.readability,'renderTea
 check('Real dedicated renderer is normalized',has(files.readability,'CP_RG_BASE_REAL_TEAM')&&has(files.readability,'cpRealTeamBlock=function'));
 check('Barcelona dedicated renderer is normalized',has(files.readability,'CP_RG_BASE_BARCA_TEAM')&&has(files.readability,'cpBarcelonaTeamBlock=function'));
 check('small labels use same display registry',has(files.readability,'smallTeamName=function')&&has(files.readability,'cpDisplayTeamName(name,true)'));
-check('pill geometry is centralized',has(files.readability,'CP_PILL_METRICS')&&has(files.readability,"medium:{v:2.6,h:8.0,font:7.2,r:8}")&&has(files.readability,"small:{v:2.3,h:6.5,font:7.0,r:8}"));
+check('pill geometry is centralized',has(files.readability,'CP_PILL_METRICS')&&has(files.readability,'logoBox:24')&&has(files.readability,'logoBox:19'));
+check('unified competition pill restores competition crest',has(files.readability,'function cpUnifiedCompetitionPill')&&has(files.readability,"typeof cpCompetitionLogoImage==='function'")&&has(files.readability,'plate.addImage(logo)'));
+check('competition crest keeps white identity plate only inside league pill',has(files.readability,"plate.backgroundColor=C('#FFFFFF',1)")&&has(files.readability,'plate.cornerRadius=q.logoBox/2'));
 check('generic competition and side pills use shared metrics',has(files.readability,'competitionPill=function')&&has(files.readability,'sidePill=function'));
-check('Barcelona pills use shared metrics',has(files.readability,'cpBarcelonaCompetitionPill=function')&&has(files.readability,'cpBarcelonaSidePill=function'));
+check('Barcelona competition pill uses same crest treatment',has(files.readability,'cpBarcelonaCompetitionPill=function')&&has(files.readability,'cpUnifiedCompetitionPill(parent,m,small,true)'));
+check('home-away chips use the shared height family',has(files.readability,'sideV:6.2')&&has(files.readability,'sideV:4.8')&&has(files.readability,'cpBarcelonaSidePill=function'));
 check('crest rescue remains selective to Juventus',has(files.readability,"new Set(['JUV'])"));
-check('crest rescue is a faint halo not opaque plate',has(files.readability,"backgroundColor=C('#F3F5F8',.10)")&&has(files.readability,"backgroundColor=C('#F6F7F9',.08)")&&!has(files.readability,"backgroundColor=C('#FFFFFF',1)"));
+check('crest rescue remains faint outside league pill',has(files.readability,"backgroundColor=C('#F3F5F8',.10)")&&has(files.readability,"backgroundColor=C('#F6F7F9',.08)"));
 
 // State and resilience contracts.
 check('Man U state renderer stays scoped',has(files.manutd,'club?.team===66'));
