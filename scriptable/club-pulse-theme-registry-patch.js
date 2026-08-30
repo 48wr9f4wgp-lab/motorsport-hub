@@ -1,5 +1,5 @@
 // Shared visual theme registry for multi-club rollout.
-// Premium v7: restrained dark surfaces, one subtle club-color glow, flat secondary components.
+// Premium v7.1: restrained dark surfaces, subtle club-color light lines, flat secondary components.
 // New clubs should add tokens here instead of cloning renderer/theme files.
 
 const CP_CLUB_THEME_REGISTRY={
@@ -7,24 +7,41 @@ const CP_CLUB_THEME_REGISTRY={
     key:'manutd',
     text:'#FFF8F2',muted:'#C9C1BE',accent:'#D6B45A',accentSoft:'#F0D58A',
     surface:'#07080A',glow:'#641019',panel:'#13090C',panelDeep:'#090A0C',
+    linePrimary:'#3B0B11',lineSecondary:'#2B2412',
     border:'#D6B45A',sideBorder:'#D6B45A'
   },
   81:{
     key:'barcelona',
     text:'#FFF8F1',muted:'#C9C6D5',accent:'#D7B04A',accentSoft:'#EFD47D',
     surface:'#070A12',glow:'#5A1038',panel:'#0C1427',panelDeep:'#090B13',
+    linePrimary:'#32102A',lineSecondary:'#0D2447',
     border:'#B94967',sideBorder:'#D7B04A'
   },
   86:{
     key:'realmadrid',
     text:'#FBFCFF',muted:'#C9D1DE',accent:'#D8B557',accentSoft:'#EFD78F',
     surface:'#070A10',glow:'#123D78',panel:'#0A172A',panelDeep:'#080C13',
+    linePrimary:'#112C52',lineSecondary:'#30291A',
     border:'#D8B557',sideBorder:'#D8B557'
   }
 };
 
 function CP_ACTIVE_THEME(){return CP_CLUB_THEME_REGISTRY[club?.team]||null}
 function cpThemeGradient(stops,alpha=.98){let loc=stops.length===2?[0,1]:stops.length===3?[0,.58,1]:stops.map((_,i)=>i/(stops.length-1));return gradient(stops.map(x=>C(x,alpha)),loc)}
+
+// A dark shell with two narrow, low-contrast diagonal light lines.
+// The lines are intentionally placed in the shell only, so they do not compete with match information.
+function cpShellGradient(t){
+  let g=new LinearGradient();
+  g.startPoint=new Point(0,0);
+  g.endPoint=new Point(1,1);
+  g.colors=[
+    C(t.surface),C(t.panel),C(t.panel),C(t.linePrimary),C(t.panel),
+    C(t.panel),C(t.panel),C(t.lineSecondary),C(t.panel),C(t.glow),C(t.surface)
+  ];
+  g.locations=[0,.18,.272,.282,.292,.58,.692,.702,.712,.86,1];
+  return g
+}
 
 const CP_THEME_BASE_BG=bg,
       CP_THEME_BASE_CARD_BG=cardBg,
@@ -38,11 +55,12 @@ const CP_THEME_BASE_BG=bg,
       CP_THEME_BASE_BUILD_MEDIUM=buildMedium,
       CP_THEME_BASE_BUILD_SMALL=buildSmall;
 
-// One quiet club-colored glow on the widget shell. No multi-stop rainbow treatment.
+// Club color appears as two quiet diagonal light lines plus one restrained undertone.
 bg=function(){
   let t=CP_ACTIVE_THEME();
   if(!t)return CP_THEME_BASE_BG();
-  return cpThemeGradient([t.surface,t.panel,t.glow],.99)
+  if(!t.linePrimary||!t.lineSecondary)return cpThemeGradient([t.surface,t.panel,t.glow],.99);
+  return cpShellGradient(t)
 };
 
 // Match panel stays dark and disciplined; club color is only a faint undertone.
