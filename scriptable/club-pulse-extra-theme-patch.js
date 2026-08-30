@@ -19,11 +19,12 @@ Object.assign(CP_CLUB_THEME_REGISTRY,{
   },
   98:{
     key:'milan',
-    text:'#FAFAFA',muted:'#D9D5D6',accent:'#E22533',accentSoft:'#F3F3F3',
-    surface:'#070708',glow:'#5A0A12',panel:'#121215',panelDeep:'#080D17',
-    // Rossoneri balance: Milan red is strongest on the Milan/left side; opponent/right stays neutral charcoal.
-    cardSurface:'#650A13',cardPanel:'#231417',cardGlow:'#202126',
-    border:'#7E2029',cardBorder:'#A02A35',sideBorder:'#D5303C'
+    text:'#FAFAFA',muted:'#DDD8DA',accent:'#E22533',accentSoft:'#F3F3F3',
+    surface:'#070708',glow:'#650B14',panel:'#151518',panelDeep:'#080D17',
+    // Rossoneri balance: visible deep red on Milan/left, lifted charcoal in the center/right.
+    // The Juventus side remains neutral rather than inheriting Milan red.
+    cardSurface:'#760B16',cardPanel:'#2D191D',cardGlow:'#292B30',
+    border:'#84232D',cardBorder:'#A72D39',sideBorder:'#D5303C'
   },
   65:{
     key:'mancity',
