@@ -1,4 +1,4 @@
-// Club Pulse canonical design system v2.
+// Club Pulse canonical design system v3.
 // This file is the visual source of truth for the current seven-club family.
 // Legacy theme files remain as compatibility fallbacks; new visual tuning belongs here.
 
@@ -57,11 +57,11 @@ const CP_THEME_DEFINITIONS={
     border:'#244F83',cardBorder:'#5A78A2',sideBorder:'#F6F7FA'
   },
   98:{
-    key:'milan',tone:'rossoneri-charcoal',
+    key:'milan',tone:'rossoneri-gunmetal',
     text:'#FAFAFA',muted:'#E1DADC',accent:'#E22533',accentSoft:'#F3F3F3',
     surface:'#080708',panel:'#181619',glow:'#6B0B15',panelDeep:'#080D17',
-    // Milan identity stays on the left; the opponent side finishes in lifted neutral charcoal.
-    cardSurface:'#7A0B16',cardPanel:'#342124',cardGlow:'#34363C',
+    // Milan identity stays on the left; the opponent side resolves into lighter neutral gunmetal so dark crests remain legible without a plate.
+    cardSurface:'#7A0B16',cardPanel:'#342124',cardGlow:'#4B4F57',
     border:'#8E2832',cardBorder:'#B23A45',sideBorder:'#D5303C'
   },
   65:{
