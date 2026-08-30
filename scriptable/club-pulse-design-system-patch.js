@@ -1,0 +1,85 @@
+// Club Pulse canonical design system v1.
+// This file is the visual source of truth for the current seven-club family.
+// Legacy theme files remain as compatibility fallbacks; new visual tuning belongs here.
+
+const CP_DESIGN_TOKENS={
+  shell:{
+    surface:'#080C14',panel:'#0D1420',glow:'#111A28',rail:'#080D17',
+    text:'#F8FAFC',muted:'#B8C2D1',border:'#465164',edge:'#9AA6B8'
+  },
+  card:{
+    radiusMedium:16,radiusSmall:14,
+    borderMedium:.85,borderSmall:.75,
+    borderAlphaMedium:.72,borderAlphaSmall:.66
+  },
+  pill:{
+    medium:{v:2.5,h:7,font:7.2,r:9,logoBox:24,logoSize:19,gap:5,sideV:6.2},
+    small:{v:2.0,h:5,font:7.3,r:9,logoBox:19,logoSize:15,gap:4,sideV:4.8}
+  }
+};
+
+const CP_THEME_DEFINITIONS={
+  66:{
+    key:'manutd',tone:'vivid-red',
+    text:'#FFF8F2',muted:'#D8CBC8',accent:'#D6B45A',accentSoft:'#F0D58A',
+    surface:'#07080A',panel:'#13090C',glow:'#DA291C',panelDeep:'#080D17',
+    cardSurface:'#5B0A0E',cardPanel:'#B5121B',cardGlow:'#DA291C',
+    border:'#A82A31',cardBorder:'#D0AE55',sideBorder:'#D6B45A'
+  },
+  81:{
+    key:'barcelona',tone:'royal-purple',
+    text:'#FFF8F1',muted:'#D7D0E2',accent:'#D7B04A',accentSoft:'#EFD47D',
+    surface:'#070A12',panel:'#0C1427',glow:'#421A68',panelDeep:'#080D17',
+    cardSurface:'#160B34',cardPanel:'#32145F',cardGlow:'#452078',
+    border:'#65449A',cardBorder:'#8064AA',sideBorder:'#D7B04A'
+  },
+  86:{
+    key:'realmadrid',tone:'pearl-white',
+    text:'#FBFCFF',muted:'#C9D1DE',accent:'#D8B557',accentSoft:'#EFD78F',
+    surface:'#070A10',panel:'#0A172A',glow:'#123D78',panelDeep:'#080D17',
+    cardSurface:'#FFFDF8',cardPanel:'#F3F0E9',cardGlow:'#FFFFFF',cardPearl:'#E9E3D6',
+    cardText:'#142443',cardMuted:'#5E6B81',cardAccent:'#2453A4',
+    border:'#D8B557',cardBorder:'#C7A653',sideBorder:'#D8B557'
+  },
+  5:{
+    key:'bayern',tone:'crest-red-blue-white',
+    text:'#FFF9FA',muted:'#F0DDE1',accent:'#FFFFFF',accentSoft:'#CFE8FF',
+    surface:'#07090D',panel:'#0E1420',glow:'#B3122E',panelDeep:'#080D17',
+    cardSurface:'#8C0016',cardPanel:'#C8102E',cardGlow:'#E21B42',
+    border:'#0066B2',cardBorder:'#1A6FB5',sideBorder:'#F7F9FC'
+  },
+  524:{
+    key:'psg',tone:'paris-royal-blue',
+    text:'#F8FBFF',muted:'#CED9E8',accent:'#E33D45',accentSoft:'#F6F7FA',
+    surface:'#060B14',panel:'#0A1527',glow:'#0B3E78',panelDeep:'#080D17',
+    cardSurface:'#04172F',cardPanel:'#082A55',cardGlow:'#0A3C73',
+    border:'#244F83',cardBorder:'#5A78A2',sideBorder:'#F6F7FA'
+  },
+  98:{
+    key:'milan',tone:'rossoneri-charcoal',
+    text:'#FAFAFA',muted:'#E1DADC',accent:'#E22533',accentSoft:'#F3F3F3',
+    surface:'#080708',panel:'#181619',glow:'#6B0B15',panelDeep:'#080D17',
+    // Milan identity stays on the left; the opponent side finishes in lifted neutral charcoal.
+    cardSurface:'#7A0B16',cardPanel:'#342124',cardGlow:'#34363C',
+    border:'#8E2832',cardBorder:'#B23A45',sideBorder:'#D5303C'
+  },
+  65:{
+    key:'mancity',tone:'sky-blue',
+    text:'#F8FCFF',muted:'#E2EFF6',accent:'#C8F0FF',accentSoft:'#F0FBFF',
+    surface:'#071018',panel:'#0C1922',glow:'#3B91B7',panelDeep:'#080D17',
+    cardSurface:'#18516F',cardPanel:'#2F7FA4',cardGlow:'#56A8C9',
+    border:'#5AA6C8',cardBorder:'#A7DDF0',sideBorder:'#F0FBFF'
+  }
+};
+
+// Apply shared tokens to the existing mutable shell object.
+if(typeof CP_COMMON_SHELL==='object')Object.assign(CP_COMMON_SHELL,CP_DESIGN_TOKENS.shell);
+
+// Apply the canonical club schema over compatibility theme registries.
+for(const [id,definition] of Object.entries(CP_THEME_DEFINITIONS)){
+  const target=CP_CLUB_THEME_REGISTRY?.[id]||(CP_CLUB_THEME_REGISTRY[id]={});
+  Object.assign(target,definition)
+}
+
+function cpDesignTheme(teamId=club?.team){return CP_THEME_DEFINITIONS[teamId]||null}
+function cpDesignToken(group,key,fallback=null){return CP_DESIGN_TOKENS?.[group]?.[key]??fallback}
