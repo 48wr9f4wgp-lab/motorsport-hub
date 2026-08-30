@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "status": "VISUAL_REVIEW_ACCEPTED",
+  "sourceRunId": 33121664709,
+  "sourceArtifactSha256": "fdf0623ddc373c7108203089f36538b1ba9b5c4d919473bf708cf44c7b03533d",
+  "acceptedAt": "2026-08-28",
+  "categories": {
+    "WRC": [
+      {
+        "assetId": "wrc-katsuta-yaris-2025",
+        "sourceSize": [960, 640],
+        "mode": "DIRECT",
+        "small": {"x": 0.18171806255976364, "y": 0, "w": 0.6666666666666666, "h": 1},
+        "medium": {"x": 0, "y": 0.30434782608695654, "w": 1, "h": 0.6956521739130435}
+      },
+      {
+        "assetId": "wrc-ogier-yaris-2025",
+        "sourceSize": [3840, 2560],
+        "mode": "DIRECT",
+        "small": {"x": 0.2921072355906169, "y": 0, "w": 0.6666666666666666, "h": 1},
+        "medium": {"x": 0, "y": 0.28471313476562504, "w": 1, "h": 0.6956521739130435}
+      }
+    ],
+    "MOTOGP": [
+      {
+        "assetId": "motogp-bezzecchi-malaysia-2025",
+        "sourceSize": [960, 640],
+        "mode": "DIRECT",
+        "small": {"x": 0.19653893629709884, "y": 0, "w": 0.6666666666666666, "h": 1},
+        "medium": {"x": 0, "y": 0.2841728782653809, "w": 1, "h": 0.6956521739130435}
+      },
+      {
+        "assetId": "motogp-bagnaia-malaysia-2025",
+        "sourceSize": [960, 640],
+        "mode": "RIDER_FALLBACK",
+        "small": {"x": 0.26584787438313173, "y": 0, "w": 0.6666666666666666, "h": 1},
+        "medium": {"x": 0, "y": 0.30434782608695654, "w": 1, "h": 0.6956521739130435}
+      }
+    ]
+  }
+}

@@ -1,0 +1,65 @@
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import {execFileSync} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
+
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const expected=['F1','WEC','WRC','SUPERGT','MOTOGP','FDJ','D1GP','SUPERFORMULA','INDYCAR','NASCAR','GTWCEU','DAKAR'];
+const src=JSON.parse(fs.readFileSync(path.join(root,'hero-refresh-sources.json'),'utf8'));
+assert.equal(src.schemaVersion,1);
+assert.equal(src.cadence,'WEEKLY');
+assert.equal(src.publicationPolicy,'CI_GATED_LIVE_HERO_CHANNEL');
+assert.deepEqual(Object.keys(src.categories),expected);
+assert.deepEqual(Object.keys(src.relevance),expected);
+assert(Number(src.minSourceLongEdge)>=2048);
+assert(Number(src.maxCandidatesPerCategory)>=1&&Number(src.maxCandidatesPerCategory)<=6);
+assert(Array.isArray(src.allowedLicenses)&&src.allowedLicenses.includes('CC BY-SA 4.0')&&src.allowedLicenses.includes('CC0 1.0'));
+assert(Array.isArray(src.globalForbiddenContext)&&src.globalForbiddenContext.includes('museum')&&src.globalForbiddenContext.includes('replica'));
+for(const term of ['safety car','pace car','race control','course car'])assert(src.globalForbiddenContext.includes(term),`race-only global exclusion missing: ${term}`);
+assert(src.relevance.NASCAR.requiredAny.includes('nascar cup')&&src.relevance.NASCAR.requiredAny.includes('nascar cup series'),'NASCAR refresh must require Cup identity');
+assert(!src.relevance.NASCAR.requiredAny.includes('nascar'),'generic NASCAR identity is too broad for Cup Hero publication');
+assert(src.relevance.NASCAR.forbiddenAny.includes('american speedfest')&&src.relevance.NASCAR.forbiddenAny.includes('brands hatch'),'known non-Cup NASCAR context exclusion missing');
+
+for(const id of expected){
+  const qs=src.categories[id],rel=src.relevance[id];
+  assert(Array.isArray(qs)&&qs.length>=3,`${id}: refresh queries missing`);
+  assert(rel&&Array.isArray(rel.requiredAny)&&rel.requiredAny.length>=1,`${id}: required relevance terms missing`);
+  assert(Array.isArray(rel.forbiddenAny),`${id}: forbidden relevance terms missing`);
+  const tmp=path.join(os.tmpdir(),`mh-hero-refresh-${id.toLowerCase()}.json`);
+  execFileSync(process.execPath,[path.join(root,'tools/build-hero-refresh-config.mjs'),`--category=${id}`,`--output=${tmp}`],{cwd:root,stdio:'pipe'});
+  const cfg=JSON.parse(fs.readFileSync(tmp,'utf8'));
+  assert.equal(cfg.category,id);
+  assert.equal(cfg.cadence,'WEEKLY');
+  assert.equal(cfg.publicationPolicy,'CI_GATED_LIVE_HERO_CHANNEL');
+  assert(cfg.searchQueries.every(q=>!q.includes('{year}')&&!q.includes('{prevYear}')));
+  assert.deepEqual(cfg.relevance.requiredAny,rel.requiredAny);
+  assert(cfg.relevance.forbiddenAny.length>=src.globalForbiddenContext.length);
+  fs.rmSync(tmp,{force:true});
+  if(id==='DAKAR')assert(fs.existsSync(path.join(root,'hero-selection-policy.json')),'DAKAR policy missing');
+  else assert(fs.existsSync(path.join(root,'hero-pilot-policies',`${id.toLowerCase()}.json`)),`${id}: pilot policy missing`);
+}
+
+const workflow=fs.readFileSync(path.join(root,'.github/workflows/hero-discovery.yml'),'utf8');
+assert(/schedule:\s*[\s\S]*cron:/.test(workflow),'scheduled Hero refresh cron missing');
+assert(workflow.includes('workflow_dispatch:'),'manual refresh entry missing');
+assert(workflow.includes('cancel-in-progress: false'),'Hero publication must not cancel an in-flight publish');
+for(const id of expected)assert(workflow.includes(id),`workflow matrix missing ${id}`);
+assert(workflow.includes('build-hero-refresh-config.mjs'));
+assert(workflow.includes('commons-hero-discovery.mjs'));
+assert(workflow.includes('validate-discovered-hero-images.mjs'));
+assert(workflow.includes('detect-hero-subjects.mjs'));
+assert(workflow.includes('build-hero-channel.mjs'));
+assert(workflow.includes('validate-hero-channel-publish.mjs'));
+assert(/permissions:\s*\n\s*contents:\s*read/.test(workflow),'workflow default permission must remain contents: read');
+assert(workflow.includes('publish-live-channel:'),'publish job missing');
+const publish=workflow.slice(workflow.indexOf('  publish-live-channel:'));
+assert(/permissions:\s*\n\s*contents:\s*write/.test(publish),'publish job alone must request contents: write');
+assert(publish.includes("github.event_name == 'schedule'")&&publish.includes("github.event_name == 'workflow_dispatch'"),'publish job must be restricted to schedule/manual events');
+assert(!publish.includes("github.event_name == 'push'"),'push event must never publish live Hero assets');
+assert(publish.includes('ref: hero-live'),'publish job must checkout hero-live');
+assert(publish.includes('push origin HEAD:hero-live'),'publish job must update only hero-live');
+assert(publish.includes('promotion-report.json'),'publish job must inspect promoted categories');
+assert(publish.includes('diff --cached --quiet'),'publish job must no-op when channel is unchanged');
+console.log('Motorsport Hub hero refresh schedule gate: PASS');

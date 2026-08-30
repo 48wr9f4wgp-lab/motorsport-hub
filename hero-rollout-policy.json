@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "policyVersion": "1.0.0",
+  "mode": "ANALYSIS_FIRST_NO_RUNTIME_MUTATION",
+  "sourceManifest": "hero-assets.json",
+  "adoptionGate": [
+    "MANIFEST_AND_LICENSE_PASS",
+    "IMAGE_PROBE_PASS",
+    "ROLE_AND_CROP_PASS",
+    "SMALL_MEDIUM_VISUAL_REGRESSION_PASS",
+    "CATEGORY_DETERMINISTIC_GATE_PASS",
+    "DEVICE_QA_REQUIRED_FOR_RENDERER_CHANGE"
+  ],
+  "pilotOrder": [
+    "WRC",
+    "MOTOGP",
+    "WEC",
+    "F1",
+    "SUPERGT",
+    "FDJ",
+    "D1GP",
+    "GTWCEU",
+    "SUPERFORMULA",
+    "INDYCAR",
+    "NASCAR"
+  ],
+  "categories": [
+    {"id":"F1","state":"PILOT_ELIGIBLE","runtimeMutation":false,"visualLockProtected":false},
+    {"id":"WEC","state":"PILOT_ELIGIBLE","runtimeMutation":false,"visualLockProtected":false},
+    {"id":"WRC","state":"PILOT_ELIGIBLE","runtimeMutation":false,"visualLockProtected":false},
+    {"id":"SUPERGT","state":"PILOT_ELIGIBLE","runtimeMutation":false,"visualLockProtected":false},
+    {"id":"MOTOGP","state":"PILOT_ELIGIBLE","runtimeMutation":false,"visualLockProtected":false},
+    {"id":"FDJ","state":"PILOT_ELIGIBLE","runtimeMutation":false,"visualLockProtected":false},
+    {"id":"D1GP","state":"PILOT_ELIGIBLE","runtimeMutation":false,"visualLockProtected":false},
+    {"id":"SUPERFORMULA","state":"VISUAL_LOCK_PROTECTED","runtimeMutation":false,"visualLockProtected":true},
+    {"id":"INDYCAR","state":"VISUAL_LOCK_PROTECTED","runtimeMutation":false,"visualLockProtected":true},
+    {"id":"NASCAR","state":"VISUAL_LOCK_PROTECTED","runtimeMutation":false,"visualLockProtected":true},
+    {"id":"GTWCEU","state":"DEVICE_QA_PROTECTED","runtimeMutation":false,"visualLockProtected":true},
+    {"id":"DAKAR","state":"RUNTIME_BASELINE_ACTIVE","runtimeMutation":true,"visualLockProtected":false}
+  ]
+}

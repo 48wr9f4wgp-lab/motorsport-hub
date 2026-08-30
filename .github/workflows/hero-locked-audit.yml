@@ -1,0 +1,78 @@
+name: Motorsport Hub Locked Hero Audit
+
+on:
+  push:
+    branches:
+      - 'hardening/v9.3-codex-handoff'
+    paths:
+      - 'hero-pilot-policies/superformula.json'
+      - 'hero-pilot-policies/indycar.json'
+      - 'hero-pilot-policies/nascar.json'
+      - 'hero-pilot-policies/gtwceu.json'
+      - 'hero-assets.json'
+      - 'tools/hero-crop-core.mjs'
+      - 'tools/detect-hero-subjects.mjs'
+      - '.github/workflows/hero-locked-audit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  locked-hero-analysis:
+    name: ${{ matrix.category }}-locked-audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        category: [superformula, indycar, nascar, gtwceu]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate shared crop semantics
+        run: |
+          node tools/test-hero-oversize-small.mjs
+          node tools/test-hero-min-confidence.mjs
+      - name: Install build-time subject detector
+        run: npm install --no-save --no-package-lock @tensorflow/tfjs-node@4.22.0 @tensorflow-models/coco-ssd@2.2.3
+      - name: Analyze current locked Hero
+        env:
+          TF_CPP_MIN_LOG_LEVEL: '2'
+          CAT: ${{ matrix.category }}
+        run: |
+          node tools/detect-hero-subjects.mjs \
+            --mode=current \
+            --policy=hero-pilot-policies/${CAT}.json \
+            --output=hero-subject-report-${CAT}.json \
+            --derivative-dir=hero-derived-${CAT} \
+            --derived-manifest=hero-derived-manifest-${CAT}.json
+      - name: Print audit summary
+        if: ${{ always() }}
+        env:
+          CAT: ${{ matrix.category }}
+        run: |
+          if [ -f hero-subject-report-${CAT}.json ]; then
+            node - <<'NODE'
+          const fs=require('node:fs');
+          const cat=process.env.CAT;
+          const r=JSON.parse(fs.readFileSync(`hero-subject-report-${cat}.json`,'utf8'));
+          console.log(JSON.stringify(r.summary));
+          for(const x of r.results||[]) console.log(JSON.stringify({assetId:x.assetId,status:x.status,recommendedRole:x.recommendedRole,error:x.error||null}));
+          NODE
+          else
+            echo 'No report produced.'
+          fi
+      - name: Upload locked Hero audit artifact
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: locked-hero-${{ matrix.category }}-${{ github.run_id }}
+          retention-days: 14
+          if-no-files-found: warn
+          path: |
+            hero-subject-report-${{ matrix.category }}.json
+            hero-derived-manifest-${{ matrix.category }}.json
+            hero-derived-${{ matrix.category }}/

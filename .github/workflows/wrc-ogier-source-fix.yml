@@ -1,0 +1,58 @@
+name: WRC Ogier Hero Source Fix
+
+on:
+  push:
+    branches:
+      - 'hardening/v9.3-codex-handoff'
+    paths:
+      - '.github/workflows/wrc-ogier-source-fix.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch-wrc-source:
+    if: ${{ github.actor != 'github-actions[bot]' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 'hardening/v9.3-codex-handoff'
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Add matching 1280 Ogier fallback URL
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs=require('fs');
+          const p='wrc-widget-flat-v1000.js';
+          const u2048='https://commons.wikimedia.org/wiki/Special:Redirect/file/2025%20Toyota%20GR%20Yaris%20Rally%201%20Ogier.jpg?width=2048';
+          const u1280='https://commons.wikimedia.org/wiki/Special:Redirect/file/2025%20Toyota%20GR%20Yaris%20Rally%201%20Ogier.jpg?width=1280';
+          let s=fs.readFileSync(p,'utf8');
+          if((s.split(u2048).length-1)!==1)throw new Error('Expected exactly one 2048 Ogier fallback URL');
+          if(s.includes(u1280))throw new Error('1280 Ogier fallback already present before patch');
+          s=s.replace(` '${u2048}'`,` '${u2048}',\n '${u1280}'`);
+          if(!s.includes(u1280))throw new Error('1280 Ogier fallback insertion failed');
+          fs.writeFileSync(p,s);
+          NODE
+      - name: Validate patched WRC module
+        run: |
+          node --check wrc-widget-flat-v1000.js
+          node tests/wrc-flat-gate.mjs
+      - name: Commit exact patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- wrc-widget-flat-v1000.js; then
+            echo 'No WRC source change to commit.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add wrc-widget-flat-v1000.js
+          git commit -m 'fix: add WRC Ogier 1280 Hero fallback'
+          git push origin HEAD:hardening/v9.3-codex-handoff

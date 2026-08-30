@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "policyVersion": "1.0.0-d1gp-pilot",
+  "category": "D1GP",
+  "mode": "ANALYSIS_ONLY_NO_RUNTIME_MUTATION",
+  "subjectDetector": {
+    "engine": "@tensorflow-models/coco-ssd",
+    "base": "lite_mobilenet_v2",
+    "minConfidence": 0.30,
+    "textSafeLeft": 0.42,
+    "subjectX": 0.76,
+    "oversizeSmall": {"enabled": true, "balance": 0.5},
+    "publicationPolicy": "ANALYSIS_ONLY_NO_RUNTIME_MUTATION",
+    "fallback": "KEEP_CURRENT_RUNTIME_ON_FAILURE"
+  },
+  "roles": [
+    {"id":"IDENTITY","minSmallSubjectFraction":0.16,"minMediumSubjectFraction":0.12,"minTextSafeScore":0.60,"veilCompensation":0.08},
+    {"id":"ACTION","minSmallSubjectFraction":0.14,"minMediumSubjectFraction":0.10,"minTextSafeScore":0.60,"veilCompensation":0.08}
+  ],
+  "observations": [
+    {"assetId":"d1gp-action-lydden-2014","roleTags":["IDENTITY","ACTION"]}
+  ]
+}

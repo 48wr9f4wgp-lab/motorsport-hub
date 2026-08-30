@@ -1,0 +1,91 @@
+name: Motorsport Hub Release Candidate CI
+
+on:
+  push:
+    branches:
+      - 'release/**'
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  transformed-release-gates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify transformed production state
+        run: node tests/main-release-transformed-gate.mjs
+      - name: Verify canonical loader distribution
+        run: node tests/loader-distribution-gate.mjs
+      - name: Syntax audit
+        run: |
+          set -euo pipefail
+          while IFS= read -r -d '' file; do
+            node --check "$file"
+          done < <(find . -type f \( -name '*.js' -o -name '*.mjs' \) -not -path './.git/*' -print0)
+      - name: Run deterministic release gates
+        run: |
+          set -euo pipefail
+          gates=(
+            tests/release-gate.mjs
+            tests/boundary-gate.mjs
+            tests/router-hardening-gate.mjs
+            tests/registry-gate.mjs
+            tests/cache-hardening-gate.mjs
+            tests/hero-manifest-gate.mjs
+            tests/hero-discovery-gate.mjs
+            tests/image-probe-gate.mjs
+            tests/hero-subject-crop-gate.mjs
+            tests/hero-selection-gate.mjs
+            tests/hero-rollout-inventory-gate.mjs
+            tests/hero-runtime-crop-gate.mjs
+            tests/hero-channel-runtime-gate.mjs
+            tests/hero-channel-promotion-gate.mjs
+            tests/hero-refresh-schedule-gate.mjs
+            tests/f1-wec-hero-runtime-gate.mjs
+            tests/domestic-hero-runtime-gate.mjs
+            tests/lifecycle-hardening-gate.mjs
+            tests/integrity-gate.mjs
+            tests/release-package-generator-gate.mjs
+            tests/diagnostics-loader-path-gate.mjs
+            tests/render-smoke-gate.mjs
+            tests/f1-flat-gate.mjs
+            tests/wec-flat-gate.mjs
+            tests/wrc-flat-gate.mjs
+            tests/supergt-flat-gate.mjs
+            tests/motogp-flat-gate.mjs
+            tests/fdj-flat-gate.mjs
+            tests/d1gp-flat-gate.mjs
+            tests/dakar-gate.mjs
+            tests/tap-action-gate.mjs
+          )
+          for gate in "${gates[@]}"; do
+            echo "::group::$gate"
+            node "$gate"
+            echo "::endgroup::"
+          done
+      - name: Build immutable production package
+        run: |
+          set -euo pipefail
+          RELEASE_REF="$(git rev-parse HEAD)"
+          node tools/generate-release-package.mjs --source-ref="$RELEASE_REF" --write
+      - name: Upload immutable production package
+        uses: actions/upload-artifact@v4
+        with:
+          name: motorsport-hub-release-${{ github.sha }}
+          retention-days: 30
+          if-no-files-found: error
+          path: |
+            release-integrity.json
+            scriptable-loader-v6.js
+            hero-selection-report.json
+            hero-rollout-inventory.json

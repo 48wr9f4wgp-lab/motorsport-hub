@@ -1,0 +1,59 @@
+[
+  {
+    "query": "Dakar Rally 2026",
+    "payload": {
+      "query": {
+        "pages": [
+          {
+            "title": "File:Dakar Rally 2026 Action.jpg",
+            "imageinfo": [{
+              "url": "https://upload.wikimedia.org/example/action.jpg",
+              "thumburl": "https://upload.wikimedia.org/example/action-2048.jpg",
+              "width": 4800,
+              "height": 3200,
+              "mime": "image/jpeg",
+              "timestamp": "2026-01-10T12:00:00Z",
+              "extmetadata": {
+                "LicenseShortName": {"value": "CC BY-SA 4.0"},
+                "Artist": {"value": "<b>Example Author</b>"},
+                "Credit": {"value": "Own work"},
+                "ImageDescription": {"value": "Dakar Rally action"},
+                "DateTimeOriginal": {"value": "2026-01-10 12:00:00"}
+              }
+            }]
+          },
+          {
+            "title": "File:Dakar tiny.jpg",
+            "imageinfo": [{
+              "url": "https://upload.wikimedia.org/example/tiny.jpg",
+              "thumburl": "https://upload.wikimedia.org/example/tiny.jpg",
+              "width": 1200,
+              "height": 800,
+              "mime": "image/jpeg",
+              "timestamp": "2026-01-09T12:00:00Z",
+              "extmetadata": {
+                "LicenseShortName": {"value": "CC BY 4.0"},
+                "Artist": {"value": "Author"}
+              }
+            }]
+          },
+          {
+            "title": "File:Dakar unknown license.jpg",
+            "imageinfo": [{
+              "url": "https://upload.wikimedia.org/example/unknown.jpg",
+              "thumburl": "https://upload.wikimedia.org/example/unknown-2048.jpg",
+              "width": 5000,
+              "height": 3300,
+              "mime": "image/jpeg",
+              "timestamp": "2026-01-08T12:00:00Z",
+              "extmetadata": {
+                "LicenseShortName": {"value": "Custom noncommercial"},
+                "Artist": {"value": "Author"}
+              }
+            }]
+          }
+        ]
+      }
+    }
+  }
+]

@@ -1,0 +1,91 @@
+name: Motorsport Hub Release Readiness
+
+on:
+  push:
+    branches:
+      - 'hardening/v9.3-codex-handoff'
+    paths:
+      - 'motorsport-hub.js'
+      - 'category-registry.json'
+      - 'hero-assets.json'
+      - 'hero-refresh-sources.json'
+      - 'hero-pilot-policies/**'
+      - 'README.md'
+      - 'scriptable-loader.js'
+      - 'scriptable-loader-v5.js'
+      - 'scriptable-loader-v6-qa.js'
+      - 'tools/generate-release-package.mjs'
+      - 'tools/prepare-main-release.mjs'
+      - 'tools/build-hero-channel.mjs'
+      - 'tools/validate-hero-channel-publish.mjs'
+      - 'tests/loader-distribution-gate.mjs'
+      - 'tests/main-release-readiness-gate.mjs'
+      - 'tests/main-release-transformed-gate.mjs'
+      - 'tests/release-gate.mjs'
+      - 'tests/router-hardening-gate.mjs'
+      - 'tests/registry-gate.mjs'
+      - 'tests/integrity-gate.mjs'
+      - 'tests/release-package-generator-gate.mjs'
+      - 'tests/render-smoke-gate.mjs'
+      - 'tests/hero-manifest-gate.mjs'
+      - 'tests/hero-channel-runtime-gate.mjs'
+      - 'tests/hero-channel-promotion-gate.mjs'
+      - 'tests/hero-refresh-schedule-gate.mjs'
+      - '.github/workflows/hero-discovery.yml'
+      - '.github/workflows/release-candidate-ci.yml'
+      - '.github/workflows/release-readiness.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  release-readiness:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate main release finalizer syntax
+        run: node --check tools/prepare-main-release.mjs
+      - name: Verify non-mutating main-release transform
+        run: node tests/main-release-readiness-gate.mjs
+      - name: Verify canonical loader distribution
+        run: node tests/loader-distribution-gate.mjs
+      - name: Re-run critical hardening RC gates
+        run: |
+          set -euo pipefail
+          node tests/release-gate.mjs
+          node tests/router-hardening-gate.mjs
+          node tests/registry-gate.mjs
+          node tests/hero-manifest-gate.mjs
+          node tests/hero-channel-runtime-gate.mjs
+          node tests/hero-channel-promotion-gate.mjs
+          node tests/hero-refresh-schedule-gate.mjs
+          node tests/integrity-gate.mjs
+          node tests/release-package-generator-gate.mjs
+          node tests/render-smoke-gate.mjs
+      - name: Simulate approved release transform locally
+        run: |
+          set -euo pipefail
+          GITHUB_REF_NAME=release/validation node tools/prepare-main-release.mjs --write --status=RELEASED
+          node tests/main-release-transformed-gate.mjs
+          node tests/loader-distribution-gate.mjs
+          node tests/release-gate.mjs
+          node tests/router-hardening-gate.mjs
+          node tests/registry-gate.mjs
+          node tests/hero-manifest-gate.mjs
+          node tests/hero-channel-runtime-gate.mjs
+          node tests/hero-channel-promotion-gate.mjs
+          node tests/hero-refresh-schedule-gate.mjs
+          node tests/render-smoke-gate.mjs
+      - name: Restore hardening working tree after simulation
+        if: ${{ always() }}
+        run: git checkout -- motorsport-hub.js category-registry.json
+      - name: Confirm CI simulation left no working-tree mutation
+        run: |
+          git diff --exit-code
+          git status --porcelain=v1 | tee /tmp/status.txt
+          test ! -s /tmp/status.txt

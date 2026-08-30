@@ -1,0 +1,31 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {reportFromApiResponses,evaluateCandidate} from '../tools/commons-hero-discovery.mjs';
+
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const config=JSON.parse(fs.readFileSync(path.join(root,'hero-source-discovery.json'),'utf8'));
+const fixture=JSON.parse(fs.readFileSync(path.join(root,'tests/fixtures/commons-hero-discovery.json'),'utf8'));
+const r=reportFromApiResponses(fixture,config);
+assert.equal(r.publicationPolicy,'DISCOVERY_ONLY_NO_RUNTIME_MUTATION');
+assert.equal(r.summary.discovered,3);
+assert.equal(r.summary.eligibleForReview,1);
+const ok=r.candidates.find(x=>x.title==='File:Dakar Rally 2026 Action.jpg');
+assert(ok.eligibleForReview);assert.equal(ok.license,'CC BY-SA 4.0');assert.equal(ok.longEdge,4800);assert.equal(ok.sourceYear,2026);assert.equal(ok.author,'Example Author');
+const tiny=r.candidates.find(x=>x.title==='File:Dakar tiny.jpg');
+assert(tiny.reasons.includes('SOURCE_RESOLUTION_TOO_LOW'));
+const bad=r.candidates.find(x=>x.title==='File:Dakar unknown license.jpg');
+assert(bad.reasons.includes('LICENSE_NOT_ALLOWED'));
+assert(r.candidates.every(x=>x.status==='DISCOVERED_UNAPPROVED'),'Discovery must never mark an asset approved');
+
+const base={title:'File:2026 race car.jpg',mime:'image/jpeg',longEdge:4000,license:'CC BY 4.0',author:'A',sourcePage:'https://commons.wikimedia.org/wiki/File:X',runtimeUrl:'https://upload.wikimedia.org/x.jpg',description:'2026 race car'};
+const f1={...config,category:'F1',relevance:{requiredAny:['formula 1','formula one','grand prix'],forbiddenAny:['museum','super formula']}};
+const wrong=evaluateCandidate({...base,title:'File:Super Formula Round 5 2026.jpg',description:'Super Formula at Suzuka'},f1);
+assert(wrong.reasons.includes('CATEGORY_RELEVANCE_MISMATCH'));
+assert(wrong.reasons.includes('CATEGORY_FORBIDDEN_CONTEXT'));
+const museum=evaluateCandidate({...base,title:'File:Formula One RB4 museum.jpg',description:'Formula One car in museum'},f1);
+assert(museum.reasons.includes('CATEGORY_FORBIDDEN_CONTEXT'));
+const action=evaluateCandidate({...base,title:'File:2026 Formula One Grand Prix action.jpg',description:'Formula One Grand Prix race action'},f1);
+assert.equal(action.eligibleForReview,true);
+console.log('Motorsport Hub Hero discovery gate: PASS');

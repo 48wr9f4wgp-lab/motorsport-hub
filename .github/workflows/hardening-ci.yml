@@ -1,0 +1,209 @@
+name: Motorsport Hub Hardening CI
+
+on:
+  push:
+    branches:
+      - 'hardening/**'
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: motorsport-hardening-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  hardening-gates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Apply accepted Hero runtime crops once
+        if: ${{ github.event_name == 'push' && github.ref_name == 'hardening/v9.3-codex-handoff' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/apply-hero-runtime-crops.py
+          python3 tools/apply-f1-wec-hero-runtime.py
+          if ! grep -q 'supergt-motul-autech-z-fuji-2024' supergt-widget-flat-v1000.js \
+             || ! grep -q 'fdj-drift-cc0' fdj-widget-flat-v1000.js \
+             || ! grep -q 'd1gp-rick-flores-2011' d1gp-widget-flat-v1000.js; then
+            python3 tools/apply-domestic-hero-runtime.py
+          else
+            echo 'Domestic Hero runtime already applied; skipping legacy applicator.'
+          fi
+          python3 tools/apply-domestic-hero-provenance.py
+          python3 tools/apply-supergt-asset-cache-key.py
+          python3 tools/apply-hero-channel-runtime.py
+          python3 tools/apply-hardening-live-router-default.py
+          accepted_patch_files=(
+            motorsport-hub.js
+            category-registry.json
+            scriptable-loader-hardening-v5.js
+            f1-widget-flat-v1000.js
+            wec-widget-flat-v1000.js
+            wrc-widget-flat-v1000.js
+            supergt-widget-flat-v1000.js
+            motogp-widget-flat-v1000.js
+            fdj-widget-flat-v1000.js
+            d1gp-widget-flat-v1000.js
+            superformula-widget.js
+            indycar-widget.js
+            nascar-widget.js
+            gtwc-europe-widget.js
+            hero-assets.json
+            ATTRIBUTION.md
+            tests/release-gate.mjs
+            tests/supergt-flat-gate.mjs
+          )
+          if git diff --quiet -- "${accepted_patch_files[@]}"; then
+            echo 'Accepted Hero/runtime routing changes already applied.'
+          else
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add "${accepted_patch_files[@]}"
+            git diff --cached --check
+            git commit -m 'feat: enable controlled live Hero channel runtime'
+            git push origin HEAD:hardening/v9.3-codex-handoff
+          fi
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Syntax audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r -d '' file; do
+            echo "node --check $file"
+            node --check "$file"
+          done < <(find . -type f \( -name '*.js' -o -name '*.mjs' \) -not -path './.git/*' -print0)
+
+      - name: Run all deterministic gates
+        shell: bash
+        run: |
+          set +e
+          failed=0
+          gates=(
+            tests/release-gate.mjs
+            tests/boundary-gate.mjs
+            tests/router-hardening-gate.mjs
+            tests/hardening-live-source-gate.mjs
+            tests/registry-gate.mjs
+            tests/cache-hardening-gate.mjs
+            tests/hero-manifest-gate.mjs
+            tests/hero-discovery-gate.mjs
+            tests/hero-refresh-schedule-gate.mjs
+            tests/hero-channel-runtime-gate.mjs
+            tests/image-probe-gate.mjs
+            tests/hero-subject-crop-gate.mjs
+            tests/hero-selection-gate.mjs
+            tests/hero-rollout-inventory-gate.mjs
+            tests/hero-runtime-crop-gate.mjs
+            tests/f1-wec-hero-runtime-gate.mjs
+            tests/domestic-hero-runtime-gate.mjs
+            tests/lifecycle-hardening-gate.mjs
+            tests/integrity-gate.mjs
+            tests/release-package-generator-gate.mjs
+            tests/diagnostics-loader-path-gate.mjs
+            tests/render-smoke-gate.mjs
+            tests/f1-flat-gate.mjs
+            tests/wec-flat-gate.mjs
+            tests/wrc-flat-gate.mjs
+            tests/supergt-flat-gate.mjs
+            tests/motogp-flat-gate.mjs
+            tests/fdj-flat-gate.mjs
+            tests/d1gp-flat-gate.mjs
+            tests/dakar-gate.mjs
+            tests/tap-action-gate.mjs
+          )
+          for gate in "${gates[@]}"; do
+            echo "::group::$gate"
+            node "$gate"
+            rc=$?
+            echo "::endgroup::"
+            if [ $rc -ne 0 ]; then
+              echo "::error::$gate failed with exit code $rc"
+              failed=1
+            fi
+          done
+          exit $failed
+
+      - name: Generate Dakar Hero selection report
+        if: ${{ github.event_name == 'push' && github.ref_name == 'hardening/v9.3-codex-handoff' }}
+        run: node tools/hero-selection-engine.mjs --write
+
+      - name: Generate 12-category Hero rollout inventory
+        if: ${{ github.event_name == 'push' && github.ref_name == 'hardening/v9.3-codex-handoff' }}
+        run: node tools/build-hero-rollout-inventory.mjs --write
+
+      - name: Build immutable release candidate package
+        if: ${{ github.event_name == 'push' && github.ref_name == 'hardening/v9.3-codex-handoff' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          RELEASE_REF="$(git rev-parse HEAD)"
+          node tools/generate-release-package.mjs --source-ref="$RELEASE_REF" --write
+
+      - name: Upload immutable release candidate package
+        if: ${{ github.event_name == 'push' && github.ref_name == 'hardening/v9.3-codex-handoff' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: motorsport-hub-immutable-${{ github.run_id }}
+          if-no-files-found: error
+          retention-days: 14
+          path: |
+            release-integrity.json
+            scriptable-loader-v6.js
+            hero-selection-report.json
+            hero-rollout-inventory.json
+
+      - name: Sync tested runtime to hardening-live
+        if: ${{ github.event_name == 'push' && github.ref_name == 'hardening/v9.3-codex-handoff' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          green_sha="$(git rev-parse HEAD)"
+          runtime_files=(
+            motorsport-hub.js
+            scriptable-loader-hardening-v5.js
+            f1-widget-flat-v1000.js
+            wec-widget-flat-v1000.js
+            wrc-widget-flat-v1000.js
+            supergt-widget-flat-v1000.js
+            motogp-widget-flat-v1000.js
+            fdj-widget-flat-v1000.js
+            d1gp-widget-flat-v1000.js
+            superformula-widget.js
+            indycar-widget.js
+            nascar-widget.js
+            gtwc-europe-widget.js
+            dakar-widget.js
+            motorsport-diagnostics-v890.js
+            category-registry.json
+            hero-assets.json
+          )
+
+          git fetch origin hardening-live
+          git checkout -B hardening-live origin/hardening-live
+          git checkout "$green_sha" -- "${runtime_files[@]}"
+
+          if git diff --cached --quiet -- "${runtime_files[@]}"; then
+            echo 'hardening-live already matches the latest green runtime.'
+            exit 0
+          fi
+
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m "test: sync green hardening runtime ${green_sha:0:12}"
+          git push origin HEAD:hardening-live

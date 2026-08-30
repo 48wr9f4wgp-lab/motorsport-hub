@@ -1,0 +1,258 @@
+{
+  "schemaVersion": 2,
+  "auditedAt": "2026-08-28",
+  "scope": "Wikimedia hero image URLs reachable from modules in category-registry.json on hardening/v9.3-codex-handoff",
+  "assets": [
+    {
+      "assetId": "f1-mercedes-russell-japan-fp3-2025",
+      "category": "F1",
+      "filename": "2025 Japan GP - Mercedes - George Russell - FP3.jpg",
+      "runtimeUrls": [
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/2025%20Japan%20GP%20-%20Mercedes%20-%20George%20Russell%20-%20FP3.jpg?width=2048",
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/2025%20Japan%20GP%20-%20Mercedes%20-%20George%20Russell%20-%20FP3.jpg?width=1280"
+      ],
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:2025_Japan_GP_-_Mercedes_-_George_Russell_-_FP3.jpg",
+      "author": "Liauzh",
+      "license": "CC BY-SA 4.0",
+      "modificationNoticeRequired": true,
+      "reviewNote": "Action Hero accepted after subject-aware Small/Medium visual pilot on 2026-08-28."
+    },
+    {
+      "assetId": "f1-ferrari-hamilton-japan-fp1-2025",
+      "category": "F1",
+      "filename": "2025 Japan GP - Ferrari - Lewis Hamilton - FP1.jpg",
+      "runtimeUrls": [
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/2025%20Japan%20GP%20-%20Ferrari%20-%20Lewis%20Hamilton%20-%20FP1.jpg?width=2048",
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/2025%20Japan%20GP%20-%20Ferrari%20-%20Lewis%20Hamilton%20-%20FP1.jpg?width=1280"
+      ],
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:2025_Japan_GP_-_Ferrari_-_Lewis_Hamilton_-_FP1.jpg",
+      "author": "Liauzh",
+      "license": "CC BY-SA 4.0",
+      "modificationNoticeRequired": true,
+      "reviewNote": "Action Hero accepted after subject-aware Small/Medium visual pilot on 2026-08-28."
+    },
+    {
+      "assetId": "f1-mclaren-piastri-japan-fp1-2025",
+      "category": "F1",
+      "filename": "2025 Japan GP - McLaren - Oscar Piastri - FP1.jpg",
+      "runtimeUrls": [
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/2025%20Japan%20GP%20-%20McLaren%20-%20Oscar%20Piastri%20-%20FP1.jpg?width=2048",
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/2025%20Japan%20GP%20-%20McLaren%20-%20Oscar%20Piastri%20-%20FP1.jpg?width=1280"
+      ],
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:2025_Japan_GP_-_McLaren_-_Oscar_Piastri_-_FP1.jpg",
+      "author": "Liauzh",
+      "license": "CC BY-SA 4.0",
+      "modificationNoticeRequired": true,
+      "reviewNote": "Action Hero accepted after subject-aware Small/Medium visual pilot on 2026-08-28."
+    },
+    {
+      "assetId": "wec-toyota-no7-spa-2024",
+      "category": "WEC",
+      "filename": "2024 6 Hours of Spa-Francorchamps Toyota Gazoo Racing Toyota GR010 Hybrid No.7 (DSC04523).jpg",
+      "runtimeUrls": [
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/2024%206%20Hours%20of%20Spa-Francorchamps%20Toyota%20Gazoo%20Racing%20Toyota%20GR010%20Hybrid%20No.7%20%28DSC04523%29.jpg?width=2048"
+      ],
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:2024_6_Hours_of_Spa-Francorchamps_Toyota_Gazoo_Racing_Toyota_GR010_Hybrid_No.7_(DSC04523).jpg",
+      "author": "MarcelX42",
+      "license": "CC BY-SA 4.0",
+      "modificationNoticeRequired": true
+    },
+    {
+      "assetId": "wec-toyota-no8-spa-2024",
+      "category": "WEC",
+      "filename": "2024 6 Hours of Spa-Francorchamps Toyota Gazoo Racing Toyota GR010 Hybrid No.8 (DSC04184).jpg",
+      "runtimeUrls": [
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/2024%206%20Hours%20of%20Spa-Francorchamps%20Toyota%20Gazoo%20Racing%20Toyota%20GR010%20Hybrid%20No.8%20%28DSC04184%29.jpg?width=2048"
+      ],
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:2024_6_Hours_of_Spa-Francorchamps_Toyota_Gazoo_Racing_ToyOTA_GR010_Hybrid_No.8_(DSC04184).jpg",
+      "author": "MarcelX42",
+      "license": "CC BY-SA 4.0",
+      "modificationNoticeRequired": true
+    },
+    {
+      "assetId": "wrc-katsuta-yaris-2025",
+      "category": "WRC",
+      "filename": "2025 Toyota GR Yaris Rally 1 Katsuta.jpg",
+      "runtimeUrls": [
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/2025_Toyota_GR_Yaris_Rally_1_Katsuta.jpg/960px-2025_Toyota_GR_Yaris_Rally_1_Katsuta.jpg"
+      ],
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:2025_Toyota_GR_Yaris_Rally_1_Katsuta.jpg",
+      "author": "TTTNIS",
+      "license": "CC0 1.0",
+      "modificationNoticeRequired": false
+    },
+    {
+      "assetId": "wrc-ogier-yaris-2025",
+      "category": "WRC",
+      "filename": "2025 Toyota GR Yaris Rally 1 Ogier.jpg",
+      "runtimeUrls": [
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/2025%20Toyota%20GR%20Yaris%20Rally%201%20Ogier.jpg?width=2048",
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/2025%20Toyota%20GR%20Yaris%20Rally%201%20Ogier.jpg?width=1280"
+      ],
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:2025_Toyota_GR_Yaris_Rally_1_Ogier.jpg",
+      "author": "TTTNIS",
+      "license": "CC0 1.0",
+      "modificationNoticeRequired": false,
+      "reviewNote": "Replaced broken 645px cropped runtime URL with the 6048x4032 CC0 original source on 2026-08-27."
+    },
+    {
+      "assetId": "supergt-motul-autech-z-fuji-2024",
+      "category": "SUPERGT",
+      "filename": "MOTUL AUTECH Z 2024 rd.2 FUJI.jpg",
+      "runtimeUrls": [
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/MOTUL%20AUTECH%20Z%202024%20rd.2%20FUJI.jpg?width=2048",
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/MOTUL%20AUTECH%20Z%202024%20rd.2%20FUJI.jpg?width=1280"
+      ],
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:MOTUL_AUTECH_Z_2024_rd.2_FUJI.jpg",
+      "author": "Abarabone1206",
+      "license": "CC BY 4.0",
+      "modificationNoticeRequired": true,
+      "reviewNote": "2024 SUPER GT race-action Hero accepted after subject-aware Small/Medium visual pilot on 2026-08-28."
+    },
+    {
+      "assetId": "motogp-bezzecchi-malaysia-2025",
+      "category": "MOTOGP",
+      "filename": "MotoGP 2025 Malaysian Grand Prix - Aprilia Racing - Marco Bezzecchi.jpg",
+      "runtimeUrls": [
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/MotoGP_2025_Malaysian_Grand_Prix_-_Aprilia_Racing_-_Marco_Bezzecchi.jpg/960px-MotoGP_2025_Malaysian_Grand_Prix_-_Aprilia_Racing_-_Marco_Bezzecchi.jpg"
+      ],
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:MotoGP_2025_Malaysian_Grand_Prix_-_Aprilia_Racing_-_Marco_Bezzecchi.jpg",
+      "author": "Liauzh",
+      "license": "CC BY-SA 4.0",
+      "modificationNoticeRequired": true
+    },
+    {
+      "assetId": "motogp-bagnaia-malaysia-2025",
+      "category": "MOTOGP",
+      "filename": "MotoGP 2025 Malaysian Grand Prix - Ducati Lenovo - Francesco Bagnaia.jpg",
+      "runtimeUrls": [
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/MotoGP_2025_Malaysian_Grand_Prix_-_Ducati_Lenovo_-_Francesco_Bagnaia.jpg/960px-MotoGP_2025_Malaysian_Grand_Prix_-_Ducati_Lenovo_-_Francesco_Bagnaia.jpg"
+      ],
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:MotoGP_2025_Malaysian_Grand_Prix_-_Ducati_Lenovo_-_Francesco_Bagnaia.jpg",
+      "author": "Liauzh",
+      "license": "CC BY-SA 4.0",
+      "modificationNoticeRequired": true
+    },
+    {
+      "assetId": "fdj-drift-cc0",
+      "category": "FDJ",
+      "filename": "DRIFT-0ae1a2ba-2d7b-4d51-b082-b698f2fbb2f1.jpg",
+      "runtimeUrls": [
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/DRIFT-0ae1a2ba-2d7b-4d51-b082-b698f2fbb2f1.jpg?width=2048",
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/DRIFT-0ae1a2ba-2d7b-4d51-b082-b698f2fbb2f1.jpg?width=1280"
+      ],
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:DRIFT-0ae1a2ba-2d7b-4d51-b082-b698f2fbb2f1.jpg",
+      "author": "Pixabay source; attribution not required",
+      "license": "CC0 1.0",
+      "modificationNoticeRequired": false,
+      "reviewNote": "Current drift action Hero retained with subject-aware Small/Medium crop accepted on 2026-08-28."
+    },
+    {
+      "assetId": "d1gp-rick-flores-2011",
+      "category": "D1GP",
+      "filename": "D1GP (5679098995).jpg",
+      "runtimeUrls": [
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/D1GP%20%285679098995%29.jpg?width=2048",
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/D1GP%20%285679098995%29.jpg?width=1280"
+      ],
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:D1GP_(5679098995).jpg",
+      "author": "Rick Flores (Flickr: Ricky Flores)",
+      "license": "CC BY 2.0",
+      "modificationNoticeRequired": true,
+      "reviewNote": "Actual D1 Grand Prix action Hero accepted over the unrelated King of Europe asset after Small/Medium visual pilot on 2026-08-28."
+    },
+    {
+      "assetId": "superformula-fraga-suzuka-2026",
+      "category": "SUPERFORMULA",
+      "filename": "Igor Fraga Super Formula Round 5 Suzuka Post-Race 2026.jpg",
+      "runtimeUrls": [
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/Igor%20Fraga%20Super%20Formula%20Round%205%20Suzuka%20Post-Race%202026.jpg?width=2048",
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/Igor%20Fraga%20Super%20Formula%20Round%205%20Suzuka%20Post-Race%202026.jpg?width=1280"
+      ],
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Igor_Fraga_Super_Formula_Round_5_Suzuka_Post-Race_2026.jpg",
+      "author": "BWard 1997",
+      "license": "CC BY 4.0",
+      "modificationNoticeRequired": true
+    },
+    {
+      "assetId": "indycar-palou-laguna-2025",
+      "category": "INDYCAR",
+      "filename": "Alex Palou (54686833932).jpg",
+      "runtimeUrls": [
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/Alex%20Palou%20%2854686833932%29.jpg?width=2048",
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/Alex%20Palou%20%2854686833932%29.jpg?width=1280"
+      ],
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Alex_Palou_(54686833932).jpg",
+      "author": "Ben Goyette",
+      "license": "CC BY-SA 4.0",
+      "modificationNoticeRequired": true
+    },
+    {
+      "assetId": "nascar-hamlin-lasvegas-2025",
+      "category": "NASCAR",
+      "filename": "Denny Hamlin 11 Las Vegas 2025.jpg",
+      "runtimeUrls": [
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/Denny%20Hamlin%2011%20Las%20Vegas%202025.jpg?width=2048",
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/Denny%20Hamlin%2011%20Las%20Vegas%202025.jpg?width=1280"
+      ],
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Denny_Hamlin_11_Las_Vegas_2025.jpg",
+      "author": "TaurusEmerald",
+      "license": "CC BY-SA 4.0",
+      "modificationNoticeRequired": true
+    },
+    {
+      "assetId": "gtwceu-auer-engel-nurburgring-2024",
+      "category": "GTWCEU",
+      "filename": "GT World Challenge Europe 2024 Nürburg Nr. 48 Auer, Engel, Morad (1).jpg",
+      "runtimeUrls": [
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/GT%20World%20Challenge%20Europe%202024%20N%C3%BCrburg%20Nr.%2048%20Auer%2C%20Engel%2C%20Morad%20%281%29.jpg?width=2048",
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/GT%20World%20Challenge%20Europe%202024%20N%C3%BCrburg%20Nr.%2048%20Auer%2C%20Engel%2C%20Morad%20%281%29.jpg?width=1280"
+      ],
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:GT_World_Challenge_Europe_2024_Nürburg_Nr._48_Auer,_Engel,_Morad_(1).jpg",
+      "author": "Lukas Raich",
+      "license": "CC BY-SA 4.0",
+      "modificationNoticeRequired": true
+    },
+    {
+      "assetId": "dakar-dacia-sandrider-gims-2024",
+      "category": "DAKAR",
+      "filename": "Dacia Sandrider GIMS 2024 1X7A2026.jpg",
+      "runtimeUrls": [
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/Dacia%20Sandrider%20GIMS%202024%201X7A2026.jpg?width=2048",
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/Dacia%20Sandrider%20GIMS%202024%201X7A2026.jpg?width=1280"
+      ],
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Dacia_Sandrider_GIMS_2024_1X7A2026.jpg",
+      "author": "Alexander-93",
+      "license": "CC BY-SA 4.0",
+      "modificationNoticeRequired": true
+    },
+    {
+      "assetId": "dakar-2021-stage05-action",
+      "category": "DAKAR",
+      "filename": "Dakar Rally 2021 - Stage 05 (50810898083).jpg",
+      "runtimeUrls": [
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/Dakar%20Rally%202021%20-%20Stage%2005%20%2850810898083%29.jpg?width=2048",
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/Dakar%20Rally%202021%20-%20Stage%2005%20%2850810898083%29.jpg?width=1280"
+      ],
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Dakar_Rally_2021_-_Stage_05_(50810898083).jpg",
+      "author": "EKSRX (source photo credit: Eric Vargiolu / DPPI)",
+      "license": "CC BY 2.0",
+      "modificationNoticeRequired": true,
+      "reviewNote": "Exact Wikimedia file page verified 2026-08-27; Commons records Flickr license review as CC BY 2.0."
+    },
+    {
+      "assetId": "dakar-2021-stage10-action",
+      "category": "DAKAR",
+      "filename": "Dakar Rally 2021 - Stage 10 (50832314671).jpg",
+      "runtimeUrls": [
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/Dakar%20Rally%202021%20-%20Stage%2010%20%2850832314671%29.jpg?width=2048",
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/Dakar%20Rally%202021%20-%20Stage%2010%20%2850832314671%29.jpg?width=1280"
+      ],
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Dakar_Rally_2021_-_Stage_10_(50832314671).jpg",
+      "author": "EKSRX (source photo credit: Antonin Vincent / DPPI)",
+      "license": "CC BY 2.0",
+      "modificationNoticeRequired": true,
+      "reviewNote": "Exact Wikimedia file page verified 2026-08-27; Commons records Flickr license review as CC BY 2.0."
+    }
+  ]
+}

@@ -1,114 +1,64 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
+import assert from 'node:assert/strict';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const read=p=>fs.readFileSync(path.join(root,p),'utf8');
-const assert=(ok,msg)=>{if(!ok)throw new Error(msg)};
 const parse=(name,src)=>{try{new Function(src)}catch(e){throw new Error(`${name}: syntax error: ${e.message}`)}};
+const router=read('motorsport-hub.js'),loaderV4=read('scriptable-loader.js'),loaderV5=read('scriptable-loader-v5.js');
+const registry=JSON.parse(read('category-registry.json')),heroes=JSON.parse(read('hero-assets.json'));
+const diagnostics=read('motorsport-diagnostics-v890.js'),attribution=read('ATTRIBUTION.md');
 
-const files={
- loader:read('scriptable-loader.js'),
- router:read('motorsport-hub.js'),
- reliability:read('motorsport-reliability-v890.js'),
- reliability892:read('motorsport-reliability-v892.js'),
- reliability894:read('motorsport-reliability-v894.js'),
- reliability895:read('motorsport-reliability-v895.js'),
- reliability896:read('motorsport-reliability-v896.js'),
- diagnostics:read('motorsport-diagnostics-v890.js'),
- visual:read('motorsport-universal-v871.js'),
- core:read('motorsport-core-v841.js'),
- hq:read('motorsport-hq-core.js'),
- fdj:read('fdj-widget.js'),
- d1:read('d1gp-reliability-v890.js'),
- d1base:read('d1gp-widget.js'),
- superformula:read('superformula-widget.js'),
- indycar:read('indycar-widget.js'),
- nascar:read('nascar-widget.js'),
- gtwc:read('gtwc-europe-widget.js'),
- attribution:read('ATTRIBUTION.md'),
- boundary:read('tests/boundary-gate.mjs'),
-};
+parse('router',router);parse('loader-v4',loaderV4);parse('loader-v5',loaderV5);parse('diagnostics',diagnostics);
+assert.equal(registry.schemaVersion,1);assert.equal(registry.routerSchema,5);assert.equal(registry.categories.length,12);assert.equal(registry.qa.id,'QA');
+assert.equal(heroes.schemaVersion,2);assert(Array.isArray(heroes.assets)&&heroes.assets.length>=18);
 
-for(const [name,src] of Object.entries(files))if(!['attribution','boundary'].includes(name))parse(name,src);
+const expectedManifest=[...registry.categories.map(c=>c.id),registry.qa.id].join(',');
+assert(router.includes(`MH_CATEGORY_MANIFEST=${expectedManifest}`),'Router category manifest drift');
+assert(router.includes('const ROUTER_SCHEMA=5'),'Router schema drift');
+assert(!router.includes('motorsport-reliability-v896.js'));assert(!router.includes('d1gp-reliability-v890.js'));assert(!/Request\.prototype\.loadString\s*=/.test(router));assert(!router.includes('hardenExpansionLifecycle'));assert(!router.includes('HARDENING_PATCH_MISMATCH'));assert(!router.includes('replaceExact('));
+for(const marker of ['Motorsport Hub','module router','v8.6.0','motorsport-core-v841.js','motorsport-hq-core.js','fdj-widget.js','Script.complete()'])assert(router.includes(marker),`Loader v4 compatibility marker missing: ${marker}`);
+for(const marker of ['motorsport-hub-router-v5-candidate.js','motorsport-hub-router-v5-lkg.js','motorsport-hub-router-v5-quarantine.js','new Function'])assert(loaderV5.includes(marker),`Loader v5 safety marker missing: ${marker}`);
 
-for(const token of ['F1','WEC','WRC','SUPERGT','MOTOGP','FDJ','D1GP','SUPERFORMULA','INDYCAR','NASCAR','GTWCEU'])
- assert(files.router.includes(token),`router missing category ${token}`);
+const sourceById={};
+for(const c of registry.categories){
+ assert.equal(c.dataCacheSchema,1,`${c.id}: every current category must use validated data cache schema 1`);
+ assert(fs.existsSync(path.join(root,c.module)),`${c.id}: missing module ${c.module}`);
+ const src=read(c.module);sourceById[c.id]=src;parse(c.module,src);
+ assert(src.includes(c.moduleMarker),`${c.id}: module marker drift`);assert(src.includes('Script.complete()'),`${c.id}: Script.complete missing`);
+ assert(router.includes(c.module),`${c.id}: Router is not using registry module`);assert(router.includes(c.moduleCacheKey),`${c.id}: Router cache key drift`);
+ assert(src.includes('CACHE_SCHEMA=1'),`${c.id}: cache schema marker missing`);
+}
 
-for(const marker of ['Motorsport Hub','module router','v8.6.0',"'FDJ'",'motorsport-core-v841.js','motorsport-hq-core.js','fdj-widget.js','Script.complete()'])
- assert(files.router.includes(marker),`loader-v4 compatibility marker missing: ${marker}`);
+for(const id of ['F1','WEC','WRC','SUPERGT','MOTOGP','FDJ','D1GP']){
+ const src=sourceById[id];assert(/flattened .* module|flattened F1 pilot module/.test(src),`${id}: flattened module marker missing`);assert(!src.includes('raw.githubusercontent.com'));assert(!/\beval\s*\(/.test(src));assert(src.includes("lifecycle:'SEASON_ENDED'")||src.includes("lifecycle:'UPCOMING'"));assert(src.includes('SEASON=2026'));
+}
+for(const id of ['SUPERFORMULA','INDYCAR','NASCAR','GTWCEU']){
+ const src=sourceById[id];assert(src.includes('MH_LIFECYCLE_BAKED=1'));assert(src.includes("lifecycle:'SEASON_ENDED'"));assert(src.includes('now>=s&&now<e'));assert(src.includes("?'シーズン終了':'次戦'"));assert(!src.includes('raw.githubusercontent.com'));assert(!/\beval\s*\(/.test(src));assert(src.includes('SEASON=2026'));
+}
 
-assert(files.router.includes('motorsport-reliability-v896.js'),'router lost v8.9.6 stable reliability path');
-assert(files.router.includes('d1gp-reliability-v890.js'),'router lost D1GP reliability wrapper');
-assert(files.router.includes('superformula-widget.js'),'router is not using SUPER FORMULA module');
-assert(files.router.includes('indycar-widget.js'),'router is not using INDYCAR module');
-assert(files.router.includes('nascar-widget.js'),'router is not using NASCAR module');
-assert(files.router.includes('gtwc-europe-widget.js'),'router is not using GTWC Europe module');
-assert(files.router.includes('motorsport-diagnostics-v890.js'),'router lost QA diagnostics');
-assert(files.router.includes("'QA'"),'router missing QA selector');
-assert(files.diagnostics.includes('QA diagnostics'),'QA diagnostics marker missing');
-for(const token of ['F1','WEC','WRC','MotoGP','SUPER GT','FDJ','D1GP','SUPER FORMULA','INDYCAR','NASCAR','GTWC EUROPE'])
- assert(files.diagnostics.includes(token),`QA diagnostics missing ${token}`);
-assert(files.diagnostics.includes('11/11 LIVE'),'QA diagnostics not expanded to eleven routes');
+assert(sourceById.F1.includes('api.jolpi.ca/ergast/f1/2026.json')&&sourceById.F1.includes('driverstandings.json'));assert(sourceById.F1.includes('Promise.all([json(SCHEDULE_SOURCE),json(STANDINGS_SOURCE)])'));assert(sourceById.F1.includes("race:'Abu Dhabi Grand Prix'")&&sourceById.F1.includes('2026-12-06T13:00:00Z'));
+assert(sourceById.WEC.includes('fiawec.com/en/page/manufacturers-classification/34'));assert(sourceById.WEC.includes('TR010 Hybrid')&&sourceById.WEC.includes('TOYOTA RACING'));for(const token of ['6 Hours of Barcelona','6 Hours of Monza','hold=10*3600000'])assert(sourceById.WEC.includes(token));
+assert(sourceById.WRC.includes('fia.com/events/world-rally-championship/season-2026/standings'));for(const token of ['Rally Saudi Arabia','2026-11-11T09:00:00+03:00','hold=4*86400000','2026 FIA World Rally Championship for Drivers'])assert(sourceById.WRC.includes(token));
+assert(sourceById.SUPERGT.includes('supergt.net/driver_ranking?gt_class=gt500&series=2026'));for(const token of ["'36':{name:'坪井 翔 / 山下 健太'","'16':{name:'野尻 智紀 / 佐藤 蓮'","'14':{name:'福住 仁嶺 / 大嶋 和也'",'第8戦 MOTEGI','hold=8*3600000'])assert(sourceById.SUPERGT.includes(token));assert(sourceById.SUPERGT.includes('MOTUL%20AUTECH%20Z%202024%20rd.2%20FUJI.jpg'));assert(!sourceById.SUPERGT.includes('Osaka%20Auto%20Messe%202025'));
+assert(sourceById.MOTOGP.includes('stats.motogp.com/en/world-standing'));for(const token of ['Valencia Grand Prix','Riders','hold=4*3600000'])assert(sourceById.MOTOGP.includes(token));
+assert(sourceById.FDJ.includes('formulad.jp/2026-fdj-standings/')&&sourceById.FDJ.includes('hold=40*3600000'));
+assert(sourceById.D1GP.includes('d1gp.co.jp/2026d1')&&sourceById.D1GP.includes('D1GP%20%285679098995%29.jpg')&&sourceById.D1GP.includes('hold=40*3600000'));assert(!sourceById.D1GP.includes('King%20of%20Europe'));
+assert(sourceById.SUPERFORMULA.includes('superformula.net/sf2/race2026/standings'));assert(sourceById.INDYCAR.includes('https://www.indycar.com/standings/'));assert(sourceById.NASCAR.includes('https://cf.nascar.com/cacher/2026/1/points-feed.json'));assert(sourceById.GTWCEU.includes('gt-world-challenge-europe.com/standings?filter_standing_type=0_0_drivers'));
 
-assert(files.reliability.includes('F1_PARTIAL'),'F1 atomic refresh guard missing');
-assert(files.reliability.includes('fia.com/events/world-rally-championship/season-2026/standings'),'FIA WRC standings source missing');
-for(const token of ['6 Hours of Barcelona','6 Hours of Monza','Rally Saudi Arabia','Valencia Grand Prix','第8戦 MOTEGI'])
- assert(files.reliability.includes(token),`season-tail calendar missing: ${token}`);
-assert(files.reliability.includes("META[m]||['','']"),'WEC unknown-manufacturer fallback missing');
-assert(files.reliability.includes("no?'No.'+no:''"),'SUPER GT unknown-car fallback missing');
-assert(files.reliability.includes('4*86400000'),'WRC multi-day hold missing');
-assert(files.reliability.includes('40*3600000'),'FDJ weekend hold missing');
-assert(files.d1.includes('40*3600000'),'D1GP weekend hold missing');
-assert(files.reliability.includes("label:'開催中'"),'multi-day in-event state missing');
-assert(files.reliability892.includes('/坪井|山下/'),'SUPER GT driver-name metadata fallback missing');
-assert(files.reliability892.includes("s||'GT500'"),'SUPER GT non-empty secondary-line fallback missing');
-assert(files.reliability894.includes('TR010 Hybrid')&&files.reliability894.includes('TOYOTA RACING'),'official 2026 WEC Toyota naming guard missing');
-assert(files.reliability895.includes("selected==='WEC'?10:8"),'WEC/SUPER GT event hold guard missing');
-assert(files.reliability895.includes('hold=4*3600000'),'MotoGP event hold guard missing');
-assert(files.reliability896.includes('Osaka%20Auto%20Messe%202025'),'verified SUPER GT CC0 hero replacement missing');
-assert(files.reliability896.includes('motorsport-hero-v896-'),'SUPER GT hero cache-bust missing');
-assert(files.visual.includes('Final Visual Polish'),'v8.7.1 visual lock source missing');
-assert(files.fdj.includes('formulad.jp/2026-fdj-standings'),'FDJ live standings source missing');
-assert(files.d1base.includes('d1gp.co.jp'),'D1GP live source missing');
-assert(files.d1.includes('King%20of%20Europe'),'D1GP action hero missing');
+const dakar=sourceById.DAKAR;
+for(const token of ['DAKAR dedicated rally-raid module','MH_LIFECYCLE_BAKED=1','SEASON=2027','PROLOGUE','STAGE 13','2027-01-15T00:00:00+03:00','dakar.com/fr/webview/rankings/stage-13/auto?year=2026','2026 FINAL','総合 CAR','GAP','Dacia%20Sandrider%20GIMS%202024%201X7A2026.jpg'])assert(dakar.includes(token),`DAKAR invariant missing: ${token}`);
+assert(!dakar.includes('raw.githubusercontent.com'));assert(!/\beval\s*\(/.test(dakar));assert(dakar.includes("lifecycle:'SEASON_ENDED'"));assert(dakar.includes('now>=s&&now<e'));
 
-assert(files.superformula.includes('SUPER FORMULA module'),'SUPER FORMULA module marker missing');
-assert(files.superformula.includes('superformula.net/sf2/race2026/standings'),'SUPER FORMULA official standings source missing');
-for(const token of ['第9・10戦 富士','第11・12戦 鈴鹿','2026-10-11T18:00:00+09:00','SF23'])
- assert(files.superformula.includes(token),`SUPER FORMULA configuration missing: ${token}`);
-assert(files.superformula.includes('Igor%20Fraga%20Super%20Formula%20Round%205%20Suzuka%20Post-Race%202026.jpg'),'SUPER FORMULA verified hero missing');
-assert(files.boundary.includes('SUPER FORMULA: retain Fuji during double-header weekend'),'SUPER FORMULA weekend boundary coverage missing');
+for(const token of ['F1','WEC','WRC','MotoGP','SUPER GT','FDJ','D1GP','SUPER FORMULA','INDYCAR','NASCAR','GTWC EUROPE','DAKAR'])assert(diagnostics.includes(token),`QA diagnostics missing ${token}`);
+assert(diagnostics.includes('12/12 LIVE'),'QA diagnostics not expanded to twelve routes');
 
-assert(files.indycar.includes('INDYCAR module'),'INDYCAR module marker missing');
-assert(files.indycar.includes('https://www.indycar.com/standings/'),'INDYCAR official standings source missing');
-for(const token of ['Milwaukee Race 1','Milwaukee Race 2','Laguna Seca Finale','Alex Palou','Kyle Kirkwood','Christian Lundgaard'])
- assert(files.indycar.includes(token),`INDYCAR configuration missing: ${token}`);
-assert(files.indycar.includes('Alex%20Palou%20%2854686833932%29.jpg'),'INDYCAR verified hero missing');
-assert(files.boundary.includes('INDYCAR: advance to Race 2 after Race 1 hold'),'INDYCAR Milwaukee boundary coverage missing');
-
-assert(files.nascar.includes('NASCAR Cup Series module'),'NASCAR module marker missing');
-assert(files.nascar.includes('https://cf.nascar.com/cacher/2026/1/points-feed.json'),'NASCAR official points JSON source missing');
-for(const token of ['Daytona','Darlington','Talladega','Martinsville','Homestead-Miami Speedway','Denny Hamlin','Ryan Blaney','Ty Gibbs'])
- assert(files.nascar.includes(token),`NASCAR configuration missing: ${token}`);
-assert(files.nascar.includes('Denny%20Hamlin%2011%20Las%20Vegas%202025.jpg'),'NASCAR verified hero missing');
-assert(files.boundary.includes('NASCAR: advance to Darlington after Daytona hold'),'NASCAR Daytona boundary coverage missing');
-
-// GT World Challenge Europe expansion gate.
-assert(files.gtwc.includes('GT World Challenge Europe module'),'GTWC Europe module marker missing');
-assert(files.gtwc.includes('https://www.gt-world-challenge-europe.com/standings?filter_standing_type=0_0_drivers'),'GTWC Europe official standings source missing');
-for(const token of ['Nürburgring 3H','Zandvoort','Barcelona','Portimão Finale','Lucas Auer / Maro Engel','Ricardo Feller / Bastian Buus','Kelvin Van Der Linde / Charles Weerts'])
- assert(files.gtwc.includes(token),`GTWC Europe configuration missing: ${token}`);
-assert(files.gtwc.includes('GT%20World%20Challenge%20Europe%202024%20N%C3%BCrburg%20Nr.%2048'),'GTWC Europe verified hero missing');
-assert(files.boundary.includes('GTWC Europe: advance to Zandvoort after Nürburgring'),'GTWC Europe Nürburgring boundary coverage missing');
-
-for(const token of ['Eustace Bagge','TTTNIS','Liauzh','MarcelX42','Rowan Harrison','Tokumeigakarinoaoshima','BWard 1997','Ben Goyette','TaurusEmerald','Lukas Raich','CC0 1.0 Universal','CC BY 4.0','CC BY-SA 4.0','CC BY-SA 2.0'])
- assert(files.attribution.includes(token),`attribution audit missing: ${token}`);
-assert(files.attribution.includes('SUPER FORMULA v9.0.0 hero licensing: **PASS**'),'SUPER FORMULA attribution gate is not closed');
-assert(files.attribution.includes('INDYCAR v9.1.0 hero licensing: **PASS**'),'INDYCAR attribution gate is not closed');
-assert(files.attribution.includes('NASCAR v9.2.0 hero licensing: **PASS**'),'NASCAR attribution gate is not closed');
-assert(files.attribution.includes('GTWC Europe v9.3.0 hero licensing: **PASS**'),'GTWC Europe attribution gate is not closed');
-assert(!files.attribution.includes('RELEASE BLOCKER FOR PUBLIC DISTRIBUTION'),'stale release blocker remains');
-assert(files.boundary.includes('Motorsport Hub boundary gate: PASS'),'boundary gate file missing PASS marker');
+for(const token of [
+ 'Lewis Hamilton / Ferrari SF-25 FP1','Oscar Piastri / McLaren MCL39 FP1','George Russell / Mercedes W16 FP3',
+ 'TTTNIS','Liauzh','MarcelX42','Rick Flores','Abarabone1206','BWard 1997','Ben Goyette','TaurusEmerald','Lukas Raich','Alexander-93',
+ 'CC0 1.0 Universal','CC BY 4.0','CC BY-SA 4.0','CC BY 2.0'
+])assert(attribution.includes(token),`ATTRIBUTION.md audit record missing: ${token}`);
+assert(!attribution.includes('RELEASE BLOCKER FOR PUBLIC DISTRIBUTION'));
 
 console.log('Motorsport Hub release gate: PASS');

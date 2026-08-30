@@ -1,0 +1,52 @@
+name: Motorsport Hub Hero Subject Pilot
+
+on:
+  push:
+    branches:
+      - 'hardening/v9.3-codex-handoff'
+    paths:
+      - 'tools/hero-crop-core.mjs'
+      - 'tools/detect-hero-subjects.mjs'
+      - 'tests/hero-subject-crop-gate.mjs'
+      - 'hero-selection-policy.json'
+      - '.github/workflows/hero-subject-pilot.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  dakar-current-hero-pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install build-time subject detector
+        run: npm install --no-save --no-package-lock @tensorflow/tfjs-node@4.22.0 @tensorflow-models/coco-ssd@2.2.3
+      - name: Detect current Dakar Hero subjects and generate crop previews
+        env:
+          TF_CPP_MIN_LOG_LEVEL: '2'
+        run: node tools/detect-hero-subjects.mjs --mode=current --preview-dir=hero-crop-previews
+      - name: Print Hero subject report
+        if: ${{ always() }}
+        run: |
+          if [ -f hero-subject-report.json ]; then
+            cat hero-subject-report.json
+          else
+            echo 'hero-subject-report.json was not produced.'
+          fi
+      - name: Upload pilot report and previews
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: dakar-hero-subject-pilot-${{ github.run_id }}
+          retention-days: 14
+          if-no-files-found: error
+          path: |
+            hero-subject-report.json
+            hero-crop-previews/
+
+# Phase 4 visual verification trigger: 2026-08-27

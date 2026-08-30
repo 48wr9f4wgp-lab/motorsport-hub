@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "policyVersion": "1.1.0-motogp-pilot",
+  "category": "MOTOGP",
+  "mode": "ANALYSIS_ONLY_NO_RUNTIME_MUTATION",
+  "subjectDetector": {
+    "engine": "@tensorflow-models/coco-ssd",
+    "base": "lite_mobilenet_v2",
+    "minConfidence": 0.28,
+    "textSafeLeft": 0.42,
+    "subjectClasses": ["motorcycle"],
+    "riderFallback": {
+      "enabled": true,
+      "minPersonConfidence": 0.85,
+      "minPersonAreaFraction": 0.08,
+      "widthScale": 2.30,
+      "heightScale": 1.80,
+      "topLift": 0.10,
+      "confidencePenalty": 0.90
+    },
+    "publicationPolicy": "ANALYSIS_ONLY_NO_RUNTIME_MUTATION",
+    "fallback": "KEEP_CURRENT_RUNTIME_ON_FAILURE"
+  },
+  "roles": [
+    {"id":"IDENTITY","minSmallSubjectFraction":0.12,"minMediumSubjectFraction":0.09,"minTextSafeScore":0.60,"veilCompensation":0.08},
+    {"id":"ACTION","minSmallSubjectFraction":0.10,"minMediumSubjectFraction":0.075,"minTextSafeScore":0.60,"veilCompensation":0.08}
+  ],
+  "observations": [
+    {"assetId":"motogp-bezzecchi-malaysia-2025","roleTags":["IDENTITY","ACTION"]},
+    {"assetId":"motogp-bagnaia-malaysia-2025","roleTags":["IDENTITY","ACTION"]}
+  ]
+}
