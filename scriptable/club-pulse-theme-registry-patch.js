@@ -1,5 +1,5 @@
 // Shared visual theme registry for multi-club rollout.
-// Premium v10: readability first. The outer shell is shared and club identity lives in simple inner surfaces only.
+// Premium v11: readability first. The outer shell is shared and club identity lives in simple inner surfaces only.
 // No decorative streaks, rails, glow bands, or lines may cross information areas.
 
 const CP_COMMON_SHELL={surface:'#0B1020',panel:'#111827',glow:'#0D1424',text:'#F8FAFC',muted:'#B8C2D1',rail:'#0A0F1C',border:'#334155'};
@@ -7,14 +7,14 @@ const CP_COMMON_SHELL={surface:'#0B1020',panel:'#111827',glow:'#0D1424',text:'#F
 const CP_CLUB_THEME_REGISTRY={
   66:{
     key:'manutd',
-    text:'#FFF8F2',muted:'#C9C1BE',accent:'#D6B45A',accentSoft:'#F0D58A',
-    surface:'#07080A',glow:'#B5121B',panel:'#13090C',panelDeep:'#0A0F1C',
-    cardSurface:'#3A070B',cardPanel:'#B5121B',cardGlow:'#DA291C',
-    border:'#9D2A33',sideBorder:'#D6B45A'
+    text:'#FFF8F2',muted:'#D8CBC8',accent:'#D6B45A',accentSoft:'#F0D58A',
+    surface:'#07080A',glow:'#DA291C',panel:'#13090C',panelDeep:'#0A0F1C',
+    cardSurface:'#5B0A0E',cardPanel:'#B5121B',cardGlow:'#DA291C',
+    border:'#A82A31',sideBorder:'#D6B45A'
   },
   81:{
     key:'barcelona',
-    text:'#FFF8F1',muted:'#C9C6D5',accent:'#D7B04A',accentSoft:'#EFD47D',
+    text:'#FFF8F1',muted:'#D7D0E2',accent:'#D7B04A',accentSoft:'#EFD47D',
     surface:'#070A12',glow:'#421A68',panel:'#0C1427',panelDeep:'#0A0F1C',
     cardSurface:'#150A2E',cardPanel:'#2D1458',cardGlow:'#3D1C6B',
     border:'#5D3A8F',sideBorder:'#D7B04A'
@@ -42,16 +42,16 @@ function cpCommonShellGradient(){
   return g
 }
 
-// Inner card: subtle club surface only. No decorative line layer.
+// Inner card: simple club surface only. Horizontal tonal depth, no decorative line layer.
 function cpSimpleCardGradient(t,mode){
   let a=t.cardSurface||t.panelDeep,
       b=t.cardPanel||t.panel,
-      c=mode==='LIVE'?(t.cardGlow||t.glow):(t.cardPanel||t.panel),
+      c=mode==='LIVE'?(t.cardGlow||t.glow):(t.cardGlow||t.cardPanel||t.panel),
       g=new LinearGradient();
-  g.startPoint=new Point(0,0);
-  g.endPoint=new Point(1,1);
+  g.startPoint=new Point(0,.5);
+  g.endPoint=new Point(1,.5);
   g.colors=[C(a),C(b),C(c)];
-  g.locations=[0,.58,1];
+  g.locations=[0,.62,1];
   return g
 }
 
