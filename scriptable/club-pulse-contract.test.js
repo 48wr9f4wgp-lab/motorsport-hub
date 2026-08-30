@@ -14,6 +14,7 @@ const files={
   themes:read('club-pulse-theme-registry-patch.js'),
   identity:read('club-pulse-identity-color-patch.js'),
   top:read('club-pulse-top-layout-patch.js'),
+  readability:read('club-pulse-readability-guard-patch.js'),
   live:read('club-pulse-live-context-patch.js'),
   resilience:read('club-pulse-resilience-patch.js')
 };
@@ -34,8 +35,9 @@ check('launcher keeps legacy Man U state renderer',has(files.launcher,'club-puls
 check('launcher loads shared theme registry',has(files.launcher,'THEME_REGISTRY_PATCH')&&has(files.launcher,'club-pulse-theme-registry-patch.js'));
 check('launcher loads theme registry v11 cache',has(files.launcher,'ClubPulseThemeRegistryPatch_v11.js')&&has(files.launcher,"'themes11'"));
 check('launcher loads identity v6 cache',has(files.launcher,'ClubPulseIdentityColorPatch_v6.js')&&has(files.launcher,"'identity6'"));
+check('launcher loads readability guard v1 cache',has(files.launcher,'ClubPulseReadabilityGuardPatch_v1.js')&&has(files.launcher,"'readability1'"));
 check('launcher has no decorative edge patch',!has(files.launcher,'EDGE_SAFE_PATCH')&&!has(files.launcher,'ClubPulseEdgeSafeIdentityPatch'));
-check('launcher theme order remains stable with expansion modules',has(files.launcher,"patches=x+'\\n'+y+'\\n'+le+'\\n'+z+'\\n'+tr+'\\n'+et+'\\n'+u+'\\n'+i+'\\n'+q+'\\n'+r"));
+check('launcher theme order remains stable with readability guard',has(files.launcher,"patches=x+'\\n'+y+'\\n'+le+'\\n'+z+'\\n'+tr+'\\n'+et+'\\n'+u+'\\n'+i+'\\n'+rg+'\\n'+q+'\\n'+r"));
 check('launcher loads resilience v2',has(files.launcher,'ClubPulseResiliencePatch_v2.js')&&has(files.launcher,"'resilience2'"));
 check('launcher keeps remote-to-local fallback',has(files.launcher,'if(F.fileExists(file))return F.readString(file)'));
 check('launcher keeps QA override persistence',has(files.launcher,'ClubPulseQAOverride_v1.json')&&has(files.launcher,'15*60*1000'));
@@ -71,6 +73,13 @@ check('Real white surface has no decorative rails',has(files.identity,'function 
 check('club crest treatment has no circular plate',has(files.themes,"o.backgroundColor=C('#000000',0)")&&has(files.themes,'o.borderWidth=0')&&has(files.themes,"i.backgroundColor=C('#000000',0)"));
 check('footer is flat and neutral',has(files.themes,'f.backgroundColor=C(t.panelDeep,.94)'));
 check('secondary pills remain flat',has(files.themes,'p.backgroundColor=C(t.panelDeep,.96)'));
+
+// Expanded-club readability guard: selective rescue, never global decoration.
+check('readability guard is scoped to expanded clubs',has(files.readability,'new Set([5,524,98,65])')&&has(files.readability,'cpReadabilityIsExtra'));
+check('readability guard selectively rescues Juventus crest',has(files.readability,"new Set(['JUV'])")&&has(files.readability,"backgroundColor=C('#D7DEE8',.20)")&&has(files.readability,"backgroundColor=C('#CBD5E1',.24)"));
+check('readability guard does not add global white crest circles',!has(files.readability,"backgroundColor=C('#FFFFFF',1)")&&!has(files.readability,'cornerRadius=(size+4)/2'));
+check('readability guard standardizes compact names',has(files.readability,'function cpCompactOpponentName')&&has(files.readability,"'パリ・サンジェルマン':'PSG'")&&has(files.readability,"'バイエルン・ミュンヘン':'バイエルン'"));
+check('readability guard uses ellipsis for long labels',has(files.readability,"n.slice(0,max-1)+'…'"));
 
 // Man U legacy state behavior retained while visual identity is shared.
 check('Man U legacy renderer remains scoped to team 66',has(files.manutd,'club?.team===66'));
