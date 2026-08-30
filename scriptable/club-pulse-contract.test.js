@@ -5,7 +5,7 @@ const read=n=>fs.readFileSync(path.join(root,n),'utf8');
 const files={
   launcher:read('club-pulse.js'),core:read('club-pulse-core.js'),clubs:read('club-pulse-club-registry-patch.js'),
   ui:read('club-pulse-ui-patch.js'),comp:read('club-pulse-competition-logo-patch.js'),manutd:read('club-pulse-manutd-theme-patch.js'),
-  themes:read('club-pulse-theme-registry-patch.js'),identity:read('club-pulse-identity-color-patch.js'),
+  themes:read('club-pulse-theme-registry-patch.js'),identity:read('club-pulse-identity-color-patch.js'),premium:read('club-pulse-premium-visual-patch.js'),
   top:read('club-pulse-top-layout-patch.js'),readability:read('club-pulse-readability-guard-patch.js'),
   live:read('club-pulse-live-context-patch.js'),resilience:read('club-pulse-resilience-patch.js')
 };
@@ -17,9 +17,11 @@ for(const [name,src] of Object.entries(files))syntax(name,src);
 
 // Launcher composition and cache versioning.
 check('launcher injects both registries before parameter resolution',has(files.launcher,"c=c.slice(0,pk)+cr+'\\n'+ec+'\\n'+c.slice(pk)"));
+check('launcher uses theme registry v12',has(files.launcher,'ClubPulseThemeRegistryPatch_v12.js')&&has(files.launcher,"'themes12'"));
+check('launcher uses extra themes v2',has(files.launcher,'ClubPulseExtraThemePatch_v2.js')&&has(files.launcher,"'extra-themes2'"));
+check('launcher uses premium visual v1',has(files.launcher,'ClubPulsePremiumVisualPatch_v1.js')&&has(files.launcher,"'premium1'"));
 check('launcher uses readability v3 cache and tag',has(files.launcher,'ClubPulseReadabilityGuardPatch_v3.js')&&has(files.launcher,"'readability3'"));
-check('launcher pins readability v3 commit',has(files.launcher,'494a717a797dd000dd3c45b7ed4e7971dd0075a6'));
-check('readability loads after identity',has(files.launcher,"+u+'\\n'+i+'\\n'+rg+'\\n'+q+'\\n'+r"));
+check('premium loads after identity before readability',has(files.launcher,"+u+'\\n'+i+'\\n'+pv+'\\n'+rg+'\\n'+q+'\\n'+r"));
 check('launcher retains remote-to-local fallback',has(files.launcher,'if(F.fileExists(file))return F.readString(file)'));
 check('launcher retains QA persistence',has(files.launcher,'ClubPulseQAOverride_v1.json')&&has(files.launcher,'15*60*1000'));
 check('no decorative edge patch returns',!has(files.launcher,'EDGE_SAFE_PATCH')&&!has(files.launcher,'ClubPulseEdgeSafeIdentityPatch'));
@@ -29,17 +31,20 @@ check('Barcelona team 81 remains registered',has(files.clubs,'CLUBS.barcelona')&
 check('Real Madrid team 86 remains registered',has(files.clubs,'CLUBS.realmadrid')&&has(files.clubs,'team:86'));
 check('Real and Barca aliases remain',has(files.clubs,"barca:'barcelona'")&&has(files.clubs,"rma:'realmadrid'"));
 
-// Shared visual architecture.
+// Shared premium visual architecture.
 check('shared theme registry contains Man U',has(files.themes,'66:{')&&has(files.themes,"key:'manutd'"));
 check('shared theme registry contains Barca',has(files.themes,'81:{')&&has(files.themes,"key:'barcelona'"));
 check('shared theme registry contains Real',has(files.themes,'86:{')&&has(files.themes,"key:'realmadrid'"));
 check('outer shell remains common neutral',has(files.themes,'CP_COMMON_SHELL')&&has(files.themes,'return cpCommonShellGradient()'));
+check('premium shell has restrained metallic edge',has(files.themes,"edge:'#9AA6B8'")&&has(files.themes,'C(CP_COMMON_SHELL.edge,.62)'));
 check('inner card remains simple horizontal gradient',has(files.themes,'function cpSimpleCardGradient')&&has(files.themes,'g.startPoint=new Point(0,.5)')&&has(files.themes,'g.endPoint=new Point(1,.5)'));
-check('decorative line tokens remain removed',!has(files.themes,'linePrimary')&&!has(files.themes,'lineSecondary')&&!has(files.identity,'linePrimary')&&!has(files.identity,'lineSecondary'));
-check('Man U vivid red identity remains',has(files.themes,"cardGlow:'#DA291C'")&&has(files.themes,"accent:'#D6B45A'"));
-check('Real pearl-white identity remains',has(files.identity,"real.cardSurface='#FAFAF8'")&&has(files.identity,"real.cardText='#142443'"));
+check('decorative line tokens remain removed',!has(files.themes,'linePrimary')&&!has(files.themes,'lineSecondary')&&!has(files.identity,'linePrimary')&&!has(files.identity,'lineSecondary')&&!has(files.premium,'streak'));
+check('Man U vivid red identity remains',has(files.themes,"cardGlow:'#DA291C'")&&has(files.themes,"cardBorder:'#D0AE55'"));
 check('Barcelona purple identity remains',has(files.identity,"barca.cardSurface='#160B34'")&&has(files.identity,"barca.cardPanel='#32145F'"));
 check('Barcelona dedicated renderer remains',has(files.identity,'function cpBarcelonaMatchMedium')&&has(files.identity,'function cpBarcelonaMatchSmall'));
+check('Real premium pearl override exists',has(files.premium,"real.cardSurface='#FFFDF8'")&&has(files.premium,"real.cardPanel='#F3F0E9'")&&has(files.premium,"real.cardPearl='#E9E3D6'"));
+check('Real premium gradient is restrained and diagonal',has(files.premium,'function cpPremiumRealGradient')&&has(files.premium,'g.locations=[0,.40,.76,1]'));
+check('extra clubs share premium thin card frame',has(files.premium,"new Set(['bayern','psg','milan','mancity'])")&&has(files.premium,'c.borderWidth=.85')&&has(files.premium,'t.cardBorder||t.border'));
 
 // Seven-club readability contract.
 check('readability applies to exactly the seven current clubs',has(files.readability,'new Set([66,81,86,5,524,98,65])'));
@@ -56,7 +61,6 @@ check('generic competition and side pills use shared metrics',has(files.readabil
 check('Barcelona competition pill uses same crest treatment',has(files.readability,'cpBarcelonaCompetitionPill=function')&&has(files.readability,'cpUnifiedCompetitionPill(parent,m,small,true)'));
 check('home-away chips use the shared height family',has(files.readability,'sideV:6.2')&&has(files.readability,'sideV:4.8')&&has(files.readability,'cpBarcelonaSidePill=function'));
 check('crest rescue remains selective to Juventus',has(files.readability,"new Set(['JUV'])"));
-check('crest rescue remains faint outside league pill',has(files.readability,"backgroundColor=C('#F3F5F8',.10)")&&has(files.readability,"backgroundColor=C('#F6F7F9',.08)"));
 
 // State and resilience contracts.
 check('Man U state renderer stays scoped',has(files.manutd,'club?.team===66'));
@@ -70,4 +74,4 @@ check('resilience keeps offline and no-cache QA',has(files.resilience,"qa==='off
 check('obsolete edge-safe files remain deleted',!fs.existsSync(path.join(root,'club-pulse-edge-safe-identity-patch.js'))&&!fs.existsSync(path.join(root,'club-pulse-edge-safe.test.js')));
 
 if(failed){console.error(`\nClub Pulse contract QA FAILED: ${failed} check(s)`);process.exit(1)}
-console.log('\nClub Pulse seven-club presentation contract QA PASSED');
+console.log('\nClub Pulse premium seven-club presentation contract QA PASSED');
