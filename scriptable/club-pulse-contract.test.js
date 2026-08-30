@@ -33,7 +33,7 @@ check('launcher loads competition registry',has(files.launcher,'club-pulse-compe
 check('launcher keeps legacy Man U state renderer',has(files.launcher,'club-pulse-manutd-theme-patch.js'));
 check('launcher loads shared theme registry',has(files.launcher,'THEME_REGISTRY_PATCH')&&has(files.launcher,'club-pulse-theme-registry-patch.js'));
 check('launcher loads theme registry v11 cache',has(files.launcher,'ClubPulseThemeRegistryPatch_v11.js')&&has(files.launcher,"'themes11'"));
-check('launcher loads identity v5 cache',has(files.launcher,'ClubPulseIdentityColorPatch_v5.js')&&has(files.launcher,"'identity5'"));
+check('launcher loads identity v6 cache',has(files.launcher,'ClubPulseIdentityColorPatch_v6.js')&&has(files.launcher,"'identity6'"));
 check('launcher has no decorative edge patch',!has(files.launcher,'EDGE_SAFE_PATCH')&&!has(files.launcher,'ClubPulseEdgeSafeIdentityPatch'));
 check('launcher theme order remains stable',has(files.launcher,"patches=x+'\\n'+y+'\\n'+z+'\\n'+tr+'\\n'+u+'\\n'+i+'\\n'+q+'\\n'+r"));
 check('launcher loads resilience v2',has(files.launcher,'ClubPulseResiliencePatch_v2.js')&&has(files.launcher,"'resilience2'"));
@@ -60,9 +60,12 @@ check('outer shell is common and neutral',has(files.themes,'CP_COMMON_SHELL')&&h
 check('inner cards use simple horizontal gradient',has(files.themes,'function cpSimpleCardGradient')&&has(files.themes,'g.startPoint=new Point(0,.5)')&&has(files.themes,'g.endPoint=new Point(1,.5)'));
 check('decorative line tokens are removed',!has(files.themes,'linePrimary')&&!has(files.themes,'lineSecondary')&&!has(files.identity,'linePrimary')&&!has(files.identity,'lineSecondary'));
 check('Man U uses vivid red with restrained depth',has(files.themes,"cardSurface:'#5B0A0E'")&&has(files.themes,"cardPanel:'#B5121B'")&&has(files.themes,"cardGlow:'#DA291C'")&&has(files.themes,"accent:'#D6B45A'"));
-check('Barcelona uses strong warm purple',has(files.identity,"barca.cardSurface='#160B34'")&&has(files.identity,"barca.cardPanel='#32145F'")&&has(files.identity,"barca.cardGlow='#452078'"));
-check('Barcelona has dedicated readable medium metadata renderer',has(files.identity,'function cpBarcelonaMatchMedium')&&has(files.identity,"semibold(meta,metaLine(d,m),9.6,1,'#F8F7FB')")&&has(files.identity,'mt.minimumScaleFactor=.84'));
-check('Barcelona has readable small kickoff renderer',has(files.identity,'function cpBarcelonaMatchSmall')&&has(files.identity,"semibold(meta,m.kickoff,9.2,1,'#F8F7FB')")&&has(files.identity,'mt.minimumScaleFactor=.90'));
+check('Barcelona keeps strong warm purple',has(files.identity,"barca.cardSurface='#160B34'")&&has(files.identity,"barca.cardPanel='#32145F'")&&has(files.identity,"barca.cardGlow='#452078'"));
+check('Barcelona uses explicit high-contrast team block',has(files.identity,'function cpBarcelonaTeamBlock')&&has(files.identity,"heavy(name,opt.name,opt.nameSize||(small?9.6:12.2),'#FFFFFF')")&&has(files.identity,'nm.minimumScaleFactor=.78'));
+check('Barcelona uses high-contrast competition and side pills',has(files.identity,'function cpBarcelonaCompetitionPill')&&has(files.identity,"p.borderColor=C('#D9DCE5',.54)")&&has(files.identity,'function cpBarcelonaSidePill')&&has(files.identity,"p.borderColor=C('#E1BD61',.76)"));
+check('Barcelona has dedicated readable medium metadata renderer',has(files.identity,'function cpBarcelonaMatchMedium')&&has(files.identity,"semibold(meta,metaLine(d,m),9.8,1,'#FFFFFF')")&&has(files.identity,'mt.minimumScaleFactor=.88'));
+check('Barcelona has readable small kickoff renderer',has(files.identity,'function cpBarcelonaMatchSmall')&&has(files.identity,"semibold(meta,m.kickoff,9.4,1,'#FFFFFF')")&&has(files.identity,'mt.minimumScaleFactor=.92'));
+check('Barcelona crest sizes are raised for readability',has(files.identity,'logoSize:58')&&has(files.identity,'logoSize:42'));
 check('Real uses pearl white inner surface',has(files.identity,"real.cardSurface='#FAFAF8'")&&has(files.identity,"real.cardPanel='#F1F3F7'")&&has(files.identity,"real.cardText='#142443'"));
 check('Real white surface has no decorative rails',has(files.identity,'function cpRealSimpleCardGradient')&&!has(files.identity,'cpRealCardGradient'));
 check('club crest treatment has no circular plate',has(files.themes,"o.backgroundColor=C('#000000',0)")&&has(files.themes,'o.borderWidth=0')&&has(files.themes,"i.backgroundColor=C('#000000',0)"));
