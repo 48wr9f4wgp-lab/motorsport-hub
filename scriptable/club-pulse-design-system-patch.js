@@ -1,4 +1,4 @@
-// Club Pulse canonical design system v1.
+// Club Pulse canonical design system v2.
 // This file is the visual source of truth for the current seven-club family.
 // Legacy theme files remain as compatibility fallbacks; new visual tuning belongs here.
 
@@ -43,10 +43,11 @@ const CP_THEME_DEFINITIONS={
   },
   5:{
     key:'bayern',tone:'crest-red-blue-white',
-    text:'#FFF9FA',muted:'#F0DDE1',accent:'#FFFFFF',accentSoft:'#CFE8FF',
+    text:'#FFF9FA',muted:'#F0DDE1',accent:'#FFFFFF',accentSoft:'#D9EEFF',
     surface:'#07090D',panel:'#0E1420',glow:'#B3122E',panelDeep:'#080D17',
     cardSurface:'#8C0016',cardPanel:'#C8102E',cardGlow:'#E21B42',
-    border:'#0066B2',cardBorder:'#1A6FB5',sideBorder:'#F7F9FC'
+    // Keep the field red-dominant; make the crest blue readable only in fine edges and pills.
+    border:'#0073C9',cardBorder:'#2D86D3',sideBorder:'#2D86D3'
   },
   524:{
     key:'psg',tone:'paris-royal-blue',
