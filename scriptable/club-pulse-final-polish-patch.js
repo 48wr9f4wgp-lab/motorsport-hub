@@ -1,16 +1,8 @@
-// Club Pulse final polish v2.
-// Scope remains narrow: Bayern blue accent visibility and Milan/Juventus contrast via the card background itself.
+// Club Pulse final polish v3.
+// Scope is intentionally narrow: Bayern blue accent visibility only.
+// Opponent crest contrast is handled by each club's generic card field, never by per-opponent exceptions.
 
-const CP_FP_BASE_BADGE=badge;
 const CP_FP_BASE_SIDE_PILL=sidePill;
-
-badge=function(p,fallback,img,size=28,p1=club.p,p2=club.s,scale=1){
-  // Juventus no longer gets a dedicated rescue tile. Milan's lighter gunmetal opponent side provides the contrast.
-  if(img&&String(fallback||'').toUpperCase()==='JUV'&&typeof CP_RG_BASE_BADGE==='function'){
-    return CP_RG_BASE_BADGE(p,fallback,img,size,p1,p2,scale)
-  }
-  return CP_FP_BASE_BADGE(p,fallback,img,size,p1,p2,scale)
-};
 
 sidePill=function(parent,m,small=false){
   if(club?.team!==5)return CP_FP_BASE_SIDE_PILL(parent,m,small);
