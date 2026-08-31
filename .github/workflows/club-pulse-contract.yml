@@ -24,3 +24,4 @@ jobs:
         run: |
           node scriptable/club-pulse-contract.test.js
           node scriptable/club-pulse-expanded-clubs.test.js
+          node scriptable/club-pulse-cache-migration.test.js
