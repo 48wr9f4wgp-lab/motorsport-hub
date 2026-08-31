@@ -23,8 +23,8 @@ check('launcher uses identity v7',has(files.launcher,'ClubPulseIdentityColorPatc
 check('launcher loads canonical design system v7',has(files.launcher,'ClubPulseDesignSystemPatch_v7.js')&&has(files.launcher,"'design-system7'"));
 check('launcher pins canonical design-system v7 commit',has(files.launcher,'3cfc3e4ea100fdc95686614c42561036052222ae'));
 check('launcher uses premium visual v3',has(files.launcher,'ClubPulsePremiumVisualPatch_v3.js')&&has(files.launcher,"'premium3'"));
-check('launcher uses readability v7',has(files.launcher,'ClubPulseReadabilityGuardPatch_v7.js')&&has(files.launcher,"'readability7'"));
-check('launcher pins readability v7 commit',has(files.launcher,'bd3e0c22693f77958b353cad80de677110755efe'));
+check('launcher uses readability v8',has(files.launcher,'ClubPulseReadabilityGuardPatch_v8.js')&&has(files.launcher,"'readability8'"));
+check('launcher pins readability v8 commit',has(files.launcher,'9b6e1f82ad2d07d67628cd501723d5eba095908f'));
 check('launcher keeps final polish v3',has(files.launcher,'ClubPulseFinalPolishPatch_v3.js')&&has(files.launcher,"'final-polish3'"));
 check('canonical load order remains stable',has(files.launcher,"+u+'\\n'+i+'\\n'+ds+'\\n'+pv+'\\n'+rg+'\\n'+fp+'\\n'+q+'\\n'+r"));
 check('launcher retains remote-to-local fallback',has(files.launcher,'if(F.fileExists(file))return F.readString(file)'));
@@ -47,7 +47,8 @@ check('readability applies to eleven clubs',has(files.readability,'new Set([66,8
 check('five-league registry fixes observed German and Italian labels',has(files.readability,"'Hoffenheim':'ホッフェンハイム'")&&has(files.readability,"'Cagliari':'カリアリ'"));
 check('five-league registry includes broad PL LaLiga Bundesliga SerieA Ligue1 coverage',has(files.readability,"'Aston Villa':'アストン・ヴィラ'")&&has(files.readability,"'Villarreal':'ビジャレアル'")&&has(files.readability,"'Bayer Leverkusen':'レヴァークーゼン'")&&has(files.readability,"'Napoli':'ナポリ'")&&has(files.readability,"'Marseille':'マルセイユ'"));
 check('canonical team name precedes ellipsis fallback',has(files.readability,'function cpCanonicalTeamName')&&has(files.readability,'CP_TEAM_DISPLAY_NAMES[n]||n')&&has(files.readability,"n.length>max?n.slice(0,max-1)+'…':n"));
-check('venue localization registry covers observed missing venues',has(files.readability,"'PreZero Arena':'プレゼロ・アレーナ'")&&has(files.readability,"'Unipol Domus':'ウニポル・ドムス'")&&has(files.readability,"'Villa Park':'ヴィラ・パーク'"));
+check('venue registry is pinned to 2026-27 current season',has(files.readability,"CP_VENUE_REGISTRY_SEASON='2026-27'")&&has(files.readability,"'Hill Dickinson Stadium':'ヒル・ディッキンソン・スタジアム'")&&has(files.readability,"'Estadio Olímpico de la Cartuja':'ラ・カルトゥハ'")&&has(files.readability,"'PreZero Arena':'SNPアレーナ'"));
+check('2026-27 promoted and changed-venue coverage is registered',has(files.readability,"'Hull City':'ハル'")&&has(files.readability,"'Racing Santander':'ラシン'")&&has(files.readability,"'SV Elversberg':'エルヴァースベルク'")&&has(files.readability,"'Frosinone':'フロジノーネ'")&&has(files.readability,"'Le Mans FC':'ル・マン'")&&has(files.readability,"'エヴァートン':'ヒル・ディッキンソン・スタジアム'")&&has(files.readability,"'ベティス':'ラ・カルトゥハ'")&&has(files.readability,"'ホッフェンハイム':'SNPアレーナ'"));
 check('away venue fallback is conservative registry lookup',has(files.readability,'const CP_HOME_VENUE_BY_TEAM=')&&has(files.readability,"out.homeAway==='AWAY'")&&has(files.readability,"CP_HOME_VENUE_BY_TEAM[out.opponentName]||'会場未定'"));
 check('mapMatch normalization happens before cache/render',has(files.readability,'const CP_RG_BASE_MAP_MATCH=mapMatch')&&has(files.readability,'mapMatch=function(m)'));
 check('pill geometry still reads canonical tokens',has(files.readability,"typeof CP_DESIGN_TOKENS==='object'")&&has(files.readability,'CP_DESIGN_TOKENS.pill'));
@@ -61,4 +62,4 @@ check('core keeps live token in Keychain',has(files.core,'clubpulse_api_football
 check('resilience keeps offline and no-cache QA',has(files.resilience,"qa==='offline'")&&has(files.resilience,"qa==='nocache'"));
 
 if(failed){console.error(`\nClub Pulse contract QA FAILED: ${failed} check(s)`);process.exit(1)}
-console.log('\nClub Pulse metadata typography and header contrast contract QA PASSED');
+console.log('\nClub Pulse metadata typography, header contrast, and 2026-27 venue registry contract QA PASSED');
