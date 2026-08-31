@@ -11,6 +11,9 @@ check('launcher pins resilience v6 commit',src.includes('968fd0308afd6ea0998d831
 check('launcher uses data policy v6 local cache',src.includes('ClubPulseDataPolicyPatch_v6.js'));
 check('launcher fetch tag is data-policy6',src.includes("'data-policy6'"));
 check('launcher pins data policy v6 commit',src.includes('c274078e2cd1742a61fe9c3548d54f703a84ebc5'));
+check('launcher uses premium visual v4 local cache',src.includes('ClubPulsePremiumVisualPatch_v4.js'));
+check('launcher fetch tag is premium4',src.includes("'premium4'"));
+check('launcher pins premium visual v4 commit',src.includes('5f465f4d34d79d03614ddba306c15d18f1049f0b/scriptable/club-pulse-premium-visual-patch.js'));
 check('launcher uses small presentation v5 local cache',src.includes('ClubPulseSmallPresentationPatch_v5.js'));
 check('launcher fetch tag is small-presentation5',src.includes("'small-presentation5'"));
 check('launcher pins small presentation v5 commit',src.includes('7409ea170e02434f6740c1f3cc16a8fa92465eaf/scriptable/club-pulse-small-presentation-patch.js'));
@@ -23,6 +26,6 @@ check('launcher pins wave4 Lens immutable commits',src.includes('28a95c8d790e4a1
 check('wave4 registry injects before core parameter resolution',src.includes("c=c.slice(0,pk)+cr+'\\n'+ec+'\\n'+w2c+'\\n'+w3c+'\\n'+w4c+'\\n'+c.slice(pk)"));
 check('wave4 presentation runs after wave3 and Small',src.includes("+dp+'\\n'+sp+'\\n'+w2t+'\\n'+w3n+'\\n'+w4l"));
 check('patch loader remains local-first',src.includes("if(F.fileExists(file)){let s=F.readString(file);if(s&&s.length>=min)return s}"));
-check('launcher documents 44-club architecture',src.includes('Club Pulse 44-club runtime')&&src.includes('Wave 4 adds RC Lens'));
+check('launcher documents 44-club architecture',src.includes('Club Pulse 44-club runtime')&&src.includes('Wave 4 adds RC Lens')&&src.includes('Premium Visual v4'));
 if(failed){console.error(`\nLauncher version QA FAILED: ${failed}`);process.exit(1)}
 console.log('\nClub Pulse 44-club launcher version QA PASSED');
