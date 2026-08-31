@@ -10,6 +10,8 @@ on:
       - 'tools/commons-hero-discovery.mjs'
       - 'tools/validate-discovered-hero-images.mjs'
       - 'tools/detect-hero-subjects.mjs'
+      - 'tools/fetch-with-retry.mjs'
+      - 'tools/install-fetch-retry-hook.mjs'
       - 'tools/build-hero-channel.mjs'
       - 'tools/validate-hero-channel-publish.mjs'
       - 'hero-selection-policy.json'
@@ -79,7 +81,7 @@ jobs:
           else
             policy="hero-pilot-policies/${lower}.json"
           fi
-          node tools/detect-hero-subjects.mjs \
+          node --import ./tools/install-fetch-retry-hook.mjs tools/detect-hero-subjects.mjs \
             --mode=discovery \
             --policy="$policy" \
             --discovery=hero-discovery-report.json \
