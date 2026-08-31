@@ -11,9 +11,9 @@ check('launcher pins resilience v6 commit',src.includes('968fd0308afd6ea0998d831
 check('launcher uses data policy v6 local cache',src.includes('ClubPulseDataPolicyPatch_v6.js'));
 check('launcher fetch tag is data-policy6',src.includes("'data-policy6'"));
 check('launcher pins data policy v6 commit',src.includes('c274078e2cd1742a61fe9c3548d54f703a84ebc5'));
-check('launcher uses small presentation v4 local cache',src.includes('ClubPulseSmallPresentationPatch_v4.js'));
-check('launcher fetch tag is small-presentation4',src.includes("'small-presentation4'"));
-check('launcher pins small presentation v4 commit',src.includes('e231b5a7c67b9edd31073f83e8b640f489cfefb7'));
+check('launcher uses small presentation v5 local cache',src.includes('ClubPulseSmallPresentationPatch_v5.js'));
+check('launcher fetch tag is small-presentation5',src.includes("'small-presentation5'"));
+check('launcher pins small presentation v5 commit',src.includes('7409ea170e02434f6740c1f3cc16a8fa92465eaf/scriptable/club-pulse-small-presentation-patch.js'));
 check('launcher uses wave2 clubs and themes v4',src.includes('ClubPulseWave2ClubsPatch_v1.js')&&src.includes("'wave2-clubs1'")&&src.includes('ClubPulseWave2ThemesPatch_v4.js')&&src.includes("'wave2-themes4'"));
 check('launcher pins wave2 immutable commits',src.includes('c53a62e6308fb99d6605d9b6c8d960869140dd46/scriptable/club-pulse-wave2-clubs-patch.js')&&src.includes('75ee9a4925091e1f8966d6adf9cf6f95e1ab58a3/scriptable/club-pulse-wave2-themes-patch.js'));
 check('launcher uses wave3 Netherlands v1 caches',src.includes('ClubPulseWave3NetherlandsClubsPatch_v1.js')&&src.includes("'wave3-nl-clubs1'")&&src.includes('ClubPulseWave3NetherlandsPatch_v1.js')&&src.includes("'wave3-netherlands1'"));
