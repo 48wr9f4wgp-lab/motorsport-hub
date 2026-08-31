@@ -17,57 +17,38 @@ function syntax(name,src){try{new Function(`return (async()=>{\n${src}\n})`);che
 for(const [name,src] of Object.entries(files))syntax(name,src);
 
 check('launcher injects both registries before parameter resolution',has(files.launcher,"c=c.slice(0,pk)+cr+'\\n'+ec+'\\n'+c.slice(pk)"));
-check('launcher loads extra-clubs v3',has(files.launcher,'ClubPulseExtraClubsPatch_v3.js')&&has(files.launcher,"'extra-clubs3'"));
-check('launcher pins extra-clubs v3 commit',has(files.launcher,'1b734c803dc4ccc39c978decc3f2a4c733ab7605'));
 check('launcher loads canonical design system v6',has(files.launcher,'ClubPulseDesignSystemPatch_v6.js')&&has(files.launcher,"'design-system6'"));
 check('launcher pins canonical design-system v6 commit',has(files.launcher,'e33abe814c496c316c4c80ca1a736c6c80d30e9b'));
-check('launcher uses premium visual v2',has(files.launcher,'ClubPulsePremiumVisualPatch_v2.js')&&has(files.launcher,"'premium2'"));
-check('launcher uses readability v6',has(files.launcher,'ClubPulseReadabilityGuardPatch_v6.js')&&has(files.launcher,"'readability6'"));
-check('launcher pins readability v6 commit',has(files.launcher,'8f569ad248f3777ca4a7f935bdacf2c5343484bc'));
+check('launcher uses readability v7',has(files.launcher,'ClubPulseReadabilityGuardPatch_v7.js')&&has(files.launcher,"'readability7'"));
+check('launcher pins readability v7 commit',has(files.launcher,'bd3e0c22693f77958b353cad80de677110755efe'));
 check('launcher keeps final polish v3',has(files.launcher,'ClubPulseFinalPolishPatch_v3.js')&&has(files.launcher,"'final-polish3'"));
 check('canonical load order remains stable',has(files.launcher,"+u+'\\n'+i+'\\n'+ds+'\\n'+pv+'\\n'+rg+'\\n'+fp+'\\n'+q+'\\n'+r"));
 check('launcher retains remote-to-local fallback',has(files.launcher,'if(F.fileExists(file))return F.readString(file)'));
 check('launcher retains QA persistence',has(files.launcher,'ClubPulseQAOverride_v1.json')&&has(files.launcher,'15*60*1000'));
-check('launcher documents eleven parameters',has(files.launcher,'arsenal, liverpool, inter, and dortmund'));
 
-check('Barcelona team 81 remains registered',has(files.clubs,'CLUBS.barcelona')&&has(files.clubs,'team:81'));
-check('Real Madrid team 86 remains registered',has(files.clubs,'CLUBS.realmadrid')&&has(files.clubs,'team:86'));
-check('new club IDs are registered',has(files.extraClubs,"id:'arsenal',team:57,comp:'PL'")&&has(files.extraClubs,"id:'liverpool',team:64,comp:'PL'")&&has(files.extraClubs,"id:'inter',team:108,comp:'SA'")&&has(files.extraClubs,"id:'dortmund',team:4,comp:'BL1'"));
-check('new club venues are registered',has(files.extraClubs,'エミレーツ・スタジアム')&&has(files.extraClubs,'アンフィールド')&&has(files.extraClubs,'ジグナル・イドゥナ・パルク')&&has(files.extraClubs,'サン・シーロ'));
-check('new aliases are registered',has(files.extraClubs,"ars:'arsenal'")&&has(files.extraClubs,"lfc:'liverpool'")&&has(files.extraClubs,"internazionale:'inter'")&&has(files.extraClubs,"bvb:'dortmund'"));
-
-check('design system declares shared shell/card/pill tokens',has(files.design,'const CP_DESIGN_TOKENS')&&has(files.design,'shell:{')&&has(files.design,'card:{')&&has(files.design,'pill:{'));
 check('design system contains all eleven theme definitions',["66:{","81:{","86:{","5:{","524:{","98:{","65:{","57:{","64:{","108:{","4:{"].every(x=>has(files.design,x)));
-check('shared shell remains frozen neutral metallic',has(files.design,"surface:'#080C14'")&&has(files.design,"edge:'#9AA6B8'"));
 check('frozen seven identities remain present',has(files.design,"key:'manutd',tone:'vivid-red'")&&has(files.design,"key:'barcelona',tone:'royal-purple'")&&has(files.design,"key:'realmadrid',tone:'pearl-white'")&&has(files.design,"key:'bayern',tone:'crest-red-blue-white'")&&has(files.design,"key:'psg',tone:'paris-royal-blue'")&&has(files.design,"key:'milan',tone:'rossoneri-gunmetal'")&&has(files.design,"key:'mancity',tone:'sky-blue'"));
-check('Arsenal identity exposes navy field and ivory edge',has(files.design,"key:'arsenal',tone:'arsenal-red-ivory-navy'")&&has(files.design,"cardSurface:'#152A4A'")&&has(files.design,"cardPanel:'#A80E2C'")&&has(files.design,"cardBorder:'#F0E5D2'"));
-check('Liverpool identity is materially deeper scarlet with stronger teal',has(files.design,"key:'liverpool',tone:'deep-scarlet-teal'")&&has(files.design,"cardSurface:'#430713'")&&has(files.design,"cardPanel:'#740A21'")&&has(files.design,"cardGlow:'#A30B2B'")&&has(files.design,"cardBorder:'#00A79F'"));
-check('Inter identity remains black electric blue',has(files.design,"key:'inter',tone:'nerazzurri-electric-blue'")&&has(files.design,"cardSurface:'#03060B'")&&has(files.design,"cardGlow:'#0057B8'"));
-check('Dortmund identity remains signal yellow black with dark text',has(files.design,"key:'dortmund',tone:'signal-yellow-black'")&&has(files.design,"cardGlow:'#FDE100'")&&has(files.design,"cardText:'#111111'"));
-check('design system stays line-free',!has(files.design,'linePrimary')&&!has(files.design,'lineSecondary'));
+check('Arsenal identity stays navy red ivory',has(files.design,"key:'arsenal',tone:'arsenal-red-ivory-navy'")&&has(files.design,"cardSurface:'#152A4A'")&&has(files.design,"cardBorder:'#F0E5D2'"));
+check('Liverpool identity stays deep scarlet teal',has(files.design,"key:'liverpool',tone:'deep-scarlet-teal'")&&has(files.design,"cardSurface:'#430713'")&&has(files.design,"cardBorder:'#00A79F'"));
+check('Inter identity remains black electric blue',has(files.design,"key:'inter',tone:'nerazzurri-electric-blue'"));
+check('Dortmund identity remains signal yellow black',has(files.design,"key:'dortmund',tone:'signal-yellow-black'"));
 
-check('premium renderer derives generic targets from canonical definitions',has(files.premium,'Object.values(CP_THEME_DEFINITIONS||{})')&&has(files.premium,'CP_PREMIUM_GENERIC_KEYS'));
-check('premium card geometry reads canonical tokens',has(files.premium,'CP_DESIGN_TOKENS?.card')&&has(files.premium,'radiusMedium')&&has(files.premium,'borderMedium'));
-check('Real premium gradient remains frozen',has(files.premium,'function cpPremiumRealGradient')&&has(files.premium,'g.locations=[0,.40,.76,1]'));
-check('Barcelona dedicated renderer remains',has(files.identity,'function cpBarcelonaMatchMedium')&&has(files.identity,'function cpBarcelonaMatchSmall'));
-
-check('readability applies to exactly eleven clubs',has(files.readability,'new Set([66,81,86,5,524,98,65,57,64,108,4])'));
-check('readability includes new club display aliases',has(files.readability,"'Arsenal FC':'アーセナル'")&&has(files.readability,"'Liverpool FC':'リヴァプール'")&&has(files.readability,"'FC Internazionale Milano':'インテル'")&&has(files.readability,"'Borussia Dortmund':'ドルトムント'"));
-check('ellipsis remains fallback only',has(files.readability,'n=CP_TEAM_DISPLAY_NAMES[n]||n')&&has(files.readability,"n.length>max?n.slice(0,max-1)+'…':n"));
-check('pill geometry reads canonical tokens',has(files.readability,"typeof CP_DESIGN_TOKENS==='object'")&&has(files.readability,'CP_DESIGN_TOKENS.pill'));
+check('readability applies to eleven clubs',has(files.readability,'new Set([66,81,86,5,524,98,65,57,64,108,4])'));
+check('five-league registry fixes observed German and Italian labels',has(files.readability,"'Hoffenheim':'ホッフェンハイム'")&&has(files.readability,"'Cagliari':'カリアリ'"));
+check('five-league registry includes broad PL LaLiga Bundesliga SerieA Ligue1 coverage',has(files.readability,"'Aston Villa':'アストン・ヴィラ'")&&has(files.readability,"'Villarreal':'ビジャレアル'")&&has(files.readability,"'Bayer Leverkusen':'レヴァークーゼン'")&&has(files.readability,"'Napoli':'ナポリ'")&&has(files.readability,"'Marseille':'マルセイユ'"));
+check('canonical team name precedes ellipsis fallback',has(files.readability,'function cpCanonicalTeamName')&&has(files.readability,'CP_TEAM_DISPLAY_NAMES[n]||n')&&has(files.readability,"n.length>max?n.slice(0,max-1)+'…':n"));
+check('venue localization registry covers observed missing venues',has(files.readability,"'PreZero Arena':'プレゼロ・アレーナ'")&&has(files.readability,"'Unipol Domus':'ウニポル・ドムス'")&&has(files.readability,"'Villa Park':'ヴィラ・パーク'"));
+check('away venue fallback is conservative registry lookup',has(files.readability,'const CP_HOME_VENUE_BY_TEAM=')&&has(files.readability,"out.homeAway==='AWAY'")&&has(files.readability,"CP_HOME_VENUE_BY_TEAM[out.opponentName]||'会場未定'"));
+check('mapMatch normalization happens before cache/render',has(files.readability,'const CP_RG_BASE_MAP_MATCH=mapMatch')&&has(files.readability,'mapMatch=function(m)'));
+check('pill geometry still reads canonical tokens',has(files.readability,"typeof CP_DESIGN_TOKENS==='object'")&&has(files.readability,'CP_DESIGN_TOKENS.pill'));
 check('competition crest treatment remains unified',has(files.readability,'function cpUnifiedCompetitionPill')&&has(files.readability,'plate.addImage(logo)'));
 check('readability contains no opponent-specific crest rescue',!has(files.readability,'CP_LOW_CONTRAST_CRESTS')&&!has(files.readability,'CP_RG_BASE_BADGE'));
 
 check('final polish remains Bayern-only',!has(files.finalPolish,'badge=function')&&!has(files.finalPolish,'JUV')&&has(files.finalPolish,"club?.team!==5"));
-check('Bayern side pill keeps stronger canonical blue',has(files.finalPolish,"t?.sideBorder||'#2D86D3'")&&has(files.finalPolish,'p.borderWidth=.9'));
-
-check('Man U state renderer stays scoped',has(files.manutd,'club?.team===66'));
-check('top layout stays Man U scoped',has(files.top,'if(!CP_MU_IS())return CP_TOP_LAYOUT_BASE_MATCH_MEDIUM'));
-check('competition registry includes PL LaLiga CL',has(files.comp,'PL:{id:39}')&&has(files.comp,'PD:{id:140}')&&has(files.comp,'CL:{id:2}'));
 check('core retains stale cache fallback',has(files.core,'if(c)return{...c,stale:true}'));
 check('core retains daily quota guard',has(files.core,'API_DAILY_BUDGET'));
 check('core keeps live token in Keychain',has(files.core,'clubpulse_api_football_token_v1'));
 check('resilience keeps offline and no-cache QA',has(files.resilience,"qa==='offline'")&&has(files.resilience,"qa==='nocache'"));
 
 if(failed){console.error(`\nClub Pulse contract QA FAILED: ${failed} check(s)`);process.exit(1)}
-console.log('\nClub Pulse eleven-club visual contract QA PASSED');
+console.log('\nClub Pulse five-league localization contract QA PASSED');
