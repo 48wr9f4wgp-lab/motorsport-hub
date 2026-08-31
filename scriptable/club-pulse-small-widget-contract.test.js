@@ -1,0 +1,26 @@
+const fs=require('fs');
+const path=require('path');
+const r=n=>fs.readFileSync(path.join(__dirname,n),'utf8');
+const core=r('club-pulse-core.js');
+const themes=r('club-pulse-theme-registry-patch.js');
+const identity=r('club-pulse-identity-color-patch.js');
+const manutd=r('club-pulse-manutd-theme-patch.js');
+const premium=r('club-pulse-premium-visual-patch.js');
+const design=r('club-pulse-design-system-patch.js');
+const resilience=r('club-pulse-resilience-patch.js');
+const policy=r('club-pulse-data-policy-patch.js');
+let failed=0;
+const check=(n,ok)=>{if(ok)console.log(`✓ ${n}`);else{console.error(`✗ ${n}`);failed++}};
+check('core retains small builder',core.includes('function buildSmall'));
+check('theme system owns small header footer and builder',themes.includes('buildHeaderSmall=function')&&themes.includes('buildFooterSmall=function')&&themes.includes('buildSmall=function'));
+check('small builder uses adaptive refreshDelay',themes.includes('w.refreshAfterDate=new Date(Date.now()+refreshDelay(d))'));
+check('generic premium clubs retain small match renderer',premium.includes('function cpPremiumExtraMatchSmall')&&premium.includes('buildMatchSmall=function'));
+check('Real and Barcelona retain dedicated small renderers',identity.includes('function cpBarcelonaMatchSmall')&&identity.includes('buildMatchSmall=function'));
+check('Man U retains dedicated small renderer',manutd.includes('buildMatchSmall=function'));
+check('small metadata uses canonical typography',design.includes('metaSmall:{font:9.0,minScale:.90}')&&premium.includes('cpMetaText(meta,m.kickoff,fg,true)')&&identity.includes('cpMetaText(meta,m.kickoff'));
+check('small NEXT LIVE POST branches remain present',premium.includes("d.mode==='LIVE'")&&premium.includes("d.mode==='POST'")&&premium.includes("d.mode==='NEXT'"));
+check('small stale header has explicit saved-data badge',resilience.includes("text(s,'保存',6.2"));
+check('small stale post-kickoff state is guarded',policy.includes('CP_DP_BASE_BUILD_MATCH_SMALL=buildMatchSmall')&&policy.includes("mode:'STALE_NEXT'")&&policy.includes("return'更新待ち'"));
+check('small waiting state keeps neutral VS and kickoff metadata',policy.includes("return'VS'")&&policy.includes('`${m.kickoff} ・ ${m.venue}`'));
+if(failed){console.error(`\nSmall widget contract QA FAILED: ${failed}`);process.exit(1)}
+console.log('\nClub Pulse small widget contract QA PASSED');
