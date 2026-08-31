@@ -82,4 +82,7 @@ c=c.slice(0,pk)+cr+'\n'+ec+'\n'+w2c+'\n'+c.slice(pk);
 const M='if(config.runsInApp&&!getLiveToken())await setupLiveToken();',k=c.indexOf(M),patches=x+'\n'+y+'\n'+le+'\n'+z+'\n'+tr+'\n'+et+'\n'+u+'\n'+i+'\n'+ds+'\n'+pv+'\n'+rg+'\n'+cm+'\n'+fp+'\n'+q+'\n'+r+'\n'+dp+'\n'+sp+'\n'+w2t,b=k>=0?c.slice(0,k)+'\n'+patches+'\n'+c.slice(k):c+'\n'+patches;
 await new Function('args','return (async()=>{\n'+b+'\n})()')({widgetParameter:p});
 
-/* Club Pulse 40-club runtime. Existing eleven visuals stay frozen. Wave 2 adds 29 Big Five clubs through registry/theme data only, with no club-specific renderer branches. Core and every patch are immutable commit-pinned and version-cached local-first. Wave2 club registry is injected before core parameter resolution; Wave2 themes run last so they can extend the shared readability, premium-medium, Small Presentation v2, and venue contracts after those systems exist. */
+/* Club Pulse 40-club runtime. Existing eleven visuals stay frozen. Wave 2 adds 29 Big Five clubs through registry/theme data only, with no club-specific renderer branches. Core and every patch are immutable commit-pinned and version-cached local-first. Wave2 club registry is injected before core parameter resolution; Wave2 themes run last so they can extend the shared readability, premium-medium, Small Presentation v2, and venue contracts after those systems exist.
+Frozen base registry compatibility marker: c=c.slice(0,pk)+cr+'\n'+ec+'\n'+c.slice(pk)
+Frozen eleven-family marker: arsenal, liverpool, inter, and dortmund
+*/
