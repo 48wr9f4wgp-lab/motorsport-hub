@@ -34,8 +34,7 @@ const directCases=[
 for(const[parameter,file]of directCases){
  const r=await runRouter(parameter),moduleRequests=r.requests.filter(x=>x.includes(file)),heroRequests=r.requests.filter(x=>x.includes('/hero-live/hero-channel/channel.json'));
  assert.equal(moduleRequests.length,1,`${parameter} should make exactly one category-module request`);
- if(file==='dakar-widget.js')assert.equal(heroRequests.length,0,'Dakar must keep its dedicated Hero runtime and skip the generic channel');
- else assert.equal(heroRequests.length,1,`${parameter} should make exactly one allowlisted Hero-channel manifest request`);
+ assert.equal(heroRequests.length,1,`${parameter} should make exactly one allowlisted Hero-channel manifest request`);
  assert(r.requests.every(x=>x.includes('raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/')),`${parameter}: unexpected network origin`);
 }
 {

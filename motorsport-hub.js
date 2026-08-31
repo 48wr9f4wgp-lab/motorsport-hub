@@ -64,7 +64,7 @@ function finishHeroChannelImage(img){
  return ctx.getImage();
 }
 async function loadHeroChannelImage(cat){
- if(cat==='DAKAR'||cat==='QA')return null;const m=await heroChannelManifest(),e=m?.categories?.[cat];if(!validHeroEntry(e,cat))return null;
+ if(cat==='QA')return null;const m=await heroChannelManifest(),e=m?.categories?.[cat];if(!validHeroEntry(e,cat))return null;
  const small=(config.widgetFamily||'medium')==='small',fam=small?'small':'medium',u=e.images[fam].url,hfm=FileManager.local(),dir=hfm.documentsDirectory(),asset=heroSafe(e.assetId),p=hfm.joinPath(dir,`motorsport-hero-channel-v1-${cat}-${fam}-${asset}.jpg`),lkg=hfm.joinPath(dir,`motorsport-hero-channel-v1-${cat}-${fam}-lkg.jpg`);
  try{if(hfm.fileExists(p))return finishHeroChannelImage(hfm.readImage(p))}catch(_){}
  if(globalThis.__MH_REMOTE_OFFLINE!==true){try{const r=new Request(`${u}?v=${encodeURIComponent(String(e.version))}`);r.timeoutInterval=10;r.headers={'Cache-Control':'no-cache','User-Agent':'MotorsportHub-HeroChannel/1'};const img=await r.loadImage();if(img){try{hfm.writeImage(p,img);hfm.writeImage(lkg,img)}catch(_){}return finishHeroChannelImage(img)}}catch(_){} }

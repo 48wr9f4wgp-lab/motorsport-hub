@@ -24,16 +24,23 @@ const FIXTURE=`<table><tr><th>P.</th><th>N°</th><th>Exp.</th><th>Pilote/Véhicu
 <tr><td>2</td><td>227</td><td></td><td>FORD RACING (esp) NANI ROMA (esp) ALEX HARO</td><td>FORD RACING</td><td>49h 06' 35''</td><td>+ 00h 09' 42''</td></tr>
 <tr><td>3</td><td>226</td><td></td><td>FORD RACING (swe) MATTIAS EKSTRÖM (swe) EMIL BERGKVIST</td><td>FORD RACING</td><td>49h 11' 26''</td><td>+ 00h 14' 33''</td></tr></table>`;
 
-// Router query parameter must bypass the picker and go directly to Dakar.
+// Router query parameter must bypass the picker, go directly to Dakar, and still consult the shared Hero channel.
 {
  const requests=[];let complete=0;
- class Request{constructor(url){this.url=url;this.headers={};requests.push(url)}async loadString(){return`// Motorsport Hub DAKAR dedicated rally-raid module\n(async()=>{globalThis.__TAP_ROUTED=true;Script.complete()})();`}}
+ class Request{
+  constructor(url){this.url=url;this.headers={};requests.push(url)}
+  async loadString(){return`// Motorsport Hub DAKAR dedicated rally-raid module\n(async()=>{globalThis.__TAP_ROUTED=true;Script.complete()})();`}
+  async loadJSON(){if(this.url.includes('/hero-live/hero-channel/channel.json'))return{schemaVersion:1,generatedAt:new Date().toISOString(),categories:{}};throw Error('unexpected json request')}
+ }
  const fm={documentsDirectory:()=>'/docs',joinPath:(a,b)=>`${a}/${b}`,fileExists:()=>false,writeString(){},readString(){throw Error('missing')},remove(){}};
  const ctx={args:{widgetParameter:'',queryParameters:{mhCategory:'DAKAR'}},config:{runsInWidget:false,widgetFamily:null},FileManager:{local:()=>fm},Request,ListWidget:class extends ListWidget{constructor(){super([])}},Color,Font,Date,Math,Map,Set,JSON,Number,String,Array,Object,RegExp,Error,Promise,decodeURIComponent,isFinite,Script:{complete(){complete++},setWidget(){}}};ctx.globalThis=ctx;
  vm.createContext(ctx);await vm.runInContext(router,ctx,{timeout:5000});
  assert.equal(ctx.__TAP_ROUTED,true,'query-category route did not execute Dakar');
- assert.equal(requests.length,1,'tap query should fetch exactly one module');
- assert(requests[0].includes('dakar-widget.js'),'tap query routed to wrong module');
+ const moduleRequests=requests.filter(x=>x.includes('/dakar-widget.js'));
+ const heroRequests=requests.filter(x=>x.includes('/hero-live/hero-channel/channel.json'));
+ assert.equal(moduleRequests.length,1,'tap query should fetch exactly one Dakar module');
+ assert.equal(heroRequests.length,1,'tap query should consult the shared Hero manifest exactly once');
+ assert.equal(requests.length,2,'tap query should make only the Dakar module and Hero-manifest requests');
  assert.equal(complete,1);
 }
 
