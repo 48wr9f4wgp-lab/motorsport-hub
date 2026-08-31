@@ -1,5 +1,6 @@
-// Club Pulse Wave 2 theme definitions v2.
+// Club Pulse Wave 2 theme definitions v3.
 // Data-driven theme expansion for 29 additional clubs. No club-specific renderer branches.
+// v3 adds an optional own-crest contrast token and tones down over-bright cyan gradients.
 
 function cpW2Theme(key,c){
   return {
@@ -9,7 +10,8 @@ function cpW2Theme(key,c){
     accent:c.accent||'#E6EAF0',accentSoft:c.accentSoft||'#F4F6F8',headerAccent:c.headerAccent||'#E6EAF0',
     surface:'#070A10',glow:c.glow||c.cardGlow,panel:'#0D1420',panelDeep:'#080D17',
     cardSurface:c.cardSurface,cardPanel:c.cardPanel,cardGlow:c.cardGlow,
-    border:c.border||c.cardBorder,cardBorder:c.cardBorder,sideBorder:c.sideBorder||c.accent||'#E6EAF0'
+    border:c.border||c.cardBorder,cardBorder:c.cardBorder,sideBorder:c.sideBorder||c.accent||'#E6EAF0',
+    ownCrestPlate:c.ownCrestPlate||null,ownCrestPlateAlpha:Number.isFinite(c.ownCrestPlateAlpha)?c.ownCrestPlateAlpha:null
   }
 }
 
@@ -39,15 +41,15 @@ Object.assign(CP_CLUB_THEME_REGISTRY,{
   18:cpW2Theme('gladbach',{cardSurface:'#080B0A',cardPanel:'#17231D',cardGlow:'#0A7041',cardBorder:'#EDEFEF',accent:'#31B86D'}),
 
   // Serie A
-  109:cpW2Theme('juventus',{cardSurface:'#0B0C0F',cardPanel:'#292B31',cardGlow:'#44474F',cardBorder:'#D4AF37',accent:'#D4AF37'}),
-  113:cpW2Theme('napoli',{cardSurface:'#075075',cardPanel:'#087FAE',cardGlow:'#12A0D3',cardBorder:'#EAF7FC',accent:'#EAF7FC'}),
+  109:cpW2Theme('juventus',{cardSurface:'#17191E',cardPanel:'#35383F',cardGlow:'#555A63',cardBorder:'#D4AF37',accent:'#D4AF37',ownCrestPlate:'#F2F2F2',ownCrestPlateAlpha:.16}),
+  113:cpW2Theme('napoli',{cardSurface:'#075075',cardPanel:'#08779F',cardGlow:'#0E91BB',cardBorder:'#EAF7FC',accent:'#EAF7FC'}),
   100:cpW2Theme('roma',{cardSurface:'#55121D',cardPanel:'#7F1C2C',cardGlow:'#9A2938',cardBorder:'#F0BC42',accent:'#F0BC42'}),
   110:cpW2Theme('lazio',{cardSurface:'#22546C',cardPanel:'#397C99',cardGlow:'#65B0CE',cardBorder:'#EAF7FC',accent:'#EAF7FC'}),
   102:cpW2Theme('atalanta',{cardSurface:'#050A12',cardPanel:'#083B72',cardGlow:'#0057B8',cardBorder:'#E9EEF5',accent:'#71AEE8'}),
   99:cpW2Theme('fiorentina',{cardSurface:'#31134D',cardPanel:'#512274',cardGlow:'#6A3490',cardBorder:'#D7B03A',accent:'#D7B03A'}),
 
   // Ligue 1
-  516:cpW2Theme('marseille',{cardSurface:'#06476B',cardPanel:'#087FAC',cardGlow:'#00AEEF',cardBorder:'#ECFAFF',accent:'#ECFAFF'}),
+  516:cpW2Theme('marseille',{cardSurface:'#06476B',cardPanel:'#08759A',cardGlow:'#0A8CB5',cardBorder:'#ECFAFF',accent:'#ECFAFF'}),
   548:cpW2Theme('monaco',{cardSurface:'#650A12',cardPanel:'#B41420',cardGlow:'#E31B23',cardBorder:'#E8D19A',accent:'#E8D19A'}),
   523:cpW2Theme('lyon',{cardSurface:'#0E2453',cardPanel:'#193D7A',cardGlow:'#8A1832',cardBorder:'#EEF2F8',accent:'#EEF2F8'}),
   521:cpW2Theme('lille',{cardSurface:'#640A14',cardPanel:'#A81222',cardGlow:'#D71920',cardBorder:'#B9C8E6',accent:'#DDE5F3'}),
@@ -57,6 +59,17 @@ Object.assign(CP_CLUB_THEME_REGISTRY,{
 // Promote Wave 2 into every shared presentation contract. These sets are mutable by design.
 if(typeof CP_STANDARD_TEAM_IDS!=='undefined')for(const id of CP_WAVE2_TEAM_IDS)CP_STANDARD_TEAM_IDS.add(id);
 if(typeof CP_PREMIUM_GENERIC_KEYS!=='undefined')for(const id of CP_WAVE2_TEAM_IDS){const t=CP_CLUB_THEME_REGISTRY[id];if(t?.key)CP_PREMIUM_GENERIC_KEYS.add(t.key)}
+
+// Optional contrast plate for a dark own crest on a dark theme. The token is generic;
+// only themes that explicitly opt in receive it, so the frozen base eleven remain unchanged.
+if(typeof badge==='function'){
+  const CP_W2_BASE_BADGE=badge;
+  badge=function(p,fallback,img,size=28,p1=club.p,p2=club.s,scale=1){
+    const o=CP_W2_BASE_BADGE(p,fallback,img,size,p1,p2,scale),t=typeof CP_ACTIVE_THEME==='function'?CP_ACTIVE_THEME():null;
+    if(t?.ownCrestPlate&&fallback===club?.badge)o.backgroundColor=C(t.ownCrestPlate,t.ownCrestPlateAlpha??.14);
+    return o
+  }
+}
 
 // Keep Small Widget labels Japanese and stable instead of falling back to provider TLAs.
 if(typeof CP_SP_SMALL_ALIASES!=='undefined')Object.assign(CP_SP_SMALL_ALIASES,{
