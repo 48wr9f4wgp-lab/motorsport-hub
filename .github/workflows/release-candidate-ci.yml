@@ -31,7 +31,12 @@ jobs:
           set -euo pipefail
           while IFS= read -r -d '' file; do
             node --check "$file"
-          done < <(find . -type f \( -name '*.js' -o -name '*.mjs' \) -not -path './.git/*' -print0)
+          done < <(find . -type f \( -name '*.js' -o -name '*.mjs' \) \
+            -not -path './.git/*' \
+            -not -path './scriptable/club-pulse.js' \
+            -print0)
+          # club-pulse.js relies on Scriptable-supported top-level await.
+          # Club Pulse Contract QA validates that launcher in async context.
       - name: Run deterministic release gates
         run: |
           set -euo pipefail
