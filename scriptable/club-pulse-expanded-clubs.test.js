@@ -25,8 +25,8 @@ check('second batch venues',has(clubs,'エミレーツ・スタジアム')&&has(
 check('second batch provider normalization',has(clubs,"'Arsenal FC':'アーセナル'")&&has(clubs,"'Liverpool FC':'リヴァプール'")&&has(clubs,"'FC Internazionale Milano':'インテル'")&&has(clubs,"'Borussia Dortmund':'ドルトムント'"));
 
 check('canonical design owns all eleven themes',["66:{","81:{","86:{","5:{","524:{","98:{","65:{","57:{","64:{","108:{","4:{"].every(x=>has(design,x)));
-check('Arsenal is differentiated from Man U and Bayern',has(design,"key:'arsenal',tone:'arsenal-red-ivory-navy'")&&has(design,"cardBorder:'#E6D8C3'")&&has(design,"border:'#263F66'"));
-check('Liverpool uses deeper scarlet plus teal trim',has(design,"key:'liverpool',tone:'deep-scarlet-teal'")&&has(design,"cardSurface:'#500614'")&&has(design,"sideBorder:'#A7E5DC'"));
+check('Arsenal exposes navy field with ivory trim',has(design,"key:'arsenal',tone:'arsenal-red-ivory-navy'")&&has(design,"cardSurface:'#152A4A'")&&has(design,"cardPanel:'#A80E2C'")&&has(design,"cardBorder:'#F0E5D2'"));
+check('Liverpool uses visibly deeper scarlet plus teal trim',has(design,"key:'liverpool',tone:'deep-scarlet-teal'")&&has(design,"cardSurface:'#430713'")&&has(design,"cardPanel:'#740A21'")&&has(design,"cardGlow:'#A30B2B'")&&has(design,"sideBorder:'#00B2A9'"));
 check('Inter uses black-to-electric-blue field',has(design,"key:'inter',tone:'nerazzurri-electric-blue'")&&has(design,"cardSurface:'#03060B'")&&has(design,"cardGlow:'#0057B8'"));
 check('Dortmund uses signal yellow with dark text',has(design,"key:'dortmund',tone:'signal-yellow-black'")&&has(design,"cardGlow:'#FDE100'")&&has(design,"cardText:'#111111'"));
 check('existing Milan generic gunmetal remains frozen',has(design,"key:'milan',tone:'rossoneri-gunmetal'")&&has(design,"cardGlow:'#62666D'"));
@@ -42,7 +42,7 @@ check('final polish remains Bayern-only',has(finalPolish,"club?.team!==5")&&!has
 
 check('existing league support covers second batch',has(leagues,"return small?'BL':'ブンデスリーガ'")&&has(leagues,"return small?'Serie A':'セリエA'"));
 check('launcher downloads extra-clubs v3',has(launcher,'ClubPulseExtraClubsPatch_v3.js')&&has(launcher,"'extra-clubs3'"));
-check('launcher downloads design v5',has(launcher,'ClubPulseDesignSystemPatch_v5.js')&&has(launcher,"'design-system5'"));
+check('launcher downloads design v6',has(launcher,'ClubPulseDesignSystemPatch_v6.js')&&has(launcher,"'design-system6'"));
 check('launcher downloads readability v6',has(launcher,'ClubPulseReadabilityGuardPatch_v6.js')&&has(launcher,"'readability6'"));
 check('launcher documents second batch',has(launcher,'arsenal, liverpool, inter, and dortmund'));
 
