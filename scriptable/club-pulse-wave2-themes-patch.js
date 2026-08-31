@@ -1,4 +1,4 @@
-// Club Pulse Wave 2 theme definitions v1.
+// Club Pulse Wave 2 theme definitions v2.
 // Data-driven theme expansion for 29 additional clubs. No club-specific renderer branches.
 
 function cpW2Theme(key,c){
@@ -54,12 +54,14 @@ Object.assign(CP_CLUB_THEME_REGISTRY,{
   522:cpW2Theme('nice',{cardSurface:'#120B0D',cardPanel:'#471016',cardGlow:'#B4141E',cardBorder:'#E8E8E8',accent:'#E8E8E8'})
 });
 
-// Promote the 29 Wave 2 teams into the canonical readability/presentation contract.
+// Promote Wave 2 into every shared presentation contract. These sets are mutable by design.
 if(typeof CP_STANDARD_TEAM_IDS!=='undefined')for(const id of CP_WAVE2_TEAM_IDS)CP_STANDARD_TEAM_IDS.add(id);
+if(typeof CP_PREMIUM_GENERIC_KEYS!=='undefined')for(const id of CP_WAVE2_TEAM_IDS){const t=CP_CLUB_THEME_REGISTRY[id];if(t?.key)CP_PREMIUM_GENERIC_KEYS.add(t.key)}
 
 // Keep Small Widget labels Japanese and stable instead of falling back to provider TLAs.
 if(typeof CP_SP_SMALL_ALIASES!=='undefined')Object.assign(CP_SP_SMALL_ALIASES,{
   'ニューカッスル':'ニューカッスル',
+  'アスレティック':'アスレティック',
   'レアル・ソシエダ':'ソシエダ',
   'レヴァークーゼン':'レヴァーク',
   'フランクフルト':'フランク',
