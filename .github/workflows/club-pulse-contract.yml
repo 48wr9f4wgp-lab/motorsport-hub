@@ -27,6 +27,7 @@ jobs:
           node scriptable/club-pulse-expanded-clubs.test.js
           node scriptable/club-pulse-wave2-expansion.test.js
           node scriptable/club-pulse-wave3-netherlands.test.js
+          node scriptable/club-pulse-wave4-lens.test.js
           node scriptable/club-pulse-cache-migration.test.js
           node scriptable/club-pulse-resilience.test.js
           node scriptable/club-pulse-data-policy.test.js
