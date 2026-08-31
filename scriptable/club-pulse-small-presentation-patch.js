@@ -1,23 +1,25 @@
-// Club Pulse Small Presentation System v7.
+// Club Pulse Small Presentation System v8.
 // Canonical small-widget renderer for all supported clubs.
-// v7 keeps short names prominent while length-aware sizing preserves full 5–6 character
-// club labels whenever practical, with semantic aliases reserved for genuinely long names.
+// v8 separates NEXT and scored-state geometry, uses stronger length-aware typography,
+// and applies semantic aliases only where a full club name is genuinely too long.
 
 const CP_SP_TYPO={
   headerName:9.0,
   headerRank:10.0,
   state:8.3,
   team:9.8,
-  teamMinScale:.82,
+  teamMinScale:.70,
   scoreNext:14.0,
-  scoreLive:15.0,
-  scorePost:15.0,
-  scoreMinScale:.76,
+  scoreLive:14.5,
+  scorePost:14.5,
+  scoreMinScale:.72,
   meta:8.7,
   metaMinScale:.90,
   footer:7.6,
-  teamWidth:54,
-  scoreWidth:32,
+  teamWidthNext:56,
+  teamWidthScore:48,
+  scoreWidthNext:26,
+  scoreWidthScore:42,
   logo:40
 };
 
@@ -26,6 +28,11 @@ const CP_SP_SMALL_ALIASES={
   'ブレントフォード':'ブレント',
   'クリスタル・パレス':'パレス',
   'ノッティンガム・フォレスト':'フォレスト',
+  'ニューカッスル':'NUFC',
+  'フェイエノールト':'FEY',
+  'アスレティック':'ビルバオ',
+  'アスレティック・ビルバオ':'ビルバオ',
+  'ボルシア・ドルトムント':'ドルトムント',
   'ホッフェンハイム':'TSG',
   'シュトゥットガルト':'VfB',
   'ヴォルフスブルク':'VfL',
@@ -64,9 +71,16 @@ function cpSpTeamLabel(name,fallback,isClub=false){
 function cpSpTeamFont(label){
   const n=Array.from(String(label||'')).length;
   if(n<=3)return CP_SP_TYPO.team;
-  if(n===4)return 9.4;
-  if(n===5)return 8.9;
-  return 8.4
+  if(n===4)return 9.1;
+  if(n===5)return 8.2;
+  if(n===6)return 7.4;
+  return 7.0
+}
+function cpSpRowMetrics(mode){
+  const scored=mode==='LIVE'||mode==='POST';
+  return scored
+    ?{teamWidth:CP_SP_TYPO.teamWidthScore,scoreWidth:CP_SP_TYPO.scoreWidthScore}
+    :{teamWidth:CP_SP_TYPO.teamWidthNext,scoreWidth:CP_SP_TYPO.scoreWidthNext}
 }
 function cpSpGenericTeamBlock(parent,opt,label){
   const s=parent.addStack();
@@ -89,7 +103,7 @@ function cpSpTeamBlock(parent,opt,isClub=false){
     logoSize:CP_SP_TYPO.logo,
     nameSize:cpSpTeamFont(label),
     nameGap:2,
-    width:CP_SP_TYPO.teamWidth
+    width:opt.width||CP_SP_TYPO.teamWidthNext
   };
   if(t?.key==='realmadrid'&&typeof cpRealTeamBlock==='function')return cpRealTeamBlock(parent,base,true);
   if(t?.key==='barcelona'&&typeof cpBarcelonaTeamBlock==='function')return cpBarcelonaTeamBlock(parent,base,true);
@@ -157,15 +171,16 @@ buildMatchSmall=function(w,d,imgs){
   }else cpSpSidePill(top,m);
 
   c.addSpacer(5);
+  const gm=cpSpRowMetrics(view.mode);
   const outer=c.addStack();outer.layoutHorizontally();outer.centerAlignContent();outer.addSpacer();
   const row=outer.addStack();row.layoutHorizontally();row.centerAlignContent();
-  cpSpTeamBlock(row,{img:imgs.club,name:club.jp,fallback:club.badge,p1:club.p,p2:club.s,scale:CREST_SCALE[club.team]||.91},true);
+  cpSpTeamBlock(row,{img:imgs.club,name:club.jp,fallback:club.badge,p1:club.p,p2:club.s,scale:CREST_SCALE[club.team]||.91,width:gm.teamWidth},true);
   row.addSpacer(1);
-  const sb=row.addStack();sb.size=new Size(CP_SP_TYPO.scoreWidth,22);sb.layoutHorizontally();sb.centerAlignContent();sb.addSpacer();
+  const sb=row.addStack();sb.size=new Size(gm.scoreWidth,22);sb.layoutHorizontally();sb.centerAlignContent();sb.addSpacer();
   const scoreSize=view.mode==='POST'?CP_SP_TYPO.scorePost:view.mode==='LIVE'?CP_SP_TYPO.scoreLive:CP_SP_TYPO.scoreNext;
-  const sc=heavy(sb,cpSpScoreValue(view,m),scoreSize,fg);sc.minimumScaleFactor=CP_SP_TYPO.scoreMinScale;sc.centerAlignText();sb.addSpacer();
+  const sc=heavy(sb,cpSpScoreValue(view,m),scoreSize,fg);sc.minimumScaleFactor=CP_SP_TYPO.scoreMinScale;sc.lineLimit=1;sc.centerAlignText();sb.addSpacer();
   row.addSpacer(1);
-  cpSpTeamBlock(row,{img:imgs.opp,name:m.opponentName,fallback:m.opponentShort,p1:'#4A5568',p2:'#20242D',scale:CREST_SCALE[m.opponentId]||CREST_SCALE.opponent_default||.90},false);
+  cpSpTeamBlock(row,{img:imgs.opp,name:m.opponentName,fallback:m.opponentShort,p1:'#4A5568',p2:'#20242D',scale:CREST_SCALE[m.opponentId]||CREST_SCALE.opponent_default||.90,width:gm.teamWidth},false);
   outer.addSpacer();
 
   c.addSpacer(4);
