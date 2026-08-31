@@ -17,6 +17,7 @@ function makeContext(mode,cached){
     applyLiveOverlay:async d=>{liveDelegated++;return{...d,liveProvider:'network'}},
     errorWidget:()=>({base:true}),
     refreshDelay:()=>15*60*1000,
+    statusTitle:d=>d.mode==='NEXT'?'次の試合':d.mode,
     readJSON:()=>cached,
     cachePath:()=>'/cache/data.json',
     cpCmNormalizeData:d=>({
@@ -62,6 +63,11 @@ function makeContext(mode,cached){
   check('offline QA blocks next-provider overlay',offline.__state.nextDelegated===0&&!offLive.nextProvider);
   check('offline QA blocks live-provider overlay',offline.__state.liveDelegated===0&&!offLive.liveProvider);
 
+  const past={...out,mode:'NEXT',stale:true,nextMatch:{...out.nextMatch,utcDate:new Date(Date.now()-60*1000).toISOString()}};
+  const future={...out,mode:'NEXT',stale:true,nextMatch:{...out.nextMatch,utcDate:new Date(Date.now()+60*60*1000).toISOString()}};
+  check('stale NEXT after kickoff becomes update-waiting',offline.statusTitle(past,past.nextMatch)==='更新待ち');
+  check('stale NEXT before kickoff remains next match',offline.statusTitle(future,future.nextMatch)==='次の試合');
+
   const nocache=makeContext('nocache',null);
   let threw=false;
   try{await nocache.loadData('token')}catch(e){threw=String(e.message).includes('QA forced network outage')}
@@ -78,5 +84,5 @@ function makeContext(mode,cached){
   check('normal fresh cadence remains unchanged',normal.refreshDelay(normalOut)===15*60*1000);
 
   if(failed){console.error(`\nResilience QA FAILED: ${failed}`);process.exit(1)}
-  console.log('\nClub Pulse resilience QA PASSED');
+  console.log('\nClub Pulse resilience and stale-state QA PASSED');
 })().catch(e=>{console.error(e);process.exit(1)});
