@@ -1,7 +1,8 @@
-// Club Pulse Small Presentation System v4.
+// Club Pulse Small Presentation System v5.
 // Canonical small-widget renderer for all supported clubs.
-// v4 keeps typography uniform, replaces cut-looking labels with semantic aliases,
-// applies the readability scale floor to generic team labels, and hardens numeric scores.
+// v5 keeps typography uniform, replaces cut-looking labels with semantic aliases,
+// applies the readability scale floor to generic team labels, hardens numeric scores,
+// and makes generic team labels honor each card theme's cardText token.
 
 const CP_SP_TYPO={
   headerName:9.0,
@@ -70,7 +71,7 @@ function cpSpGenericTeamBlock(parent,opt,label){
   logo.addSpacer();
   s.addSpacer(opt.nameGap??2);
   const name=s.addStack();name.layoutHorizontally();name.addSpacer();
-  const nm=heavy(name,label,opt.nameSize||CP_SP_TYPO.team);
+  const nm=heavy(name,label,opt.nameSize||CP_SP_TYPO.team,cpSpCardColor());
   nm.centerAlignText();nm.minimumScaleFactor=CP_SP_TYPO.teamMinScale;
   name.addSpacer();
   return s
