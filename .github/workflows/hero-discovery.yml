@@ -1,4 +1,4 @@
-name: Motorsport Hub Hero Refresh Discovery
+name: Motorsport Hub Hero Active Refresh
 
 on:
   push:
@@ -20,7 +20,7 @@ on:
       - 'tests/hero-refresh-schedule-gate.mjs'
       - '.github/workflows/hero-discovery.yml'
   schedule:
-    - cron: '17 3 * * 1'
+    - cron: '17 */6 * * *'
   workflow_dispatch:
 
 concurrency:
@@ -105,7 +105,7 @@ jobs:
 
   build-promotion-candidate:
     needs: discover-and-validate
-    if: ${{ needs.discover-and-validate.result == 'success' }}
+    if: ${{ always() && !cancelled() }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -115,7 +115,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Download all category refresh evidence
+      - name: Download available category refresh evidence
         uses: actions/download-artifact@v4
         with:
           pattern: hero-refresh-*-${{ github.run_id }}
@@ -133,7 +133,7 @@ jobs:
               cp -R /tmp/hero-live-export/hero-channel/. hero-channel-previous/
             fi
           fi
-      - name: Build conservative promotion candidate
+      - name: Build category-isolated promotion candidate
         run: node tools/build-hero-channel.mjs --artifacts=refresh-artifacts --previous-dir=hero-channel-previous --output-dir=hero-channel-candidate
       - name: Validate candidate channel and LKG preservation
         run: |
@@ -211,5 +211,5 @@ jobs:
           git -C hero-live-worktree diff --cached --check
           git -C hero-live-worktree config user.name 'github-actions[bot]'
           git -C hero-live-worktree config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git -C hero-live-worktree commit -m "hero: publish gated weekly refresh ${{ github.run_id }}"
+          git -C hero-live-worktree commit -m "hero: publish gated active refresh ${{ github.run_id }}"
           git -C hero-live-worktree push origin HEAD:hero-live
