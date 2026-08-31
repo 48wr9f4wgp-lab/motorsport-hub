@@ -19,8 +19,8 @@ for(const [name,src] of Object.entries(files))syntax(name,src);
 check('launcher injects both registries before parameter resolution',has(files.launcher,"c=c.slice(0,pk)+cr+'\\n'+ec+'\\n'+c.slice(pk)"));
 check('launcher loads extra-clubs v3',has(files.launcher,'ClubPulseExtraClubsPatch_v3.js')&&has(files.launcher,"'extra-clubs3'"));
 check('launcher pins extra-clubs v3 commit',has(files.launcher,'1b734c803dc4ccc39c978decc3f2a4c733ab7605'));
-check('launcher loads canonical design system v5',has(files.launcher,'ClubPulseDesignSystemPatch_v5.js')&&has(files.launcher,"'design-system5'"));
-check('launcher pins canonical design-system v5 commit',has(files.launcher,'64431aec299fd388e6a651f4eed7da01cdeee726'));
+check('launcher loads canonical design system v6',has(files.launcher,'ClubPulseDesignSystemPatch_v6.js')&&has(files.launcher,"'design-system6'"));
+check('launcher pins canonical design-system v6 commit',has(files.launcher,'e33abe814c496c316c4c80ca1a736c6c80d30e9b'));
 check('launcher uses premium visual v2',has(files.launcher,'ClubPulsePremiumVisualPatch_v2.js')&&has(files.launcher,"'premium2'"));
 check('launcher uses readability v6',has(files.launcher,'ClubPulseReadabilityGuardPatch_v6.js')&&has(files.launcher,"'readability6'"));
 check('launcher pins readability v6 commit',has(files.launcher,'8f569ad248f3777ca4a7f935bdacf2c5343484bc'));
@@ -40,10 +40,10 @@ check('design system declares shared shell/card/pill tokens',has(files.design,'c
 check('design system contains all eleven theme definitions',["66:{","81:{","86:{","5:{","524:{","98:{","65:{","57:{","64:{","108:{","4:{"].every(x=>has(files.design,x)));
 check('shared shell remains frozen neutral metallic',has(files.design,"surface:'#080C14'")&&has(files.design,"edge:'#9AA6B8'"));
 check('frozen seven identities remain present',has(files.design,"key:'manutd',tone:'vivid-red'")&&has(files.design,"key:'barcelona',tone:'royal-purple'")&&has(files.design,"key:'realmadrid',tone:'pearl-white'")&&has(files.design,"key:'bayern',tone:'crest-red-blue-white'")&&has(files.design,"key:'psg',tone:'paris-royal-blue'")&&has(files.design,"key:'milan',tone:'rossoneri-gunmetal'")&&has(files.design,"key:'mancity',tone:'sky-blue'"));
-check('Arsenal identity is red ivory navy',has(files.design,"key:'arsenal',tone:'arsenal-red-ivory-navy'")&&has(files.design,"cardGlow:'#E31B3D'")&&has(files.design,"cardBorder:'#E6D8C3'"));
-check('Liverpool identity is deep scarlet teal',has(files.design,"key:'liverpool',tone:'deep-scarlet-teal'")&&has(files.design,"cardSurface:'#500614'")&&has(files.design,"cardBorder:'#71B8AE'"));
-check('Inter identity is black electric blue',has(files.design,"key:'inter',tone:'nerazzurri-electric-blue'")&&has(files.design,"cardSurface:'#03060B'")&&has(files.design,"cardGlow:'#0057B8'"));
-check('Dortmund identity is signal yellow black with dark text',has(files.design,"key:'dortmund',tone:'signal-yellow-black'")&&has(files.design,"cardGlow:'#FDE100'")&&has(files.design,"cardText:'#111111'"));
+check('Arsenal identity exposes navy field and ivory edge',has(files.design,"key:'arsenal',tone:'arsenal-red-ivory-navy'")&&has(files.design,"cardSurface:'#152A4A'")&&has(files.design,"cardPanel:'#A80E2C'")&&has(files.design,"cardBorder:'#F0E5D2'"));
+check('Liverpool identity is materially deeper scarlet with stronger teal',has(files.design,"key:'liverpool',tone:'deep-scarlet-teal'")&&has(files.design,"cardSurface:'#430713'")&&has(files.design,"cardPanel:'#740A21'")&&has(files.design,"cardGlow:'#A30B2B'")&&has(files.design,"cardBorder:'#00A79F'"));
+check('Inter identity remains black electric blue',has(files.design,"key:'inter',tone:'nerazzurri-electric-blue'")&&has(files.design,"cardSurface:'#03060B'")&&has(files.design,"cardGlow:'#0057B8'"));
+check('Dortmund identity remains signal yellow black with dark text',has(files.design,"key:'dortmund',tone:'signal-yellow-black'")&&has(files.design,"cardGlow:'#FDE100'")&&has(files.design,"cardText:'#111111'"));
 check('design system stays line-free',!has(files.design,'linePrimary')&&!has(files.design,'lineSecondary'));
 
 check('premium renderer derives generic targets from canonical definitions',has(files.premium,'Object.values(CP_THEME_DEFINITIONS||{})')&&has(files.premium,'CP_PREMIUM_GENERIC_KEYS'));
