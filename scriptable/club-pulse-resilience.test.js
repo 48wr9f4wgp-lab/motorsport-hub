@@ -7,10 +7,14 @@ const src=fs.readFileSync(path.join(__dirname,'club-pulse-resilience-patch.js'),
 function makeContext(mode,cached){
   let persisted=[];
   let delegated=0;
+  let nextDelegated=0;
+  let liveDelegated=0;
   const context={
     console,JSON,Date,
     qa:mode,
     loadData:async()=>{delegated++;return{mode:'NEXT',fetchedAt:999,stale:false}},
+    applyNextOverlay:async d=>{nextDelegated++;return{...d,nextProvider:'network'}},
+    applyLiveOverlay:async d=>{liveDelegated++;return{...d,liveProvider:'network'}},
     errorWidget:()=>({base:true}),
     refreshDelay:()=>15*60*1000,
     readJSON:()=>cached,
@@ -30,7 +34,12 @@ function makeContext(mode,cached){
     ListWidget:function(){this.addStack=()=>({layoutHorizontally(){},centerAlignContent(){},addSpacer(){},setPadding(){},addStack(){return this}});this.addSpacer=()=>{};this.setPadding=()=>{}},
     gradient:()=>({}),family:'medium',bg:()=>({})
   };
-  context.__state={persisted,get delegated(){return delegated}};
+  context.__state={
+    persisted,
+    get delegated(){return delegated},
+    get nextDelegated(){return nextDelegated},
+    get liveDelegated(){return liveDelegated}
+  };
   vm.createContext(context);
   vm.runInContext(src,context);
   return context;
@@ -48,6 +57,10 @@ function makeContext(mode,cached){
   check('offline QA stamps migrated schema',out.cacheSchema==='venue-2026-27-v1');
   check('offline QA persists migration without network',offline.__state.persisted.length===1&&offline.__state.delegated===0);
   check('stale data retries after five minutes',offline.refreshDelay(out)===5*60*1000);
+  const offNext=await offline.applyNextOverlay(out);
+  const offLive=await offline.applyLiveOverlay(offNext);
+  check('offline QA blocks next-provider overlay',offline.__state.nextDelegated===0&&!offLive.nextProvider);
+  check('offline QA blocks live-provider overlay',offline.__state.liveDelegated===0&&!offLive.liveProvider);
 
   const nocache=makeContext('nocache',null);
   let threw=false;
@@ -57,7 +70,11 @@ function makeContext(mode,cached){
 
   const normal=makeContext('auto',oldCache);
   const normalOut=await normal.loadData('token');
+  const normalNext=await normal.applyNextOverlay(normalOut);
+  const normalLive=await normal.applyLiveOverlay(normalNext);
   check('normal mode delegates to production loadData',normal.__state.delegated===1&&normalOut.fetchedAt===999);
+  check('normal mode delegates next overlay',normal.__state.nextDelegated===1&&normalLive.nextProvider==='network');
+  check('normal mode delegates live overlay',normal.__state.liveDelegated===1&&normalLive.liveProvider==='network');
   check('normal fresh cadence remains unchanged',normal.refreshDelay(normalOut)===15*60*1000);
 
   if(failed){console.error(`\nResilience QA FAILED: ${failed}`);process.exit(1)}
