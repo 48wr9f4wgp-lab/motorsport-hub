@@ -11,7 +11,8 @@ assert(router.includes('HERO_CHANNEL_TTL=6*3600000'));
 assert(router.includes('hero-channel/channel.json')||router.includes("${HERO_CHANNEL_BASE}/channel.json"));
 assert(router.includes('loadHeroChannelImage(selected)'));
 assert(router.includes('__MH_HERO_OVERRIDE_IMAGE=hi'));
-assert(router.includes("cat==='DAKAR'||cat==='QA'"),'Dakar/QA must remain on their dedicated runtime paths');
+assert(router.includes("if(cat==='QA')return null"),'QA must remain outside the production Hero channel');
+assert(!router.includes("cat==='DAKAR'||cat==='QA'"),'Dakar must not be excluded from the shared Hero channel');
 assert(router.includes("startsWith(`${HERO_CHANNEL_BASE}/assets/${cat}/`)"),'Hero channel URLs must be repo/branch allowlisted');
 assert(router.includes("startsWith('https://commons.wikimedia.org/wiki/File:')"),'Hero channel source provenance must be Commons file page');
 assert(router.includes('HERO_CHANNEL_LICENSES'));
@@ -23,5 +24,11 @@ for(const name of modules){
  assert(src.indexOf('__MH_HERO_OVERRIDE_IMAGE')>src.indexOf('async function hero('),`${name}: hook must live inside hero()`);
 }
 const dakar=fs.readFileSync(path.join(root,'dakar-widget.js'),'utf8');
-assert.equal((dakar.match(/__MH_HERO_OVERRIDE_IMAGE/g)||[]).length,0,'Dakar dedicated multi-Hero runtime must not be overridden by generic channel');
+assert.equal((dakar.match(/__MH_HERO_OVERRIDE_IMAGE/g)||[]).length,1,'Dakar dynamic Hero hook missing/drifted');
+assert(dakar.includes('const dynamicHero=()=>globalThis.__MH_HERO_OVERRIDE_IMAGE||null;'),'Dakar must expose the shared Hero override as its primary-image helper');
+assert(dakar.includes('const override=dynamicHero();if(override)return override;'),'Dakar hero() must prefer the shared Hero channel before its embedded fallback set');
+assert(dakar.includes("if(ACTION==='cycleHero'&&!dynamicHero())"),'Dakar fallback cycling must be disabled while a shared Hero is active');
+assert(dakar.includes('if(dynamicHero())return S.url;'),'Dakar shared-Hero tap must not cycle the fallback photo set');
+assert(dakar.includes('if(!dynamicHero()){top.addSpacer(5);T(top,`H${UI.heroVariant+1}/3`'),'Dakar medium fallback indicator must be hidden for shared Hero');
+assert(dakar.includes('if(!dynamicHero()){top.addSpacer(4);T(top,`H${UI.heroVariant+1}/3`'),'Dakar small fallback indicator must be hidden for shared Hero');
 console.log('Motorsport Hub Hero channel runtime gate: PASS');
