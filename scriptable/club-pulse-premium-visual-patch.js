@@ -1,6 +1,6 @@
-// Club Pulse premium visual pass v2.
+// Club Pulse premium visual pass v3.
 // Rendering consumes the canonical design-system tokens instead of club-specific magic numbers.
-// Real Madrid keeps the pearl-white finish; dark club themes share one premium frame renderer.
+// v3 routes all generic-theme match metadata through the shared fixed-size typography contract.
 
 const CP_PREMIUM_BASE_CARD_BG=cardBg,
       CP_PREMIUM_BASE_MATCH_MEDIUM=buildMatchMedium,
@@ -54,7 +54,7 @@ function cpPremiumExtraMatchMedium(w,d,imgs,t){
   row.addSpacer(d.mode==='POST'?16:20);
   renderTeamBlock(row,{img:imgs.opp,name:m.opponentName,sub:'',fallback:m.opponentShort,logoSize:56,nameSize:12,subSize:0,p1:'#4A5568',p2:'#20242D',scale:CREST_SCALE[m.opponentId]||CREST_SCALE.opponent_default||.90,nameGap:1,width:94});
   outer.addSpacer();c.addSpacer(2);
-  let meta=c.addStack();meta.layoutHorizontally();meta.addSpacer();let mt=semibold(meta,metaLine(d,m),9,.98,fg);mt.centerAlignText();meta.addSpacer()
+  let meta=c.addStack();meta.layoutHorizontally();meta.addSpacer();cpMetaText(meta,metaLine(d,m),fg,false);meta.addSpacer()
 }
 
 function cpPremiumExtraMatchSmall(w,d,imgs,t){
@@ -78,7 +78,7 @@ function cpPremiumExtraMatchSmall(w,d,imgs,t){
   row.addSpacer(4);
   renderTeamBlock(row,{img:imgs.opp,name:smallTeamName(m.opponentName),fallback:m.opponentShort,logoSize:40,nameSize:9.2,p1:'#4A5568',p2:'#20242D',scale:CREST_SCALE[m.opponentId]||CREST_SCALE.opponent_default||.90,nameGap:2,width:48});
   outer.addSpacer();c.addSpacer(4);
-  let meta=c.addStack();meta.layoutHorizontally();meta.addSpacer();let mt=semibold(meta,m.kickoff,9.2,.99,fg);mt.centerAlignText();meta.addSpacer()
+  let meta=c.addStack();meta.layoutHorizontally();meta.addSpacer();cpMetaText(meta,m.kickoff,fg,true);meta.addSpacer()
 }
 
 buildMatchMedium=function(w,d,imgs){
