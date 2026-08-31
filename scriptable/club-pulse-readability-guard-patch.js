@@ -1,6 +1,7 @@
-// Club Pulse readability guard v7.
+// Club Pulse readability guard v8.
 // Eleven-club presentation contract: stable Japanese display names, shared token-driven pill dimensions,
 // visible competition identity, generic opponent handling, and conservative venue localization/fallback.
+// Venue registry baseline: 2026-27 current Premier League / LaLiga / Bundesliga / Serie A / Ligue 1.
 
 const CP_STANDARD_TEAM_IDS=new Set([66,81,86,5,524,98,65,57,64,108,4]);
 const CP_RG_BASE_RENDER_TEAM=renderTeamBlock;
@@ -8,6 +9,7 @@ const CP_RG_BASE_SMALL_TEAM_NAME=smallTeamName;
 const CP_RG_BASE_REAL_TEAM=typeof cpRealTeamBlock==='function'?cpRealTeamBlock:null;
 const CP_RG_BASE_BARCA_TEAM=typeof cpBarcelonaTeamBlock==='function'?cpBarcelonaTeamBlock:null;
 const CP_RG_BASE_MAP_MATCH=mapMatch;
+const CP_VENUE_REGISTRY_SEASON='2026-27';
 
 function cpRgActive(){return CP_STANDARD_TEAM_IDS.has(club?.team)}
 
@@ -27,6 +29,7 @@ const CP_TEAM_DISPLAY_NAMES={
   'Crystal Palace FC':'クリスタル・パレス','Crystal Palace':'クリスタル・パレス',
   'Everton FC':'エヴァートン','Everton':'エヴァートン',
   'Fulham FC':'フラム','Fulham':'フラム',
+  'Hull City AFC':'ハル','Hull City':'ハル','Hull':'ハル',
   'Leeds United FC':'リーズ','Leeds United':'リーズ','Leeds':'リーズ',
   'Newcastle United FC':'ニューカッスル','Newcastle United':'ニューカッスル',
   'Nottingham Forest FC':'フォレスト','Nottingham Forest':'フォレスト','ノッティンガム・フォレスト':'フォレスト',
@@ -61,7 +64,9 @@ const CP_TEAM_DISPLAY_NAMES={
   'Levante UD':'レバンテ','Levante':'レバンテ',
   'Real Oviedo':'オビエド','Real Oviedo CF':'オビエド',
   'UD Las Palmas':'ラス・パルマス','Las Palmas':'ラス・パルマス',
-  'Málaga CF':'マラガ','Málaga':'マラガ','マラガ':'マラガ',
+  'Málaga CF':'マラガ','Málaga':'マラガ','Malaga CF':'マラガ','Malaga':'マラガ','マラガ':'マラガ',
+  'Real Racing Club de Santander':'ラシン','Racing Santander':'ラシン','Racing Club':'ラシン',
+  'RC Deportivo de La Coruña':'デポルティーボ','Deportivo La Coruña':'デポルティーボ','Deportivo de La Coruña':'デポルティーボ','Deportivo A Coruña':'デポルティーボ',
   // Germany
   'FC Bayern München':'バイエルン','Bayern München':'バイエルン','Bayern Munich':'バイエルン','バイエルン・ミュンヘン':'バイエルン',
   'Borussia Dortmund':'ドルトムント','Dortmund':'ドルトムント','ボルシア・ドルトムント':'ドルトムント','ドルトムント':'ドルトムント',
@@ -70,7 +75,7 @@ const CP_TEAM_DISPLAY_NAMES={
   'RB Leipzig':'ライプツィヒ','RasenBallsport Leipzig':'ライプツィヒ',
   'Eintracht Frankfurt':'フランクフルト','Frankfurt':'フランクフルト',
   'VfB Stuttgart':'シュトゥットガルト','Stuttgart':'シュトゥットガルト',
-  'SC Freiburg':'フライブルク','Freiburg':'フライブルク',
+  'SC Freiburg':'フライブルク','Sport-Club Freiburg':'フライブルク','Freiburg':'フライブルク',
   '1. FSV Mainz 05':'マインツ','Mainz 05':'マインツ','Mainz':'マインツ',
   'Borussia Mönchengladbach':'ボルシアMG','Borussia Monchengladbach':'ボルシアMG','Mönchengladbach':'ボルシアMG',
   'VfL Wolfsburg':'ヴォルフスブルク','Wolfsburg':'ヴォルフスブルク',
@@ -82,6 +87,8 @@ const CP_TEAM_DISPLAY_NAMES={
   'FC St. Pauli 1910':'ザンクト・パウリ','FC St. Pauli':'ザンクト・パウリ','St. Pauli':'ザンクト・パウリ',
   '1. FC Heidenheim 1846':'ハイデンハイム','Heidenheim':'ハイデンハイム',
   'FC Schalke 04':'シャルケ','Schalke 04':'シャルケ','Schalke':'シャルケ','シャルケ':'シャルケ',
+  'SV Elversberg':'エルヴァースベルク','Elversberg':'エルヴァースベルク',
+  'SC Paderborn 07':'パーダーボルン','Paderborn':'パーダーボルン',
   // Italy
   'AC Milan':'ミラン','Milan':'ミラン','ACミラン':'ミラン',
   'FC Internazionale Milano':'インテル','Internazionale':'インテル','Inter Milan':'インテル','Inter':'インテル','インテル':'インテル',
@@ -105,6 +112,7 @@ const CP_TEAM_DISPLAY_NAMES={
   'Pisa Sporting Club':'ピサ','Pisa SC':'ピサ','Pisa':'ピサ',
   'Venezia FC':'ヴェネツィア','Venezia':'ヴェネツィア',
   'AC Monza':'モンツァ','Monza':'モンツァ',
+  'Frosinone Calcio':'フロジノーネ','Frosinone':'フロジノーネ',
   // France
   'Paris Saint-Germain FC':'PSG','Paris Saint-Germain':'PSG','Paris SG':'PSG','パリ・サンジェルマン':'PSG',
   'AS Monaco FC':'モナコ','AS Monaco':'モナコ','Monaco':'モナコ','モナコ':'モナコ',
@@ -113,7 +121,7 @@ const CP_TEAM_DISPLAY_NAMES={
   'LOSC Lille':'リール','Lille OSC':'リール','Lille':'リール',
   'RC Lens':'ランス','Lens':'ランス',
   'OGC Nice':'ニース','Nice':'ニース',
-  'Stade Rennais FC 1901':'レンヌ','Stade Rennais':'レンヌ','Rennes':'レンヌ',
+  'Stade Rennais FC 1901':'レンヌ','Stade Rennais':'レンヌ','Stade Rennais FC':'レンヌ','Rennes':'レンヌ',
   'RC Strasbourg Alsace':'ストラスブール','Strasbourg':'ストラスブール',
   'Toulouse FC':'トゥールーズ','Toulouse':'トゥールーズ',
   'FC Nantes':'ナント','Nantes':'ナント',
@@ -124,43 +132,155 @@ const CP_TEAM_DISPLAY_NAMES={
   'FC Lorient':'ロリアン','Lorient':'ロリアン',
   'FC Metz':'メス','Metz':'メス',
   'Paris FC':'パリFC',
-  'Stade de Reims':'ランス','Reims':'ランス',
+  'Stade de Reims':'スタッド・ランス','Reims':'スタッド・ランス',
   'AS Saint-Étienne':'サンテティエンヌ','Saint-Étienne':'サンテティエンヌ','Saint-Etienne':'サンテティエンヌ',
-  'Montpellier HSC':'モンペリエ','Montpellier':'モンペリエ'
+  'Montpellier HSC':'モンペリエ','Montpellier':'モンペリエ',
+  'Le Mans FC':'ル・マン','Le Mans':'ル・マン',
+  'ESTAC Troyes':'トロワ','Troyes':'トロワ'
 };
 
+// Provider venue aliases -> stable Japanese display strings.
+// Sponsor-name aliases are kept where providers may lag behind official renames.
 const CP_VENUE_DISPLAY_NAMES={
+  // England
+  'Emirates Stadium':'エミレーツ・スタジアム',
   'Villa Park':'ヴィラ・パーク',
-  'PreZero Arena':'プレゼロ・アレーナ',
-  'Unipol Domus':'ウニポル・ドムス',
-  'Stade Louis II':'スタッド・ルイ・ドゥ',
+  'Dean Court':'ディーン・コート','Vitality Stadium':'ディーン・コート',
+  'Brentford Community Stadium':'ブレントフォード・コミュニティ・スタジアム','Gtech Community Stadium':'ブレントフォード・コミュニティ・スタジアム',
+  'Falmer Stadium':'ファルマー・スタジアム','American Express Stadium':'ファルマー・スタジアム','The American Express Community Stadium':'ファルマー・スタジアム',
+  'Stamford Bridge':'スタンフォード・ブリッジ',
   'Coventry Building Society Arena':'コヴェントリー・ビルディング・ソサエティ・アリーナ',
+  'Selhurst Park':'セルハースト・パーク',
+  'Hill Dickinson Stadium':'ヒル・ディッキンソン・スタジアム','Everton Stadium':'ヒル・ディッキンソン・スタジアム',
+  'Craven Cottage':'クレイヴン・コテージ',
+  'MKM Stadium':'MKMスタジアム',
   'Portman Road':'ポートマン・ロード',
-  'Estadio de Vallecas':'エスタディオ・デ・バジェカス',
-  'Campo de Fútbol de Vallecas':'エスタディオ・デ・バジェカス',
+  'Elland Road':'エランド・ロード',
+  'Anfield':'アンフィールド',
+  'City of Manchester Stadium':'エティハド・スタジアム','Etihad Stadium':'エティハド・スタジアム',
+  'Old Trafford':'オールド・トラッフォード',
+  "St James' Park":'セント・ジェームズ・パーク','St. James’ Park':'セント・ジェームズ・パーク','St James Park':'セント・ジェームズ・パーク',
+  'City Ground':'シティ・グラウンド','The City Ground':'シティ・グラウンド',
+  'Stadium of Light':'スタジアム・オブ・ライト',
+  'Tottenham Hotspur Stadium':'トッテナム・ホットスパー・スタジアム',
+  // Spain
+  'Campo de Fútbol de Mendizorrotza':'メンディソロッツァ','Estadio de Mendizorroza':'メンディソロッツァ',
+  'Estadio San Mamés':'サン・マメス','San Mamés':'サン・マメス',
+  'Estadio Riyadh Air Metropolitano':'メトロポリターノ','Riyadh Air Metropolitano':'メトロポリターノ','Estadio Cívitas Metropolitano':'メトロポリターノ','Estádio Cívitas Metropolitano':'メトロポリターノ',
+  'Camp Nou':'カンプ・ノウ','Spotify Camp Nou':'カンプ・ノウ',
+  'Estadio ABANCA Balaídos':'バライードス','Estadio Municipal de Balaídos':'バライードス','Balaídos':'バライードス',
+  'Estadio ABANCA Riazor':'リアソール','Estadio de Riazor':'リアソール','Riazor':'リアソール',
+  'Estadio Martínez Valero':'マルティネス・バレーロ','Martínez Valero':'マルティネス・バレーロ',
+  'RCDE Stadium':'RCDEスタジアム','Stage Front Stadium':'RCDEスタジアム',
+  'Estadio Coliseum':'コリセウム','Coliseum':'コリセウム',
+  'Estadio Ciutat de València':'シウタ・デ・バレンシア','Ciutat de València':'シウタ・デ・バレンシア',
+  'La Rosaleda Stadium':'ラ・ロサレーダ','Estadio La Rosaleda':'ラ・ロサレーダ','La Rosaleda':'ラ・ロサレーダ',
+  'Estadio El Sadar':'エル・サダール','El Sadar':'エル・サダール',
+  'Campos de Sport de El Sardinero':'エル・サルディネロ','El Sardinero':'エル・サルディネロ',
+  'Estadio de Vallecas':'エスタディオ・デ・バジェカス','Campo de Fútbol de Vallecas':'エスタディオ・デ・バジェカス','El Campo de Fútbol de Vallecas':'エスタディオ・デ・バジェカス',
+  'Estadio Olímpico de la Cartuja':'ラ・カルトゥハ','Estadio La Cartuja de Sevilla':'ラ・カルトゥハ','La Cartuja':'ラ・カルトゥハ',
+  'Bernabéu':'サンティアゴ・ベルナベウ','Santiago Bernabéu':'サンティアゴ・ベルナベウ','Estadio Santiago Bernabéu':'サンティアゴ・ベルナベウ',
+  'Reale Arena':'レアレ・アレーナ','Anoeta':'レアレ・アレーナ',
+  'Estadio Ramón Sánchez-Pizjuán':'サンチェス・ピスフアン','Ramón Sánchez-Pizjuán':'サンチェス・ピスフアン',
+  'Camp de Mestalla':'メスタージャ','Mestalla':'メスタージャ','Estadio de Mestalla':'メスタージャ',
+  'Estadio de la Cerámica':'エスタディオ・デ・ラ・セラミカ','Estadio de la Ceramica':'エスタディオ・デ・ラ・セラミカ',
+  // Germany
   'Allianz Arena':'アリアンツ・アレーナ',
-  'Parc des Princes':'パルク・デ・プランス',
+  'Signal Iduna Park':'ジグナル・イドゥナ・パルク','SIGNAL IDUNA PARK':'ジグナル・イドゥナ・パルク',
+  'BayArena':'バイアレーナ',
+  'MHPArena':'MHPアレーナ','Mercedes-Benz Arena':'MHPアレーナ',
+  'Deutsche Bank Park':'ドイチェ・バンク・パルク',
+  'Volksparkstadion':'フォルクスパルクシュタディオン',
+  'ista-Borussia-Park':'ボルシア・パルク','BORUSSIA-PARK':'ボルシア・パルク',
+  'RheinEnergieStadion':'ラインエネルギーシュタディオン','RheinEnergieSTADION':'ラインエネルギーシュタディオン',
+  'Red Bull Arena':'レッドブル・アレーナ',
+  'Weserstadion':'ヴェーザーシュタディオン',
+  'Europa-Park Stadion':'ヨーロッパ・パルク・シュタディオン',
+  'MEWA ARENA':'MEWAアレーナ','Mewa Arena':'MEWAアレーナ',
+  'WWK Arena':'WWKアレーナ','WWK ARENA':'WWKアレーナ',
+  'SNP Arena':'SNPアレーナ','PreZero Arena':'SNPアレーナ',
+  'Stadion An der Alten Försterei':'アルテ・フェルステライ','An der Alten Försterei':'アルテ・フェルステライ',
+  'VELTINS-Arena':'フェルティンス・アレーナ','Veltins-Arena':'フェルティンス・アレーナ',
+  'URSAPHARM-Arena an der Kaiserlinde':'ウルザファーム・アレーナ','URSAPHARM-Arena':'ウルザファーム・アレーナ',
+  'Home Deluxe Arena':'ホーム・デラックス・アレーナ','Home-Deluxe-Arena':'ホーム・デラックス・アレーナ',
+  // Italy
+  'New Balance Arena':'ニュー・バランス・アレーナ','Gewiss Stadium':'ニュー・バランス・アレーナ',
+  "Stadio Renato Dall'Ara":'レナート・ダッラーラ',
+  'Unipol Domus':'ウニポル・ドムス',
+  'Stadio Giuseppe Sinigaglia':'ジュゼッペ・シニガーリャ',
+  'Stadio Artemio Franchi':'アルテミオ・フランキ',
+  'Stadio Benito Stirpe':'ベニート・スティルペ',
+  'Stadio Luigi Ferraris':'ルイジ・フェッラーリス',
   'San Siro':'サン・シーロ','Stadio Giuseppe Meazza':'サン・シーロ',
-  'Etihad Stadium':'エティハド・スタジアム','Anfield':'アンフィールド','Emirates Stadium':'エミレーツ・スタジアム',
-  'Signal Iduna Park':'ジグナル・イドゥナ・パルク','SIGNAL IDUNA PARK':'ジグナル・イドゥナ・パルク'
+  'Allianz Stadium':'アリアンツ・スタジアム','Juventus Stadium':'アリアンツ・スタジアム',
+  'Stadio Olimpico':'スタディオ・オリンピコ',
+  'Stadio Via del Mare-Ettore Giardiniero':'ヴィア・デル・マーレ','Stadio Via del Mare':'ヴィア・デル・マーレ',
+  'Stadio Brianteo':'ブリアンテオ','U-Power Stadium':'ブリアンテオ',
+  'Stadio Diego Armando Maradona':'ディエゴ・アルマンド・マラドーナ',
+  'Stadio Ennio Tardini':'エンニオ・タルディーニ',
+  'Mapei Stadium – Città del Tricolore':'マペイ・スタジアム','Mapei Stadium - Città del Tricolore':'マペイ・スタジアム','Mapei Stadium':'マペイ・スタジアム',
+  'Stadio Olimpico Grande Torino':'オリンピコ・グランデ・トリノ',
+  'Bluenergy Stadium':'ブルーエナジー・スタジアム','Dacia Arena':'ブルーエナジー・スタジアム',
+  'Stadio Pier Luigi Penzo':'ピエル・ルイジ・ペンツォ',
+  // France
+  'Stade Raymond Kopa':'レイモン・コパ',
+  'Stade Abbé Deschamps':'アベ・デシャン',
+  'Stade Francis-Le Blé':'フランシス・ル・ブレ',
+  'Stade Océane':'スタッド・オセアン',
+  'Stade Marie-Marvingt':'マリー・マルヴァン',
+  'Stade Bollaert-Delelis':'ボラール・デレリス',
+  'Stade Pierre-Mauroy':'ピエール・モーロワ','Decathlon Arena – Stade Pierre-Mauroy':'ピエール・モーロワ',
+  'Stade du Moustoir':'ムストワール',
+  'Groupama Stadium':'グルパマ・スタジアム',
+  'Stade Vélodrome':'ヴェロドローム','Orange Vélodrome':'ヴェロドローム',
+  'Stade Louis II':'スタッド・ルイ・ドゥ',
+  'Allianz Riviera':'アリアンツ・リヴィエラ',
+  'Stade Jean-Bouin':'ジャン・ブアン',
+  'Parc des Princes':'パルク・デ・プランス',
+  'Roazhon Park':'ロアゾン・パルク',
+  'Stade de la Meinau':'スタッド・ド・ラ・メノ',
+  'Stadium de Toulouse':'スタジアム・ド・トゥールーズ',
+  "Stade de l'Aube":'スタッド・ド・ローブ'
 };
 
-// Conservative home-ground inference. Only use venues explicitly registered here; unknown opponents remain 会場未定.
+// Current 2026-27 top-flight home-ground inference.
+// Use only when the provider omits the venue and the supported club is AWAY.
 const CP_HOME_VENUE_BY_TEAM={
-  'アストン・ヴィラ':'ヴィラ・パーク',
-  'ホッフェンハイム':'プレゼロ・アレーナ',
-  'カリアリ':'ウニポル・ドムス',
-  'モナコ':'スタッド・ルイ・ドゥ',
-  'コヴェントリー':'コヴェントリー・ビルディング・ソサエティ・アリーナ',
-  'イプスウィッチ':'ポートマン・ロード',
-  'ラージョ':'エスタディオ・デ・バジェカス',
-  'アーセナル':'エミレーツ・スタジアム',
-  'リヴァプール':'アンフィールド',
-  'マンC':'エティハド・スタジアム',
-  'バイエルン':'アリアンツ・アレーナ',
-  'PSG':'パルク・デ・プランス',
-  'ミラン':'サン・シーロ','インテル':'サン・シーロ',
-  'ドルトムント':'ジグナル・イドゥナ・パルク'
+  // Premier League 20
+  'アーセナル':'エミレーツ・スタジアム','アストン・ヴィラ':'ヴィラ・パーク','ボーンマス':'ディーン・コート',
+  'ブレントフォード':'ブレントフォード・コミュニティ・スタジアム','ブライトン':'ファルマー・スタジアム','チェルシー':'スタンフォード・ブリッジ',
+  'コヴェントリー':'コヴェントリー・ビルディング・ソサエティ・アリーナ','クリスタル・パレス':'セルハースト・パーク',
+  'エヴァートン':'ヒル・ディッキンソン・スタジアム','フラム':'クレイヴン・コテージ','ハル':'MKMスタジアム',
+  'イプスウィッチ':'ポートマン・ロード','リーズ':'エランド・ロード','リヴァプール':'アンフィールド','マンC':'エティハド・スタジアム',
+  'マンU':'オールド・トラッフォード','ニューカッスル':'セント・ジェームズ・パーク','フォレスト':'シティ・グラウンド',
+  'サンダーランド':'スタジアム・オブ・ライト','トッテナム':'トッテナム・ホットスパー・スタジアム',
+  // LaLiga 20
+  'アラベス':'メンディソロッツァ','アスレティック':'サン・マメス','アトレティコ':'メトロポリターノ','バルサ':'カンプ・ノウ',
+  'セルタ':'バライードス','デポルティーボ':'リアソール','エルチェ':'マルティネス・バレーロ','エスパニョール':'RCDEスタジアム',
+  'ヘタフェ':'コリセウム','レバンテ':'シウタ・デ・バレンシア','マラガ':'ラ・ロサレーダ','オサスナ':'エル・サダール',
+  'ラシン':'エル・サルディネロ','ラージョ':'エスタディオ・デ・バジェカス','ベティス':'ラ・カルトゥハ',
+  'レアル':'サンティアゴ・ベルナベウ','ソシエダ':'レアレ・アレーナ','セビージャ':'サンチェス・ピスフアン',
+  'バレンシア':'メスタージャ','ビジャレアル':'エスタディオ・デ・ラ・セラミカ',
+  // Bundesliga 18
+  'アウクスブルク':'WWKアレーナ','ウニオン・ベルリン':'アルテ・フェルステライ','ブレーメン':'ヴェーザーシュタディオン',
+  'ドルトムント':'ジグナル・イドゥナ・パルク','エルヴァースベルク':'ウルザファーム・アレーナ','フランクフルト':'ドイチェ・バンク・パルク',
+  'フライブルク':'ヨーロッパ・パルク・シュタディオン','ハンブルク':'フォルクスパルクシュタディオン','ホッフェンハイム':'SNPアレーナ',
+  'ケルン':'ラインエネルギーシュタディオン','ライプツィヒ':'レッドブル・アレーナ','レヴァークーゼン':'バイアレーナ',
+  'マインツ':'MEWAアレーナ','ボルシアMG':'ボルシア・パルク','バイエルン':'アリアンツ・アレーナ',
+  'パーダーボルン':'ホーム・デラックス・アレーナ','シャルケ':'フェルティンス・アレーナ','シュトゥットガルト':'MHPアレーナ',
+  // Serie A 20
+  'アタランタ':'ニュー・バランス・アレーナ','ボローニャ':'レナート・ダッラーラ','カリアリ':'ウニポル・ドムス','コモ':'ジュゼッペ・シニガーリャ',
+  'フィオレンティーナ':'アルテミオ・フランキ','フロジノーネ':'ベニート・スティルペ','ジェノア':'ルイジ・フェッラーリス',
+  'ミラン':'サン・シーロ','インテル':'サン・シーロ','ユベントス':'アリアンツ・スタジアム','ラツィオ':'スタディオ・オリンピコ',
+  'ローマ':'スタディオ・オリンピコ','レッチェ':'ヴィア・デル・マーレ','モンツァ':'ブリアンテオ','ナポリ':'ディエゴ・アルマンド・マラドーナ',
+  'パルマ':'エンニオ・タルディーニ','サッスオーロ':'マペイ・スタジアム','トリノ':'オリンピコ・グランデ・トリノ',
+  'ウディネーゼ':'ブルーエナジー・スタジアム','ヴェネツィア':'ピエル・ルイジ・ペンツォ',
+  // Ligue 1 18
+  'アンジェ':'レイモン・コパ','オセール':'アベ・デシャン','ブレスト':'フランシス・ル・ブレ','ル・アーヴル':'スタッド・オセアン',
+  'ル・マン':'マリー・マルヴァン','ランス':'ボラール・デレリス','リール':'ピエール・モーロワ','ロリアン':'ムストワール',
+  'リヨン':'グルパマ・スタジアム','マルセイユ':'ヴェロドローム','モナコ':'スタッド・ルイ・ドゥ','ニース':'アリアンツ・リヴィエラ',
+  'パリFC':'ジャン・ブアン','PSG':'パルク・デ・プランス','レンヌ':'ロアゾン・パルク','ストラスブール':'スタッド・ド・ラ・メノ',
+  'トゥールーズ':'スタジアム・ド・トゥールーズ','トロワ':'スタッド・ド・ローブ'
 };
 
 function cpCanonicalTeamName(name){
@@ -174,7 +294,8 @@ function cpDisplayTeamName(name,small=false){
   return n.length>max?n.slice(0,max-1)+'…':n
 }
 
-// Normalize data before it reaches cache/rendering. This fixes provider-English labels and fills only verified away venues.
+// Normalize data before it reaches cache/rendering. Provider venue wins when known;
+// registry inference is only used for verified AWAY home grounds when venue is missing.
 mapMatch=function(m){
   let out=CP_RG_BASE_MAP_MATCH(m);
   if(!out)return out;
