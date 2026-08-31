@@ -1,7 +1,7 @@
-// Club Pulse Small Presentation System v8.
+// Club Pulse Small Presentation System v9.
 // Canonical small-widget renderer for all supported clubs.
-// v8 separates NEXT and scored-state geometry, uses stronger length-aware typography,
-// and applies semantic aliases only where a full club name is genuinely too long.
+// v9 keeps v8's scored-state protection and full-name typography, while restoring
+// enough NEXT center width for the literal VS label to render without clipping.
 
 const CP_SP_TYPO={
   headerName:9.0,
@@ -16,9 +16,9 @@ const CP_SP_TYPO={
   meta:8.7,
   metaMinScale:.90,
   footer:7.6,
-  teamWidthNext:56,
+  teamWidthNext:55,
   teamWidthScore:48,
-  scoreWidthNext:26,
+  scoreWidthNext:32,
   scoreWidthScore:42,
   logo:40
 };
