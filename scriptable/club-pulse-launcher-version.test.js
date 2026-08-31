@@ -15,8 +15,8 @@ check('launcher uses small presentation v4 local cache',src.includes('ClubPulseS
 check('launcher fetch tag is small-presentation4',src.includes("'small-presentation4'"));
 check('launcher pins small presentation v4 commit',src.includes('e231b5a7c67b9edd31073f83e8b640f489cfefb7'));
 check('launcher uses wave2 clubs v1 local cache',src.includes('ClubPulseWave2ClubsPatch_v1.js')&&src.includes("'wave2-clubs1'"));
-check('launcher uses wave2 themes v3 local cache',src.includes('ClubPulseWave2ThemesPatch_v3.js')&&src.includes("'wave2-themes3'"));
-check('launcher pins wave2 clubs and themes to immutable commits',src.includes('c53a62e6308fb99d6605d9b6c8d960869140dd46/scriptable/club-pulse-wave2-clubs-patch.js')&&src.includes('64a0facd6a963a08f900a171540bd9a6dabfa15a/scriptable/club-pulse-wave2-themes-patch.js'));
+check('launcher uses wave2 themes v4 local cache',src.includes('ClubPulseWave2ThemesPatch_v4.js')&&src.includes("'wave2-themes4'"));
+check('launcher pins wave2 clubs and themes to immutable commits',src.includes('c53a62e6308fb99d6605d9b6c8d960869140dd46/scriptable/club-pulse-wave2-clubs-patch.js')&&src.includes('75ee9a4925091e1f8966d6adf9cf6f95e1ab58a3/scriptable/club-pulse-wave2-themes-patch.js'));
 check('wave2 club registry injects before core parameter resolution',src.includes("c=c.slice(0,pk)+cr+'\\n'+ec+'\\n'+w2c+'\\n'+c.slice(pk)"));
 check('wave2 themes run after small presentation',src.includes("+dp+'\\n'+sp+'\\n'+w2t"));
 check('patch loader remains local-first',src.includes("if(F.fileExists(file)){let s=F.readString(file);if(s&&s.length>=min)return s}"));
