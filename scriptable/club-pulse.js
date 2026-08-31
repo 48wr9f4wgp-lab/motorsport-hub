@@ -3,6 +3,7 @@ const CLUB_REGISTRY_PATCH='https://raw.githubusercontent.com/48wr9f4wgp-lab/moto
 const EXTRA_CLUBS_PATCH='https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/1b734c803dc4ccc39c978decc3f2a4c733ab7605/scriptable/club-pulse-extra-clubs-patch.js';
 const WAVE2_CLUBS_PATCH='https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/c53a62e6308fb99d6605d9b6c8d960869140dd46/scriptable/club-pulse-wave2-clubs-patch.js';
 const WAVE3_CLUBS_PATCH='https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/b6b1e42237d899fc3084ced49a1974185c5b43e3/scriptable/club-pulse-wave3-netherlands-clubs-patch.js';
+const WAVE4_LENS_CLUB_PATCH='https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/28a95c8d790e4a15a9204ff45694d5dde361600e/scriptable/club-pulse-wave4-lens-club-patch.js';
 const PATCH='https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/839434e9b6e414f1382fa2b5b9ead69d3112b965/scriptable/club-pulse-ui-patch.js';
 const COMP_PATCH='https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/288a223e94e49face49f4061641460ec5848dc93/scriptable/club-pulse-competition-logo-patch.js';
 const LEAGUE_EXPANSION_PATCH='https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/33a963823dfc5b2f23a09ef2e325b42b66812011/scriptable/club-pulse-league-expansion-patch.js';
@@ -22,9 +23,10 @@ const DATA_POLICY_PATCH='https://raw.githubusercontent.com/48wr9f4wgp-lab/motors
 const SMALL_PRESENTATION_PATCH='https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/e231b5a7c67b9edd31073f83e8b640f489cfefb7/scriptable/club-pulse-small-presentation-patch.js';
 const WAVE2_THEMES_PATCH='https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/75ee9a4925091e1f8966d6adf9cf6f95e1ab58a3/scriptable/club-pulse-wave2-themes-patch.js';
 const WAVE3_NL_PATCH='https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/a38b811efeb76811d3d12df9fe35db43c1c527f5/scriptable/club-pulse-wave3-netherlands-patch.js';
+const WAVE4_LENS_PATCH='https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/6380251307413da618226363e5f22800df9301dc/scriptable/club-pulse-wave4-lens-patch.js';
 
 const F=FileManager.local(),D=F.documentsDirectory();
-const CP=F.joinPath(D,'ClubPulseCore_v2.js'),CRP=F.joinPath(D,'ClubPulseClubRegistryPatch_v2.js'),ECP=F.joinPath(D,'ClubPulseExtraClubsPatch_v3.js'),W2CP=F.joinPath(D,'ClubPulseWave2ClubsPatch_v1.js'),W3CP=F.joinPath(D,'ClubPulseWave3NetherlandsClubsPatch_v1.js'),PP=F.joinPath(D,'ClubPulseUIPatch_v8.js'),LP=F.joinPath(D,'ClubPulseCompetitionLogoPatch_v3.js'),LEP=F.joinPath(D,'ClubPulseLeagueExpansionPatch_v1.js'),TP=F.joinPath(D,'ClubPulseManUThemePatch_v4.js'),TRP=F.joinPath(D,'ClubPulseThemeRegistryPatch_v13.js'),ETP=F.joinPath(D,'ClubPulseExtraThemePatch_v2.js'),TLP=F.joinPath(D,'ClubPulseTopLayoutPatch_v2.js'),IP=F.joinPath(D,'ClubPulseIdentityColorPatch_v7.js'),DSP=F.joinPath(D,'ClubPulseDesignSystemPatch_v7.js'),PVP=F.joinPath(D,'ClubPulsePremiumVisualPatch_v3.js'),RGP=F.joinPath(D,'ClubPulseReadabilityGuardPatch_v8.js'),CMP=F.joinPath(D,'ClubPulseCacheMigrationPatch_v1.js'),FPP=F.joinPath(D,'ClubPulseFinalPolishPatch_v3.js'),LCP=F.joinPath(D,'ClubPulseLiveContextPatch_v1.js'),RP=F.joinPath(D,'ClubPulseResiliencePatch_v6.js'),DPP=F.joinPath(D,'ClubPulseDataPolicyPatch_v6.js'),SPP=F.joinPath(D,'ClubPulseSmallPresentationPatch_v4.js'),W2TP=F.joinPath(D,'ClubPulseWave2ThemesPatch_v4.js'),W3NP=F.joinPath(D,'ClubPulseWave3NetherlandsPatch_v1.js'),QAP=F.joinPath(D,'ClubPulseQAOverride_v1.json');
+const CP=F.joinPath(D,'ClubPulseCore_v2.js'),CRP=F.joinPath(D,'ClubPulseClubRegistryPatch_v2.js'),ECP=F.joinPath(D,'ClubPulseExtraClubsPatch_v3.js'),W2CP=F.joinPath(D,'ClubPulseWave2ClubsPatch_v1.js'),W3CP=F.joinPath(D,'ClubPulseWave3NetherlandsClubsPatch_v1.js'),W4CP=F.joinPath(D,'ClubPulseWave4LensClubPatch_v1.js'),PP=F.joinPath(D,'ClubPulseUIPatch_v8.js'),LP=F.joinPath(D,'ClubPulseCompetitionLogoPatch_v3.js'),LEP=F.joinPath(D,'ClubPulseLeagueExpansionPatch_v1.js'),TP=F.joinPath(D,'ClubPulseManUThemePatch_v4.js'),TRP=F.joinPath(D,'ClubPulseThemeRegistryPatch_v13.js'),ETP=F.joinPath(D,'ClubPulseExtraThemePatch_v2.js'),TLP=F.joinPath(D,'ClubPulseTopLayoutPatch_v2.js'),IP=F.joinPath(D,'ClubPulseIdentityColorPatch_v7.js'),DSP=F.joinPath(D,'ClubPulseDesignSystemPatch_v7.js'),PVP=F.joinPath(D,'ClubPulsePremiumVisualPatch_v3.js'),RGP=F.joinPath(D,'ClubPulseReadabilityGuardPatch_v8.js'),CMP=F.joinPath(D,'ClubPulseCacheMigrationPatch_v1.js'),FPP=F.joinPath(D,'ClubPulseFinalPolishPatch_v3.js'),LCP=F.joinPath(D,'ClubPulseLiveContextPatch_v1.js'),RP=F.joinPath(D,'ClubPulseResiliencePatch_v6.js'),DPP=F.joinPath(D,'ClubPulseDataPolicyPatch_v6.js'),SPP=F.joinPath(D,'ClubPulseSmallPresentationPatch_v4.js'),W2TP=F.joinPath(D,'ClubPulseWave2ThemesPatch_v4.js'),W3NP=F.joinPath(D,'ClubPulseWave3NetherlandsPatch_v1.js'),W4LP=F.joinPath(D,'ClubPulseWave4LensPatch_v1.js'),QAP=F.joinPath(D,'ClubPulseQAOverride_v1.json');
 
 let p=String(args.widgetParameter||'manutd').trim()||'manutd';
 if(config.runsInApp&&!p.includes(':')){
@@ -71,6 +73,7 @@ let c=await core(),
   ec=await getRemote(EXTRA_CLUBS_PATCH,ECP,900,'extra-clubs3'),
   w2c=await getRemote(WAVE2_CLUBS_PATCH,W2CP,2000,'wave2-clubs1'),
   w3c=await getRemote(WAVE3_CLUBS_PATCH,W3CP,800,'wave3-nl-clubs1'),
+  w4c=await getRemote(WAVE4_LENS_CLUB_PATCH,W4CP,350,'wave4-lens-club1'),
   x=await getRemote(PATCH,PP,300,'ui8'),y=await getRemote(COMP_PATCH,LP,300,'comp3'),le=await getRemote(LEAGUE_EXPANSION_PATCH,LEP,300,'leagues1'),
   z=await getRemote(THEME_PATCH,TP,300,'mutheme4'),tr=await getRemote(THEME_REGISTRY_PATCH,TRP,300,'themes13'),et=await getRemote(EXTRA_THEME_PATCH,ETP,300,'extra-themes2'),
   u=await getRemote(TOP_LAYOUT_PATCH,TLP,300,'toplayout2'),i=await getRemote(IDENTITY_PATCH,IP,300,'identity7'),ds=await getRemote(DESIGN_SYSTEM_PATCH,DSP,1200,'design-system7'),
@@ -78,15 +81,16 @@ let c=await core(),
   fp=await getRemote(FINAL_POLISH_PATCH,FPP,250,'final-polish3'),q=await getRemote(LIVE_CONTEXT_PATCH,LCP,250,'livectx1'),r=await getRemote(RESILIENCE_PATCH,RP,600,'resilience6'),
   dp=await getRemote(DATA_POLICY_PATCH,DPP,3200,'data-policy6'),sp=await getRemote(SMALL_PRESENTATION_PATCH,SPP,2600,'small-presentation4'),
   w2t=await getRemote(WAVE2_THEMES_PATCH,W2TP,1800,'wave2-themes4'),
-  w3n=await getRemote(WAVE3_NL_PATCH,W3NP,2500,'wave3-netherlands1');
+  w3n=await getRemote(WAVE3_NL_PATCH,W3NP,2500,'wave3-netherlands1'),
+  w4l=await getRemote(WAVE4_LENS_PATCH,W4LP,1200,'wave4-lens1');
 
 const PM='const param=String(args.widgetParameter',pk=c.indexOf(PM);
 if(pk<0)throw new Error('Club registry injection marker missing');
-c=c.slice(0,pk)+cr+'\n'+ec+'\n'+w2c+'\n'+w3c+'\n'+c.slice(pk);
-const M='if(config.runsInApp&&!getLiveToken())await setupLiveToken();',k=c.indexOf(M),patches=x+'\n'+y+'\n'+le+'\n'+z+'\n'+tr+'\n'+et+'\n'+u+'\n'+i+'\n'+ds+'\n'+pv+'\n'+rg+'\n'+cm+'\n'+fp+'\n'+q+'\n'+r+'\n'+dp+'\n'+sp+'\n'+w2t+'\n'+w3n,b=k>=0?c.slice(0,k)+'\n'+patches+'\n'+c.slice(k):c+'\n'+patches;
+c=c.slice(0,pk)+cr+'\n'+ec+'\n'+w2c+'\n'+w3c+'\n'+w4c+'\n'+c.slice(pk);
+const M='if(config.runsInApp&&!getLiveToken())await setupLiveToken();',k=c.indexOf(M),patches=x+'\n'+y+'\n'+le+'\n'+z+'\n'+tr+'\n'+et+'\n'+u+'\n'+i+'\n'+ds+'\n'+pv+'\n'+rg+'\n'+cm+'\n'+fp+'\n'+q+'\n'+r+'\n'+dp+'\n'+sp+'\n'+w2t+'\n'+w3n+'\n'+w4l,b=k>=0?c.slice(0,k)+'\n'+patches+'\n'+c.slice(k):c+'\n'+patches;
 await new Function('args','return (async()=>{\n'+b+'\n})()')({widgetParameter:p});
 
-/* Club Pulse 43-club runtime. Existing forty visuals stay frozen. Wave 3 adds Ajax, PSV and Feyenoord through registry/theme/competition data only, with no club-specific renderer branches. Core and every patch are immutable commit-pinned and version-cached local-first. Wave3 club registry is injected before core parameter resolution; Netherlands presentation runs last so Eredivisie competition, localization, venue and shared Small/Medium presentation contracts are available before data loads.
+/* Club Pulse 44-club runtime. Existing forty-three visuals stay frozen. Wave 4 adds RC Lens through registry/theme/localization/venue data only, with no club-specific renderer branches. Core and every patch are immutable commit-pinned and version-cached local-first. Wave4 club registry is injected before core parameter resolution; Lens presentation runs last so shared Small/Medium systems and Ligue 1 competition handling are already active.
 Frozen base registry compatibility marker: c=c.slice(0,pk)+cr+'\n'+ec+'\n'+c.slice(pk)
 Frozen eleven-family marker: arsenal, liverpool, inter, and dortmund
 */
