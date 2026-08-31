@@ -1,6 +1,6 @@
-// Club Pulse identity color override v6
+// Club Pulse identity color override v7
 // Readability-first identity: no decorative streaks/rails. Club differentiation comes from the inner surface palette.
-// Real Madrid: pearl white / royal blue / restrained gold. Barcelona: strong warm purple with high-contrast readable match content.
+// v7 keeps Real/Barcelona visuals frozen while routing metadata through the canonical typography contract.
 
 const CP_IDENTITY_BASE_CARD_BG=cardBg,
       CP_IDENTITY_BASE_MATCH_MEDIUM=buildMatchMedium,
@@ -26,7 +26,6 @@ const CP_IDENTITY_BASE_CARD_BG=cardBg,
   }
 })();
 
-// Real keeps a clean pearl-white information surface with only a very subtle tonal falloff.
 function cpRealSimpleCardGradient(t,mode){
   let g=new LinearGradient();
   g.startPoint=new Point(0,0);
@@ -137,8 +136,7 @@ function cpBarcelonaMatchMedium(w,d,imgs){
   cpBarcelonaTeamBlock(row,{img:imgs.opp,name:m.opponentName,fallback:m.opponentShort,logoSize:58,nameSize:11.8,scale:CREST_SCALE[m.opponentId]||CREST_SCALE.opponent_default||.90,nameGap:2,width:96});
   outer.addSpacer();
   c.addSpacer(5);
-  let meta=c.addStack();meta.layoutHorizontally();meta.addSpacer();
-  let mt=semibold(meta,metaLine(d,m),9.8,1,'#FFFFFF');mt.centerAlignText();mt.minimumScaleFactor=.88;meta.addSpacer()
+  let meta=c.addStack();meta.layoutHorizontally();meta.addSpacer();cpMetaText(meta,metaLine(d,m),'#FFFFFF',false);meta.addSpacer()
 }
 
 function cpBarcelonaMatchSmall(w,d,imgs){
@@ -163,8 +161,7 @@ function cpBarcelonaMatchSmall(w,d,imgs){
   cpBarcelonaTeamBlock(row,{img:imgs.opp,name:smallTeamName(m.opponentName),fallback:m.opponentShort,logoSize:42,nameSize:9.4,scale:CREST_SCALE[m.opponentId]||CREST_SCALE.opponent_default||.90,nameGap:2,width:50},true);
   outer.addSpacer();
   c.addSpacer(4);
-  let meta=c.addStack();meta.layoutHorizontally();meta.addSpacer();
-  let mt=semibold(meta,m.kickoff,9.4,1,'#FFFFFF');mt.centerAlignText();mt.minimumScaleFactor=.92;meta.addSpacer()
+  let meta=c.addStack();meta.layoutHorizontally();meta.addSpacer();cpMetaText(meta,m.kickoff,'#FFFFFF',true);meta.addSpacer()
 }
 
 buildMatchMedium=function(w,d,imgs){
@@ -193,8 +190,7 @@ buildMatchMedium=function(w,d,imgs){
   row.addSpacer(d.mode==='POST'?16:20);
   cpRealTeamBlock(row,{img:imgs.opp,name:m.opponentName,sub:'',fallback:m.opponentShort,logoSize:56,nameSize:12,subSize:0,scale:CREST_SCALE[m.opponentId]||CREST_SCALE.opponent_default||.90,nameGap:1,width:94});
   outer.addSpacer();c.addSpacer(2);
-  let meta=c.addStack();meta.layoutHorizontally();meta.addSpacer();
-  let mt=semibold(meta,metaLine(d,m),9,.94,t.cardText);mt.centerAlignText();meta.addSpacer()
+  let meta=c.addStack();meta.layoutHorizontally();meta.addSpacer();cpMetaText(meta,metaLine(d,m),t.cardText,false);meta.addSpacer()
 };
 
 buildMatchSmall=function(w,d,imgs){
@@ -222,6 +218,5 @@ buildMatchSmall=function(w,d,imgs){
   row.addSpacer(4);
   cpRealTeamBlock(row,{img:imgs.opp,name:smallTeamName(m.opponentName),fallback:m.opponentShort,logoSize:40,nameSize:9.2,scale:CREST_SCALE[m.opponentId]||CREST_SCALE.opponent_default||.90,nameGap:2,width:48},true);
   outer.addSpacer();c.addSpacer(4);
-  let meta=c.addStack();meta.layoutHorizontally();meta.addSpacer();
-  let mt=semibold(meta,m.kickoff,9.2,.97,t.cardText);mt.centerAlignText();meta.addSpacer()
+  let meta=c.addStack();meta.layoutHorizontally();meta.addSpacer();cpMetaText(meta,m.kickoff,t.cardText,true);meta.addSpacer()
 };
