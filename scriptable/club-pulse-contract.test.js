@@ -22,7 +22,7 @@ check('launcher uses theme registry v13',has(files.launcher,'ClubPulseThemeRegis
 check('launcher uses identity v7',has(files.launcher,'ClubPulseIdentityColorPatch_v7.js')&&has(files.launcher,"'identity7'"));
 check('launcher loads canonical design system v7',has(files.launcher,'ClubPulseDesignSystemPatch_v7.js')&&has(files.launcher,"'design-system7'"));
 check('launcher pins canonical design-system v7 commit',has(files.launcher,'3cfc3e4ea100fdc95686614c42561036052222ae'));
-check('launcher uses premium visual v3',has(files.launcher,'ClubPulsePremiumVisualPatch_v3.js')&&has(files.launcher,"'premium3'"));
+check('launcher uses premium visual v4',has(files.launcher,'ClubPulsePremiumVisualPatch_v4.js')&&has(files.launcher,"'premium4'")&&has(files.launcher,'5f465f4d34d79d03614ddba306c15d18f1049f0b'));
 check('launcher uses readability v8',has(files.launcher,'ClubPulseReadabilityGuardPatch_v8.js')&&has(files.launcher,"'readability8'"));
 check('launcher pins readability v8 commit',has(files.launcher,'9b6e1f82ad2d07d67628cd501723d5eba095908f'));
 check('launcher uses cache migration v1',has(files.launcher,'ClubPulseCacheMigrationPatch_v1.js')&&has(files.launcher,"'cache-migration1'")&&has(files.launcher,'986e4aa662f695d84b1174bf79917cb8e31a10f7'));
