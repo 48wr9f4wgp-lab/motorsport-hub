@@ -17,8 +17,12 @@ function syntax(name,src){try{new Function(`return (async()=>{\n${src}\n})`);che
 for(const [name,src] of Object.entries(files))syntax(name,src);
 
 check('launcher injects both registries before parameter resolution',has(files.launcher,"c=c.slice(0,pk)+cr+'\\n'+ec+'\\n'+c.slice(pk)"));
-check('launcher loads canonical design system v6',has(files.launcher,'ClubPulseDesignSystemPatch_v6.js')&&has(files.launcher,"'design-system6'"));
-check('launcher pins canonical design-system v6 commit',has(files.launcher,'e33abe814c496c316c4c80ca1a736c6c80d30e9b'));
+check('launcher uses Man U v4',has(files.launcher,'ClubPulseManUThemePatch_v4.js')&&has(files.launcher,"'mutheme4'"));
+check('launcher uses theme registry v13',has(files.launcher,'ClubPulseThemeRegistryPatch_v13.js')&&has(files.launcher,"'themes13'"));
+check('launcher uses identity v7',has(files.launcher,'ClubPulseIdentityColorPatch_v7.js')&&has(files.launcher,"'identity7'"));
+check('launcher loads canonical design system v7',has(files.launcher,'ClubPulseDesignSystemPatch_v7.js')&&has(files.launcher,"'design-system7'"));
+check('launcher pins canonical design-system v7 commit',has(files.launcher,'3cfc3e4ea100fdc95686614c42561036052222ae'));
+check('launcher uses premium visual v3',has(files.launcher,'ClubPulsePremiumVisualPatch_v3.js')&&has(files.launcher,"'premium3'"));
 check('launcher uses readability v7',has(files.launcher,'ClubPulseReadabilityGuardPatch_v7.js')&&has(files.launcher,"'readability7'"));
 check('launcher pins readability v7 commit',has(files.launcher,'bd3e0c22693f77958b353cad80de677110755efe'));
 check('launcher keeps final polish v3',has(files.launcher,'ClubPulseFinalPolishPatch_v3.js')&&has(files.launcher,"'final-polish3'"));
@@ -31,7 +35,13 @@ check('frozen seven identities remain present',has(files.design,"key:'manutd',to
 check('Arsenal identity stays navy red ivory',has(files.design,"key:'arsenal',tone:'arsenal-red-ivory-navy'")&&has(files.design,"cardSurface:'#152A4A'")&&has(files.design,"cardBorder:'#F0E5D2'"));
 check('Liverpool identity stays deep scarlet teal',has(files.design,"key:'liverpool',tone:'deep-scarlet-teal'")&&has(files.design,"cardSurface:'#430713'")&&has(files.design,"cardBorder:'#00A79F'"));
 check('Inter identity remains black electric blue',has(files.design,"key:'inter',tone:'nerazzurri-electric-blue'"));
-check('Dortmund identity remains signal yellow black',has(files.design,"key:'dortmund',tone:'signal-yellow-black'"));
+check('Dortmund identity remains signal yellow black',has(files.design,"key:'dortmund',tone:'signal-yellow-black'")&&has(files.design,"cardText:'#111111'"));
+check('design defines shared metadata typography',has(files.design,'metaMedium:{font:9.2,minScale:.88}')&&has(files.design,'metaSmall:{font:9.0,minScale:.90}')&&has(files.design,'function cpMetaText'));
+check('Dortmund has separate light shell-header accent',has(files.design,"headerAccent:'#E6EAF0'"));
+check('theme header consumes optional shell-header accent',has(files.themes,'t.headerAccent||t.accentSoft||CP_COMMON_SHELL.muted'));
+check('generic renderer uses canonical metadata typography',has(files.premium,'cpMetaText(meta,metaLine(d,m),fg,false)')&&has(files.premium,'cpMetaText(meta,m.kickoff,fg,true)'));
+check('Real and Barcelona use canonical metadata typography',has(files.identity,"cpMetaText(meta,metaLine(d,m),'#FFFFFF',false)")&&has(files.identity,'cpMetaText(meta,metaLine(d,m),t.cardText,false)'));
+check('Man U uses canonical metadata typography',has(files.manutd,"cpMetaText(meta,metaLine(d,m),CP_MU_IS()?'#F1E9D8':'#FFFFFF',false)"));
 
 check('readability applies to eleven clubs',has(files.readability,'new Set([66,81,86,5,524,98,65,57,64,108,4])'));
 check('five-league registry fixes observed German and Italian labels',has(files.readability,"'Hoffenheim':'ホッフェンハイム'")&&has(files.readability,"'Cagliari':'カリアリ'"));
@@ -51,4 +61,4 @@ check('core keeps live token in Keychain',has(files.core,'clubpulse_api_football
 check('resilience keeps offline and no-cache QA',has(files.resilience,"qa==='offline'")&&has(files.resilience,"qa==='nocache'"));
 
 if(failed){console.error(`\nClub Pulse contract QA FAILED: ${failed} check(s)`);process.exit(1)}
-console.log('\nClub Pulse five-league localization contract QA PASSED');
+console.log('\nClub Pulse metadata typography and header contrast contract QA PASSED');
