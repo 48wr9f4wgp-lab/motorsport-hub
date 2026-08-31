@@ -5,9 +5,9 @@ let failed=0;
 function check(name,ok){if(ok)console.log(`✓ ${name}`);else{console.error(`✗ ${name}`);failed++}}
 check('launcher pins core to immutable commit',src.includes('30a2b7f1b5c58d4ffa7e91047b637692c3cac7ce/scriptable/club-pulse-core.js'));
 check('launcher uses core v2 local cache',src.includes('ClubPulseCore_v2.js')&&src.includes("CORE+'?v=core2'"));
-check('launcher uses resilience v5 local cache',src.includes('ClubPulseResiliencePatch_v5.js'));
-check('launcher fetch tag is resilience5',src.includes("'resilience5'"));
-check('launcher pins resilience v5 commit',src.includes('56cbbf144a7bc9989694dc67baba09619bf85f51'));
+check('launcher uses resilience v6 local cache',src.includes('ClubPulseResiliencePatch_v6.js'));
+check('launcher fetch tag is resilience6',src.includes("'resilience6'"));
+check('launcher pins resilience v6 commit',src.includes('968fd0308afd6ea0998d8317357d86af9d8aa0c3'));
 check('launcher uses data policy v6 local cache',src.includes('ClubPulseDataPolicyPatch_v6.js'));
 check('launcher fetch tag is data-policy6',src.includes("'data-policy6'"));
 check('launcher pins data policy v6 commit',src.includes('c274078e2cd1742a61fe9c3548d54f703a84ebc5'));
