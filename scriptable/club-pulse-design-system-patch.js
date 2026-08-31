@@ -1,6 +1,6 @@
-// Club Pulse canonical design system v5.
+// Club Pulse canonical design system v6.
 // Visual source of truth for the eleven-club family. Existing seven-club visual definitions stay frozen.
-// New clubs use the same shell, geometry and component hierarchy; only canonical theme tokens vary.
+// Arsenal and Liverpool receive a second-pass identity separation while retaining shared geometry.
 
 const CP_DESIGN_TOKENS={
   shell:{
@@ -73,15 +73,17 @@ const CP_THEME_DEFINITIONS={
     key:'arsenal',tone:'arsenal-red-ivory-navy',
     text:'#FFF9F4',muted:'#E7DDE0',accent:'#F2E7D5',accentSoft:'#FFF6E8',
     surface:'#090A0E',panel:'#101827',glow:'#A80F2A',panelDeep:'#080D17',
-    cardSurface:'#690719',cardPanel:'#B31230',cardGlow:'#E31B3D',
-    border:'#263F66',cardBorder:'#E6D8C3',sideBorder:'#F2E7D5'
+    // Navy is visible in the field itself; ivory stays on fine edges so white copy remains legible.
+    cardSurface:'#152A4A',cardPanel:'#A80E2C',cardGlow:'#D7193F',
+    border:'#243B5A',cardBorder:'#F0E5D2',sideBorder:'#F2E7D5'
   },
   64:{
     key:'liverpool',tone:'deep-scarlet-teal',
-    text:'#FFF8F6',muted:'#E4D9DA',accent:'#A7E5DC',accentSoft:'#D9F2EE',
-    surface:'#090708',panel:'#180B10',glow:'#8B0A25',panelDeep:'#080D17',
-    cardSurface:'#500614',cardPanel:'#8F0B28',cardGlow:'#C8102E',
-    border:'#6E2031',cardBorder:'#71B8AE',sideBorder:'#A7E5DC'
+    text:'#FFF8F6',muted:'#E4D9DA',accent:'#00B2A9',accentSoft:'#A7E5DC',
+    surface:'#090708',panel:'#180B10',glow:'#650A20',panelDeep:'#080D17',
+    // Keep Liverpool materially darker than Man U / Arsenal; teal is a premium accent, not a second field color.
+    cardSurface:'#430713',cardPanel:'#740A21',cardGlow:'#A30B2B',
+    border:'#542333',cardBorder:'#00A79F',sideBorder:'#00B2A9'
   },
   108:{
     key:'inter',tone:'nerazzurri-electric-blue',
