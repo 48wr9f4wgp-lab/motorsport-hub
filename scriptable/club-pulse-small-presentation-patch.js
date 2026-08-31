@@ -1,6 +1,7 @@
-// Club Pulse Small Presentation System v1.
+// Club Pulse Small Presentation System v2.
 // Canonical small-widget renderer for all supported clubs.
 // Goal: identical typography hierarchy across clubs while preserving each club's color/crest identity.
+// v2 reserves enough center width for VS / live / final scores without clipping.
 
 const CP_SP_TYPO={
   headerName:9.0,
@@ -14,8 +15,8 @@ const CP_SP_TYPO={
   meta:9.0,
   metaMinScale:.90,
   footer:7.6,
-  teamWidth:54,
-  scoreWidth:28,
+  teamWidth:52,
+  scoreWidth:34,
   logo:40
 };
 
