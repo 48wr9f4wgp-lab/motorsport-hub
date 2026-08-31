@@ -1,5 +1,5 @@
 // Shared visual theme registry for multi-club rollout.
-// Premium v12: readability first, with a refined neutral shell and thin metallic card edging.
+// Premium v13: readability first, with a refined neutral shell and thin metallic card edging.
 // Club identity stays inside simple information surfaces. No decorative streaks or lines cross content.
 
 const CP_COMMON_SHELL={surface:'#080C14',panel:'#0D1420',glow:'#111A28',text:'#F8FAFC',muted:'#B8C2D1',rail:'#080D17',border:'#465164',edge:'#9AA6B8'};
@@ -32,7 +32,6 @@ function CP_ACTIVE_THEME(){return CP_CLUB_THEME_REGISTRY[club?.team]||null}
 function cpThemeGradient(stops,alpha=.98){let loc=stops.length===2?[0,1]:stops.length===3?[0,.58,1]:stops.map((_,i)=>i/(stops.length-1));return gradient(stops.map(x=>C(x,alpha)),loc)}
 function cpLegacyShellFallback(t){return cpThemeGradient([t.surface,t.panel,t.glow],.99)}
 
-// Shared outer shell: neutral, near-black, and slightly cooler than the information surfaces.
 function cpCommonShellGradient(){
   let g=new LinearGradient();
   g.startPoint=new Point(0,0);
@@ -42,7 +41,6 @@ function cpCommonShellGradient(){
   return g
 }
 
-// Inner card: club surface with restrained tonal depth only.
 function cpSimpleCardGradient(t,mode){
   let a=t.cardSurface||t.panelDeep,
       b=t.cardPanel||t.panel,
@@ -79,7 +77,6 @@ cardBg=function(mode){
   return cpSimpleCardGradient(t,mode)
 };
 
-// Club crest: preserve transparent artwork. No global white plate.
 badge=function(p,fallback,img,size=28,p1=club.p,p2=club.s,scale=1){
   let t=CP_ACTIVE_THEME();
   if(!t||fallback!==club.badge)return CP_THEME_BASE_BADGE(p,fallback,img,size,p1,p2,scale);
@@ -142,7 +139,7 @@ buildHeaderMedium=function(w,d,img){
   h.addSpacer();
   let r=h.addStack();r.layoutVertically();r.centerAlignContent();
   let rk=heavy(r,d.rank!=null?`${d.rank}位`:'–',12.5,CP_COMMON_SHELL.text);rk.rightAlignText();
-  let pt=semibold(r,`勝点 ${d.points??'–'}`,7.2,.92,t.accentSoft);pt.rightAlignText()
+  let pt=semibold(r,`勝点 ${d.points??'–'}`,7.2,.92,t.headerAccent||t.accentSoft||CP_COMMON_SHELL.muted);pt.rightAlignText()
 };
 
 buildHeaderSmall=function(w,d,img){
@@ -156,7 +153,6 @@ buildHeaderSmall=function(w,d,img){
   let rk=heavy(h,d.rank!=null?`${d.rank}位`:'–',9.5,CP_COMMON_SHELL.text);rk.rightAlignText()
 };
 
-// Footer stays neutral; club identity is only a tiny accent cue.
 buildFooterMedium=function(w,d){
   let t=CP_ACTIVE_THEME();
   if(!t)return CP_THEME_BASE_FOOTER_MEDIUM(w,d);
@@ -180,7 +176,6 @@ buildFooterSmall=function(w,d){
   f.addSpacer()
 };
 
-// Shared themed clubs keep canonical composition with a slightly brighter neutral top edge.
 buildMedium=function(d,imgs){
   let t=CP_ACTIVE_THEME();
   if(!t)return CP_THEME_BASE_BUILD_MEDIUM(d,imgs);
