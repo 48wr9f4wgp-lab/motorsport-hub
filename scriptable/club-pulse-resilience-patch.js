@@ -1,12 +1,14 @@
-// Club Pulse resilience v4.
-// Forced outage QA follows the same normalized cache contract as a real provider failure
-// and prevents secondary next/live data providers from leaking fresh network data into the test.
+// Club Pulse resilience v5.
+// Forced outage QA follows the same normalized cache contract as a real provider failure,
+// blocks secondary network providers, and prevents stale pre-match cache from being presented
+// as a trustworthy upcoming fixture after kickoff has already arrived.
 
 const CP_RES_BASE_LOAD_DATA=loadData,
       CP_RES_BASE_NEXT_OVERLAY=applyNextOverlay,
       CP_RES_BASE_LIVE_OVERLAY=applyLiveOverlay,
       CP_RES_BASE_ERROR_WIDGET=errorWidget,
-      CP_RES_BASE_REFRESH_DELAY=refreshDelay;
+      CP_RES_BASE_REFRESH_DELAY=refreshDelay,
+      CP_RES_BASE_STATUS_TITLE=statusTitle;
 
 function cpResForcedOutage(){return qa==='offline'||qa==='nocache'}
 
@@ -47,6 +49,18 @@ applyLiveOverlay=async function(d){
 refreshDelay=function(d){
   if(d?.stale)return 5*60*1000;
   return CP_RES_BASE_REFRESH_DELAY(d)
+};
+
+function cpResKickoffReached(d,m){
+  if(!d?.stale||d.mode!=='NEXT'||!m?.utcDate)return false;
+  let t=new Date(m.utcDate).getTime();
+  return Number.isFinite(t)&&Date.now()>=t
+}
+
+// Do not call a stale fixture "next" once its scheduled kickoff is in the past.
+statusTitle=function(d,m){
+  if(cpResKickoffReached(d,m))return'更新待ち';
+  return CP_RES_BASE_STATUS_TITLE(d,m)
 };
 
 function cpResTheme(){
