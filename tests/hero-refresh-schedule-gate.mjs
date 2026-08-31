@@ -10,7 +10,7 @@ const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const expected=['F1','WEC','WRC','SUPERGT','MOTOGP','FDJ','D1GP','SUPERFORMULA','INDYCAR','NASCAR','GTWCEU','DAKAR'];
 const src=JSON.parse(fs.readFileSync(path.join(root,'hero-refresh-sources.json'),'utf8'));
 assert.equal(src.schemaVersion,1);
-assert.equal(src.cadence,'WEEKLY');
+assert.equal(src.cadence,'ACTIVE_6H');
 assert.equal(src.publicationPolicy,'CI_GATED_LIVE_HERO_CHANNEL');
 assert.deepEqual(Object.keys(src.categories),expected);
 assert.deepEqual(Object.keys(src.relevance),expected);
@@ -32,7 +32,7 @@ for(const id of expected){
   execFileSync(process.execPath,[path.join(root,'tools/build-hero-refresh-config.mjs'),`--category=${id}`,`--output=${tmp}`],{cwd:root,stdio:'pipe'});
   const cfg=JSON.parse(fs.readFileSync(tmp,'utf8'));
   assert.equal(cfg.category,id);
-  assert.equal(cfg.cadence,'WEEKLY');
+  assert.equal(cfg.cadence,'ACTIVE_6H');
   assert.equal(cfg.publicationPolicy,'CI_GATED_LIVE_HERO_CHANNEL');
   assert(cfg.searchQueries.every(q=>!q.includes('{year}')&&!q.includes('{prevYear}')));
   assert.deepEqual(cfg.relevance.requiredAny,rel.requiredAny);
@@ -62,7 +62,7 @@ assert.equal(hardResponse.status,404,'non-transient 4xx must be returned without
 assert.equal(hardAttempts,1,'non-transient 4xx must not retry');
 
 const workflow=fs.readFileSync(path.join(root,'.github/workflows/hero-discovery.yml'),'utf8');
-assert(/schedule:\s*[\s\S]*cron:/.test(workflow),'scheduled Hero refresh cron missing');
+assert(workflow.includes("cron: '17 */6 * * *'"),'active Hero refresh must run every six hours');
 assert(workflow.includes('workflow_dispatch:'),'manual refresh entry missing');
 assert(workflow.includes('cancel-in-progress: false'),'Hero publication must not cancel an in-flight publish');
 for(const id of expected)assert(workflow.includes(id),`workflow matrix missing ${id}`);
@@ -76,8 +76,14 @@ assert(workflow.includes('node --import ./tools/install-fetch-retry-hook.mjs too
 assert(workflow.includes('build-hero-channel.mjs'));
 assert(workflow.includes('validate-hero-channel-publish.mjs'));
 assert(/permissions:\s*\n\s*contents:\s*read/.test(workflow),'workflow default permission must remain contents: read');
-assert(workflow.includes('publish-live-channel:'),'publish job missing');
-const publish=workflow.slice(workflow.indexOf('  publish-live-channel:'));
+const buildStart=workflow.indexOf('  build-promotion-candidate:');
+const publishStart=workflow.indexOf('  publish-live-channel:');
+assert(buildStart>=0&&publishStart>buildStart,'promotion/publish jobs missing');
+const build=workflow.slice(buildStart,publishStart);
+assert(build.includes('if: ${{ always() && !cancelled() }}'),'promotion candidate must run after partial category failure');
+assert(!build.includes("needs.discover-and-validate.result == 'success'"),'promotion must not require all 12 category jobs to succeed');
+assert(build.includes('Download available category refresh evidence'),'promotion must consume available per-category evidence');
+const publish=workflow.slice(publishStart);
 assert(/permissions:\s*\n\s*contents:\s*write/.test(publish),'publish job alone must request contents: write');
 assert(publish.includes("github.event_name == 'schedule'")&&publish.includes("github.event_name == 'workflow_dispatch'"),'publish job must be restricted to schedule/manual events');
 assert(!publish.includes("github.event_name == 'push'"),'push event must never publish live Hero assets');
@@ -85,4 +91,5 @@ assert(publish.includes('ref: hero-live'),'publish job must checkout hero-live')
 assert(publish.includes('push origin HEAD:hero-live'),'publish job must update only hero-live');
 assert(publish.includes('promotion-report.json'),'publish job must inspect promoted categories');
 assert(publish.includes('diff --cached --quiet'),'publish job must no-op when channel is unchanged');
-console.log('Motorsport Hub hero refresh schedule gate: PASS');
+assert(publish.includes('publish gated active refresh'),'live commits must identify active refresh publication');
+console.log('Motorsport Hub hero active refresh gate: PASS');
