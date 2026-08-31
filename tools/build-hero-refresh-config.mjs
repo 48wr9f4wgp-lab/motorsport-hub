@@ -27,7 +27,7 @@ const config={
   minSourceLongEdge:Number(src.minSourceLongEdge)||2048,
   allowedLicenses:Array.isArray(src.allowedLicenses)?src.allowedLicenses:[],
   maxCandidates:Number(src.maxCandidatesPerCategory)||4,
-  cadence:src.cadence||'WEEKLY',
+  cadence:src.cadence||'ACTIVE_6H',
   publicationPolicy:src.publicationPolicy||'DISCOVERY_AND_VALIDATION_ONLY_NO_RUNTIME_MUTATION',
   relevance:{
     requiredAny:relevance.requiredAny.map(String),
