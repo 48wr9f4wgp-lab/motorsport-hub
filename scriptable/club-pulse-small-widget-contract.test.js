@@ -20,6 +20,7 @@ check('Man U retains dedicated small renderer',manutd.includes('buildMatchSmall=
 check('small metadata uses canonical typography',design.includes('metaSmall:{font:9.0,minScale:.90}')&&premium.includes('cpMetaText(meta,m.kickoff,fg,true)')&&identity.includes('cpMetaText(meta,m.kickoff'));
 check('small NEXT LIVE POST branches remain present',premium.includes("d.mode==='LIVE'")&&premium.includes("d.mode==='POST'")&&premium.includes("d.mode==='NEXT'"));
 check('small stale header has explicit saved-data badge',resilience.includes("text(s,'保存',6.2"));
+check('small shell header uses headerAccent or canonical shell text',resilience.includes('t.headerAccent||shellText')&&resilience.includes("CP_DESIGN_TOKENS?.shell?.text"));
 check('small stale post-kickoff state is guarded',policy.includes('CP_DP_BASE_BUILD_MATCH_SMALL=buildMatchSmall')&&policy.includes("mode:'STALE_NEXT'")&&policy.includes("return'更新待ち'"));
 check('small waiting state keeps neutral VS and kickoff metadata',policy.includes("return'VS'")&&policy.includes('`${m.kickoff} ・ ${m.venue}`'));
 if(failed){console.error(`\nSmall widget contract QA FAILED: ${failed}`);process.exit(1)}
