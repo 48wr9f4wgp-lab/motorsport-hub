@@ -1,11 +1,16 @@
-// Club Pulse data policy v1.
+// Club Pulse data policy v2.
 // Adaptive refresh/cache policy for multi-club home-screen operation.
 // Goals: keep LIVE/near-kickoff data responsive, reduce far-fixture provider traffic,
-// share league standings snapshots, and avoid API-Football negative-cache churn.
+// share league standings snapshots, avoid API-Football negative-cache churn,
+// and keep stale state semantics consistent in both medium and small widgets.
 
 const CP_DP_BASE_LOAD_DATA=loadData,
       CP_DP_BASE_NEXT_OVERLAY=applyNextOverlay,
-      CP_DP_BASE_REFRESH_DELAY=refreshDelay;
+      CP_DP_BASE_REFRESH_DELAY=refreshDelay,
+      CP_DP_BASE_BUILD_MATCH_SMALL=buildMatchSmall,
+      CP_DP_BASE_STATUS_TITLE=statusTitle,
+      CP_DP_BASE_CENTER_MAIN=centerMainText,
+      CP_DP_BASE_META_LINE=metaLine;
 
 const CP_DP_STANDINGS_TTL=30*60*1000;
 
@@ -128,4 +133,33 @@ applyNextOverlay=async function(d){
 refreshDelay=function(d){
   if(d?.stale)return 5*60*1000;
   return cpDpMatchTtl(d)
+};
+
+function cpDpSmallWaiting(d){
+  if(!d?.stale||d.mode!=='NEXT'||!d.nextMatch?.utcDate)return false;
+  const t=new Date(d.nextMatch.utcDate).getTime();
+  return Number.isFinite(t)&&Date.now()>=t
+}
+
+// Existing small renderers intentionally abbreviate NEXT to 「次戦」.
+// When cached data has crossed kickoff, temporarily use a synthetic mode so they
+// fall through to shared statusTitle while still selecting nextMatch.
+buildMatchSmall=function(w,d,imgs){
+  if(cpDpSmallWaiting(d))return CP_DP_BASE_BUILD_MATCH_SMALL(w,{...d,mode:'STALE_NEXT',cpSmallWaiting:true},imgs);
+  return CP_DP_BASE_BUILD_MATCH_SMALL(w,d,imgs)
+};
+
+statusTitle=function(d,m){
+  if(d?.cpSmallWaiting)return'更新待ち';
+  return CP_DP_BASE_STATUS_TITLE(d,m)
+};
+
+centerMainText=function(d,m){
+  if(d?.cpSmallWaiting)return'VS';
+  return CP_DP_BASE_CENTER_MAIN(d,m)
+};
+
+metaLine=function(d,m){
+  if(d?.cpSmallWaiting)return`${m.kickoff} ・ ${m.venue}`;
+  return CP_DP_BASE_META_LINE(d,m)
 };
