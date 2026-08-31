@@ -1,6 +1,6 @@
-// Club Pulse canonical design system v6.
-// Visual source of truth for the eleven-club family. Existing seven-club visual definitions stay frozen.
-// Arsenal and Liverpool receive a second-pass identity separation while retaining shared geometry.
+// Club Pulse canonical design system v7.
+// Visual source of truth for the eleven-club family. Existing club surfaces remain frozen.
+// v7 adds one shared metadata typography contract and separates Dortmund shell-header contrast from its yellow-card text.
 
 const CP_DESIGN_TOKENS={
   shell:{
@@ -15,6 +15,10 @@ const CP_DESIGN_TOKENS={
   pill:{
     medium:{v:2.5,h:7,font:7.2,r:9,logoBox:24,logoSize:19,gap:5,sideV:6.2},
     small:{v:2.0,h:5,font:7.3,r:9,logoBox:19,logoSize:15,gap:4,sideV:4.8}
+  },
+  typography:{
+    metaMedium:{font:9.2,minScale:.88},
+    metaSmall:{font:9.0,minScale:.90}
   }
 };
 
@@ -73,7 +77,6 @@ const CP_THEME_DEFINITIONS={
     key:'arsenal',tone:'arsenal-red-ivory-navy',
     text:'#FFF9F4',muted:'#E7DDE0',accent:'#F2E7D5',accentSoft:'#FFF6E8',
     surface:'#090A0E',panel:'#101827',glow:'#A80F2A',panelDeep:'#080D17',
-    // Navy is visible in the field itself; ivory stays on fine edges so white copy remains legible.
     cardSurface:'#152A4A',cardPanel:'#A80E2C',cardGlow:'#D7193F',
     border:'#243B5A',cardBorder:'#F0E5D2',sideBorder:'#F2E7D5'
   },
@@ -81,7 +84,6 @@ const CP_THEME_DEFINITIONS={
     key:'liverpool',tone:'deep-scarlet-teal',
     text:'#FFF8F6',muted:'#E4D9DA',accent:'#00B2A9',accentSoft:'#A7E5DC',
     surface:'#090708',panel:'#180B10',glow:'#650A20',panelDeep:'#080D17',
-    // Keep Liverpool materially darker than Man U / Arsenal; teal is a premium accent, not a second field color.
     cardSurface:'#430713',cardPanel:'#740A21',cardGlow:'#A30B2B',
     border:'#542333',cardBorder:'#00A79F',sideBorder:'#00B2A9'
   },
@@ -94,7 +96,7 @@ const CP_THEME_DEFINITIONS={
   },
   4:{
     key:'dortmund',tone:'signal-yellow-black',
-    text:'#121212',muted:'#343434',accent:'#111111',accentSoft:'#2A2A2A',
+    text:'#121212',muted:'#343434',accent:'#111111',accentSoft:'#2A2A2A',headerAccent:'#E6EAF0',
     surface:'#080808',panel:'#111111',glow:'#D8BD00',panelDeep:'#080D17',
     cardSurface:'#C6A900',cardPanel:'#E3C500',cardGlow:'#FDE100',
     cardText:'#111111',cardMuted:'#323232',cardAccent:'#111111',
@@ -110,3 +112,13 @@ for(const [id,definition] of Object.entries(CP_THEME_DEFINITIONS)){
 
 function cpDesignTheme(teamId=club?.team){return CP_THEME_DEFINITIONS[teamId]||null}
 function cpDesignToken(group,key,fallback=null){return CP_DESIGN_TOKENS?.[group]?.[key]??fallback}
+function cpMetaText(parent,value,color,small=false){
+  const q=small?CP_DESIGN_TOKENS.typography.metaSmall:CP_DESIGN_TOKENS.typography.metaMedium;
+  const t=parent.addText(String(value||''));
+  t.font=Font.semiboldSystemFont(q.font);
+  t.textColor=C(color||CP_DESIGN_TOKENS.shell.text);
+  t.lineLimit=1;
+  t.minimumScaleFactor=q.minScale;
+  t.centerAlignText();
+  return t
+}
