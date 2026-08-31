@@ -1,10 +1,8 @@
-// Club Pulse readability guard v4.
+// Club Pulse readability guard v5.
 // Seven-club presentation contract: stable Japanese display names, shared token-driven pill dimensions,
-// visible competition identity, and selective low-contrast crest rescue without global decoration.
+// visible competition identity, and no opponent-specific crest styling.
 
 const CP_STANDARD_TEAM_IDS=new Set([66,81,86,5,524,98,65]);
-const CP_LOW_CONTRAST_CRESTS=new Set(['JUV']);
-const CP_RG_BASE_BADGE=badge;
 const CP_RG_BASE_RENDER_TEAM=renderTeamBlock;
 const CP_RG_BASE_SMALL_TEAM_NAME=smallTeamName;
 const CP_RG_BASE_REAL_TEAM=typeof cpRealTeamBlock==='function'?cpRealTeamBlock:null;
@@ -44,30 +42,6 @@ function cpDisplayTeamName(name,small=false){
   const max=small?7:10;
   return n.length>max?n.slice(0,max-1)+'…':n
 }
-
-// Selective crest rescue: a faint neutral halo only for genuinely dark marks.
-// No opaque white/gray tile and no global circular plate.
-badge=function(p,fallback,img,size=28,p1=club.p,p2=club.s,scale=1){
-  if(!cpRgActive()||!img||!CP_LOW_CONTRAST_CRESTS.has(String(fallback||'').toUpperCase())){
-    return CP_RG_BASE_BADGE(p,fallback,img,size,p1,p2,scale)
-  }
-  let o=p.addStack();
-  o.size=new Size(size+2,size+2);
-  o.cornerRadius=Math.max(8,Math.round(size*.20));
-  o.backgroundColor=C('#F3F5F8',.10);
-  o.borderWidth=.4;
-  o.borderColor=C('#FFFFFF',.10);
-  o.centerAlignContent();
-  let i=o.addStack();
-  i.size=new Size(size,size);
-  i.cornerRadius=Math.max(7,Math.round(size*.18));
-  i.backgroundColor=C('#F6F7F9',.08);
-  i.centerAlignContent();
-  let im=i.addImage(img),z=Math.round((size-2)*Math.min(scale||1,1));
-  im.imageSize=new Size(z,z);
-  im.centerAlignImage();
-  return o
-};
 
 function cpNormalizeOpponentOpt(opt,small=false){
   if(!opt||opt.fallback===club.badge)return opt;
