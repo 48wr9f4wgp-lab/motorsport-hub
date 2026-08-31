@@ -1,23 +1,23 @@
-// Club Pulse Small Presentation System v6.
+// Club Pulse Small Presentation System v7.
 // Canonical small-widget renderer for all supported clubs.
-// v6 promotes team names above match metadata in the visual hierarchy while preserving
-// one-line clipping safety, semantic aliases, theme-aware card text, and shared geometry.
+// v7 keeps short names prominent while length-aware sizing preserves full 5–6 character
+// club labels whenever practical, with semantic aliases reserved for genuinely long names.
 
 const CP_SP_TYPO={
   headerName:9.0,
   headerRank:10.0,
   state:8.3,
-  team:9.6,
-  teamMinScale:.86,
+  team:9.8,
+  teamMinScale:.82,
   scoreNext:14.0,
   scoreLive:15.0,
   scorePost:15.0,
-  scoreMinScale:.78,
-  meta:8.8,
+  scoreMinScale:.76,
+  meta:8.7,
   metaMinScale:.90,
   footer:7.6,
-  teamWidth:52,
-  scoreWidth:36,
+  teamWidth:54,
+  scoreWidth:32,
   logo:40
 };
 
@@ -56,10 +56,17 @@ function cpSpCanonical(name){
 function cpSpTeamLabel(name,fallback,isClub=false){
   let n=isClub?(club?.jp||club?.short||''):cpSpCanonical(name);
   if(CP_SP_SMALL_ALIASES[n])return CP_SP_SMALL_ALIASES[n];
-  if(n.length<=6)return n;
+  if(Array.from(n).length<=6)return n;
   const fb=String(fallback||'').trim();
   if(/^[A-Z0-9.-]{2,5}$/i.test(fb))return fb;
   return n
+}
+function cpSpTeamFont(label){
+  const n=Array.from(String(label||'')).length;
+  if(n<=3)return CP_SP_TYPO.team;
+  if(n===4)return 9.4;
+  if(n===5)return 8.9;
+  return 8.4
 }
 function cpSpGenericTeamBlock(parent,opt,label){
   const s=parent.addStack();
@@ -70,7 +77,7 @@ function cpSpGenericTeamBlock(parent,opt,label){
   logo.addSpacer();
   s.addSpacer(opt.nameGap??2);
   const name=s.addStack();name.layoutHorizontally();name.addSpacer();
-  const nm=heavy(name,label,opt.nameSize||CP_SP_TYPO.team,cpSpCardColor());
+  const nm=heavy(name,label,opt.nameSize||cpSpTeamFont(label),cpSpCardColor());
   nm.centerAlignText();nm.lineLimit=1;nm.minimumScaleFactor=CP_SP_TYPO.teamMinScale;
   name.addSpacer();
   return s
@@ -80,7 +87,7 @@ function cpSpTeamBlock(parent,opt,isClub=false){
     ...opt,
     name:label,
     logoSize:CP_SP_TYPO.logo,
-    nameSize:CP_SP_TYPO.team,
+    nameSize:cpSpTeamFont(label),
     nameGap:2,
     width:CP_SP_TYPO.teamWidth
   };
@@ -153,11 +160,11 @@ buildMatchSmall=function(w,d,imgs){
   const outer=c.addStack();outer.layoutHorizontally();outer.centerAlignContent();outer.addSpacer();
   const row=outer.addStack();row.layoutHorizontally();row.centerAlignContent();
   cpSpTeamBlock(row,{img:imgs.club,name:club.jp,fallback:club.badge,p1:club.p,p2:club.s,scale:CREST_SCALE[club.team]||.91},true);
-  row.addSpacer(2);
+  row.addSpacer(1);
   const sb=row.addStack();sb.size=new Size(CP_SP_TYPO.scoreWidth,22);sb.layoutHorizontally();sb.centerAlignContent();sb.addSpacer();
   const scoreSize=view.mode==='POST'?CP_SP_TYPO.scorePost:view.mode==='LIVE'?CP_SP_TYPO.scoreLive:CP_SP_TYPO.scoreNext;
   const sc=heavy(sb,cpSpScoreValue(view,m),scoreSize,fg);sc.minimumScaleFactor=CP_SP_TYPO.scoreMinScale;sc.centerAlignText();sb.addSpacer();
-  row.addSpacer(2);
+  row.addSpacer(1);
   cpSpTeamBlock(row,{img:imgs.opp,name:m.opponentName,fallback:m.opponentShort,p1:'#4A5568',p2:'#20242D',scale:CREST_SCALE[m.opponentId]||CREST_SCALE.opponent_default||.90},false);
   outer.addSpacer();
 
