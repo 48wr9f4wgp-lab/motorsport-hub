@@ -1,7 +1,7 @@
-// Club Pulse Small Presentation System v2.
+// Club Pulse Small Presentation System v3.
 // Canonical small-widget renderer for all supported clubs.
 // Goal: identical typography hierarchy across clubs while preserving each club's color/crest identity.
-// v2 reserves enough center width for VS / live / final scores without clipping.
+// v3 widens the center score lane for POST/LIVE numeric scores and keeps a readable scale floor.
 
 const CP_SP_TYPO={
   headerName:9.0,
@@ -12,11 +12,12 @@ const CP_SP_TYPO={
   scoreNext:14.0,
   scoreLive:15.5,
   scorePost:16.0,
+  scoreMinScale:.78,
   meta:9.0,
   metaMinScale:.90,
   footer:7.6,
-  teamWidth:52,
-  scoreWidth:34,
+  teamWidth:49,
+  scoreWidth:40,
   logo:40
 };
 
@@ -138,7 +139,7 @@ buildMatchSmall=function(w,d,imgs){
   row.addSpacer(3);
   const sb=row.addStack();sb.size=new Size(CP_SP_TYPO.scoreWidth,22);sb.layoutHorizontally();sb.centerAlignContent();sb.addSpacer();
   const scoreSize=view.mode==='POST'?CP_SP_TYPO.scorePost:view.mode==='LIVE'?CP_SP_TYPO.scoreLive:CP_SP_TYPO.scoreNext;
-  const sc=heavy(sb,centerMainText(view,m),scoreSize,fg);sc.minimumScaleFactor=.90;sc.centerAlignText();sb.addSpacer();
+  const sc=heavy(sb,centerMainText(view,m),scoreSize,fg);sc.minimumScaleFactor=CP_SP_TYPO.scoreMinScale;sc.centerAlignText();sb.addSpacer();
   row.addSpacer(3);
   cpSpTeamBlock(row,{img:imgs.opp,name:m.opponentName,fallback:m.opponentShort,p1:'#4A5568',p2:'#20242D',scale:CREST_SCALE[m.opponentId]||CREST_SCALE.opponent_default||.90},false);
   outer.addSpacer();
