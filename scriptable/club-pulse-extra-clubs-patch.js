@@ -1,5 +1,5 @@
-// Club Pulse extra club registry v2.
-// Injected before core parameter resolution. Adds Bayern, PSG, AC Milan, and Manchester City without touching the frozen core.
+// Club Pulse extra club registry v3.
+// Injected before core parameter resolution. Adds the expanded eight-club batch while leaving the frozen core untouched.
 
 CLUBS.bayern={
   id:'bayern',team:5,comp:'BL1',
@@ -29,14 +29,46 @@ CLUBS.mancity={
   venue:'エティハド・スタジアム',liveSearch:'Manchester City'
 };
 
+CLUBS.arsenal={
+  id:'arsenal',team:57,comp:'PL',
+  name:'アーセナル',short:'ARS',jp:'アーセナル',badge:'ARS',league:'プレミアリーグ',
+  p:'#EF0107',s:'#172B4D',a:'#F2E7D5',
+  venue:'エミレーツ・スタジアム',liveSearch:'Arsenal'
+};
+
+CLUBS.liverpool={
+  id:'liverpool',team:64,comp:'PL',
+  name:'リヴァプール',short:'LIV',jp:'リヴァプール',badge:'LIV',league:'プレミアリーグ',
+  p:'#C8102E',s:'#6A0D1D',a:'#D9F2EE',
+  venue:'アンフィールド',liveSearch:'Liverpool'
+};
+
+CLUBS.inter={
+  id:'inter',team:108,comp:'SA',
+  name:'インテル',short:'INT',jp:'インテル',badge:'INT',league:'セリエA',
+  p:'#0057B8',s:'#050A14',a:'#7FA7E6',
+  venue:'サン・シーロ',liveSearch:'Internazionale'
+};
+
+CLUBS.dortmund={
+  id:'dortmund',team:4,comp:'BL1',
+  name:'ボルシア・ドルトムント',short:'BVB',jp:'ドルトムント',badge:'BVB',league:'ブンデスリーガ',
+  p:'#FDE100',s:'#111111',a:'#FDE100',
+  venue:'ジグナル・イドゥナ・パルク',liveSearch:'Borussia Dortmund'
+};
+
 Object.assign(ALIASES,{
   bayern:'bayern',fcbayern:'bayern','bayern-munich':'bayern',munich:'bayern',
   psg:'psg',paris:'psg','paris-saint-germain':'psg',
   milan:'milan',acmilan:'milan','ac-milan':'milan',
-  city:'mancity',mancity:'mancity',mci:'mancity','man-city':'mancity'
+  city:'mancity',mancity:'mancity',mci:'mancity','man-city':'mancity',
+  arsenal:'arsenal',ars:'arsenal','the-arsenal':'arsenal',
+  liverpool:'liverpool',liv:'liverpool',lfc:'liverpool',
+  inter:'inter',internazionale:'inter','inter-milan':'inter',int:'inter',
+  dortmund:'dortmund',bvb:'dortmund','borussia-dortmund':'dortmund'
 });
 
-Object.assign(CREST_SCALE,{5:1.02,524:1.00,98:1.00,65:1.02});
+Object.assign(CREST_SCALE,{5:1.02,524:1.00,98:1.00,65:1.02,57:1.00,64:1.00,108:1.00,4:1.01});
 Object.assign(COMP,{BL1:'ブンデスリーガ',FL1:'リーグ・アン',SA:'セリエA'});
 
 Object.assign(JP,{
@@ -44,6 +76,10 @@ Object.assign(JP,{
   'Paris Saint-Germain FC':'パリ・サンジェルマン','Paris Saint-Germain':'パリ・サンジェルマン','Paris SG':'パリ・サンジェルマン',
   'AC Milan':'ACミラン','Milan':'ACミラン',
   'Manchester City FC':'マンチェスター・シティ','Manchester City':'マンチェスター・シティ',
+  'Arsenal FC':'アーセナル','Arsenal':'アーセナル',
+  'Liverpool FC':'リヴァプール','Liverpool':'リヴァプール',
+  'FC Internazionale Milano':'インテル','Internazionale':'インテル','Inter Milan':'インテル','Inter':'インテル',
+  'Borussia Dortmund':'ドルトムント','Dortmund':'ドルトムント',
   'AS Monaco FC':'モナコ','AS Monaco':'モナコ','Monaco':'モナコ',
   'Coventry City FC':'コヴェントリー','Coventry City':'コヴェントリー',
   'FC Schalke 04':'シャルケ','Schalke 04':'シャルケ','Schalke':'シャルケ',
@@ -54,5 +90,8 @@ Object.assign(VEN,{
   'Allianz Arena':'アリアンツ・アレーナ',
   'Parc des Princes':'パルク・デ・プランス',
   'Stadio Giuseppe Meazza':'サン・シーロ','San Siro':'サン・シーロ',
-  'Etihad Stadium':'エティハド・スタジアム'
+  'Etihad Stadium':'エティハド・スタジアム',
+  'Emirates Stadium':'エミレーツ・スタジアム',
+  'Anfield':'アンフィールド',
+  'Signal Iduna Park':'ジグナル・イドゥナ・パルク','SIGNAL IDUNA PARK':'ジグナル・イドゥナ・パルク'
 });
