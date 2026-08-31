@@ -1,13 +1,37 @@
-const CP_RES_BASE_LOAD_DATA=loadData,CP_RES_BASE_ERROR_WIDGET=errorWidget;
+// Club Pulse resilience v3.
+// Forced outage QA follows the same cache-normalization contract as a real network failure.
+
+const CP_RES_BASE_LOAD_DATA=loadData,
+      CP_RES_BASE_ERROR_WIDGET=errorWidget,
+      CP_RES_BASE_REFRESH_DELAY=refreshDelay;
+
+function cpResNormalizeCached(cached){
+  if(!cached)return cached;
+  if(typeof cpCmNormalizeData!=='function')return cached;
+  let normalized=cpCmNormalizeData(cached);
+  try{
+    if(JSON.stringify(normalized)!==JSON.stringify(cached)&&typeof cpCmPersist==='function')cpCmPersist(normalized)
+  }catch{}
+  return normalized
+}
 
 loadData=async function(t){
   if(qa==='offline'||qa==='nocache'){
     const cached=readJSON(cachePath());
     const forced=new Error('QA forced network outage');
-    if(qa==='offline'&&cached)return{...cached,stale:true,resilience:'cache'};
+    if(qa==='offline'&&cached){
+      const normalized=cpResNormalizeCached(cached);
+      return{...normalized,stale:true,resilience:'cache'}
+    }
     throw forced;
   }
   return CP_RES_BASE_LOAD_DATA(t)
+};
+
+// Stale data should retry sooner than the ordinary 15-minute far-fixture cadence.
+refreshDelay=function(d){
+  if(d?.stale)return 5*60*1000;
+  return CP_RES_BASE_REFRESH_DELAY(d)
 };
 
 function cpResTheme(){
