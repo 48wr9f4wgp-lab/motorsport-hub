@@ -52,9 +52,9 @@ It is produced by `tools/generate-release-package.mjs` and uploaded with `releas
 ### Loader policy
 - `scriptable-loader-v6.js` — **the only production distribution loader** when generated from the exact approved release SHA.
 - `scriptable-loader-hardening-v5.js` — development/device-test utility only.
-- `scriptable-loader.js` — legacy v4 compatibility only.
-- `scriptable-loader-v5.js` — legacy transactional compatibility only.
-- `scriptable-loader-v6-qa.js` — retired historical QA snapshot; must not be distributed.
+- `scriptable-loader.js` — **legacy v4 compatibility loader**; not a production distribution path.
+- `scriptable-loader-v5.js` — **legacy transactional compatibility loader**; not a production distribution path.
+- `scriptable-loader-v6-qa.js` — **retired historical QA snapshot**; it must not be distributed.
 
 Do not distribute hardening, QA, legacy, or arbitrary static v6 copies to production users.
 
