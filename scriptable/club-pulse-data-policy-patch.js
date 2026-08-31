@@ -1,8 +1,8 @@
-// Club Pulse data policy v4.
+// Club Pulse data policy v5.
 // Adaptive refresh/cache policy for multi-club home-screen operation.
 // Goals: keep LIVE/near-kickoff data responsive, reduce provider traffic,
 // share league standings and global LIVE snapshots, reserve API-Football quota,
-// and keep stale semantics consistent across widget sizes.
+// and keep stale semantics honest across time and widget sizes.
 
 const CP_DP_BASE_LOAD_DATA=loadData,
       CP_DP_BASE_NEXT_OVERLAY=applyNextOverlay,
@@ -11,12 +11,14 @@ const CP_DP_BASE_LOAD_DATA=loadData,
       CP_DP_BASE_BUILD_MATCH_SMALL=buildMatchSmall,
       CP_DP_BASE_STATUS_TITLE=statusTitle,
       CP_DP_BASE_CENTER_MAIN=centerMainText,
-      CP_DP_BASE_META_LINE=metaLine;
+      CP_DP_BASE_META_LINE=metaLine,
+      CP_DP_BASE_UPDATED=updated;
 
 const CP_DP_STANDINGS_TTL=30*60*1000;
 const CP_DP_NEXT_OVERLAY_TTL=12*60*60*1000;
 const CP_DP_NEXT_QUOTA_CEILING=40;
 const CP_DP_GLOBAL_LIVE_TTL=3*60*1000;
+const CP_DP_OLD_CACHE_AGE=24*60*60*1000;
 
 function cpDpForcedOutage(){
   return typeof cpResForcedOutage==='function'&&cpResForcedOutage()
@@ -83,7 +85,6 @@ async function cpDpFetchMatches(t){
 function cpDpSanitizeStale(d){
   if(!d?.stale)return d;
   // A cached LIVE score must not look live indefinitely after a provider outage.
-  // Four hours after scheduled kickoff, degrade to a neutral update-waiting fixture.
   if(d.mode==='LIVE'&&d.liveMatch?.utcDate){
     const kickoff=new Date(d.liveMatch.utcDate).getTime();
     if(Number.isFinite(kickoff)&&Date.now()>=kickoff+4*60*60*1000){
@@ -91,17 +92,23 @@ function cpDpSanitizeStale(d){
       return{...d,mode:'NEXT',nextMatch:m,liveMatch:null,liveExpired:true}
     }
   }
+  // POST is intentionally temporary. Once its normal window has elapsed, a cached
+  // result should give way to the already-cached next fixture instead of looking current forever.
+  if(d.mode==='POST'&&d.recentResult?.utcDate&&d.nextMatch){
+    const resultKickoff=new Date(d.recentResult.utcDate).getTime();
+    const postWindow=typeof POST==='number'?POST:10*60*60*1000;
+    if(Number.isFinite(resultKickoff)&&Date.now()>=resultKickoff+postWindow){
+      return{...d,mode:'NEXT',postExpired:true}
+    }
+  }
   return d
 }
 
 loadData=async function(t){
-  // Keep the tested forced-outage path owned by Resilience.
   if(cpDpForcedOutage())return cpDpSanitizeStale(await CP_DP_BASE_LOAD_DATA(t));
 
   let cached=cpDpNormalize(readJSON(cachePath()));
   const now=Date.now(),ttl=cpDpMatchTtl(cached);
-
-  // Standings are league-shared and can update independently of a far-away fixture.
   const standingsPromise=cpDpStandings(t);
   if(cached&&Number.isFinite(cached.fetchedAt)&&now-cached.fetchedAt<ttl){
     const sj=await standingsPromise;
@@ -133,12 +140,9 @@ function cpDpQuotaCount(){
 applyNextOverlay=async function(d){
   if(cpDpForcedOutage())return CP_DP_BASE_NEXT_OVERLAY(d);
   const c=readJSON(nextPath());
-  // Supplemental next-fixture discovery is cached for 12h. Across eleven clubs this
-  // caps routine discovery near 22 calls/day instead of ~44 with the old six-hour TTL.
   if(c&&Date.now()-c.fetchedAt<CP_DP_NEXT_OVERLAY_TTL&&Object.prototype.hasOwnProperty.call(c,'match')){
     return c.match?chooseNext(d,c.match):d
   }
-  // Preserve the majority of the core 85-call daily guard for LIVE checks.
   if(cpDpQuotaCount()>=CP_DP_NEXT_QUOTA_CEILING)return{...d,nextProvider:d.nextProvider||'quota-conserve'};
   return CP_DP_BASE_NEXT_OVERLAY(d)
 };
@@ -178,8 +182,6 @@ applyLiveOverlay=async function(d){
   const token=getLiveToken();
   if(!token||!shouldCheckLive(d))return{...d,liveProvider:token?'ready':'unconfigured'};
   try{
-    // One shared /fixtures?live=all snapshot serves every Club Pulse widget on-device.
-    // API-Football documents this endpoint for retrieving all fixtures currently in play.
     const rows=await cpDpGlobalLiveRows(token),hit=await cpDpFindLive(rows,token);
     if(!hit?.fixture)return{...d,liveProvider:'ready'};
     const m=mapApiFixture(hit.fixture,hit.teamId,true);
@@ -194,15 +196,19 @@ refreshDelay=function(d){
   return cpDpMatchTtl(d)
 };
 
+// Avoid ambiguous old cache timestamps such as "16:16更新" when that time was yesterday.
+updated=function(t){
+  const ms=new Date(t).getTime();
+  if(Number.isFinite(ms)&&Date.now()-ms>=CP_DP_OLD_CACHE_AGE)return fmt(new Date(ms),'M/d HH:mm')+'更新';
+  return CP_DP_BASE_UPDATED(t)
+};
+
 function cpDpSmallWaiting(d){
   if(!d?.stale||d.mode!=='NEXT'||!d.nextMatch?.utcDate)return false;
   const t=new Date(d.nextMatch.utcDate).getTime();
   return Number.isFinite(t)&&Date.now()>=t
 }
 
-// Existing small renderers intentionally abbreviate NEXT to 「次戦」.
-// When cached data has crossed kickoff, temporarily use a synthetic mode so they
-// fall through to shared statusTitle while still selecting nextMatch.
 buildMatchSmall=function(w,d,imgs){
   if(cpDpSmallWaiting(d))return CP_DP_BASE_BUILD_MATCH_SMALL(w,{...d,mode:'STALE_NEXT',cpSmallWaiting:true},imgs);
   return CP_DP_BASE_BUILD_MATCH_SMALL(w,d,imgs)
