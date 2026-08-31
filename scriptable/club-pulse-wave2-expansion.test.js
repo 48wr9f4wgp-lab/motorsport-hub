@@ -37,6 +37,7 @@ check('club patch adds no renderer exception',!clubsSrc.includes('buildMedium=')
 const themeContext={
   CP_CLUB_THEME_REGISTRY:{},
   CP_STANDARD_TEAM_IDS:new Set([66,81,86,5,524,98,65,57,64,108,4]),
+  CP_PREMIUM_GENERIC_KEYS:new Set(['bayern','psg','milan','mancity','arsenal','liverpool','inter','dortmund']),
   CP_WAVE2_TEAM_IDS:ids,
   CP_SP_SMALL_ALIASES:{},
   CP_HOME_VENUE_BY_TEAM:{},
@@ -46,6 +47,7 @@ vm.createContext(themeContext);
 vm.runInContext(themesSrc,themeContext);
 check('29 wave2 themes registered',ids.every(id=>themeContext.CP_CLUB_THEME_REGISTRY[id]));
 check('canonical presentation set expands to 40',themeContext.CP_STANDARD_TEAM_IDS.size===40);
+check('all wave2 clubs route through generic premium medium renderer',ids.every(id=>themeContext.CP_PREMIUM_GENERIC_KEYS.has(themeContext.CP_CLUB_THEME_REGISTRY[id].key)));
 check('all wave2 themes have common contract fields',ids.every(id=>{const t=themeContext.CP_CLUB_THEME_REGISTRY[id];return t.key&&t.cardSurface&&t.cardPanel&&t.cardGlow&&t.cardBorder&&t.headerAccent&&t.cardText}));
 check('long Small labels use Japanese aliases',themeContext.CP_SP_SMALL_ALIASES['レアル・ソシエダ']==='ソシエダ'&&themeContext.CP_SP_SMALL_ALIASES['レヴァークーゼン']==='レヴァーク'&&themeContext.CP_SP_SMALL_ALIASES['フィオレンティーナ']==='フィオレン');
 check('2026-27 venue overrides include Everton Betis Atalanta',themeContext.CP_HOME_VENUE_BY_TEAM['エヴァートン']==='ヒル・ディッキンソン・スタジアム'&&themeContext.CP_HOME_VENUE_BY_TEAM['ベティス']==='ラ・カルトゥハ'&&themeContext.CP_HOME_VENUE_BY_TEAM['アタランタ']==='ニュー・バランス・アリーナ');
