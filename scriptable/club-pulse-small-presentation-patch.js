@@ -1,24 +1,23 @@
-// Club Pulse Small Presentation System v5.
+// Club Pulse Small Presentation System v6.
 // Canonical small-widget renderer for all supported clubs.
-// v5 keeps typography uniform, replaces cut-looking labels with semantic aliases,
-// applies the readability scale floor to generic team labels, hardens numeric scores,
-// and makes generic team labels honor each card theme's cardText token.
+// v6 promotes team names above match metadata in the visual hierarchy while preserving
+// one-line clipping safety, semantic aliases, theme-aware card text, and shared geometry.
 
 const CP_SP_TYPO={
   headerName:9.0,
   headerRank:10.0,
   state:8.3,
-  team:8.8,
-  teamMinScale:.84,
+  team:9.6,
+  teamMinScale:.86,
   scoreNext:14.0,
   scoreLive:15.0,
   scorePost:15.0,
   scoreMinScale:.78,
-  meta:9.0,
+  meta:8.8,
   metaMinScale:.90,
   footer:7.6,
-  teamWidth:49,
-  scoreWidth:40,
+  teamWidth:52,
+  scoreWidth:36,
   logo:40
 };
 
@@ -72,7 +71,7 @@ function cpSpGenericTeamBlock(parent,opt,label){
   s.addSpacer(opt.nameGap??2);
   const name=s.addStack();name.layoutHorizontally();name.addSpacer();
   const nm=heavy(name,label,opt.nameSize||CP_SP_TYPO.team,cpSpCardColor());
-  nm.centerAlignText();nm.minimumScaleFactor=CP_SP_TYPO.teamMinScale;
+  nm.centerAlignText();nm.lineLimit=1;nm.minimumScaleFactor=CP_SP_TYPO.teamMinScale;
   name.addSpacer();
   return s
 }
@@ -154,11 +153,11 @@ buildMatchSmall=function(w,d,imgs){
   const outer=c.addStack();outer.layoutHorizontally();outer.centerAlignContent();outer.addSpacer();
   const row=outer.addStack();row.layoutHorizontally();row.centerAlignContent();
   cpSpTeamBlock(row,{img:imgs.club,name:club.jp,fallback:club.badge,p1:club.p,p2:club.s,scale:CREST_SCALE[club.team]||.91},true);
-  row.addSpacer(3);
+  row.addSpacer(2);
   const sb=row.addStack();sb.size=new Size(CP_SP_TYPO.scoreWidth,22);sb.layoutHorizontally();sb.centerAlignContent();sb.addSpacer();
   const scoreSize=view.mode==='POST'?CP_SP_TYPO.scorePost:view.mode==='LIVE'?CP_SP_TYPO.scoreLive:CP_SP_TYPO.scoreNext;
   const sc=heavy(sb,cpSpScoreValue(view,m),scoreSize,fg);sc.minimumScaleFactor=CP_SP_TYPO.scoreMinScale;sc.centerAlignText();sb.addSpacer();
-  row.addSpacer(3);
+  row.addSpacer(2);
   cpSpTeamBlock(row,{img:imgs.opp,name:m.opponentName,fallback:m.opponentShort,p1:'#4A5568',p2:'#20242D',scale:CREST_SCALE[m.opponentId]||CREST_SCALE.opponent_default||.90},false);
   outer.addSpacer();
 
