@@ -4,6 +4,7 @@ import path from 'node:path';
 import assert from 'node:assert/strict';
 import {execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
+import {createRetryingFetch} from '../tools/fetch-with-retry.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const expected=['F1','WEC','WRC','SUPERGT','MOTOGP','FDJ','D1GP','SUPERFORMULA','INDYCAR','NASCAR','GTWCEU','DAKAR'];
@@ -41,6 +42,25 @@ for(const id of expected){
   else assert(fs.existsSync(path.join(root,'hero-pilot-policies',`${id.toLowerCase()}.json`)),`${id}: pilot policy missing`);
 }
 
+let fetchAttempts=0;
+const delays=[];
+const transient=Object.assign(new TypeError('fetch failed'),{cause:Object.assign(new Error('reset'),{code:'ECONNRESET'})});
+const retryFetch=createRetryingFetch(async()=>{
+  fetchAttempts++;
+  if(fetchAttempts<3)throw transient;
+  return {ok:true,status:200,headers:{get:()=>null}};
+},{maxAttempts:4,baseDelayMs:10,maxDelayMs:100,sleepFn:async ms=>{delays.push(ms)},randomFn:()=>0});
+const recovered=await retryFetch('https://example.invalid/image.jpg');
+assert.equal(recovered.ok,true,'transient ECONNRESET must recover when a later fetch succeeds');
+assert.equal(fetchAttempts,3,'transient fetch must be retried');
+assert.deepEqual(delays,[10,20],'retry must use exponential backoff');
+
+let hardAttempts=0;
+const hardFetch=createRetryingFetch(async()=>{hardAttempts++;return {ok:false,status:404,headers:{get:()=>null}}},{sleepFn:async()=>{throw new Error('404 must not sleep')}});
+const hardResponse=await hardFetch('https://example.invalid/missing.jpg');
+assert.equal(hardResponse.status,404,'non-transient 4xx must be returned without retry');
+assert.equal(hardAttempts,1,'non-transient 4xx must not retry');
+
 const workflow=fs.readFileSync(path.join(root,'.github/workflows/hero-discovery.yml'),'utf8');
 assert(/schedule:\s*[\s\S]*cron:/.test(workflow),'scheduled Hero refresh cron missing');
 assert(workflow.includes('workflow_dispatch:'),'manual refresh entry missing');
@@ -50,6 +70,9 @@ assert(workflow.includes('build-hero-refresh-config.mjs'));
 assert(workflow.includes('commons-hero-discovery.mjs'));
 assert(workflow.includes('validate-discovered-hero-images.mjs'));
 assert(workflow.includes('detect-hero-subjects.mjs'));
+assert(workflow.includes('fetch-with-retry.mjs'),'retry helper must trigger Hero workflow validation');
+assert(workflow.includes('install-fetch-retry-hook.mjs'),'retry preload hook must be part of Hero workflow');
+assert(workflow.includes('node --import ./tools/install-fetch-retry-hook.mjs tools/detect-hero-subjects.mjs'),'subject detection must run with transient fetch retry hook');
 assert(workflow.includes('build-hero-channel.mjs'));
 assert(workflow.includes('validate-hero-channel-publish.mjs'));
 assert(/permissions:\s*\n\s*contents:\s*read/.test(workflow),'workflow default permission must remain contents: read');
