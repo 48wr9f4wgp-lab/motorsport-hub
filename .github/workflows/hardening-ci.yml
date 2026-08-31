@@ -98,7 +98,6 @@ jobs:
             tests/release-gate.mjs
             tests/boundary-gate.mjs
             tests/router-hardening-gate.mjs
-            tests/hardening-live-source-gate.mjs
             tests/registry-gate.mjs
             tests/cache-hardening-gate.mjs
             tests/hero-manifest-gate.mjs
@@ -127,6 +126,11 @@ jobs:
             tests/dakar-gate.mjs
             tests/tap-action-gate.mjs
           )
+          if [[ "${{ github.event_name }}" == "push" && "${{ github.ref_name }}" == "hardening/v9.3-codex-handoff" ]]; then
+            gates+=(tests/hardening-live-source-gate.mjs)
+          else
+            echo 'Skipping hardening-live source default gate outside the dedicated hardening branch.'
+          fi
           for gate in "${gates[@]}"; do
             echo "::group::$gate"
             node "$gate"

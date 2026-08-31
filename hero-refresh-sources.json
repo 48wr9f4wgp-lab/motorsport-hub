@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "source": "wikimedia-commons-action-api",
   "apiUrl": "https://commons.wikimedia.org/w/api.php",
-  "cadence": "WEEKLY",
+  "cadence": "ACTIVE_6H",
   "publicationPolicy": "CI_GATED_LIVE_HERO_CHANNEL",
   "resultsPerQuery": 12,
   "thumbWidth": 2048,
