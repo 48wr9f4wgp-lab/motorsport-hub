@@ -1,8 +1,8 @@
-// Club Pulse readability guard v5.
-// Seven-club presentation contract: stable Japanese display names, shared token-driven pill dimensions,
+// Club Pulse readability guard v6.
+// Eleven-club presentation contract: stable Japanese display names, shared token-driven pill dimensions,
 // visible competition identity, and no opponent-specific crest styling.
 
-const CP_STANDARD_TEAM_IDS=new Set([66,81,86,5,524,98,65]);
+const CP_STANDARD_TEAM_IDS=new Set([66,81,86,5,524,98,65,57,64,108,4]);
 const CP_RG_BASE_RENDER_TEAM=renderTeamBlock;
 const CP_RG_BASE_SMALL_TEAM_NAME=smallTeamName;
 const CP_RG_BASE_REAL_TEAM=typeof cpRealTeamBlock==='function'?cpRealTeamBlock:null;
@@ -14,6 +14,8 @@ const CP_TEAM_DISPLAY_NAMES={
   // Premier League / England
   'Manchester United FC':'マンU','Manchester United':'マンU','マンチェスター・ユナイテッド':'マンU',
   'Manchester City FC':'マンC','Manchester City':'マンC','マンチェスター・シティ':'マンC',
+  'Arsenal FC':'アーセナル','Arsenal':'アーセナル','アーセナル':'アーセナル',
+  'Liverpool FC':'リヴァプール','Liverpool':'リヴァプール','リバプール':'リヴァプール','リヴァプール':'リヴァプール',
   'Coventry City FC':'コヴェントリー','Coventry City':'コヴェントリー','コヴェントリー':'コヴェントリー',
   'Ipswich Town FC':'イプスウィッチ','Ipswich Town':'イプスウィッチ','イプスウィッチ':'イプスウィッチ',
   'Nottingham Forest FC':'フォレスト','Nottingham Forest':'フォレスト','ノッティンガム・フォレスト':'フォレスト',
@@ -29,9 +31,11 @@ const CP_TEAM_DISPLAY_NAMES={
   'AS Monaco FC':'モナコ','AS Monaco':'モナコ','Monaco':'モナコ','モナコ':'モナコ',
   // Germany
   'FC Bayern München':'バイエルン','Bayern München':'バイエルン','Bayern Munich':'バイエルン','バイエルン・ミュンヘン':'バイエルン',
+  'Borussia Dortmund':'ドルトムント','Dortmund':'ドルトムント','ボルシア・ドルトムント':'ドルトムント','ドルトムント':'ドルトムント',
   'FC Schalke 04':'シャルケ','Schalke 04':'シャルケ','Schalke':'シャルケ','シャルケ':'シャルケ',
   // Italy
   'AC Milan':'ミラン','Milan':'ミラン','ACミラン':'ミラン',
+  'FC Internazionale Milano':'インテル','Internazionale':'インテル','Inter Milan':'インテル','Inter':'インテル','インテル':'インテル',
   'Juventus FC':'ユベントス','Juventus':'ユベントス','ユベントス':'ユベントス'
 };
 
@@ -59,7 +63,6 @@ smallTeamName=function(name,isClub=false){
   return cpDisplayTeamName(name,true)
 };
 
-// Real Madrid and Barcelona use dedicated team renderers; normalize their opponent labels too.
 if(CP_RG_BASE_REAL_TEAM){
   cpRealTeamBlock=function(parent,opt,small=false){
     return CP_RG_BASE_REAL_TEAM(parent,cpNormalizeOpponentOpt(opt,small),small)
@@ -71,7 +74,6 @@ if(CP_RG_BASE_BARCA_TEAM){
   }
 }
 
-// Shared pill geometry comes from the canonical design system, with safe legacy fallback.
 const CP_PILL_METRICS=typeof CP_DESIGN_TOKENS==='object'&&CP_DESIGN_TOKENS.pill?CP_DESIGN_TOKENS.pill:{
   medium:{v:2.5,h:7,font:7.2,r:9,logoBox:24,logoSize:19,gap:5,sideV:6.2},
   small:{v:2.0,h:5,font:7.3,r:9,logoBox:19,logoSize:15,gap:4,sideV:4.8}
@@ -100,7 +102,6 @@ sidePill=function(parent,m,small=false){
   text(p,label,q.font,true,1,'#F6F7F9')
 };
 
-// Barcelona keeps its purple/gold identity, but uses the same geometry and league crest treatment.
 if(typeof cpBarcelonaCompetitionPill==='function'){
   cpBarcelonaCompetitionPill=function(parent,m,small=false){
     return cpUnifiedCompetitionPill(parent,m,small,true)
