@@ -1,9 +1,14 @@
-// Club Pulse resilience v3.
-// Forced outage QA follows the same cache-normalization contract as a real network failure.
+// Club Pulse resilience v4.
+// Forced outage QA follows the same normalized cache contract as a real provider failure
+// and prevents secondary next/live data providers from leaking fresh network data into the test.
 
 const CP_RES_BASE_LOAD_DATA=loadData,
+      CP_RES_BASE_NEXT_OVERLAY=applyNextOverlay,
+      CP_RES_BASE_LIVE_OVERLAY=applyLiveOverlay,
       CP_RES_BASE_ERROR_WIDGET=errorWidget,
       CP_RES_BASE_REFRESH_DELAY=refreshDelay;
+
+function cpResForcedOutage(){return qa==='offline'||qa==='nocache'}
 
 function cpResNormalizeCached(cached){
   if(!cached)return cached;
@@ -16,7 +21,7 @@ function cpResNormalizeCached(cached){
 }
 
 loadData=async function(t){
-  if(qa==='offline'||qa==='nocache'){
+  if(cpResForcedOutage()){
     const cached=readJSON(cachePath());
     const forced=new Error('QA forced network outage');
     if(qa==='offline'&&cached){
@@ -26,6 +31,16 @@ loadData=async function(t){
     throw forced;
   }
   return CP_RES_BASE_LOAD_DATA(t)
+};
+
+applyNextOverlay=async function(d){
+  if(cpResForcedOutage())return d;
+  return CP_RES_BASE_NEXT_OVERLAY(d)
+};
+
+applyLiveOverlay=async function(d){
+  if(cpResForcedOutage())return d;
+  return CP_RES_BASE_LIVE_OVERLAY(d)
 };
 
 // Stale data should retry sooner than the ordinary 15-minute far-fixture cadence.
