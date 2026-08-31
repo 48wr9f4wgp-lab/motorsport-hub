@@ -23,14 +23,13 @@ function makeContext({now=Date.now(),mode='NEXT',kickoffMs=now+72*3600e3,cachedA
     statusTitle:d=>d.mode==='LIVE'?'試合中':d.mode==='POST'?'試合終了':'次の試合',
     centerMainText:d=>d.mode==='NEXT'?'VS':'2-1',
     metaLine:(d,m)=>d.mode==='NEXT'?`${m.kickoff} ・ ${m.venue}`:`${m.venue}`,
-    updated:()=> 'BASE',
     cpResForcedOutage:()=>false,
     cpCmNormalizeData:d=>d,
     readJSON:p=>store[String(p)]??null,
     writeJSON:(p,v)=>{store[String(p)]=v;writes.push({p:String(p),v})},
     path:n=>`/cache/${n}`,
     cachePath:()=>'/cache/data_manutd.json',nextPath:()=>'/cache/next_all_manutd.json',quotaPath:()=>'/cache/api_football_quota.json',
-    fmt:(d,f)=>f==='yyyy-MM-dd'?'2026-08-31':f==='M/d HH:mm'?'8/30 08:00':'FMT',
+    fmt:(d,f)=>f==='yyyy-MM-dd'?'2026-08-31':'FMT',
     NEXT_TTL:6*3600e3,TTL_LIVE:3*60e3,
     addDays:(d,n)=>new RealDate(d.getTime()+n*864e5),ymd:d=>d.toISOString().slice(0,10),
     api:async p=>{apiCalls.push(p);if(p.includes('/matches?'))return{matches:[]};if(p.includes('/standings'))return standings;throw new Error('unexpected')},
@@ -41,6 +40,7 @@ function makeContext({now=Date.now(),mode='NEXT',kickoffMs=now+72*3600e3,cachedA
     mapData:(m,sj)=>({fetchedAt:now,mode:'NEXT',rank:sj?.standings?.[0]?.table?.[0]?.position??null,points:sj?.standings?.[0]?.table?.[0]?.points??null,nextMatch:{utcDate:new RealDate(kickoffMs).toISOString(),kickoff:'9/1(火) 04:00',venue:'テスト会場'}}),
     chooseNext:(d,m)=>({...d,nextMatch:m,chosen:true})
   };
+  Object.defineProperty(ctx,'updated',{value:()=> 'BASE',writable:false,configurable:false});
   ctx.__state={apiCalls,writes,store,get baseNextCalls(){return baseNextCalls},get baseLiveCalls(){return baseLiveCalls},get liveApiCalls(){return liveApiCalls},get resolveCalls(){return resolveCalls},cached};
   vm.createContext(ctx);vm.runInContext(src,ctx);return ctx
 }
@@ -48,6 +48,7 @@ function makeContext({now=Date.now(),mode='NEXT',kickoffMs=now+72*3600e3,cachedA
 (async()=>{
   let failed=0;const check=(n,ok)=>{if(ok)console.log(`✓ ${n}`);else{console.error(`✗ ${n}`);failed++}};
   let c=makeContext();
+  check('policy loads with readonly core updated binding',c.updated()==='BASE');
   check('far fixture cadence is one hour',c.refreshDelay(c.__state.cached)===60*60e3);
   let out=await c.loadData('t');
   check('far fresh match cache avoids match request',!c.__state.apiCalls.some(x=>x.includes('/matches?')));
@@ -82,8 +83,6 @@ function makeContext({now=Date.now(),mode='NEXT',kickoffMs=now+72*3600e3,cachedA
   c=makeContext({now});
   out=c.cpDpSanitizeStale({stale:true,mode:'POST',recentResult:{utcDate:new Date(now-11*3600e3).toISOString()},nextMatch:{utcDate:new Date(now+48*3600e3).toISOString()}});
   check('expired stale POST yields cached NEXT fixture',out.mode==='NEXT'&&out.postExpired===true);
-  check('fresh timestamp keeps compact time label',c.updated(now-60*60e3)==='BASE');
-  check('older-than-day timestamp includes calendar date',c.updated(now-25*60*60e3)==='8/30 08:00更新');
 
   c=makeContext({now,kickoffMs:now-60*1000});const staleNext={...c.__state.cached,stale:true};const small=c.buildMatchSmall(null,staleNext,{});
   check('small stale NEXT becomes waiting state',small.mode==='STALE_NEXT'&&small.cpSmallWaiting===true);
