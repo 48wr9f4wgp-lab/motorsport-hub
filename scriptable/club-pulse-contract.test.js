@@ -7,7 +7,7 @@ const files={
   ui:read('club-pulse-ui-patch.js'),comp:read('club-pulse-competition-logo-patch.js'),manutd:read('club-pulse-manutd-theme-patch.js'),
   themes:read('club-pulse-theme-registry-patch.js'),extraThemes:read('club-pulse-extra-theme-patch.js'),identity:read('club-pulse-identity-color-patch.js'),
   design:read('club-pulse-design-system-patch.js'),premium:read('club-pulse-premium-visual-patch.js'),
-  top:read('club-pulse-top-layout-patch.js'),readability:read('club-pulse-readability-guard-patch.js'),finalPolish:read('club-pulse-final-polish-patch.js'),
+  top:read('club-pulse-top-layout-patch.js'),readability:read('club-pulse-readability-guard-patch.js'),cacheMigration:read('club-pulse-cache-migration-patch.js'),finalPolish:read('club-pulse-final-polish-patch.js'),
   live:read('club-pulse-live-context-patch.js'),resilience:read('club-pulse-resilience-patch.js')
 };
 let failed=0;
@@ -25,8 +25,9 @@ check('launcher pins canonical design-system v7 commit',has(files.launcher,'3cfc
 check('launcher uses premium visual v3',has(files.launcher,'ClubPulsePremiumVisualPatch_v3.js')&&has(files.launcher,"'premium3'"));
 check('launcher uses readability v8',has(files.launcher,'ClubPulseReadabilityGuardPatch_v8.js')&&has(files.launcher,"'readability8'"));
 check('launcher pins readability v8 commit',has(files.launcher,'9b6e1f82ad2d07d67628cd501723d5eba095908f'));
+check('launcher uses cache migration v1',has(files.launcher,'ClubPulseCacheMigrationPatch_v1.js')&&has(files.launcher,"'cache-migration1'")&&has(files.launcher,'986e4aa662f695d84b1174bf79917cb8e31a10f7'));
 check('launcher keeps final polish v3',has(files.launcher,'ClubPulseFinalPolishPatch_v3.js')&&has(files.launcher,"'final-polish3'"));
-check('canonical load order remains stable',has(files.launcher,"+u+'\\n'+i+'\\n'+ds+'\\n'+pv+'\\n'+rg+'\\n'+fp+'\\n'+q+'\\n'+r"));
+check('canonical load order remains stable',has(files.launcher,"+u+'\\n'+i+'\\n'+ds+'\\n'+pv+'\\n'+rg+'\\n'+cm+'\\n'+fp+'\\n'+q+'\\n'+r"));
 check('launcher retains remote-to-local fallback',has(files.launcher,'if(F.fileExists(file))return F.readString(file)'));
 check('launcher retains QA persistence',has(files.launcher,'ClubPulseQAOverride_v1.json')&&has(files.launcher,'15*60*1000'));
 
@@ -51,6 +52,9 @@ check('venue registry is pinned to 2026-27 current season',has(files.readability
 check('2026-27 promoted and changed-venue coverage is registered',has(files.readability,"'Hull City':'ハル'")&&has(files.readability,"'Racing Santander':'ラシン'")&&has(files.readability,"'SV Elversberg':'エルヴァースベルク'")&&has(files.readability,"'Frosinone':'フロジノーネ'")&&has(files.readability,"'Le Mans FC':'ル・マン'")&&has(files.readability,"'エヴァートン':'ヒル・ディッキンソン・スタジアム'")&&has(files.readability,"'ベティス':'ラ・カルトゥハ'")&&has(files.readability,"'ホッフェンハイム':'SNPアレーナ'"));
 check('away venue fallback is conservative registry lookup',has(files.readability,'const CP_HOME_VENUE_BY_TEAM=')&&has(files.readability,"out.homeAway==='AWAY'")&&has(files.readability,"CP_HOME_VENUE_BY_TEAM[out.opponentName]||'会場未定'"));
 check('mapMatch normalization happens before cache/render',has(files.readability,'const CP_RG_BASE_MAP_MATCH=mapMatch')&&has(files.readability,'mapMatch=function(m)'));
+check('cache migration wraps loadData',has(files.cacheMigration,'const CP_CM_BASE_LOAD_DATA=loadData')&&has(files.cacheMigration,'loadData=async function(t)'));
+check('cache migration handles legacy and missing venues',has(files.cacheMigration,"'プレゼロ・アレーナ':'SNPアレーナ'")&&has(files.cacheMigration,"CP_HOME_VENUE_BY_TEAM[out.opponentName]||'会場未定'"));
+check('cache migration stamps schema and avoids persisting stale flag',has(files.cacheMigration,"CP_CACHE_SCHEMA_VERSION='venue-2026-27-v1'")&&has(files.cacheMigration,'delete stored.stale'));
 check('pill geometry still reads canonical tokens',has(files.readability,"typeof CP_DESIGN_TOKENS==='object'")&&has(files.readability,'CP_DESIGN_TOKENS.pill'));
 check('competition crest treatment remains unified',has(files.readability,'function cpUnifiedCompetitionPill')&&has(files.readability,'plate.addImage(logo)'));
 check('readability contains no opponent-specific crest rescue',!has(files.readability,'CP_LOW_CONTRAST_CRESTS')&&!has(files.readability,'CP_RG_BASE_BADGE'));
@@ -62,4 +66,4 @@ check('core keeps live token in Keychain',has(files.core,'clubpulse_api_football
 check('resilience keeps offline and no-cache QA',has(files.resilience,"qa==='offline'")&&has(files.resilience,"qa==='nocache'"));
 
 if(failed){console.error(`\nClub Pulse contract QA FAILED: ${failed} check(s)`);process.exit(1)}
-console.log('\nClub Pulse metadata typography, header contrast, and 2026-27 venue registry contract QA PASSED');
+console.log('\nClub Pulse metadata typography, header contrast, venue registry, and cache migration contract QA PASSED');
