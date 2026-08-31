@@ -35,7 +35,7 @@ check('premium renderer uses shared metadata typography',has(premium,'cpMetaText
 check('readability contract spans eleven teams',has(readability,'new Set([66,81,86,5,524,98,65,57,64,108,4])'));
 check('observed English leftovers now normalize',has(readability,"'Hoffenheim':'ホッフェンハイム'")&&has(readability,"'Cagliari':'カリアリ'"));
 check('five-league aliases are broad and reusable',has(readability,"'Chelsea':'チェルシー'")&&has(readability,"'Sevilla':'セビージャ'")&&has(readability,"'RB Leipzig':'ライプツィヒ'")&&has(readability,"'Roma':'ローマ'")&&has(readability,"'Lyon':'リヨン'"));
-check('known away venues can be inferred without opponent-specific UI code',has(readability,"'アストン・ヴィラ':'ヴィラ・パーク'")&&has(readability,"'ホッフェンハイム':'プレゼロ・アレーナ'")&&has(readability,"'カリアリ':'ウニポル・ドムス'"));
+check('known away venues can be inferred without opponent-specific UI code',has(readability,"'アストン・ヴィラ':'ヴィラ・パーク'")&&has(readability,"'ホッフェンハイム':'SNPアレーナ'")&&has(readability,"'カリアリ':'ウニポル・ドムス'"));
 check('unknown away venues stay explicitly unknown',has(readability,"CP_HOME_VENUE_BY_TEAM[out.opponentName]||'会場未定'"));
 check('long labels still use ellipsis only as fallback',has(readability,'CP_TEAM_DISPLAY_NAMES[n]||n')&&has(readability,"n.slice(0,max-1)+'…'"));
 check('competition pill remains shared',has(readability,'function cpUnifiedCompetitionPill')&&has(readability,'plate.size=new Size(q.logoBox,q.logoBox)'));
@@ -45,8 +45,8 @@ check('final polish remains Bayern-only',has(finalPolish,"club?.team!==5")&&!has
 check('existing league support covers expansion',has(leagues,"return small?'BL':'ブンデスリーガ'")&&has(leagues,"return small?'Serie A':'セリエA'"));
 check('launcher downloads design v7',has(launcher,'ClubPulseDesignSystemPatch_v7.js')&&has(launcher,"'design-system7'"));
 check('launcher downloads premium v3',has(launcher,'ClubPulsePremiumVisualPatch_v3.js')&&has(launcher,"'premium3'"));
-check('launcher downloads readability v7',has(launcher,'ClubPulseReadabilityGuardPatch_v7.js')&&has(launcher,"'readability7'"));
+check('launcher downloads readability v8',has(launcher,'ClubPulseReadabilityGuardPatch_v8.js')&&has(launcher,"'readability8'"));
 check('launcher documents expansion',has(launcher,'arsenal, liverpool, inter, and dortmund'));
 
 if(failed){console.error(`\nExpanded club QA FAILED: ${failed}`);process.exit(1)}
-console.log('\nEleven-club metadata typography and localization QA PASSED');
+console.log('\nEleven-club metadata typography, localization, and 2026-27 venue QA PASSED');
