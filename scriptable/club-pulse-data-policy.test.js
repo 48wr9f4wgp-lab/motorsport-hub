@@ -7,7 +7,7 @@ function makeContext({now=Date.now(),mode='NEXT',kickoffMs=now+72*3600e3,cachedA
   const RealDate=Date;
   class FakeDate extends RealDate{constructor(v){super(v===undefined?now:v)}static now(){return now}}
   let apiCalls=[],baseNextCalls=0,baseLiveCalls=0,liveApiCalls=0,resolveCalls=0,writes=[];
-  const cached={fetchedAt:now-cachedAge,mode,rank:9,points:12,stale:false,nextMatch:{utcDate:new RealDate(kickoffMs).toISOString(),kickoff:'9/1(火) 04:00',venue:'テスト会場',opponentName:'X'},liveMatch:mode==='LIVE'?{utcDate:new RealDate(kickoffMs).toISOString(),kickoff:'9/1(火) 04:00',venue:'テスト会場',ourScore:2,opponentScore:1,minute:"67'"}:null,recentResult:mode==='POST'?{utcDate:new RealDate(kickoffMs).toISOString(),kickoff:'9/1(火) 04:00',venue:'テスト会場',ourScore:2,opponentScore:1}:null};
+  const cached={fetchedAt:now-cachedAge,mode,rank:9,points:12,stale:false,nextMatch:{utcDate:new RealDate(kickoffMs).toISOString(),kickoff:'9/1(火) 04:00',venue:'テスト会場',opponentName:'X'},liveMatch:mode==='LIVE'?{utcDate:new RealDate(kickoffMs).toISOString(),kickoff:'9/1(火) 04:00',venue:'テスト会場',ourScore:2,opponentScore:1,minute:"67'"}:null,recentResult:mode==='POST'?{utcDate:new RealDate(kickoffMs).toISOString(),kickoff:'9/1(火) 04:00',venue:'テスト会場',ourScore:2,opponentScore:1,result:'W'}:null};
   const standings={standings:[{type:'TOTAL',table:[{team:{id:66},position:4,points:21}]}]};
   const defaultLiveRows=liveRows??[{fixture:{id:777,date:new RealDate(kickoffMs).toISOString(),status:{short:'2H',elapsed:67},venue:{name:'Old Trafford'}},league:{name:'Premier League'},teams:{home:{id:33,name:'Manchester United',logo:'mu'},away:{id:44,name:'Everton',logo:'eve'}},goals:{home:2,away:1}}];
   const store={'/cache/data_manutd.json':cached,'/cache/standings_pl.json':{fetchedAt:now-5*60e3,payload:standings},'/cache/api_football_quota.json':{day:'2026-08-31',count:quotaCount}};
@@ -83,6 +83,16 @@ function makeContext({now=Date.now(),mode='NEXT',kickoffMs=now+72*3600e3,cachedA
   c=makeContext({now});
   out=c.cpDpSanitizeStale({stale:true,mode:'POST',recentResult:{utcDate:new Date(now-11*3600e3).toISOString()},nextMatch:{utcDate:new Date(now+48*3600e3).toISOString()}});
   check('expired stale POST yields cached NEXT fixture',out.mode==='NEXT'&&out.postExpired===true);
+
+  c=makeContext({now});
+  const futureRaw={matches:[{status:'FINISHED',utcDate:new Date(now+48*3600e3).toISOString(),score:{fullTime:{home:2,away:1}}}]};
+  const guarded=c.cpDpTemporalizeMatches(futureRaw);
+  check('future FINISHED provider row is reclassified to SCHEDULED',guarded.matches[0].status==='SCHEDULED');
+  check('future FINISHED provider score is cleared',guarded.matches[0].score.fullTime.home===null&&guarded.matches[0].score.fullTime.away===null);
+  const futurePost={fetchedAt:now-60e3,stale:false,mode:'POST',recentResult:{utcDate:new Date(now+48*3600e3).toISOString(),kickoff:'9/3(木) 22:30',ourScore:2,opponentScore:1,result:'W'},nextMatch:null};
+  out=c.cpDpSanitizeTemporal(futurePost);
+  check('cached future POST is repaired to NEXT',out.mode==='NEXT'&&out.futureResultCorrected===true&&out.recentResult===null);
+  check('repaired future POST removes result payload',out.nextMatch.ourScore===null&&out.nextMatch.opponentScore===null&&out.nextMatch.result===null);
 
   c=makeContext({now,kickoffMs:now-60*1000});const staleNext={...c.__state.cached,stale:true};const small=c.buildMatchSmall(null,staleNext,{});
   check('small stale NEXT becomes waiting state',small.mode==='STALE_NEXT'&&small.cpSmallWaiting===true);
