@@ -13,16 +13,17 @@ check('theme system keeps shared small builder shell',themes.includes('buildSmal
 check('resilience keeps stale saved-data semantics',resilience.includes("text(s,'保存',6.2")&&resilience.includes('t.headerAccent||shellText'));
 check('data policy keeps stale post-kickoff semantics',policy.includes("mode:'STALE_NEXT'")&&policy.includes("return'更新待ち'")&&policy.includes("return'VS'"));
 check('small presentation owns final header match footer',small.includes('buildHeaderSmall=function')&&small.includes('buildMatchSmall=function')&&small.includes('buildFooterSmall=function'));
-check('small presentation defines one typography hierarchy',small.includes('const CP_SP_TYPO=')&&small.includes('headerName:9.0')&&small.includes('team:8.8')&&small.includes('meta:9.0')&&small.includes('footer:7.6'));
-check('generic team labels enforce readability scale floor',small.includes('teamMinScale:.84')&&small.includes('nm.minimumScaleFactor=CP_SP_TYPO.teamMinScale'));
+check('small presentation defines stronger team-name hierarchy',small.includes('const CP_SP_TYPO=')&&small.includes('headerName:9.0')&&small.includes('team:9.6')&&small.includes('meta:8.8')&&small.includes('footer:7.6'));
+check('generic team labels enforce readability scale floor',small.includes('teamMinScale:.86')&&small.includes('nm.minimumScaleFactor=CP_SP_TYPO.teamMinScale'));
+check('generic team labels stay single-line clipping safe',small.includes('nm.lineLimit=1')&&small.includes('teamWidth:52'));
 check('generic team labels honor cardText token',small.includes('heavy(name,label,opt.nameSize||CP_SP_TYPO.team,cpSpCardColor())')&&small.includes("return t?.cardText||t?.text||'#F8FAFC'"));
 check('cut-looking aliases are replaced with semantic labels',small.includes("'ホッフェンハイム':'TSG'")&&small.includes("'フィオレンティーナ':'ヴィオラ'")&&small.includes("'シュトゥットガルト':'VfB'"));
 check('unknown long names can fall back to provider short code',small.includes("/^[A-Z0-9.-]{2,5}$/i.test(fb)"));
-check('all small teams share canonical block geometry',small.includes('teamWidth:49')&&small.includes('scoreWidth:40')&&small.includes('logo:40'));
-check('center score column has clipping-safe width and scale',small.includes('scoreWidth:40')&&small.includes('scoreMinScale:.78')&&small.includes('sb.size=new Size(CP_SP_TYPO.scoreWidth,22)'));
+check('all small teams share rebalanced canonical block geometry',small.includes('teamWidth:52')&&small.includes('scoreWidth:36')&&small.includes('logo:40'));
+check('center score column stays clipping-safe after rebalance',small.includes('scoreWidth:36')&&small.includes('scoreMinScale:.78')&&small.includes('sb.size=new Size(CP_SP_TYPO.scoreWidth,22)'));
 check('LIVE POST numeric scores bypass inherited ellipsis risk',small.includes('function cpSpScoreValue')&&small.includes('Number.isFinite(m?.ourScore)')&&small.includes('`${m.ourScore}-${m.opponentScore}`'));
 check('special Real and Barcelona crest treatment is preserved',small.includes("t?.key==='realmadrid'")&&small.includes('cpRealTeamBlock')&&small.includes("t?.key==='barcelona'")&&small.includes('cpBarcelonaTeamBlock'));
 check('NEXT LIVE POST and stale-next share final small renderer',small.includes("view.mode==='LIVE'")&&small.includes("view.mode==='POST'")&&small.includes("d?.mode==='STALE_NEXT'")&&small.includes("mode:'STALE_NEXT'"));
 check('Dortmund shell header stays on headerAccent',small.includes('t?.headerAccent||CP_DESIGN_TOKENS?.shell?.text'));
 if(failed){console.error(`\nSmall widget contract QA FAILED: ${failed}`);process.exit(1)}
-console.log('\nClub Pulse canonical Small Presentation System QA PASSED');
+console.log('\nClub Pulse canonical Small Presentation System v6 QA PASSED');
