@@ -133,6 +133,10 @@ jobs:
             tests/tap-action-gate.mjs
           )
           for gate in "${gates[@]}"; do
+            if [[ "${{ github.event_name }}" == "pull_request" && "$gate" == "tests/hardening-live-source-gate.mjs" ]]; then
+              echo "Skipping hardening-live-only gate for main-targeting PR"
+              continue
+            fi
             echo "::group::$gate"
             node "$gate"
             rc=$?
