@@ -1,7 +1,7 @@
-// Club Pulse resilience v5.
+// Club Pulse resilience v6.
 // Forced outage QA follows the same normalized cache contract as a real provider failure,
-// blocks secondary network providers, and prevents stale pre-match cache from being presented
-// as a trustworthy upcoming fixture after kickoff has already arrived.
+// blocks secondary network providers, prevents stale pre-match cache from being presented
+// as a trustworthy upcoming fixture after kickoff, and keeps shell text readable for every theme.
 
 const CP_RES_BASE_LOAD_DATA=loadData,
       CP_RES_BASE_NEXT_OVERLAY=applyNextOverlay,
@@ -45,7 +45,6 @@ applyLiveOverlay=async function(d){
   return CP_RES_BASE_LIVE_OVERLAY(d)
 };
 
-// Stale data should retry sooner than the ordinary 15-minute far-fixture cadence.
 refreshDelay=function(d){
   if(d?.stale)return 5*60*1000;
   return CP_RES_BASE_REFRESH_DELAY(d)
@@ -57,19 +56,25 @@ function cpResKickoffReached(d,m){
   return Number.isFinite(t)&&Date.now()>=t
 }
 
-// Do not call a stale fixture "next" once its scheduled kickoff is in the past.
 statusTitle=function(d,m){
   if(cpResKickoffReached(d,m))return'更新待ち';
   return CP_RES_BASE_STATUS_TITLE(d,m)
 };
 
+function cpResShellText(){
+  return typeof CP_DESIGN_TOKENS==='object'&&CP_DESIGN_TOKENS?.shell?.text
+    ?CP_DESIGN_TOKENS.shell.text
+    :'#F8FAFC'
+}
+
 function cpResTheme(){
   if(typeof CP_MU_IS==='function'&&CP_MU_IS())return{title:CP_MU_THEME.ivory,accent:CP_MU_THEME.goldSoft};
+  const shellText=cpResShellText();
   if(typeof CP_ACTIVE_THEME==='function'){
     let t=CP_ACTIVE_THEME();
-    if(t)return{title:t.text||'#FFFFFF',accent:t.accentSoft||t.accent||'#FFFFFF'}
+    if(t)return{title:t.headerAccent||shellText,accent:t.headerAccent||t.accentSoft||t.accent||shellText}
   }
-  return{title:'#FFFFFF',accent:'#FFFFFF'}
+  return{title:shellText,accent:shellText}
 }
 
 buildHeaderSmall=function(w,d,img){
