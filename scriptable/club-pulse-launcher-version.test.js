@@ -11,7 +11,10 @@ check('launcher pins resilience v6 commit',src.includes('968fd0308afd6ea0998d831
 check('launcher uses data policy v6 local cache',src.includes('ClubPulseDataPolicyPatch_v6.js'));
 check('launcher fetch tag is data-policy6',src.includes("'data-policy6'"));
 check('launcher pins data policy v6 commit',src.includes('c274078e2cd1742a61fe9c3548d54f703a84ebc5'));
-check('data policy runs after resilience',src.includes("+fp+'\\n'+q+'\\n'+r+'\\n'+dp"));
+check('launcher uses small presentation v1 local cache',src.includes('ClubPulseSmallPresentationPatch_v1.js'));
+check('launcher fetch tag is small-presentation1',src.includes("'small-presentation1'"));
+check('launcher pins small presentation v1 commit',src.includes('f2fa2be2c6e61375c133f5830d284f5ceaeb9f9b'));
+check('small presentation runs after resilience and data policy',src.includes("+q+'\\n'+r+'\\n'+dp+'\\n'+sp"));
 check('patch loader remains local-first',src.includes("if(F.fileExists(file)){let s=F.readString(file);if(s&&s.length>=min)return s}"));
 if(failed){console.error(`\nLauncher version QA FAILED: ${failed}`);process.exit(1)}
 console.log('\nClub Pulse launcher version QA PASSED');
