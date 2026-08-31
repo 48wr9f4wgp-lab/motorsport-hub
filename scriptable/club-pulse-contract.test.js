@@ -17,12 +17,13 @@ function syntax(name,src){try{new Function(`return (async()=>{\n${src}\n})`);che
 for(const [name,src] of Object.entries(files))syntax(name,src);
 
 check('launcher injects both registries before parameter resolution',has(files.launcher,"c=c.slice(0,pk)+cr+'\\n'+ec+'\\n'+c.slice(pk)"));
-check('launcher loads canonical design system v3',has(files.launcher,'ClubPulseDesignSystemPatch_v3.js')&&has(files.launcher,"'design-system3'"));
-check('launcher pins canonical design-system v3 commit',has(files.launcher,'b594900aa9ab2fdd83d12ffbc009b41e0517d64a'));
+check('launcher loads canonical design system v4',has(files.launcher,'ClubPulseDesignSystemPatch_v4.js')&&has(files.launcher,"'design-system4'"));
+check('launcher pins canonical design-system v4 commit',has(files.launcher,'2e7ed650112fd5d52ecba7cbd7961956a458b37b'));
 check('launcher uses premium visual v2',has(files.launcher,'ClubPulsePremiumVisualPatch_v2.js')&&has(files.launcher,"'premium2'"));
-check('launcher uses readability v4 cache and tag',has(files.launcher,'ClubPulseReadabilityGuardPatch_v4.js')&&has(files.launcher,"'readability4'"));
-check('launcher loads final polish v2',has(files.launcher,'ClubPulseFinalPolishPatch_v2.js')&&has(files.launcher,"'final-polish2'"));
-check('launcher pins final polish v2 commit',has(files.launcher,'3e330f2ea3ec8cf797e7a3d96ac66e8aa156e75b'));
+check('launcher uses readability v5 cache and tag',has(files.launcher,'ClubPulseReadabilityGuardPatch_v5.js')&&has(files.launcher,"'readability5'"));
+check('launcher pins readability v5 commit',has(files.launcher,'012d71d918b370bc33971407de4a43e24f0f6711'));
+check('launcher loads final polish v3',has(files.launcher,'ClubPulseFinalPolishPatch_v3.js')&&has(files.launcher,"'final-polish3'"));
+check('launcher pins final polish v3 commit',has(files.launcher,'71334b75cb6c60bc8e48e39a4dd1ce87d93ed590'));
 check('canonical load order includes final polish after readability',has(files.launcher,"+u+'\\n'+i+'\\n'+ds+'\\n'+pv+'\\n'+rg+'\\n'+fp+'\\n'+q+'\\n'+r"));
 check('launcher retains remote-to-local fallback',has(files.launcher,'if(F.fileExists(file))return F.readString(file)'));
 check('launcher retains QA persistence',has(files.launcher,'ClubPulseQAOverride_v1.json')&&has(files.launcher,'15*60*1000'));
@@ -41,7 +42,7 @@ check('Barcelona canonical purple identity',has(files.design,"key:'barcelona',to
 check('Real canonical pearl identity',has(files.design,"key:'realmadrid',tone:'pearl-white'")&&has(files.design,"cardSurface:'#FFFDF8'")&&has(files.design,"cardPearl:'#E9E3D6'"));
 check('Bayern canonical crest-color identity with stronger blue edge',has(files.design,"key:'bayern',tone:'crest-red-blue-white'")&&has(files.design,"cardPanel:'#C8102E'")&&has(files.design,"border:'#0073C9'")&&has(files.design,"cardBorder:'#2D86D3'")&&has(files.design,"sideBorder:'#2D86D3'"));
 check('PSG and Man City have distinct blue families',has(files.design,"key:'psg',tone:'paris-royal-blue'")&&has(files.design,"cardSurface:'#04172F'")&&has(files.design,"key:'mancity',tone:'sky-blue'")&&has(files.design,"cardGlow:'#56A8C9'"));
-check('Milan is Rossoneri-to-gunmetal with a lighter opponent side',has(files.design,"key:'milan',tone:'rossoneri-gunmetal'")&&has(files.design,"cardSurface:'#7A0B16'")&&has(files.design,"cardPanel:'#342124'")&&has(files.design,"cardGlow:'#4B4F57'"));
+check('Milan is Rossoneri-to-generic-gunmetal',has(files.design,"key:'milan',tone:'rossoneri-gunmetal'")&&has(files.design,"cardSurface:'#7A0B16'")&&has(files.design,"cardPanel:'#342124'")&&has(files.design,"cardGlow:'#62666D'"));
 check('design system has no decorative line tokens',!has(files.design,'linePrimary')&&!has(files.design,'lineSecondary'));
 
 check('premium renderer derives club targets from canonical definitions',has(files.premium,'Object.values(CP_THEME_DEFINITIONS||{})')&&has(files.premium,'CP_PREMIUM_GENERIC_KEYS'));
@@ -59,9 +60,9 @@ check('pill geometry reads canonical design tokens',has(files.readability,"typeo
 check('unified competition pill restores competition crest',has(files.readability,'function cpUnifiedCompetitionPill')&&has(files.readability,"typeof cpCompetitionLogoImage==='function'")&&has(files.readability,'plate.addImage(logo)'));
 check('competition crest keeps white identity plate only inside league pill',has(files.readability,"plate.backgroundColor=C('#FFFFFF',1)")&&has(files.readability,'plate.cornerRadius=q.logoBox/2'));
 check('Barcelona competition pill uses same crest treatment',has(files.readability,'cpBarcelonaCompetitionPill=function')&&has(files.readability,'cpUnifiedCompetitionPill(parent,m,small,true)'));
+check('readability contains no opponent-specific crest rescue',!has(files.readability,'CP_LOW_CONTRAST_CRESTS')&&!has(files.readability,'CP_RG_BASE_BADGE')&&!has(files.readability,"new Set(['JUV'])"));
 
-check('final polish bypasses the old Juventus rescue renderer',has(files.finalPolish,"toUpperCase()==='JUV'")&&has(files.finalPolish,"typeof CP_RG_BASE_BADGE==='function'")&&has(files.finalPolish,'return CP_RG_BASE_BADGE'));
-check('final polish contains no Juventus background tile',!has(files.finalPolish,"backgroundColor=C('#F3F5F8'")&&!has(files.finalPolish,"backgroundColor=C('#F6F7F9'"));
+check('final polish is Bayern-only',!has(files.finalPolish,'badge=function')&&!has(files.finalPolish,'JUV')&&has(files.finalPolish,"club?.team!==5"));
 check('Bayern side pill uses stronger canonical blue',has(files.finalPolish,"t?.sideBorder||'#2D86D3'")&&has(files.finalPolish,'p.borderWidth=.9')&&has(files.finalPolish,".86)"));
 
 check('Man U state renderer stays scoped',has(files.manutd,'club?.team===66'));
@@ -75,4 +76,4 @@ check('resilience keeps offline and no-cache QA',has(files.resilience,"qa==='off
 check('obsolete edge-safe files remain deleted',!fs.existsSync(path.join(root,'club-pulse-edge-safe-identity-patch.js'))&&!fs.existsSync(path.join(root,'club-pulse-edge-safe.test.js')));
 
 if(failed){console.error(`\nClub Pulse contract QA FAILED: ${failed} check(s)`);process.exit(1)}
-console.log('\nClub Pulse frozen seven-club visual contract QA PASSED');
+console.log('\nClub Pulse generic opponent-contrast visual contract QA PASSED');
