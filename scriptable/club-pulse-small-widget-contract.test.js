@@ -17,8 +17,8 @@ check('small presentation defines one typography hierarchy',small.includes('cons
 check('team labels never auto-shrink below readability floor',small.includes('teamMinScale:.84')&&small.includes('minimumScaleFactor=.88'));
 check('long common names use semantic small aliases',small.includes("'ホッフェンハイム':'ホッフェン'")&&small.includes("'アストン・ヴィラ':'ヴィラ'")&&small.includes("'クリスタル・パレス':'パレス'"));
 check('unknown long names can fall back to provider short code',small.includes("/^[A-Z0-9.-]{2,5}$/.test(fb)"));
-check('all small teams share canonical block geometry',small.includes('teamWidth:52')&&small.includes('scoreWidth:34')&&small.includes('logo:40'));
-check('center score column has clipping-safe width',small.includes('scoreWidth:34')&&small.includes('sb.size=new Size(CP_SP_TYPO.scoreWidth,22)'));
+check('all small teams share canonical block geometry',small.includes('teamWidth:49')&&small.includes('scoreWidth:40')&&small.includes('logo:40'));
+check('center score column has POST-safe width and scale floor',small.includes('scoreWidth:40')&&small.includes('scoreMinScale:.78')&&small.includes('sb.size=new Size(CP_SP_TYPO.scoreWidth,22)')&&small.includes('sc.minimumScaleFactor=CP_SP_TYPO.scoreMinScale'));
 check('special Real and Barcelona crest treatment is preserved',small.includes("t?.key==='realmadrid'")&&small.includes('cpRealTeamBlock')&&small.includes("t?.key==='barcelona'")&&small.includes('cpBarcelonaTeamBlock'));
 check('NEXT LIVE POST and stale-next share final small renderer',small.includes("view.mode==='LIVE'")&&small.includes("view.mode==='POST'")&&small.includes("d?.mode==='STALE_NEXT'")&&small.includes("mode:'STALE_NEXT'"));
 check('Dortmund shell header stays on headerAccent',small.includes('t?.headerAccent||CP_DESIGN_TOKENS?.shell?.text'));
