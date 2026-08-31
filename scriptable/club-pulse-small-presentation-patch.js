@@ -1,7 +1,7 @@
-// Club Pulse Small Presentation System v2.
+// Club Pulse Small Presentation System v4.
 // Canonical small-widget renderer for all supported clubs.
-// Goal: identical typography hierarchy across clubs while preserving each club's color/crest identity.
-// v2 reserves enough center width for VS / live / final scores without clipping.
+// v4 keeps typography uniform, replaces cut-looking labels with semantic aliases,
+// applies the readability scale floor to generic team labels, and hardens numeric scores.
 
 const CP_SP_TYPO={
   headerName:9.0,
@@ -10,13 +10,14 @@ const CP_SP_TYPO={
   team:8.8,
   teamMinScale:.84,
   scoreNext:14.0,
-  scoreLive:15.5,
-  scorePost:16.0,
+  scoreLive:15.0,
+  scorePost:15.0,
+  scoreMinScale:.78,
   meta:9.0,
   metaMinScale:.90,
   footer:7.6,
-  teamWidth:52,
-  scoreWidth:34,
+  teamWidth:49,
+  scoreWidth:40,
   logo:40
 };
 
@@ -25,13 +26,13 @@ const CP_SP_SMALL_ALIASES={
   'ブレントフォード':'ブレント',
   'クリスタル・パレス':'パレス',
   'ノッティンガム・フォレスト':'フォレスト',
-  'ホッフェンハイム':'ホッフェン',
-  'シュトゥットガルト':'シュトゥット',
-  'ヴォルフスブルク':'ヴォルフス',
+  'ホッフェンハイム':'TSG',
+  'シュトゥットガルト':'VfB',
+  'ヴォルフスブルク':'VfL',
   'ウニオン・ベルリン':'ウニオン',
-  'エルヴァースベルク':'エルヴァース',
-  'フィオレンティーナ':'フィオレン',
-  'サンテティエンヌ':'サンテティエンヌ'
+  'エルヴァースベルク':'SVE',
+  'フィオレンティーナ':'ヴィオラ',
+  'サンテティエンヌ':'ASSE'
 };
 
 function cpSpTheme(){
@@ -57,8 +58,22 @@ function cpSpTeamLabel(name,fallback,isClub=false){
   if(CP_SP_SMALL_ALIASES[n])return CP_SP_SMALL_ALIASES[n];
   if(n.length<=6)return n;
   const fb=String(fallback||'').trim();
-  if(/^[A-Z0-9.-]{2,5}$/.test(fb))return fb;
+  if(/^[A-Z0-9.-]{2,5}$/i.test(fb))return fb;
   return n
+}
+function cpSpGenericTeamBlock(parent,opt,label){
+  const s=parent.addStack();
+  if(opt.width)s.size=new Size(opt.width,0);
+  s.layoutVertically();
+  const logo=s.addStack();logo.layoutHorizontally();logo.addSpacer();
+  badge(logo,opt.fallback,opt.img,opt.logoSize,opt.p1,opt.p2,opt.scale||1);
+  logo.addSpacer();
+  s.addSpacer(opt.nameGap??2);
+  const name=s.addStack();name.layoutHorizontally();name.addSpacer();
+  const nm=heavy(name,label,opt.nameSize||CP_SP_TYPO.team);
+  nm.centerAlignText();nm.minimumScaleFactor=CP_SP_TYPO.teamMinScale;
+  name.addSpacer();
+  return s
 }
 function cpSpTeamBlock(parent,opt,isClub=false){
   const t=cpSpTheme(),label=cpSpTeamLabel(opt.name,opt.fallback,isClub),base={
@@ -71,8 +86,7 @@ function cpSpTeamBlock(parent,opt,isClub=false){
   };
   if(t?.key==='realmadrid'&&typeof cpRealTeamBlock==='function')return cpRealTeamBlock(parent,base,true);
   if(t?.key==='barcelona'&&typeof cpBarcelonaTeamBlock==='function')return cpBarcelonaTeamBlock(parent,base,true);
-  const s=renderTeamBlock(parent,base);
-  return s
+  return cpSpGenericTeamBlock(parent,base,label)
 }
 function cpSpSidePill(parent,m){
   const t=cpSpTheme(),q=CP_PILL_METRICS?.small||CP_DESIGN_TOKENS?.pill?.small||{sideV:4.8,h:5,r:9,font:7.3};
@@ -94,6 +108,10 @@ function cpSpMatchFor(d){
   if(d?.mode==='LIVE')return d.liveMatch;
   if(d?.mode==='POST')return d.recentResult;
   return d.nextMatch
+}
+function cpSpScoreValue(d,m){
+  if((d?.mode==='POST'||d?.mode==='LIVE')&&Number.isFinite(m?.ourScore)&&Number.isFinite(m?.opponentScore))return `${m.ourScore}-${m.opponentScore}`;
+  return centerMainText(d,m)
 }
 
 buildHeaderSmall=function(w,d,img){
@@ -138,7 +156,7 @@ buildMatchSmall=function(w,d,imgs){
   row.addSpacer(3);
   const sb=row.addStack();sb.size=new Size(CP_SP_TYPO.scoreWidth,22);sb.layoutHorizontally();sb.centerAlignContent();sb.addSpacer();
   const scoreSize=view.mode==='POST'?CP_SP_TYPO.scorePost:view.mode==='LIVE'?CP_SP_TYPO.scoreLive:CP_SP_TYPO.scoreNext;
-  const sc=heavy(sb,centerMainText(view,m),scoreSize,fg);sc.minimumScaleFactor=.90;sc.centerAlignText();sb.addSpacer();
+  const sc=heavy(sb,cpSpScoreValue(view,m),scoreSize,fg);sc.minimumScaleFactor=CP_SP_TYPO.scoreMinScale;sc.centerAlignText();sb.addSpacer();
   row.addSpacer(3);
   cpSpTeamBlock(row,{img:imgs.opp,name:m.opponentName,fallback:m.opponentShort,p1:'#4A5568',p2:'#20242D',scale:CREST_SCALE[m.opponentId]||CREST_SCALE.opponent_default||.90},false);
   outer.addSpacer();

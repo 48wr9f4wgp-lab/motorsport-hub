@@ -18,11 +18,11 @@ const FINAL_POLISH_PATCH='https://raw.githubusercontent.com/48wr9f4wgp-lab/motor
 const LIVE_CONTEXT_PATCH='https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/d1f571e9658e99d69a64dbbe591655a048461654/scriptable/club-pulse-live-context-patch.js';
 const RESILIENCE_PATCH='https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/968fd0308afd6ea0998d8317357d86af9d8aa0c3/scriptable/club-pulse-resilience-patch.js';
 const DATA_POLICY_PATCH='https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/c274078e2cd1742a61fe9c3548d54f703a84ebc5/scriptable/club-pulse-data-policy-patch.js';
-const SMALL_PRESENTATION_PATCH='https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/52ff2fbabfd2f518293b2745ab6e3931d4421c73/scriptable/club-pulse-small-presentation-patch.js';
-const WAVE2_THEMES_PATCH='https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/c53a62e6308fb99d6605d9b6c8d960869140dd46/scriptable/club-pulse-wave2-themes-patch.js';
+const SMALL_PRESENTATION_PATCH='https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/e231b5a7c67b9edd31073f83e8b640f489cfefb7/scriptable/club-pulse-small-presentation-patch.js';
+const WAVE2_THEMES_PATCH='https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/75ee9a4925091e1f8966d6adf9cf6f95e1ab58a3/scriptable/club-pulse-wave2-themes-patch.js';
 
 const F=FileManager.local(),D=F.documentsDirectory();
-const CP=F.joinPath(D,'ClubPulseCore_v2.js'),CRP=F.joinPath(D,'ClubPulseClubRegistryPatch_v2.js'),ECP=F.joinPath(D,'ClubPulseExtraClubsPatch_v3.js'),W2CP=F.joinPath(D,'ClubPulseWave2ClubsPatch_v1.js'),PP=F.joinPath(D,'ClubPulseUIPatch_v8.js'),LP=F.joinPath(D,'ClubPulseCompetitionLogoPatch_v3.js'),LEP=F.joinPath(D,'ClubPulseLeagueExpansionPatch_v1.js'),TP=F.joinPath(D,'ClubPulseManUThemePatch_v4.js'),TRP=F.joinPath(D,'ClubPulseThemeRegistryPatch_v13.js'),ETP=F.joinPath(D,'ClubPulseExtraThemePatch_v2.js'),TLP=F.joinPath(D,'ClubPulseTopLayoutPatch_v2.js'),IP=F.joinPath(D,'ClubPulseIdentityColorPatch_v7.js'),DSP=F.joinPath(D,'ClubPulseDesignSystemPatch_v7.js'),PVP=F.joinPath(D,'ClubPulsePremiumVisualPatch_v3.js'),RGP=F.joinPath(D,'ClubPulseReadabilityGuardPatch_v8.js'),CMP=F.joinPath(D,'ClubPulseCacheMigrationPatch_v1.js'),FPP=F.joinPath(D,'ClubPulseFinalPolishPatch_v3.js'),LCP=F.joinPath(D,'ClubPulseLiveContextPatch_v1.js'),RP=F.joinPath(D,'ClubPulseResiliencePatch_v6.js'),DPP=F.joinPath(D,'ClubPulseDataPolicyPatch_v6.js'),SPP=F.joinPath(D,'ClubPulseSmallPresentationPatch_v2.js'),W2TP=F.joinPath(D,'ClubPulseWave2ThemesPatch_v2.js'),QAP=F.joinPath(D,'ClubPulseQAOverride_v1.json');
+const CP=F.joinPath(D,'ClubPulseCore_v2.js'),CRP=F.joinPath(D,'ClubPulseClubRegistryPatch_v2.js'),ECP=F.joinPath(D,'ClubPulseExtraClubsPatch_v3.js'),W2CP=F.joinPath(D,'ClubPulseWave2ClubsPatch_v1.js'),PP=F.joinPath(D,'ClubPulseUIPatch_v8.js'),LP=F.joinPath(D,'ClubPulseCompetitionLogoPatch_v3.js'),LEP=F.joinPath(D,'ClubPulseLeagueExpansionPatch_v1.js'),TP=F.joinPath(D,'ClubPulseManUThemePatch_v4.js'),TRP=F.joinPath(D,'ClubPulseThemeRegistryPatch_v13.js'),ETP=F.joinPath(D,'ClubPulseExtraThemePatch_v2.js'),TLP=F.joinPath(D,'ClubPulseTopLayoutPatch_v2.js'),IP=F.joinPath(D,'ClubPulseIdentityColorPatch_v7.js'),DSP=F.joinPath(D,'ClubPulseDesignSystemPatch_v7.js'),PVP=F.joinPath(D,'ClubPulsePremiumVisualPatch_v3.js'),RGP=F.joinPath(D,'ClubPulseReadabilityGuardPatch_v8.js'),CMP=F.joinPath(D,'ClubPulseCacheMigrationPatch_v1.js'),FPP=F.joinPath(D,'ClubPulseFinalPolishPatch_v3.js'),LCP=F.joinPath(D,'ClubPulseLiveContextPatch_v1.js'),RP=F.joinPath(D,'ClubPulseResiliencePatch_v6.js'),DPP=F.joinPath(D,'ClubPulseDataPolicyPatch_v6.js'),SPP=F.joinPath(D,'ClubPulseSmallPresentationPatch_v4.js'),W2TP=F.joinPath(D,'ClubPulseWave2ThemesPatch_v4.js'),QAP=F.joinPath(D,'ClubPulseQAOverride_v1.json');
 
 let p=String(args.widgetParameter||'manutd').trim()||'manutd';
 if(config.runsInApp&&!p.includes(':')){
@@ -73,8 +73,8 @@ let c=await core(),
   u=await getRemote(TOP_LAYOUT_PATCH,TLP,300,'toplayout2'),i=await getRemote(IDENTITY_PATCH,IP,300,'identity7'),ds=await getRemote(DESIGN_SYSTEM_PATCH,DSP,1200,'design-system7'),
   pv=await getRemote(PREMIUM_PATCH,PVP,900,'premium3'),rg=await getRemote(READABILITY_PATCH,RGP,2200,'readability8'),cm=await getRemote(CACHE_MIGRATION_PATCH,CMP,700,'cache-migration1'),
   fp=await getRemote(FINAL_POLISH_PATCH,FPP,250,'final-polish3'),q=await getRemote(LIVE_CONTEXT_PATCH,LCP,250,'livectx1'),r=await getRemote(RESILIENCE_PATCH,RP,600,'resilience6'),
-  dp=await getRemote(DATA_POLICY_PATCH,DPP,3200,'data-policy6'),sp=await getRemote(SMALL_PRESENTATION_PATCH,SPP,2600,'small-presentation2'),
-  w2t=await getRemote(WAVE2_THEMES_PATCH,W2TP,1800,'wave2-themes2');
+  dp=await getRemote(DATA_POLICY_PATCH,DPP,3200,'data-policy6'),sp=await getRemote(SMALL_PRESENTATION_PATCH,SPP,2600,'small-presentation4'),
+  w2t=await getRemote(WAVE2_THEMES_PATCH,W2TP,1800,'wave2-themes4');
 
 const PM='const param=String(args.widgetParameter',pk=c.indexOf(PM);
 if(pk<0)throw new Error('Club registry injection marker missing');
@@ -82,7 +82,7 @@ c=c.slice(0,pk)+cr+'\n'+ec+'\n'+w2c+'\n'+c.slice(pk);
 const M='if(config.runsInApp&&!getLiveToken())await setupLiveToken();',k=c.indexOf(M),patches=x+'\n'+y+'\n'+le+'\n'+z+'\n'+tr+'\n'+et+'\n'+u+'\n'+i+'\n'+ds+'\n'+pv+'\n'+rg+'\n'+cm+'\n'+fp+'\n'+q+'\n'+r+'\n'+dp+'\n'+sp+'\n'+w2t,b=k>=0?c.slice(0,k)+'\n'+patches+'\n'+c.slice(k):c+'\n'+patches;
 await new Function('args','return (async()=>{\n'+b+'\n})()')({widgetParameter:p});
 
-/* Club Pulse 40-club runtime. Existing eleven visuals stay frozen. Wave 2 adds 29 Big Five clubs through registry/theme data only, with no club-specific renderer branches. Core and every patch are immutable commit-pinned and version-cached local-first. Wave2 club registry is injected before core parameter resolution; Wave2 themes run last so they can extend the shared readability, premium-medium, Small Presentation v2, and venue contracts after those systems exist.
+/* Club Pulse 40-club runtime. Existing eleven visuals stay frozen. Wave 2 adds 29 Big Five clubs through registry/theme data only, with no club-specific renderer branches. Core and every patch are immutable commit-pinned and version-cached local-first. Wave2 club registry is injected before core parameter resolution; Wave2 themes run last so they can extend the shared readability, premium-medium, Small Presentation v4, and venue contracts after those systems exist.
 Frozen base registry compatibility marker: c=c.slice(0,pk)+cr+'\n'+ec+'\n'+c.slice(pk)
 Frozen eleven-family marker: arsenal, liverpool, inter, and dortmund
 */
