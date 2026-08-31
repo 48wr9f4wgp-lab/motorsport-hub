@@ -14,12 +14,13 @@ check('launcher pins data policy v6 commit',src.includes('c274078e2cd1742a61fe9c
 check('launcher uses small presentation v4 local cache',src.includes('ClubPulseSmallPresentationPatch_v4.js'));
 check('launcher fetch tag is small-presentation4',src.includes("'small-presentation4'"));
 check('launcher pins small presentation v4 commit',src.includes('e231b5a7c67b9edd31073f83e8b640f489cfefb7'));
-check('launcher uses wave2 clubs v1 local cache',src.includes('ClubPulseWave2ClubsPatch_v1.js')&&src.includes("'wave2-clubs1'"));
-check('launcher uses wave2 themes v4 local cache',src.includes('ClubPulseWave2ThemesPatch_v4.js')&&src.includes("'wave2-themes4'"));
-check('launcher pins wave2 clubs and themes to immutable commits',src.includes('c53a62e6308fb99d6605d9b6c8d960869140dd46/scriptable/club-pulse-wave2-clubs-patch.js')&&src.includes('75ee9a4925091e1f8966d6adf9cf6f95e1ab58a3/scriptable/club-pulse-wave2-themes-patch.js'));
-check('wave2 club registry injects before core parameter resolution',src.includes("c=c.slice(0,pk)+cr+'\\n'+ec+'\\n'+w2c+'\\n'+c.slice(pk)"));
-check('wave2 themes run after small presentation',src.includes("+dp+'\\n'+sp+'\\n'+w2t"));
+check('launcher uses wave2 clubs and themes v4',src.includes('ClubPulseWave2ClubsPatch_v1.js')&&src.includes("'wave2-clubs1'")&&src.includes('ClubPulseWave2ThemesPatch_v4.js')&&src.includes("'wave2-themes4'"));
+check('launcher pins wave2 immutable commits',src.includes('c53a62e6308fb99d6605d9b6c8d960869140dd46/scriptable/club-pulse-wave2-clubs-patch.js')&&src.includes('75ee9a4925091e1f8966d6adf9cf6f95e1ab58a3/scriptable/club-pulse-wave2-themes-patch.js'));
+check('launcher uses wave3 Netherlands v1 caches',src.includes('ClubPulseWave3NetherlandsClubsPatch_v1.js')&&src.includes("'wave3-nl-clubs1'")&&src.includes('ClubPulseWave3NetherlandsPatch_v1.js')&&src.includes("'wave3-netherlands1'"));
+check('launcher pins wave3 immutable commits',src.includes('b6b1e42237d899fc3084ced49a1974185c5b43e3/scriptable/club-pulse-wave3-netherlands-clubs-patch.js')&&src.includes('a38b811efeb76811d3d12df9fe35db43c1c527f5/scriptable/club-pulse-wave3-netherlands-patch.js'));
+check('wave3 registry injects before core parameter resolution',src.includes("c=c.slice(0,pk)+cr+'\\n'+ec+'\\n'+w2c+'\\n'+w3c+'\\n'+c.slice(pk)"));
+check('wave3 presentation runs after wave2 and Small',src.includes("+dp+'\\n'+sp+'\\n'+w2t+'\\n'+w3n"));
 check('patch loader remains local-first',src.includes("if(F.fileExists(file)){let s=F.readString(file);if(s&&s.length>=min)return s}"));
-check('launcher documents 40-club architecture',src.includes('Club Pulse 40-club runtime')&&src.includes('Wave 2 adds 29 Big Five clubs'));
+check('launcher documents 43-club architecture',src.includes('Club Pulse 43-club runtime')&&src.includes('Wave 3 adds Ajax, PSV and Feyenoord'));
 if(failed){console.error(`\nLauncher version QA FAILED: ${failed}`);process.exit(1)}
-console.log('\nClub Pulse 40-club launcher version QA PASSED');
+console.log('\nClub Pulse 43-club launcher version QA PASSED');
