@@ -1,6 +1,6 @@
-// Club Pulse canonical design system v4.
-// This file is the visual source of truth for the current seven-club family.
-// Legacy theme files remain as compatibility fallbacks; new visual tuning belongs here.
+// Club Pulse canonical design system v5.
+// Visual source of truth for the eleven-club family. Existing seven-club visual definitions stay frozen.
+// New clubs use the same shell, geometry and component hierarchy; only canonical theme tokens vary.
 
 const CP_DESIGN_TOKENS={
   shell:{
@@ -46,7 +46,6 @@ const CP_THEME_DEFINITIONS={
     text:'#FFF9FA',muted:'#F0DDE1',accent:'#FFFFFF',accentSoft:'#D9EEFF',
     surface:'#07090D',panel:'#0E1420',glow:'#B3122E',panelDeep:'#080D17',
     cardSurface:'#8C0016',cardPanel:'#C8102E',cardGlow:'#E21B42',
-    // Keep the field red-dominant; make the crest blue readable only in fine edges and pills.
     border:'#0073C9',cardBorder:'#2D86D3',sideBorder:'#2D86D3'
   },
   524:{
@@ -60,7 +59,6 @@ const CP_THEME_DEFINITIONS={
     key:'milan',tone:'rossoneri-gunmetal',
     text:'#FAFAFA',muted:'#E1DADC',accent:'#E22533',accentSoft:'#F3F3F3',
     surface:'#080708',panel:'#181619',glow:'#6B0B15',panelDeep:'#080D17',
-    // Milan identity stays on the left; the opponent side is a generic mid-light gunmetal zone that supports dark or light crests without per-opponent styling.
     cardSurface:'#7A0B16',cardPanel:'#342124',cardGlow:'#62666D',
     border:'#8E2832',cardBorder:'#B23A45',sideBorder:'#D5303C'
   },
@@ -70,13 +68,39 @@ const CP_THEME_DEFINITIONS={
     surface:'#071018',panel:'#0C1922',glow:'#3B91B7',panelDeep:'#080D17',
     cardSurface:'#18516F',cardPanel:'#2F7FA4',cardGlow:'#56A8C9',
     border:'#5AA6C8',cardBorder:'#A7DDF0',sideBorder:'#F0FBFF'
+  },
+  57:{
+    key:'arsenal',tone:'arsenal-red-ivory-navy',
+    text:'#FFF9F4',muted:'#E7DDE0',accent:'#F2E7D5',accentSoft:'#FFF6E8',
+    surface:'#090A0E',panel:'#101827',glow:'#A80F2A',panelDeep:'#080D17',
+    cardSurface:'#690719',cardPanel:'#B31230',cardGlow:'#E31B3D',
+    border:'#263F66',cardBorder:'#E6D8C3',sideBorder:'#F2E7D5'
+  },
+  64:{
+    key:'liverpool',tone:'deep-scarlet-teal',
+    text:'#FFF8F6',muted:'#E4D9DA',accent:'#A7E5DC',accentSoft:'#D9F2EE',
+    surface:'#090708',panel:'#180B10',glow:'#8B0A25',panelDeep:'#080D17',
+    cardSurface:'#500614',cardPanel:'#8F0B28',cardGlow:'#C8102E',
+    border:'#6E2031',cardBorder:'#71B8AE',sideBorder:'#A7E5DC'
+  },
+  108:{
+    key:'inter',tone:'nerazzurri-electric-blue',
+    text:'#F7FAFF',muted:'#CCD5E2',accent:'#C9A85E',accentSoft:'#E9D9A6',
+    surface:'#05070B',panel:'#07101F',glow:'#004AB8',panelDeep:'#080D17',
+    cardSurface:'#03060B',cardPanel:'#07152B',cardGlow:'#0057B8',
+    border:'#163D78',cardBorder:'#2E70D1',sideBorder:'#C9A85E'
+  },
+  4:{
+    key:'dortmund',tone:'signal-yellow-black',
+    text:'#121212',muted:'#343434',accent:'#111111',accentSoft:'#2A2A2A',
+    surface:'#080808',panel:'#111111',glow:'#D8BD00',panelDeep:'#080D17',
+    cardSurface:'#C6A900',cardPanel:'#E3C500',cardGlow:'#FDE100',
+    cardText:'#111111',cardMuted:'#323232',cardAccent:'#111111',
+    border:'#2C2C2C',cardBorder:'#181818',sideBorder:'#111111'
   }
 };
 
-// Apply shared tokens to the existing mutable shell object.
 if(typeof CP_COMMON_SHELL==='object')Object.assign(CP_COMMON_SHELL,CP_DESIGN_TOKENS.shell);
-
-// Apply the canonical club schema over compatibility theme registries.
 for(const [id,definition] of Object.entries(CP_THEME_DEFINITIONS)){
   const target=CP_CLUB_THEME_REGISTRY?.[id]||(CP_CLUB_THEME_REGISTRY[id]={});
   Object.assign(target,definition)
