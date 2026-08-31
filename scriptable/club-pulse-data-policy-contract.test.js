@@ -13,7 +13,7 @@ check('adaptive refresh tiers exist',['3*60*1000','5*60*1000','15*60*1000','30*6
 check('standings cache is league-shared',has(policy,"standings_${String(club.comp||'league').toLowerCase()}.json")&&has(policy,'CP_DP_STANDINGS_TTL=30*60*1000'));
 check('match fetch and standings overlay are separated',has(policy,'Promise.all([cpDpFetchMatches(t),standingsPromise])'));
 check('supplemental next cache is twelve hours',has(policy,'CP_DP_NEXT_OVERLAY_TTL=12*60*60*1000'));
-check('live quota reserve ceiling is forty',has(policy,'CP_DP_NEXT_QUOTA_CEILING=40')&&has(policy("")));
+check('live quota reserve ceiling is forty',has(policy,'CP_DP_NEXT_QUOTA_CEILING=40'));
 check('quota conservation skips supplemental next',has(policy,'cpDpQuotaCount()>=CP_DP_NEXT_QUOTA_CEILING')&&has(policy,"nextProvider:d.nextProvider||'quota-conserve'"));
 check('positive and negative next cache are reused',has(policy,"Object.prototype.hasOwnProperty.call(c,'match')")&&has(policy,'return c.match?chooseNext(d,c.match):d'));
 check('expired stale LIVE is neutralized',has(policy,"d.mode==='LIVE'")&&has(policy,"kickoff+4*60*60*1000")&&has(policy,"ourScore:null,opponentScore:null")&&has(policy,"liveExpired:true"));
