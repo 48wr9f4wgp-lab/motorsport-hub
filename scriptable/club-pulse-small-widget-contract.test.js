@@ -15,6 +15,7 @@ check('data policy keeps stale post-kickoff semantics',policy.includes("mode:'ST
 check('small presentation owns final header match footer',small.includes('buildHeaderSmall=function')&&small.includes('buildMatchSmall=function')&&small.includes('buildFooterSmall=function'));
 check('small presentation defines one typography hierarchy',small.includes('const CP_SP_TYPO=')&&small.includes('headerName:9.0')&&small.includes('team:8.8')&&small.includes('meta:9.0')&&small.includes('footer:7.6'));
 check('generic team labels enforce readability scale floor',small.includes('teamMinScale:.84')&&small.includes('nm.minimumScaleFactor=CP_SP_TYPO.teamMinScale'));
+check('generic team labels honor cardText token',small.includes('heavy(name,label,opt.nameSize||CP_SP_TYPO.team,cpSpCardColor())')&&small.includes("return t?.cardText||t?.text||'#F8FAFC'"));
 check('cut-looking aliases are replaced with semantic labels',small.includes("'ホッフェンハイム':'TSG'")&&small.includes("'フィオレンティーナ':'ヴィオラ'")&&small.includes("'シュトゥットガルト':'VfB'"));
 check('unknown long names can fall back to provider short code',small.includes("/^[A-Z0-9.-]{2,5}$/i.test(fb)"));
 check('all small teams share canonical block geometry',small.includes('teamWidth:49')&&small.includes('scoreWidth:40')&&small.includes('logo:40'));
