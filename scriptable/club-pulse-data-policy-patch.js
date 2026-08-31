@@ -1,8 +1,8 @@
-// Club Pulse data policy v2.
+// Club Pulse data policy v3.
 // Adaptive refresh/cache policy for multi-club home-screen operation.
 // Goals: keep LIVE/near-kickoff data responsive, reduce far-fixture provider traffic,
 // share league standings snapshots, avoid API-Football negative-cache churn,
-// and keep stale state semantics consistent in both medium and small widgets.
+// reserve API-Football capacity for LIVE, and keep stale semantics consistent across sizes.
 
 const CP_DP_BASE_LOAD_DATA=loadData,
       CP_DP_BASE_NEXT_OVERLAY=applyNextOverlay,
@@ -13,6 +13,8 @@ const CP_DP_BASE_LOAD_DATA=loadData,
       CP_DP_BASE_META_LINE=metaLine;
 
 const CP_DP_STANDINGS_TTL=30*60*1000;
+const CP_DP_NEXT_OVERLAY_TTL=12*60*60*1000;
+const CP_DP_NEXT_QUOTA_CEILING=40;
 
 function cpDpForcedOutage(){
   return typeof cpResForcedOutage==='function'&&cpResForcedOutage()
@@ -119,14 +121,23 @@ loadData=async function(t){
   }
 };
 
+function cpDpQuotaCount(){
+  try{
+    const q=readJSON(quotaPath(),{day:'',count:0}),today=fmt(new Date(),'yyyy-MM-dd');
+    return q?.day===today?Number(q.count||0):0
+  }catch{return 0}
+}
+
 applyNextOverlay=async function(d){
   if(cpDpForcedOutage())return CP_DP_BASE_NEXT_OVERLAY(d);
   const c=readJSON(nextPath());
-  // Respect both positive and negative API-Football next-fixture cache entries.
-  // Core previously reused only c.match truthy entries, causing null results to consume quota repeatedly.
-  if(c&&Date.now()-c.fetchedAt<NEXT_TTL&&Object.prototype.hasOwnProperty.call(c,'match')){
+  // API-Football next-fixture discovery is supplemental. Reuse positive AND negative
+  // results for 12 hours so an eleven-club setup needs at most ~22 routine checks/day.
+  if(c&&Date.now()-c.fetchedAt<CP_DP_NEXT_OVERLAY_TTL&&Object.prototype.hasOwnProperty.call(c,'match')){
     return c.match?chooseNext(d,c.match):d
   }
+  // Preserve the majority of the core 85-call daily guard for LIVE checks.
+  if(cpDpQuotaCount()>=CP_DP_NEXT_QUOTA_CEILING)return{...d,nextProvider:d.nextProvider||'quota-conserve'};
   return CP_DP_BASE_NEXT_OVERLAY(d)
 };
 
