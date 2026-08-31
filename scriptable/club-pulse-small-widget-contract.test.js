@@ -21,12 +21,13 @@ check('generic team labels enforce deeper readability floor',small.includes('tea
 check('generic team labels stay single-line clipping safe',small.includes('nm.lineLimit=1'));
 check('generic team labels honor cardText token',small.includes('heavy(name,label,opt.nameSize||cpSpTeamFont(label),cpSpCardColor())')&&small.includes("return t?.cardText||t?.text||'#F8FAFC'"));
 check('unknown long names can fall back to provider short code',small.includes("/^[A-Z0-9.-]{2,5}$/i.test(fb)"));
-check('NEXT and scored states use separate row geometry',small.includes('teamWidthNext:56')&&small.includes('teamWidthScore:48')&&small.includes('scoreWidthNext:26')&&small.includes('scoreWidthScore:42')&&small.includes('function cpSpRowMetrics(mode)'));
-check('scored state width is restored above v7 regression',small.includes("const scored=mode==='LIVE'||mode==='POST'")&&small.includes('scoreWidth:CP_SP_TYPO.scoreWidthScore'));
+check('NEXT and scored states use separate row geometry',small.includes('teamWidthNext:55')&&small.includes('teamWidthScore:48')&&small.includes('scoreWidthNext:32')&&small.includes('scoreWidthScore:42')&&small.includes('function cpSpRowMetrics(mode)'));
+check('NEXT VS column is protected from v8 clipping regression',small.includes('scoreWidthNext:32')&&small.includes('scoreNext:14.0'));
+check('scored state width stays protected',small.includes("const scored=mode==='LIVE'||mode==='POST'")&&small.includes('scoreWidth:CP_SP_TYPO.scoreWidthScore'));
 check('LIVE POST numeric scores bypass inherited ellipsis risk',small.includes('function cpSpScoreValue')&&small.includes('Number.isFinite(m?.ourScore)')&&small.includes('`${m.ourScore}-${m.opponentScore}`'));
 check('score renderer uses dynamic width and single-line scaling',small.includes('sb.size=new Size(gm.scoreWidth,22)')&&small.includes('scoreMinScale:.72')&&small.includes('sc.lineLimit=1'));
 check('special Real and Barcelona crest treatment is preserved',small.includes("t?.key==='realmadrid'")&&small.includes('cpRealTeamBlock')&&small.includes("t?.key==='barcelona'")&&small.includes('cpBarcelonaTeamBlock'));
 check('NEXT LIVE POST and stale-next share final small renderer',small.includes("view.mode==='LIVE'")&&small.includes("view.mode==='POST'")&&small.includes("d?.mode==='STALE_NEXT'")&&small.includes("mode:'STALE_NEXT'"));
 check('Dortmund shell header stays on headerAccent',small.includes('t?.headerAccent||CP_DESIGN_TOKENS?.shell?.text'));
 if(failed){console.error(`\nSmall widget contract QA FAILED: ${failed}`);process.exit(1)}
-console.log('\nClub Pulse canonical Small Presentation System v8 QA PASSED');
+console.log('\nClub Pulse canonical Small Presentation System v9 QA PASSED');
