@@ -4,10 +4,11 @@ const vm=require('vm');
 const root=__dirname;
 const clubsSrc=fs.readFileSync(path.join(root,'club-pulse-wave3-netherlands-clubs-patch.js'),'utf8');
 const patchSrc=fs.readFileSync(path.join(root,'club-pulse-wave3-netherlands-patch.js'),'utf8');
+const premiumSrc=fs.readFileSync(path.join(root,'club-pulse-premium-visual-patch.js'),'utf8');
 let failed=0;
 const check=(name,ok)=>{if(ok)console.log(`✓ ${name}`);else{console.error(`✗ ${name}`);failed++}};
 const syntax=(name,src)=>{try{new Function(src);check(`${name}: syntax`,true)}catch(e){console.error(e);check(`${name}: syntax`,false)}};
-syntax('wave3 clubs',clubsSrc);syntax('wave3 netherlands',patchSrc);
+syntax('wave3 clubs',clubsSrc);syntax('wave3 netherlands',patchSrc);syntax('premium visual',premiumSrc);
 
 const CLUBS={},ALIASES={};
 vm.runInNewContext(clubsSrc,{CLUBS,ALIASES});
@@ -39,6 +40,9 @@ check('Dutch localization registry populated',context.JP['AFC Ajax']==='アヤ�
 check('Small Feyenoord alias avoids clipping',context.CP_SP_SMALL_ALIASES['フェイエノールト']==='フェイエ');
 check('three home venues registered',context.CP_HOME_VENUE_BY_TEAM['アヤックス']==='ヨハン・クライフ・アレナ'&&context.CP_HOME_VENUE_BY_TEAM['PSV']==='フィリップス・スタディオン'&&context.CP_HOME_VENUE_BY_TEAM['フェイエノールト']==='デ・カイプ');
 check('presentation patch adds no club renderer exception',!patchSrc.includes('buildMedium=')&&!patchSrc.includes('buildSmall=')&&!patchSrc.includes('renderTeamBlock='));
+check('premium Medium team block accepts theme text color',premiumSrc.includes('function cpPremiumTeamBlock(parent,opt,fg)')&&premiumSrc.includes('heavy(name,opt.name,opt.nameSize||12,fg)'));
+check('premium Medium applies cardText to both team labels',(premiumSrc.match(/cpPremiumTeamBlock\(row,/g)||[]).length===2&&premiumSrc.includes('fg=cpPremiumTextColor(t)'));
+check('Ajax fix remains data driven',!premiumSrc.includes("t?.key==='ajax'")&&!premiumSrc.includes("club.id==='ajax'"));
 
 if(failed){console.error(`\nClub Pulse Wave 3 Netherlands QA FAILED: ${failed}`);process.exit(1)}
 console.log('\nClub Pulse Ajax / PSV / Feyenoord expansion QA PASSED');
