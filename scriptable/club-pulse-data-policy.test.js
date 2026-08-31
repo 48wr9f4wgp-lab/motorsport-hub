@@ -13,9 +13,9 @@ function makeContext({now=Date.now(),mode='NEXT',kickoffMs=now+72*3600e3,cachedA
   let apiCalls=[],baseNextCalls=0,writes=[];
   const cached={
     fetchedAt:now-cachedAge,mode,rank:9,points:12,stale:false,
-    nextMatch:{utcDate:new realDate(kickoffMs).toISOString(),opponentName:'X'},
-    liveMatch:mode==='LIVE'?{utcDate:new realDate(kickoffMs).toISOString(),ourScore:2,opponentScore:1,minute:"67'"}:null,
-    recentResult:mode==='POST'?{utcDate:new realDate(kickoffMs).toISOString(),ourScore:2,opponentScore:1}:null
+    nextMatch:{utcDate:new realDate(kickoffMs).toISOString(),kickoff:'9/1(火) 04:00',venue:'テスト会場',opponentName:'X'},
+    liveMatch:mode==='LIVE'?{utcDate:new realDate(kickoffMs).toISOString(),kickoff:'9/1(火) 04:00',venue:'テスト会場',ourScore:2,opponentScore:1,minute:"67'"}:null,
+    recentResult:mode==='POST'?{utcDate:new realDate(kickoffMs).toISOString(),kickoff:'9/1(火) 04:00',venue:'テスト会場',ourScore:2,opponentScore:1}:null
   };
   const standings={standings:[{type:'TOTAL',table:[{team:{id:66},position:4,points:21}]}]};
   const ctx={
@@ -24,6 +24,10 @@ function makeContext({now=Date.now(),mode='NEXT',kickoffMs=now+72*3600e3,cachedA
     loadData:async()=>({...cached,stale:true,resilience:'cache'}),
     applyNextOverlay:async d=>{baseNextCalls++;return{...d,baseNext:true}},
     refreshDelay:()=>15*60e3,
+    buildMatchSmall:(w,d)=>d,
+    statusTitle:(d)=>d.mode==='LIVE'?'試合中':d.mode==='POST'?'試合終了':'次の試合',
+    centerMainText:(d)=>d.mode==='NEXT'?'VS':'2-1',
+    metaLine:(d,m)=>d.mode==='NEXT'?`${m.kickoff} ・ ${m.venue}`:`${m.venue}`,
     cpResForcedOutage:()=>false,
     cpCmNormalizeData:d=>d,
     readJSON:p=>{
@@ -41,7 +45,7 @@ function makeContext({now=Date.now(),mode='NEXT',kickoffMs=now+72*3600e3,cachedA
     ymd:d=>d.toISOString().slice(0,10),
     api:async p=>{apiCalls.push(p);if(p.includes('/matches?'))return{matches:[]};if(p.includes('/standings'))return standings;throw new Error('unexpected')},
     standing:sj=>sj?.standings?.[0]?.table?.[0]||null,
-    mapData:(m,sj)=>({fetchedAt:now,mode:'NEXT',rank:sj?.standings?.[0]?.table?.[0]?.position??null,points:sj?.standings?.[0]?.table?.[0]?.points??null,nextMatch:{utcDate:new realDate(kickoffMs).toISOString()}}),
+    mapData:(m,sj)=>({fetchedAt:now,mode:'NEXT',rank:sj?.standings?.[0]?.table?.[0]?.position??null,points:sj?.standings?.[0]?.table?.[0]?.points??null,nextMatch:{utcDate:new realDate(kickoffMs).toISOString(),kickoff:'9/1(火) 04:00',venue:'テスト会場'}}),
     chooseNext:(d,m)=>({...d,nextMatch:m,chosen:true})
   };
   ctx.__state={apiCalls,writes,get baseNextCalls(){return baseNextCalls},cached};
@@ -70,10 +74,17 @@ function makeContext({now=Date.now(),mode='NEXT',kickoffMs=now+72*3600e3,cachedA
 
   c=makeContext({now,mode:'LIVE',kickoffMs:now-5*3600e3,cachedAge:5*60e3});
   c.cpResForcedOutage=()=>true;
-  // Re-evaluate wrapper forced-outage predicate through the global binding.
   out=await c.loadData('t');
   check('expired stale LIVE degrades to neutral NEXT/update-waiting state',out.mode==='NEXT'&&out.liveExpired===true&&out.nextMatch.ourScore===null&&out.nextMatch.opponentScore===null);
   check('stale data retries after five minutes',c.refreshDelay({...out,stale:true})===5*60e3);
+
+  c=makeContext({now,kickoffMs:now-60*1000});
+  const staleNext={...c.__state.cached,stale:true};
+  const smallState=c.buildMatchSmall(null,staleNext,{});
+  check('small stale NEXT switches to synthetic waiting state',smallState.mode==='STALE_NEXT'&&smallState.cpSmallWaiting===true);
+  check('small stale NEXT label is update waiting',c.statusTitle(smallState,smallState.nextMatch)==='更新待ち');
+  check('small stale NEXT keeps neutral VS center',c.centerMainText(smallState,smallState.nextMatch)==='VS');
+  check('small stale NEXT keeps kickoff and venue metadata',c.metaLine(smallState,smallState.nextMatch)==='9/1(火) 04:00 ・ テスト会場');
 
   if(failed){console.error(`\nData policy QA FAILED: ${failed}`);process.exit(1)}
   console.log('\nClub Pulse data policy QA PASSED')
