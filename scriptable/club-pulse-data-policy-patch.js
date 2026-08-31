@@ -1,8 +1,9 @@
-// Club Pulse data policy v5.
+// Club Pulse data policy v6.
 // Adaptive refresh/cache policy for multi-club home-screen operation.
 // Goals: keep LIVE/near-kickoff data responsive, reduce provider traffic,
 // share league standings and global LIVE snapshots, reserve API-Football quota,
 // and keep stale semantics honest across time and widget sizes.
+// v6 removes the v5 `updated` override because core defines it as a const binding.
 
 const CP_DP_BASE_LOAD_DATA=loadData,
       CP_DP_BASE_NEXT_OVERLAY=applyNextOverlay,
@@ -11,14 +12,12 @@ const CP_DP_BASE_LOAD_DATA=loadData,
       CP_DP_BASE_BUILD_MATCH_SMALL=buildMatchSmall,
       CP_DP_BASE_STATUS_TITLE=statusTitle,
       CP_DP_BASE_CENTER_MAIN=centerMainText,
-      CP_DP_BASE_META_LINE=metaLine,
-      CP_DP_BASE_UPDATED=updated;
+      CP_DP_BASE_META_LINE=metaLine;
 
 const CP_DP_STANDINGS_TTL=30*60*1000;
 const CP_DP_NEXT_OVERLAY_TTL=12*60*60*1000;
 const CP_DP_NEXT_QUOTA_CEILING=40;
 const CP_DP_GLOBAL_LIVE_TTL=3*60*1000;
-const CP_DP_OLD_CACHE_AGE=24*60*60*1000;
 
 function cpDpForcedOutage(){
   return typeof cpResForcedOutage==='function'&&cpResForcedOutage()
@@ -84,7 +83,6 @@ async function cpDpFetchMatches(t){
 
 function cpDpSanitizeStale(d){
   if(!d?.stale)return d;
-  // A cached LIVE score must not look live indefinitely after a provider outage.
   if(d.mode==='LIVE'&&d.liveMatch?.utcDate){
     const kickoff=new Date(d.liveMatch.utcDate).getTime();
     if(Number.isFinite(kickoff)&&Date.now()>=kickoff+4*60*60*1000){
@@ -92,8 +90,6 @@ function cpDpSanitizeStale(d){
       return{...d,mode:'NEXT',nextMatch:m,liveMatch:null,liveExpired:true}
     }
   }
-  // POST is intentionally temporary. Once its normal window has elapsed, a cached
-  // result should give way to the already-cached next fixture instead of looking current forever.
   if(d.mode==='POST'&&d.recentResult?.utcDate&&d.nextMatch){
     const resultKickoff=new Date(d.recentResult.utcDate).getTime();
     const postWindow=typeof POST==='number'?POST:10*60*60*1000;
@@ -194,13 +190,6 @@ applyLiveOverlay=async function(d){
 refreshDelay=function(d){
   if(d?.stale)return 5*60*1000;
   return cpDpMatchTtl(d)
-};
-
-// Avoid ambiguous old cache timestamps such as "16:16更新" when that time was yesterday.
-updated=function(t){
-  const ms=new Date(t).getTime();
-  if(Number.isFinite(ms)&&Date.now()-ms>=CP_DP_OLD_CACHE_AGE)return fmt(new Date(ms),'M/d HH:mm')+'更新';
-  return CP_DP_BASE_UPDATED(t)
 };
 
 function cpDpSmallWaiting(d){
