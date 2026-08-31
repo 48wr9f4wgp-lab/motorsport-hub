@@ -19,7 +19,7 @@ check('long common names use semantic small aliases',small.includes("'ホッフ�
 check('unknown long names can fall back to provider short code',small.includes("/^[A-Z0-9.-]{2,5}$/.test(fb)"));
 check('all small teams share canonical block geometry',small.includes('teamWidth:54')&&small.includes('scoreWidth:28')&&small.includes('logo:40'));
 check('special Real and Barcelona crest treatment is preserved',small.includes("t?.key==='realmadrid'")&&small.includes('cpRealTeamBlock')&&small.includes("t?.key==='barcelona'")&&small.includes('cpBarcelonaTeamBlock'));
-check('NEXT LIVE POST share final small renderer',small.includes("view.mode==='LIVE'")&&small.includes("view.mode==='POST'")&&small.includes("view.mode==='STALE_NEXT'"));
+check('NEXT LIVE POST and stale-next share final small renderer',small.includes("view.mode==='LIVE'")&&small.includes("view.mode==='POST'")&&small.includes("d?.mode==='STALE_NEXT'")&&small.includes("mode:'STALE_NEXT'"));
 check('Dortmund shell header stays on headerAccent',small.includes('t?.headerAccent||CP_DESIGN_TOKENS?.shell?.text'));
 if(failed){console.error(`\nSmall widget contract QA FAILED: ${failed}`);process.exit(1)}
 console.log('\nClub Pulse canonical Small Presentation System QA PASSED');
