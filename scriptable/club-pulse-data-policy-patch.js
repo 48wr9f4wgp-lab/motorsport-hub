@@ -1,11 +1,12 @@
-// Club Pulse data policy v3.
+// Club Pulse data policy v4.
 // Adaptive refresh/cache policy for multi-club home-screen operation.
-// Goals: keep LIVE/near-kickoff data responsive, reduce far-fixture provider traffic,
-// share league standings snapshots, avoid API-Football negative-cache churn,
-// reserve API-Football capacity for LIVE, and keep stale semantics consistent across sizes.
+// Goals: keep LIVE/near-kickoff data responsive, reduce provider traffic,
+// share league standings and global LIVE snapshots, reserve API-Football quota,
+// and keep stale semantics consistent across widget sizes.
 
 const CP_DP_BASE_LOAD_DATA=loadData,
       CP_DP_BASE_NEXT_OVERLAY=applyNextOverlay,
+      CP_DP_BASE_LIVE_OVERLAY=applyLiveOverlay,
       CP_DP_BASE_REFRESH_DELAY=refreshDelay,
       CP_DP_BASE_BUILD_MATCH_SMALL=buildMatchSmall,
       CP_DP_BASE_STATUS_TITLE=statusTitle,
@@ -15,6 +16,7 @@ const CP_DP_BASE_LOAD_DATA=loadData,
 const CP_DP_STANDINGS_TTL=30*60*1000;
 const CP_DP_NEXT_OVERLAY_TTL=12*60*60*1000;
 const CP_DP_NEXT_QUOTA_CEILING=40;
+const CP_DP_GLOBAL_LIVE_TTL=3*60*1000;
 
 function cpDpForcedOutage(){
   return typeof cpResForcedOutage==='function'&&cpResForcedOutage()
@@ -131,14 +133,60 @@ function cpDpQuotaCount(){
 applyNextOverlay=async function(d){
   if(cpDpForcedOutage())return CP_DP_BASE_NEXT_OVERLAY(d);
   const c=readJSON(nextPath());
-  // API-Football next-fixture discovery is supplemental. Reuse positive AND negative
-  // results for 12 hours so an eleven-club setup needs at most ~22 routine checks/day.
+  // Supplemental next-fixture discovery is cached for 12h. Across eleven clubs this
+  // caps routine discovery near 22 calls/day instead of ~44 with the old six-hour TTL.
   if(c&&Date.now()-c.fetchedAt<CP_DP_NEXT_OVERLAY_TTL&&Object.prototype.hasOwnProperty.call(c,'match')){
     return c.match?chooseNext(d,c.match):d
   }
   // Preserve the majority of the core 85-call daily guard for LIVE checks.
   if(cpDpQuotaCount()>=CP_DP_NEXT_QUOTA_CEILING)return{...d,nextProvider:d.nextProvider||'quota-conserve'};
   return CP_DP_BASE_NEXT_OVERLAY(d)
+};
+
+function cpDpGlobalLivePath(){return path('live_global.json')}
+
+async function cpDpGlobalLiveRows(token){
+  const p=cpDpGlobalLivePath(),c=readJSON(p),now=Date.now();
+  if(c&&now-c.fetchedAt<CP_DP_GLOBAL_LIVE_TTL&&Array.isArray(c.rows))return c.rows;
+  const j=await liveApi('/fixtures?live=all',token),rows=Array.isArray(j?.response)?j.response:[];
+  writeJSON(p,{fetchedAt:Date.now(),rows});
+  return rows
+}
+
+function cpDpFindLiveByName(rows){
+  const q=String(club?.liveSearch||'').trim().toLowerCase();
+  if(!q)return null;
+  for(const fixture of rows||[]){
+    const home=fixture?.teams?.home,away=fixture?.teams?.away;
+    if(String(home?.name||'').trim().toLowerCase()===q)return{fixture,teamId:home?.id||null};
+    if(String(away?.name||'').trim().toLowerCase()===q)return{fixture,teamId:away?.id||null}
+  }
+  return null
+}
+
+async function cpDpFindLive(rows,token){
+  const named=cpDpFindLiveByName(rows);
+  if(named?.teamId)return named;
+  const teamId=await resolveLiveTeamId(token);
+  if(!teamId)return null;
+  const fixture=(rows||[]).find(x=>x?.teams?.home?.id===teamId||x?.teams?.away?.id===teamId)||null;
+  return fixture?{fixture,teamId}:null
+}
+
+applyLiveOverlay=async function(d){
+  if(cpDpForcedOutage())return CP_DP_BASE_LIVE_OVERLAY(d);
+  const token=getLiveToken();
+  if(!token||!shouldCheckLive(d))return{...d,liveProvider:token?'ready':'unconfigured'};
+  try{
+    // One shared /fixtures?live=all snapshot serves every Club Pulse widget on-device.
+    // API-Football documents this endpoint for retrieving all fixtures currently in play.
+    const rows=await cpDpGlobalLiveRows(token),hit=await cpDpFindLive(rows,token);
+    if(!hit?.fixture)return{...d,liveProvider:'ready'};
+    const m=mapApiFixture(hit.fixture,hit.teamId,true);
+    return{...d,mode:'LIVE',liveMatch:m,clubCrest:m.clubCrest||d.clubCrest,liveProvider:'apiFootball-global'}
+  }catch{
+    return{...d,liveProvider:'error'}
+  }
 };
 
 refreshDelay=function(d){
