@@ -2,7 +2,7 @@ name: Club Pulse Contract QA
 
 on:
   push:
-    branches: [club-pulse-runtime, club-pulse-rc-integration]
+    branches: [club-pulse-runtime, club-pulse-rc-integration, club-pulse-expansion-40]
     paths:
       - 'scriptable/**'
       - '.github/workflows/club-pulse-contract.yml'
@@ -25,10 +25,22 @@ jobs:
         run: |
           node scriptable/club-pulse-contract.test.js
           node scriptable/club-pulse-expanded-clubs.test.js
+          node scriptable/club-pulse-wave2-expansion.test.js
+          node scriptable/club-pulse-wave3-netherlands.test.js
+          node scriptable/club-pulse-wave4-lens.test.js
+          node scriptable/club-pulse-bundesliga-venue-contract.test.js
+          node scriptable/club-pulse-premier-league-venue-contract.test.js
+          node scriptable/club-pulse-laliga-venue-contract.test.js
+          node scriptable/club-pulse-serie-a-venue-contract.test.js
+          node scriptable/club-pulse-ligue1-venue-contract.test.js
           node scriptable/club-pulse-cache-migration.test.js
           node scriptable/club-pulse-resilience.test.js
           node scriptable/club-pulse-data-policy.test.js
           node scriptable/club-pulse-data-policy-contract.test.js
+          node scriptable/club-pulse-simulation-guard.test.js
           node scriptable/club-pulse-loader-efficiency.test.js
           node scriptable/club-pulse-small-widget-contract.test.js
+          node scriptable/club-pulse-medium-state-contract.test.js
+          node scriptable/club-pulse-live-context-contract.test.js
+          node scriptable/club-pulse-form-system-contract.test.js
           node scriptable/club-pulse-launcher-version.test.js

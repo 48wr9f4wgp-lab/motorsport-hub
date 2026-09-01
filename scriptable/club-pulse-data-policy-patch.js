@@ -1,9 +1,9 @@
-// Club Pulse data policy v6.
+// Club Pulse data policy v8.
 // Adaptive refresh/cache policy for multi-club home-screen operation.
 // Goals: keep LIVE/near-kickoff data responsive, reduce provider traffic,
 // share league standings and global LIVE snapshots, reserve API-Football quota,
-// and keep stale semantics honest across time and widget sizes.
-// v6 removes the v5 `updated` override because core defines it as a const binding.
+// keep stale semantics honest, reject impossible future-result states,
+// and prevent legacy simulated match modes from leaking onto Home Screen widgets.
 
 const CP_DP_BASE_LOAD_DATA=loadData,
       CP_DP_BASE_NEXT_OVERLAY=applyNextOverlay,
@@ -12,12 +12,14 @@ const CP_DP_BASE_LOAD_DATA=loadData,
       CP_DP_BASE_BUILD_MATCH_SMALL=buildMatchSmall,
       CP_DP_BASE_STATUS_TITLE=statusTitle,
       CP_DP_BASE_CENTER_MAIN=centerMainText,
-      CP_DP_BASE_META_LINE=metaLine;
+      CP_DP_BASE_META_LINE=metaLine,
+      CP_DP_BASE_APPLY_TEST_MODE=typeof applyTestMode==='function'?applyTestMode:(d=>d);
 
 const CP_DP_STANDINGS_TTL=30*60*1000;
 const CP_DP_NEXT_OVERLAY_TTL=12*60*60*1000;
 const CP_DP_NEXT_QUOTA_CEILING=40;
 const CP_DP_GLOBAL_LIVE_TTL=3*60*1000;
+const CP_DP_SIMULATED_MATCH_MODES=['live','post','cl','fa','efl'];
 
 function cpDpForcedOutage(){
   return typeof cpResForcedOutage==='function'&&cpResForcedOutage()
@@ -81,7 +83,40 @@ async function cpDpFetchMatches(t){
   return api(`/teams/${club.team}/matches?dateFrom=${from}&dateTo=${to}&limit=100`,t)
 }
 
+function cpDpIsFutureResult(m,now=Date.now()){
+  if(m?.status!=='FINISHED'||!m?.utcDate)return false;
+  const t=new Date(m.utcDate).getTime();
+  return Number.isFinite(t)&&t>now
+}
+
+function cpDpFutureAsScheduled(m){
+  const score={...(m?.score||{})};
+  for(const k of['fullTime','regularTime','halfTime','extraTime','penalties']){
+    if(score[k])score[k]={...score[k],home:null,away:null}
+  }
+  return{...m,status:'SCHEDULED',score}
+}
+
+function cpDpTemporalizeMatches(mj){
+  if(!Array.isArray(mj?.matches))return mj;
+  const now=Date.now();
+  return{...mj,matches:mj.matches.map(m=>cpDpIsFutureResult(m,now)?cpDpFutureAsScheduled(m):m)}
+}
+
+function cpDpSanitizeTemporal(d){
+  if(!d)return d;
+  if(d.mode==='POST'&&d.recentResult?.utcDate){
+    const t=new Date(d.recentResult.utcDate).getTime();
+    if(Number.isFinite(t)&&t>Date.now()){
+      const m={...d.recentResult,status:'SCHEDULED',minute:null,ourScore:null,opponentScore:null,result:null};
+      return{...d,mode:'NEXT',nextMatch:m,recentResult:null,liveMatch:null,futureResultCorrected:true}
+    }
+  }
+  return d
+}
+
 function cpDpSanitizeStale(d){
+  d=cpDpSanitizeTemporal(d);
   if(!d?.stale)return d;
   if(d.mode==='LIVE'&&d.liveMatch?.utcDate){
     const kickoff=new Date(d.liveMatch.utcDate).getTime();
@@ -103,7 +138,7 @@ function cpDpSanitizeStale(d){
 loadData=async function(t){
   if(cpDpForcedOutage())return cpDpSanitizeStale(await CP_DP_BASE_LOAD_DATA(t));
 
-  let cached=cpDpNormalize(readJSON(cachePath()));
+  let cached=cpDpSanitizeTemporal(cpDpNormalize(readJSON(cachePath())));
   const now=Date.now(),ttl=cpDpMatchTtl(cached);
   const standingsPromise=cpDpStandings(t);
   if(cached&&Number.isFinite(cached.fetchedAt)&&now-cached.fetchedAt<ttl){
@@ -113,7 +148,7 @@ loadData=async function(t){
 
   try{
     const [matches,sj]=await Promise.all([cpDpFetchMatches(t),standingsPromise]);
-    let fresh=mapData(matches,sj||{});
+    let fresh=cpDpSanitizeTemporal(mapData(cpDpTemporalizeMatches(matches),sj||{}));
     if(!sj&&cached)fresh={...fresh,rank:cached.rank,points:cached.points};
     writeJSON(cachePath(),fresh);
     return{...fresh,stale:false,dataPolicy:'network'}
@@ -216,4 +251,14 @@ centerMainText=function(d,m){
 metaLine=function(d,m){
   if(d?.cpSmallWaiting)return`${m.kickoff} ・ ${m.venue}`;
   return CP_DP_BASE_META_LINE(d,m)
+};
+
+function cpDpSuppressWidgetSimulation(){
+  const mode=String(typeof qa==='string'?qa:'auto').trim().toLowerCase();
+  return !config.runsInApp&&CP_DP_SIMULATED_MATCH_MODES.includes(mode)
+}
+
+applyTestMode=function(d){
+  if(cpDpSuppressWidgetSimulation())return{...d,qaModeSuppressed:String(qa||'').toLowerCase()};
+  return CP_DP_BASE_APPLY_TEST_MODE(d)
 };

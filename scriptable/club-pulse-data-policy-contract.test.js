@@ -7,7 +7,7 @@ let failed=0;
 const check=(n,ok)=>{if(ok)console.log(`✓ ${n}`);else{console.error(`✗ ${n}`);failed++}};
 const has=(s,x)=>s.includes(x);
 try{new Function(`return (async()=>{\n${policy}\n})`);check('data policy syntax',true)}catch(e){console.error(e.message);check('data policy syntax',false)}
-check('launcher pins data policy v6',has(launcher,'c274078e2cd1742a61fe9c3548d54f703a84ebc5')&&has(launcher,'ClubPulseDataPolicyPatch_v6.js')&&has(launcher,"'data-policy6'"));
+check('launcher pins data policy v8',has(launcher,'fa0b30efd1407e4221175b25da282b904c713b71')&&has(launcher,'ClubPulseDataPolicyPatch_v8.js')&&has(launcher,"'data-policy8'"));
 check('data policy loads after resilience',has(launcher,"+q+'\\n'+r+'\\n'+dp"));
 check('adaptive refresh tiers exist',['3*60*1000','5*60*1000','15*60*1000','30*60*1000','60*60*1000'].every(x=>has(policy,x)));
 check('standings cache is league-shared',has(policy,"standings_${String(club.comp||'league').toLowerCase()}.json")&&has(policy,'CP_DP_STANDINGS_TTL=30*60*1000'));
@@ -17,6 +17,10 @@ check('quota conservation skips supplemental next',has(policy,'cpDpQuotaCount()>
 check('global live cache is three minutes',has(policy,'CP_DP_GLOBAL_LIVE_TTL=3*60*1000')&&has(policy,"path('live_global.json')"));
 check('global live endpoint is shared',has(policy,"liveApi('/fixtures?live=all',token)")&&has(policy,"liveProvider:'apiFootball-global'"));
 check('global live lookup prefers canonical team name before id fallback',has(policy,'function cpDpFindLiveByName')&&has(policy,'resolveLiveTeamId(token)'));
+check('future FINISHED rows are reclassified before mapping',has(policy,"m?.status!=='FINISHED'")&&has(policy,"status:'SCHEDULED'")&&has(policy,'cpDpTemporalizeMatches(matches)'));
+check('future cached POST is neutralized into NEXT',has(policy,"d.mode==='POST'&&d.recentResult?.utcDate")&&has(policy,'t>Date.now()')&&has(policy,"futureResultCorrected:true")&&has(policy,'recentResult:null'));
+check('home-screen simulated match modes are suppressed',has(policy,"CP_DP_SIMULATED_MATCH_MODES=['live','post','cl','fa','efl']")&&has(policy,'!config.runsInApp&&CP_DP_SIMULATED_MATCH_MODES.includes(mode)')&&has(policy,'qaModeSuppressed'));
+check('in-app simulation still delegates to core',has(policy,'return CP_DP_BASE_APPLY_TEST_MODE(d)'));
 check('expired stale LIVE is neutralized',has(policy,"d.mode==='LIVE'")&&has(policy,"kickoff+4*60*60*1000")&&has(policy,"ourScore:null,opponentScore:null")&&has(policy,"liveExpired:true"));
 check('expired stale POST yields next fixture',has(policy,"d.mode==='POST'")&&has(policy,"postExpired:true")&&has(policy,"typeof POST==='number'?POST:10*60*60*1000"));
 check('readonly core updated binding is never reassigned',!/(^|[^A-Za-z0-9_$])updated\s*=/.test(policy)&&!has(policy,'CP_DP_BASE_UPDATED=updated'));
