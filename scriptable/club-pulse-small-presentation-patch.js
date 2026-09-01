@@ -1,8 +1,9 @@
-// Club Pulse Small Presentation System v9.
+// Club Pulse Small Presentation System v10.
 // Canonical small-widget renderer for all supported clubs.
-// v9 keeps v8's scored-state protection and full-name typography, while restoring
-// enough NEXT center width for the literal VS label to render without clipping.
+// v10 keeps v9 geometry and scored-state protection, while preferring readable
+// Japanese club names up to nine characters before falling back to aliases/codes.
 
+const CP_SP_FULL_NAME_LIMIT=9;
 const CP_SP_TYPO={
   headerName:9.0,
   headerRank:10.0,
@@ -47,8 +48,8 @@ function cpSpHeaderColor(){const t=cpSpTheme();return t?.headerAccent||CP_DESIGN
 function cpSpCardColor(){const t=cpSpTheme();return t?.cardText||t?.text||'#F8FAFC'}
 function cpSpMutedCardColor(){const t=cpSpTheme();return t?.cardMuted||t?.muted||'#D8DDE6'}
 function cpSpCanonical(name){return typeof cpCanonicalTeamName==='function'?cpCanonicalTeamName(name):String(name||'').trim()}
-function cpSpTeamLabel(name,fallback,isClub=false){let n=isClub?(club?.jp||club?.short||''):cpSpCanonical(name);if(CP_SP_SMALL_ALIASES[n])return CP_SP_SMALL_ALIASES[n];if(Array.from(n).length<=6)return n;const fb=String(fallback||'').trim();if(/^[A-Z0-9.-]{2,5}$/i.test(fb))return fb;return n}
-function cpSpTeamFont(label){const n=Array.from(String(label||'')).length;if(n<=3)return CP_SP_TYPO.team;if(n===4)return 9.1;if(n===5)return 8.2;if(n===6)return 7.4;return 7.0}
+function cpSpTeamLabel(name,fallback,isClub=false){let n=isClub?(club?.jp||club?.short||''):cpSpCanonical(name);if(Array.from(n).length<=CP_SP_FULL_NAME_LIMIT)return n;if(CP_SP_SMALL_ALIASES[n])return CP_SP_SMALL_ALIASES[n];const fb=String(fallback||'').trim();if(/^[A-Z0-9.-]{2,5}$/i.test(fb))return fb;return n}
+function cpSpTeamFont(label){const n=Array.from(String(label||'')).length;if(n<=3)return CP_SP_TYPO.team;if(n===4)return 9.1;if(n===5)return 8.2;if(n===6)return 7.4;if(n===7)return 7.0;if(n===8)return 6.6;if(n===9)return 6.2;return 7.0}
 function cpSpRowMetrics(mode){const scored=mode==='LIVE'||mode==='POST';return scored?{teamWidth:CP_SP_TYPO.teamWidthScore,scoreWidth:CP_SP_TYPO.scoreWidthScore}:{teamWidth:CP_SP_TYPO.teamWidthNext,scoreWidth:CP_SP_TYPO.scoreWidthNext}}
 function cpSpGenericTeamBlock(parent,opt,label){const s=parent.addStack();if(opt.width)s.size=new Size(opt.width,0);s.layoutVertically();const logo=s.addStack();logo.layoutHorizontally();logo.addSpacer();badge(logo,opt.fallback,opt.img,opt.logoSize,opt.p1,opt.p2,opt.scale||1);logo.addSpacer();s.addSpacer(opt.nameGap??2);const name=s.addStack();name.layoutHorizontally();name.addSpacer();const nm=heavy(name,label,opt.nameSize||cpSpTeamFont(label),cpSpCardColor());nm.centerAlignText();nm.lineLimit=1;nm.minimumScaleFactor=CP_SP_TYPO.teamMinScale;name.addSpacer();return s}
 function cpSpTeamBlock(parent,opt,isClub=false){const t=cpSpTheme(),label=cpSpTeamLabel(opt.name,opt.fallback,isClub),base={...opt,name:label,logoSize:CP_SP_TYPO.logo,nameSize:cpSpTeamFont(label),nameGap:2,width:opt.width||CP_SP_TYPO.teamWidthNext};if(t?.key==='realmadrid'&&typeof cpRealTeamBlock==='function')return cpRealTeamBlock(parent,base,true);if(t?.key==='barcelona'&&typeof cpBarcelonaTeamBlock==='function')return cpBarcelonaTeamBlock(parent,base,true);return cpSpGenericTeamBlock(parent,base,label)}
