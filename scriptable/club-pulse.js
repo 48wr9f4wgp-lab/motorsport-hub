@@ -32,11 +32,11 @@ const CP=F.joinPath(D,'ClubPulseCore_v2.js'),CRP=F.joinPath(D,'ClubPulseClubRegi
 
 let p=String(args.widgetParameter||'manutd').trim()||'manutd';
 if(config.runsInApp&&!p.includes(':')){
-  let a=new Alert();a.title='Club Pulse 耐障害QA';a.message='通常表示または障害状態を選択';
-  ['通常表示','通信障害・保存あり','通信障害・保存なし'].forEach(x=>a.addAction(x));a.addCancelAction('キャンセル');
+  let a=new Alert();a.title='Club Pulse RC QA';a.message='確認したい表示状態を選択';
+  ['通常表示','LIVE模擬','試合終了模擬','通信障害・保存あり','通信障害・保存なし'].forEach(x=>a.addAction(x));a.addCancelAction('キャンセル');
   let i=await a.presentSheet();
   if(i<0){Script.complete();return}
-  if(i===1)p=p+':offline';else if(i===2)p=p+':nocache';
+  if(i===1)p=p+':live';else if(i===2)p=p+':post';else if(i===3)p=p+':offline';else if(i===4)p=p+':nocache';
 }
 function cpQaRead(){try{return F.fileExists(QAP)?JSON.parse(F.readString(QAP)):null}catch{return null}}
 function cpQaWrite(v){try{F.writeString(QAP,JSON.stringify(v))}catch{}}
@@ -44,7 +44,7 @@ function cpQaClear(){try{if(F.fileExists(QAP))F.remove(QAP)}catch{}}
 (function(){
   let a=p.split(':'),clubId=a[0]||'manutd',mode=(a[1]||'').toLowerCase(),now=Date.now();
   if(config.runsInApp){
-    if(mode&&mode!=='auto'&&mode!=='normal')cpQaWrite({clubId,mode,expiresAt:now+15*60*1000});
+    if(mode==='offline'||mode==='nocache')cpQaWrite({clubId,mode,expiresAt:now+15*60*1000});
     else cpQaClear();
     return;
   }
@@ -94,7 +94,7 @@ c=c.slice(0,pk)+cr+'\n'+ec+'\n'+w2c+'\n'+w3c+'\n'+w4c+'\n'+c.slice(pk);
 const M='if(config.runsInApp&&!getLiveToken())await setupLiveToken();',k=c.indexOf(M),patches=x+'\n'+y+'\n'+le+'\n'+z+'\n'+tr+'\n'+et+'\n'+u+'\n'+i+'\n'+ds+'\n'+pv+'\n'+rg+'\n'+cm+'\n'+fp+'\n'+q+'\n'+r+'\n'+dp+'\n'+sp+'\n'+w2t+'\n'+w3n+'\n'+w4l+'\n'+plv+'\n'+fs,b=k>=0?c.slice(0,k)+'\n'+patches+'\n'+c.slice(k):c+'\n'+patches;
 await new Function('args','return (async()=>{\n'+b+'\n})()')({widgetParameter:p});
 
-/* Club Pulse 44-club runtime. Existing forty-three visuals stay frozen. Wave 4 adds RC Lens through registry/theme/localization/venue data only, with no club-specific renderer branches. Core and every patch are immutable commit-pinned and version-cached local-first. Data Policy v8 rejects impossible future FINISHED states and suppresses legacy simulated live/post/cup modes on Home Screen widgets, while preserving in-app developer simulation and resilience QA. Small Presentation v11 keeps short Japanese labels large, uses curated natural long-name labels instead of micro-text or code-style abbreviations, and retains scored-state and NEXT VS width protections. Wave 2 Theme v5 no longer reintroduces code-style Small abbreviations after the canonical Small renderer. Wave 3 Netherlands v2 covers all 18 current Eredivisie home venues for provider-missing away venue fallback. Premier League Venue Registry v1 owns the current 2026-27 twenty-club home-ground names and legacy provider aliases. Premium Visual v6 keeps all Medium wrapping guards and raises NEXT versus text to 20pt so pre-match hierarchy matches LIVE/POST weight. Canonical Form System v1 is loaded last and owns every Small/Medium latest-form row so W/D/L/unknown typography cannot drift by club or renderer.
+/* Club Pulse 44-club runtime. Existing forty-three visuals stay frozen. Wave 4 adds RC Lens through registry/theme/localization/venue data only, with no club-specific renderer branches. Core and every patch are immutable commit-pinned and version-cached local-first. Data Policy v8 rejects impossible future FINISHED states and suppresses legacy simulated live/post/cup modes on Home Screen widgets, while preserving in-app developer simulation and resilience QA. RC QA menu exposes normal, LIVE, POST, offline-cache, and no-cache previews; LIVE/POST remain in-app only and are never persisted to Home Screen. Small Presentation v11 keeps short Japanese labels large, uses curated natural long-name labels instead of micro-text or code-style abbreviations, and retains scored-state and NEXT VS width protections. Wave 2 Theme v5 no longer reintroduces code-style Small abbreviations after the canonical Small renderer. Wave 3 Netherlands v2 covers all 18 current Eredivisie home venues for provider-missing away venue fallback. Premier League Venue Registry v1 owns the current 2026-27 twenty-club home-ground names and legacy provider aliases. Premium Visual v6 keeps all Medium wrapping guards and raises NEXT versus text to 20pt so pre-match hierarchy matches LIVE/POST weight. Canonical Form System v1 is loaded last and owns every Small/Medium latest-form row so W/D/L/unknown typography cannot drift by club or renderer.
 Frozen base registry compatibility marker: c=c.slice(0,pk)+cr+'\n'+ec+'\n'+c.slice(pk)
 Frozen eleven-family marker: arsenal, liverpool, inter, and dortmund
 */
