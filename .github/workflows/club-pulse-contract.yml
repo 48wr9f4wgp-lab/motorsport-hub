@@ -36,4 +36,5 @@ jobs:
           node scriptable/club-pulse-loader-efficiency.test.js
           node scriptable/club-pulse-small-widget-contract.test.js
           node scriptable/club-pulse-medium-state-contract.test.js
+          node scriptable/club-pulse-form-system-contract.test.js
           node scriptable/club-pulse-launcher-version.test.js
