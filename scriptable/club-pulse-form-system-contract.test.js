@@ -17,7 +17,7 @@ check('Small footer routes through canonical row',form.includes("buildFooterSmal
 check('form system contains no club id branches',!/(club\?\.team\s*===|team\s*===\s*\d+)/.test(form));
 check('launcher uses dedicated form-system cache',launcher.includes('ClubPulseFormSystemPatch_v1.js')&&launcher.includes("'form-system1'"));
 check('launcher pins immutable form-system commit',launcher.includes('41ce4238ea15fb7dc8eb668011c98e203acd1aa4/scriptable/club-pulse-form-system-patch.js'));
-check('form system loads last',launcher.includes("+w4l+'\\n'+fs"));
+check('form system loads last',launcher.includes("+plv+'\\n'+fs"));
 check('launcher documents canonical form ownership',launcher.includes('Canonical Form System v1 is loaded last'));
 if(failed){console.error(`\nCanonical form system contract FAILED: ${failed}`);process.exit(1)}
 console.log('\nClub Pulse canonical form system contract PASSED');
