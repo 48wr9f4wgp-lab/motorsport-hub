@@ -10,11 +10,12 @@ let failed=0;
 const check=(name,ok)=>{if(ok)console.log(`✓ ${name}`);else{console.error(`✗ ${name}`);failed++}};
 
 try{new Function(premium);check('premium visual syntax',true)}catch(e){console.error(e);check('premium visual syntax',false)}
-check('premium v5 captures shared Medium header',premium.includes('CP_PREMIUM_BASE_HEADER_MEDIUM=buildHeaderMedium'));
+check('premium v6 captures shared Medium header',premium.includes('CP_PREMIUM_BASE_HEADER_MEDIUM=buildHeaderMedium'));
 check('generic Medium header routes through typography guard',premium.includes('function cpPremiumHeaderMedium')&&premium.includes('cpPremiumGuardText(heavy(l,club.name,10.5'));
 check('Medium header stays single line with scale floor',premium.includes('t.lineLimit=1')&&premium.includes('t.minimumScaleFactor=minScale'));
 check('Medium team labels use guarded one-line rendering',premium.includes('cpPremiumGuardText(heavy(name,opt.name,opt.nameSize||12,fg),.74)'));
-check('Medium center score is guarded against wrapping',premium.includes('cpPremiumGuardText(heavy(row,centerMainText(d,m)')&&premium.includes(',.74);mid.centerAlignText()'));
+check('Medium NEXT versus is emphasized to 20pt',premium.includes("d.mode==='POST'?27:d.mode==='NEXT'?20:22"));
+check('Medium center score remains guarded against wrapping',premium.includes('cpPremiumGuardText(heavy(row,centerMainText(d,m)')&&premium.includes(',.82);mid.centerAlignText()'));
 check('Medium metadata keeps canonical scaling helper',premium.includes('cpMetaText(meta,metaLine(d,m),fg,false)'));
 check('generic Medium header override preserves special-club fallback',premium.includes('if(t&&CP_PREMIUM_GENERIC_KEYS.has(t.key))return cpPremiumHeaderMedium')&&premium.includes('return CP_PREMIUM_BASE_HEADER_MEDIUM'));
 
