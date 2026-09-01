@@ -52,7 +52,7 @@ check('all wave2 themes have common contract fields',ids.every(id=>{const t=them
 check('Juventus opts into generic own-crest contrast token',themeContext.CP_CLUB_THEME_REGISTRY[109].ownCrestPlate==='#F2F2F2'&&themeContext.CP_CLUB_THEME_REGISTRY[109].ownCrestPlateAlpha===.16);
 check('Napoli cyan gradient is restrained',themeContext.CP_CLUB_THEME_REGISTRY[113].cardGlow==='#0E91BB');
 check('Marseille cyan gradient is restrained',themeContext.CP_CLUB_THEME_REGISTRY[516].cardGlow==='#0A8CB5');
-check('long Small labels use intentional aliases',themeContext.CP_SP_SMALL_ALIASES['レアル・ソシエダ']==='ソシエダ'&&themeContext.CP_SP_SMALL_ALIASES['レヴァークーゼン']==='B04'&&themeContext.CP_SP_SMALL_ALIASES['フランクフルト']==='SGE'&&themeContext.CP_SP_SMALL_ALIASES['シュトゥットガルト']==='VfB'&&themeContext.CP_SP_SMALL_ALIASES['フィオレンティーナ']==='ヴィオラ');
+check('late wave2 Small aliases preserve natural club names',themeContext.CP_SP_SMALL_ALIASES['レアル・ソシエダ']==='レアル・ソシエダ'&&themeContext.CP_SP_SMALL_ALIASES['レヴァークーゼン']==='レヴァークーゼン'&&themeContext.CP_SP_SMALL_ALIASES['フランクフルト']==='フランクフルト'&&themeContext.CP_SP_SMALL_ALIASES['シュトゥットガルト']==='シュトゥットガルト'&&themeContext.CP_SP_SMALL_ALIASES['フィオレンティーナ']==='フィオレンティーナ');
 check('2026-27 venue overrides include Everton Betis Atalanta',themeContext.CP_HOME_VENUE_BY_TEAM['エヴァートン']==='ヒル・ディッキンソン・スタジアム'&&themeContext.CP_HOME_VENUE_BY_TEAM['ベティス']==='ラ・カルトゥハ'&&themeContext.CP_HOME_VENUE_BY_TEAM['アタランタ']==='ニュー・バランス・アリーナ');
 check('legacy Atalanta venue migrates to current name',themeContext.CP_VENUE_DISPLAY_NAMES['Gewiss Stadium']==='ニュー・バランス・アリーナ');
 check('theme patch adds no club-specific renderer exception',!themesSrc.includes('buildMedium=')&&!themesSrc.includes('buildSmall=')&&!themesSrc.includes('renderTeamBlock='));
