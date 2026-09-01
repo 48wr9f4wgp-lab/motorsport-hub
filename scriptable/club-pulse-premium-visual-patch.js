@@ -1,7 +1,6 @@
-// Club Pulse premium visual pass v5.
+// Club Pulse premium visual pass v6.
 // Rendering consumes the canonical design-system tokens instead of club-specific magic numbers.
-// v5 keeps v4 theme-aware card text and hardens Medium headers, team labels, and score text
-// against wrapping/clipping across NEXT, LIVE, POST, stale, and long-name fixtures.
+// v6 keeps v5 Medium wrapping guards and restores NEXT versus text to a strong central hierarchy.
 
 const CP_PREMIUM_BASE_CARD_BG=cardBg,
       CP_PREMIUM_BASE_HEADER_MEDIUM=buildHeaderMedium,
@@ -92,7 +91,7 @@ function cpPremiumExtraMatchMedium(w,d,imgs,t){
   let row=outer.addStack();row.layoutHorizontally();row.centerAlignContent();
   cpPremiumTeamBlock(row,{img:imgs.club,name:club.jp,sub:'',fallback:club.badge,logoSize:56,nameSize:12,subSize:0,p1:club.p,p2:club.s,scale:CREST_SCALE[club.team]||.91,nameGap:1,width:94},fg);
   row.addSpacer(d.mode==='POST'?16:20);
-  let mid=cpPremiumGuardText(heavy(row,centerMainText(d,m),d.mode==='POST'?27:d.mode==='NEXT'?14:22,fg),.74);mid.centerAlignText();
+  let mid=cpPremiumGuardText(heavy(row,centerMainText(d,m),d.mode==='POST'?27:d.mode==='NEXT'?20:22,fg),.82);mid.centerAlignText();
   row.addSpacer(d.mode==='POST'?16:20);
   cpPremiumTeamBlock(row,{img:imgs.opp,name:m.opponentName,sub:'',fallback:m.opponentShort,logoSize:56,nameSize:12,subSize:0,p1:'#4A5568',p2:'#20242D',scale:CREST_SCALE[m.opponentId]||CREST_SCALE.opponent_default||.90,nameGap:1,width:94},fg);
   outer.addSpacer();c.addSpacer(2);
