@@ -17,8 +17,8 @@ check('launcher pins premium visual v4 commit',src.includes('5f465f4d34d79d03614
 check('launcher uses small presentation v10 local cache',src.includes('ClubPulseSmallPresentationPatch_v10.js'));
 check('launcher fetch tag is small-presentation10',src.includes("'small-presentation10'"));
 check('launcher pins small presentation v10 commit',src.includes('3d06d2cdcc63b34dd818ce79b853ad3d10b5b987/scriptable/club-pulse-small-presentation-patch.js'));
-check('launcher uses wave2 clubs and themes v4',src.includes('ClubPulseWave2ClubsPatch_v1.js')&&src.includes("'wave2-clubs1'")&&src.includes('ClubPulseWave2ThemesPatch_v4.js')&&src.includes("'wave2-themes4'"));
-check('launcher pins wave2 immutable commits',src.includes('c53a62e6308fb99d6605d9b6c8d960869140dd46/scriptable/club-pulse-wave2-clubs-patch.js')&&src.includes('75ee9a4925091e1f8966d6adf9cf6f95e1ab58a3/scriptable/club-pulse-wave2-themes-patch.js'));
+check('launcher uses wave2 clubs and themes v5',src.includes('ClubPulseWave2ClubsPatch_v1.js')&&src.includes("'wave2-clubs1'")&&src.includes('ClubPulseWave2ThemesPatch_v5.js')&&src.includes("'wave2-themes5'"));
+check('launcher pins wave2 immutable commits',src.includes('c53a62e6308fb99d6605d9b6c8d960869140dd46/scriptable/club-pulse-wave2-clubs-patch.js')&&src.includes('5e6abb10e817d5dbebd0f2b95d9e8106da8ff401/scriptable/club-pulse-wave2-themes-patch.js'));
 check('launcher uses wave3 Netherlands v1 caches',src.includes('ClubPulseWave3NetherlandsClubsPatch_v1.js')&&src.includes("'wave3-nl-clubs1'")&&src.includes('ClubPulseWave3NetherlandsPatch_v1.js')&&src.includes("'wave3-netherlands1'"));
 check('launcher pins wave3 immutable commits',src.includes('b6b1e42237d899fc3084ced49a1974185c5b43e3/scriptable/club-pulse-wave3-netherlands-clubs-patch.js')&&src.includes('a38b811efeb76811d3d12df9fe35db43c1c527f5/scriptable/club-pulse-wave3-netherlands-patch.js'));
 check('launcher uses wave4 Lens v1 caches',src.includes('ClubPulseWave4LensClubPatch_v1.js')&&src.includes("'wave4-lens-club1'")&&src.includes('ClubPulseWave4LensPatch_v1.js')&&src.includes("'wave4-lens1'"));
@@ -26,6 +26,6 @@ check('launcher pins wave4 Lens immutable commits',src.includes('28a95c8d790e4a1
 check('wave4 registry injects before core parameter resolution',src.includes("c=c.slice(0,pk)+cr+'\\n'+ec+'\\n'+w2c+'\\n'+w3c+'\\n'+w4c+'\\n'+c.slice(pk)"));
 check('wave4 presentation runs after wave3 and Small',src.includes("+dp+'\\n'+sp+'\\n'+w2t+'\\n'+w3n+'\\n'+w4l"));
 check('patch loader remains local-first',src.includes("if(F.fileExists(file)){let s=F.readString(file);if(s&&s.length>=min)return s}"));
-check('launcher documents 44-club architecture',src.includes('Club Pulse 44-club runtime')&&src.includes('Wave 4 adds RC Lens')&&src.includes('Data Policy v8')&&src.includes('Premium Visual v4')&&src.includes('Small Presentation v10'));
+check('launcher documents 44-club architecture',src.includes('Club Pulse 44-club runtime')&&src.includes('Wave 4 adds RC Lens')&&src.includes('Data Policy v8')&&src.includes('Premium Visual v4')&&src.includes('Small Presentation v10')&&src.includes('Wave 2 Theme v5'));
 if(failed){console.error(`\nLauncher version QA FAILED: ${failed}`);process.exit(1)}
 console.log('\nClub Pulse 44-club launcher version QA PASSED');
