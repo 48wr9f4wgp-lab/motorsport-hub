@@ -1,6 +1,7 @@
-// Club Pulse Wave 3 Netherlands presentation v1.
+// Club Pulse Wave 3 Netherlands presentation v2.
 // Adds Eredivisie competition presentation plus Ajax / PSV / Feyenoord themes,
-// localization, Small aliases and conservative venue coverage.
+// localization, Small aliases and complete 2026-27 Eredivisie venue fallback coverage.
+// Venue names are sourced from the current Eredivisie club/ticket registry.
 // No club-specific renderer branches.
 
 if(typeof CP_COMP_ASSETS!=='undefined')CP_COMP_ASSETS.DED={id:88};
@@ -61,11 +62,11 @@ if(typeof JP!=='undefined')Object.assign(JP,{
   'AZ':'AZ','AZ Alkmaar':'AZ','Alkmaar Zaanstreek':'AZ',
   'FC Twente':'トゥウェンテ','FC Twente 1965':'トゥウェンテ',
   'FC Utrecht':'ユトレヒト','Go Ahead Eagles':'ゴー・アヘッド',
-  'Fortuna Sittard':'フォルトゥナ','NEC':'NEC','NEC Nijmegen':'NEC',
-  'SBV Excelsior':'エクセルシオール','Excelsior':'エクセルシオール',
-  'FC Groningen':'フローニンゲン','SC Heerenveen':'ヘーレンフェーン',
+  'Fortuna Sittard':'フォルトゥナ','NEC':'NEC','NEC Nijmegen':'NEC','N.E.C. Nijmegen':'NEC','N.E.C.':'NEC',
+  'SBV Excelsior':'エクセルシオール','Excelsior':'エクセルシオール','Excelsior Rotterdam':'エクセルシオール',
+  'FC Groningen':'フローニンゲン','SC Heerenveen':'ヘーレンフェーン','sc Heerenveen':'ヘーレンフェーン',
   'Sparta Rotterdam':'スパルタ','PEC Zwolle':'ズウォレ',
-  'SC Telstar':'テルスター','Telstar 1963':'テルスター',
+  'SC Telstar':'テルスター','Telstar 1963':'テルスター','Telstar':'テルスター',
   'Willem II Tilburg':'ヴィレムII','Willem II':'ヴィレムII',
   'ADO Den Haag':'ADO','SC Cambuur':'カンブール'
 });
@@ -75,9 +76,9 @@ if(typeof CP_TEAM_DISPLAY_NAMES!=='undefined')Object.assign(CP_TEAM_DISPLAY_NAME
   'PSV Eindhoven':'PSV','PSV':'PSV',
   'Feyenoord Rotterdam':'フェイエノールト','Feyenoord':'フェイエノールト',
   'AZ Alkmaar':'AZ','AZ':'AZ','FC Twente':'トゥウェンテ','FC Utrecht':'ユトレヒト',
-  'Go Ahead Eagles':'ゴー・アヘッド','Fortuna Sittard':'フォルトゥナ','NEC Nijmegen':'NEC','NEC':'NEC',
-  'SBV Excelsior':'エクセルシオール','FC Groningen':'フローニンゲン','SC Heerenveen':'ヘーレンフェーン',
-  'Sparta Rotterdam':'スパルタ','PEC Zwolle':'ズウォレ','SC Telstar':'テルスター','Telstar 1963':'テルスター',
+  'Go Ahead Eagles':'ゴー・アヘッド','Fortuna Sittard':'フォルトゥナ','NEC Nijmegen':'NEC','N.E.C. Nijmegen':'NEC','N.E.C.':'NEC','NEC':'NEC',
+  'SBV Excelsior':'エクセルシオール','Excelsior Rotterdam':'エクセルシオール','FC Groningen':'フローニンゲン','SC Heerenveen':'ヘーレンフェーン','sc Heerenveen':'ヘーレンフェーン',
+  'Sparta Rotterdam':'スパルタ','PEC Zwolle':'ズウォレ','SC Telstar':'テルスター','Telstar 1963':'テルスター','Telstar':'テルスター',
   'Willem II Tilburg':'ヴィレムII','ADO Den Haag':'ADO','SC Cambuur':'カンブール'
 });
 
@@ -88,13 +89,43 @@ if(typeof CP_SP_SMALL_ALIASES!=='undefined')Object.assign(CP_SP_SMALL_ALIASES,{
 });
 
 if(typeof CP_VENUE_DISPLAY_NAMES!=='undefined')Object.assign(CP_VENUE_DISPLAY_NAMES,{
+  'WerkTalent Stadion':'WerkTalent Stadion',
   'Johan Cruijff ArenA':'ヨハン・クライフ・アレナ','Johan Cruijff Arena':'ヨハン・クライフ・アレナ',
-  'Philips Stadion':'フィリップス・スタディオン',
-  'Stadion Feijenoord':'デ・カイプ','De Kuip':'デ・カイプ'
+  'AFAS Stadion':'AFAS Stadion',
+  'Stadion Woudestein':'Stadion Woudestein','Van Donge & De Roo Stadion':'Stadion Woudestein',
+  'De Euroborg':'De Euroborg','Euroborg':'De Euroborg',
+  'De Grolsch Veste':'De Grolsch Veste','Grolsch Veste':'De Grolsch Veste',
+  'Stadion Galgenwaard':'Stadion Galgenwaard','Galgenwaard Stadium':'Stadion Galgenwaard',
+  'Stadion Feijenoord':'デ・カイプ','De Kuip':'デ・カイプ',
+  'Fortuna Sittard Stadion':'Fortuna Sittard Stadion',
+  'De Adelaarshorst':'De Adelaarshorst','Adelaarshorst':'De Adelaarshorst',
+  'Goffertstadion':'Goffertstadion','Stadion de Goffert':'Goffertstadion',
+  'MAC³PARK Stadion':'MAC³PARK Stadion','MAC3PARK Stadion':'MAC³PARK Stadion',
+  'Philips Stadion':'フィリップス・スタディオン','Philips Stadium':'フィリップス・スタディオン',
+  'Kooi Stadion':'Kooi Stadion','Cambuur Stadion':'Kooi Stadion',
+  'Abe Lenstra Stadion':'Abe Lenstra Stadion',
+  'Spartastadion Het Kasteel':'Spartastadion Het Kasteel','Sparta-Stadion Het Kasteel':'Spartastadion Het Kasteel','Het Kasteel':'Spartastadion Het Kasteel',
+  'BUKO Stadion':'BUKO Stadion',
+  'Koning Willem II Stadion':'Koning Willem II Stadion'
 });
 
 if(typeof CP_HOME_VENUE_BY_TEAM!=='undefined')Object.assign(CP_HOME_VENUE_BY_TEAM,{
+  'ADO':'WerkTalent Stadion',
   'アヤックス':'ヨハン・クライフ・アレナ',
+  'AZ':'AFAS Stadion',
+  'エクセルシオール':'Stadion Woudestein',
+  'フローニンゲン':'De Euroborg',
+  'トゥウェンテ':'De Grolsch Veste',
+  'ユトレヒト':'Stadion Galgenwaard',
+  'フェイエノールト':'デ・カイプ',
+  'フォルトゥナ':'Fortuna Sittard Stadion',
+  'ゴー・アヘッド':'De Adelaarshorst',
+  'NEC':'Goffertstadion',
+  'ズウォレ':'MAC³PARK Stadion',
   'PSV':'フィリップス・スタディオン',
-  'フェイエノールト':'デ・カイプ'
+  'カンブール':'Kooi Stadion',
+  'ヘーレンフェーン':'Abe Lenstra Stadion',
+  'スパルタ':'Spartastadion Het Kasteel',
+  'テルスター':'BUKO Stadion',
+  'ヴィレムII':'Koning Willem II Stadion'
 });
