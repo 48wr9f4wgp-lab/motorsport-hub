@@ -25,9 +25,12 @@ check('launcher uses wave3 Netherlands v2 cache',src.includes('ClubPulseWave3Net
 check('launcher pins wave3 venue-audited immutable commit',src.includes('b6b1e42237d899fc3084ced49a1974185c5b43e3/scriptable/club-pulse-wave3-netherlands-clubs-patch.js')&&src.includes('4b81db83ea2ef39b2ae171b40649f85c439d04e7/scriptable/club-pulse-wave3-netherlands-patch.js'));
 check('launcher uses wave4 Lens v1 caches',src.includes('ClubPulseWave4LensClubPatch_v1.js')&&src.includes("'wave4-lens-club1'")&&src.includes('ClubPulseWave4LensPatch_v1.js')&&src.includes("'wave4-lens1'"));
 check('launcher pins wave4 Lens immutable commits',src.includes('28a95c8d790e4a15a9204ff45694d5dde361600e/scriptable/club-pulse-wave4-lens-club-patch.js')&&src.includes('6380251307413da618226363e5f22800df9301dc/scriptable/club-pulse-wave4-lens-patch.js'));
+check('launcher uses Premier League venue registry v1',src.includes('ClubPulsePremierLeagueVenuesPatch_v1.js')&&src.includes("'pl-venues1'"));
+check('launcher pins Premier League venue registry v1',src.includes('0443dcbeb6cff7f7039f83eb67f5ba5faf53f2e5/scriptable/club-pulse-premier-league-venues-patch.js'));
 check('wave4 registry injects before core parameter resolution',src.includes("c=c.slice(0,pk)+cr+'\\n'+ec+'\\n'+w2c+'\\n'+w3c+'\\n'+w4c+'\\n'+c.slice(pk)"));
-check('canonical form system runs last',src.includes("+w4l+'\\n'+fs"));
+check('Premier League venue registry runs after Wave4 and before form system',src.includes("+w4l+'\\n'+plv+'\\n'+fs"));
+check('canonical form system runs last',src.includes("+plv+'\\n'+fs"));
 check('patch loader remains local-first',src.includes("if(F.fileExists(file)){let s=F.readString(file);if(s&&s.length>=min)return s}"));
-check('launcher documents 44-club architecture',src.includes('Club Pulse 44-club runtime')&&src.includes('Wave 4 adds RC Lens')&&src.includes('Data Policy v8')&&src.includes('Premium Visual v6')&&src.includes('Small Presentation v11')&&src.includes('Wave 2 Theme v5')&&src.includes('Wave 3 Netherlands v2')&&src.includes('Canonical Form System v1'));
+check('launcher documents 44-club architecture',src.includes('Club Pulse 44-club runtime')&&src.includes('Wave 4 adds RC Lens')&&src.includes('Data Policy v8')&&src.includes('Premium Visual v6')&&src.includes('Small Presentation v11')&&src.includes('Wave 2 Theme v5')&&src.includes('Wave 3 Netherlands v2')&&src.includes('Premier League Venue Registry v1')&&src.includes('Canonical Form System v1'));
 if(failed){console.error(`\nLauncher version QA FAILED: ${failed}`);process.exit(1)}
 console.log('\nClub Pulse 44-club launcher version QA PASSED');
