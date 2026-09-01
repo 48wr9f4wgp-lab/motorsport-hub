@@ -14,9 +14,10 @@ check('resilience keeps stale saved-data semantics',resilience.includes("text(s,
 check('data policy keeps stale post-kickoff semantics',policy.includes("mode:'STALE_NEXT'")&&policy.includes("return'更新待ち'")&&policy.includes("return'VS'"));
 check('small presentation owns final header match footer',small.includes('buildHeaderSmall=function')&&small.includes('buildMatchSmall=function')&&small.includes('buildFooterSmall=function'));
 check('small presentation defines adaptive hierarchy',small.includes('const CP_SP_TYPO=')&&small.includes('team:9.8')&&small.includes('meta:8.7')&&small.includes('footer:7.6'));
-check('length-aware team font is aggressive enough for six characters',small.includes('function cpSpTeamFont(label)')&&small.includes('if(n===5)return 8.2')&&small.includes('if(n===6)return 7.4'));
-check('five to six character names remain canonical',small.includes('if(Array.from(n).length<=6)return n'));
-check('semantic aliases cover genuinely long broadcast labels',small.includes("'ニューカッスル':'NUFC'")&&small.includes("'フェイエノールト':'FEY'")&&small.includes("'アスレティック':'ビルバオ'"));
+check('full Japanese name threshold is nine characters',small.includes('const CP_SP_FULL_NAME_LIMIT=9')&&small.includes('if(Array.from(n).length<=CP_SP_FULL_NAME_LIMIT)return n'));
+check('full readable names win before alias/code fallback',small.indexOf('if(Array.from(n).length<=CP_SP_FULL_NAME_LIMIT)return n')<small.indexOf('if(CP_SP_SMALL_ALIASES[n])return CP_SP_SMALL_ALIASES[n]'));
+check('seven to nine character labels get stepped typography',small.includes('if(n===7)return 7.0')&&small.includes('if(n===8)return 6.6')&&small.includes('if(n===9)return 6.2'));
+check('semantic aliases remain available for genuinely long labels',small.includes("'ノッティンガム・フォレスト':'フォレスト'")&&small.includes("'アスレティック・ビルバオ':'ビルバオ'")&&small.includes("'ボルシア・ドルトムント':'ドルトムント'"));
 check('generic team labels enforce deeper readability floor',small.includes('teamMinScale:.70')&&small.includes('nm.minimumScaleFactor=CP_SP_TYPO.teamMinScale'));
 check('generic team labels stay single-line clipping safe',small.includes('nm.lineLimit=1'));
 check('generic team labels honor cardText token',small.includes('heavy(name,label,opt.nameSize||cpSpTeamFont(label),cpSpCardColor())')&&small.includes("return t?.cardText||t?.text||'#F8FAFC'"));
@@ -30,4 +31,4 @@ check('special Real and Barcelona crest treatment is preserved',small.includes("
 check('NEXT LIVE POST and stale-next share final small renderer',small.includes("view.mode==='LIVE'")&&small.includes("view.mode==='POST'")&&small.includes("d?.mode==='STALE_NEXT'")&&small.includes("mode:'STALE_NEXT'"));
 check('Dortmund shell header stays on headerAccent',small.includes('t?.headerAccent||CP_DESIGN_TOKENS?.shell?.text'));
 if(failed){console.error(`\nSmall widget contract QA FAILED: ${failed}`);process.exit(1)}
-console.log('\nClub Pulse canonical Small Presentation System v9 QA PASSED');
+console.log('\nClub Pulse canonical Small Presentation System v10 QA PASSED');
