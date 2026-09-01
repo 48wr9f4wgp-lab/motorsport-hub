@@ -44,7 +44,7 @@ check('final polish remains Bayern-only',has(finalPolish,"club?.team!==5")&&!has
 
 check('existing league support covers expansion',has(leagues,"return small?'BL':'ブンデスリーガ'")&&has(leagues,"return small?'Serie A':'セリエA'"));
 check('launcher downloads design v7',has(launcher,'ClubPulseDesignSystemPatch_v7.js')&&has(launcher,"'design-system7'"));
-check('launcher downloads premium v5',has(launcher,'ClubPulsePremiumVisualPatch_v5.js')&&has(launcher,"'premium5'")&&has(launcher,'1b5be468f91013f99c4f79ef23e885cb1ce5690c'));
+check('launcher downloads premium v6',has(launcher,'ClubPulsePremiumVisualPatch_v6.js')&&has(launcher,"'premium6'")&&has(launcher,'ecc546bf6f1bfb3d82e7a601d07622b3d716dcba'));
 check('launcher downloads readability v8',has(launcher,'ClubPulseReadabilityGuardPatch_v8.js')&&has(launcher,"'readability8'"));
 check('launcher documents expansion',has(launcher,'arsenal, liverpool, inter, and dortmund'));
 
