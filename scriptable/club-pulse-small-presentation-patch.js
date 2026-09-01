@@ -1,8 +1,9 @@
-// Club Pulse Small Presentation System v9.
+// Club Pulse Small Presentation System v10.
 // Canonical small-widget renderer for all supported clubs.
-// v9 keeps v8's scored-state protection and full-name typography, while restoring
-// enough NEXT center width for the literal VS label to render without clipping.
+// v10 keeps v9 geometry and scored-state protection, while preferring readable
+// Japanese club names up to nine characters before falling back to aliases/codes.
 
+const CP_SP_FULL_NAME_LIMIT=9;
 const CP_SP_TYPO={
   headerName:9.0,
   headerRank:10.0,
@@ -62,8 +63,8 @@ function cpSpCanonical(name){
 }
 function cpSpTeamLabel(name,fallback,isClub=false){
   let n=isClub?(club?.jp||club?.short||''):cpSpCanonical(name);
+  if(Array.from(n).length<=CP_SP_FULL_NAME_LIMIT)return n;
   if(CP_SP_SMALL_ALIASES[n])return CP_SP_SMALL_ALIASES[n];
-  if(Array.from(n).length<=6)return n;
   const fb=String(fallback||'').trim();
   if(/^[A-Z0-9.-]{2,5}$/i.test(fb))return fb;
   return n
@@ -74,6 +75,9 @@ function cpSpTeamFont(label){
   if(n===4)return 9.1;
   if(n===5)return 8.2;
   if(n===6)return 7.4;
+  if(n===7)return 7.0;
+  if(n===8)return 6.6;
+  if(n===9)return 6.2;
   return 7.0
 }
 function cpSpRowMetrics(mode){
