@@ -32,6 +32,7 @@ jobs:
           node scriptable/club-pulse-resilience.test.js
           node scriptable/club-pulse-data-policy.test.js
           node scriptable/club-pulse-data-policy-contract.test.js
+          node scriptable/club-pulse-simulation-guard.test.js
           node scriptable/club-pulse-loader-efficiency.test.js
           node scriptable/club-pulse-small-widget-contract.test.js
           node scriptable/club-pulse-launcher-version.test.js
