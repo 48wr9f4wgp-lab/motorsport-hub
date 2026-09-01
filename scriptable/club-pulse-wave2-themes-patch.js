@@ -1,6 +1,6 @@
-// Club Pulse Wave 2 theme definitions v4.
+// Club Pulse Wave 2 theme definitions v5.
 // Data-driven theme expansion for 29 additional clubs. No club-specific renderer branches.
-// v4 keeps the v3 contrast/cyan tuning and replaces cut-looking Small labels with intentional abbreviations.
+// v5 keeps the visual tuning while aligning late Small-label overrides with the v10 full-name policy.
 
 function cpW2Theme(key,c){
   return {
@@ -62,11 +62,11 @@ if(typeof badge==='function'){
 if(typeof CP_SP_SMALL_ALIASES!=='undefined')Object.assign(CP_SP_SMALL_ALIASES,{
   'ニューカッスル':'ニューカッスル',
   'アスレティック':'アスレティック',
-  'レアル・ソシエダ':'ソシエダ',
-  'レヴァークーゼン':'B04',
-  'フランクフルト':'SGE',
-  'シュトゥットガルト':'VfB',
-  'フィオレンティーナ':'ヴィオラ'
+  'レアル・ソシエダ':'レアル・ソシエダ',
+  'レヴァークーゼン':'レヴァークーゼン',
+  'フランクフルト':'フランクフルト',
+  'シュトゥットガルト':'シュトゥットガルト',
+  'フィオレンティーナ':'フィオレンティーナ'
 });
 
 if(typeof CP_HOME_VENUE_BY_TEAM!=='undefined')Object.assign(CP_HOME_VENUE_BY_TEAM,{
