@@ -3,7 +3,7 @@ function cpLiveContext(m){
   if(!m)return'';
   const side=m.homeAway==='AWAY'?'アウェイ':'ホーム';
   const venue=String(m.venue||'').trim();
-  return venue&&venue!=='会場未定'?`${side}・${venue}`:side
+  return venue&&venue!=='会場未定'?`${side} ・ ${venue}`:side
 }
 metaLine=function(d,m){
   if(d?.mode==='LIVE')return cpLiveContext(m);
