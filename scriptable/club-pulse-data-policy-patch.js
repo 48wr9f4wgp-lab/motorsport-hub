@@ -1,8 +1,9 @@
-// Club Pulse data policy v7.
+// Club Pulse data policy v8.
 // Adaptive refresh/cache policy for multi-club home-screen operation.
 // Goals: keep LIVE/near-kickoff data responsive, reduce provider traffic,
 // share league standings and global LIVE snapshots, reserve API-Football quota,
-// keep stale semantics honest, and reject impossible future-result states.
+// keep stale semantics honest, reject impossible future-result states,
+// and prevent legacy simulated match modes from leaking onto Home Screen widgets.
 
 const CP_DP_BASE_LOAD_DATA=loadData,
       CP_DP_BASE_NEXT_OVERLAY=applyNextOverlay,
@@ -11,12 +12,14 @@ const CP_DP_BASE_LOAD_DATA=loadData,
       CP_DP_BASE_BUILD_MATCH_SMALL=buildMatchSmall,
       CP_DP_BASE_STATUS_TITLE=statusTitle,
       CP_DP_BASE_CENTER_MAIN=centerMainText,
-      CP_DP_BASE_META_LINE=metaLine;
+      CP_DP_BASE_META_LINE=metaLine,
+      CP_DP_BASE_APPLY_TEST_MODE=typeof applyTestMode==='function'?applyTestMode:(d=>d);
 
 const CP_DP_STANDINGS_TTL=30*60*1000;
 const CP_DP_NEXT_OVERLAY_TTL=12*60*60*1000;
 const CP_DP_NEXT_QUOTA_CEILING=40;
 const CP_DP_GLOBAL_LIVE_TTL=3*60*1000;
+const CP_DP_SIMULATED_MATCH_MODES=['live','post','cl','fa','efl'];
 
 function cpDpForcedOutage(){
   return typeof cpResForcedOutage==='function'&&cpResForcedOutage()
@@ -248,4 +251,14 @@ centerMainText=function(d,m){
 metaLine=function(d,m){
   if(d?.cpSmallWaiting)return`${m.kickoff} ・ ${m.venue}`;
   return CP_DP_BASE_META_LINE(d,m)
+};
+
+function cpDpSuppressWidgetSimulation(){
+  const mode=String(typeof qa==='string'?qa:'auto').trim().toLowerCase();
+  return !config.runsInApp&&CP_DP_SIMULATED_MATCH_MODES.includes(mode)
+}
+
+applyTestMode=function(d){
+  if(cpDpSuppressWidgetSimulation())return{...d,qaModeSuppressed:String(qa||'').toLowerCase()};
+  return CP_DP_BASE_APPLY_TEST_MODE(d)
 };
