@@ -20,7 +20,7 @@ check('Medium metadata keeps canonical scaling helper',premium.includes('cpMetaT
 check('generic Medium header override preserves special-club fallback',premium.includes('if(t&&CP_PREMIUM_GENERIC_KEYS.has(t.key))return cpPremiumHeaderMedium')&&premium.includes('return CP_PREMIUM_BASE_HEADER_MEDIUM'));
 
 check('Medium stale header still exposes saved-data state',theme.includes("${d.stale?' · 保存データ':''}"));
-check('LIVE context uses home-away plus venue instead of kickoff',live.includes("return venue&&venue!=='会場未定'?`${side}・${venue}`:side")&&live.includes("if(d?.mode==='LIVE')return cpLiveContext(m)"));
+check('LIVE context uses separated home-away plus venue instead of kickoff',live.includes("return venue&&venue!=='会場未定'?`${side} ・ ${venue}`:side")&&live.includes("if(d?.mode==='LIVE')return cpLiveContext(m)"));
 check('Small LIVE context restores source kickoff after rendering',live.includes('finally{m.kickoff=oldKickoff}'));
 
 check('offline mode serves normalized cache',resilience.includes("if(qa==='offline'&&cached)")&&resilience.includes("return{...normalized,stale:true,resilience:'cache'}"));
