@@ -11,9 +11,9 @@ check('launcher pins resilience v6 commit',src.includes('968fd0308afd6ea0998d831
 check('launcher uses data policy v8 local cache',src.includes('ClubPulseDataPolicyPatch_v8.js'));
 check('launcher fetch tag is data-policy8',src.includes("'data-policy8'"));
 check('launcher pins data policy v8 commit',src.includes('fa0b30efd1407e4221175b25da282b904c713b71'));
-check('launcher uses premium visual v5 local cache',src.includes('ClubPulsePremiumVisualPatch_v5.js'));
-check('launcher fetch tag is premium5',src.includes("'premium5'"));
-check('launcher pins premium visual v5 commit',src.includes('1b5be468f91013f99c4f79ef23e885cb1ce5690c/scriptable/club-pulse-premium-visual-patch.js'));
+check('launcher uses premium visual v6 local cache',src.includes('ClubPulsePremiumVisualPatch_v6.js'));
+check('launcher fetch tag is premium6',src.includes("'premium6'"));
+check('launcher pins premium visual v6 commit',src.includes('ecc546bf6f1bfb3d82e7a601d07622b3d716dcba/scriptable/club-pulse-premium-visual-patch.js'));
 check('launcher uses small presentation v11 local cache',src.includes('ClubPulseSmallPresentationPatch_v11.js'));
 check('launcher fetch tag is small-presentation11',src.includes("'small-presentation11'"));
 check('launcher pins small presentation v11 commit',src.includes('0191f8450c4ca7c3c8277da2223cdf5c6bb0f15b/scriptable/club-pulse-small-presentation-patch.js'));
@@ -26,6 +26,6 @@ check('launcher pins wave4 Lens immutable commits',src.includes('28a95c8d790e4a1
 check('wave4 registry injects before core parameter resolution',src.includes("c=c.slice(0,pk)+cr+'\\n'+ec+'\\n'+w2c+'\\n'+w3c+'\\n'+w4c+'\\n'+c.slice(pk)"));
 check('wave4 presentation runs after wave3 and Small',src.includes("+dp+'\\n'+sp+'\\n'+w2t+'\\n'+w3n+'\\n'+w4l"));
 check('patch loader remains local-first',src.includes("if(F.fileExists(file)){let s=F.readString(file);if(s&&s.length>=min)return s}"));
-check('launcher documents 44-club architecture',src.includes('Club Pulse 44-club runtime')&&src.includes('Wave 4 adds RC Lens')&&src.includes('Data Policy v8')&&src.includes('Premium Visual v5')&&src.includes('Small Presentation v11')&&src.includes('Wave 2 Theme v5'));
+check('launcher documents 44-club architecture',src.includes('Club Pulse 44-club runtime')&&src.includes('Wave 4 adds RC Lens')&&src.includes('Data Policy v8')&&src.includes('Premium Visual v6')&&src.includes('Small Presentation v11')&&src.includes('Wave 2 Theme v5'));
 if(failed){console.error(`\nLauncher version QA FAILED: ${failed}`);process.exit(1)}
 console.log('\nClub Pulse 44-club launcher version QA PASSED');
