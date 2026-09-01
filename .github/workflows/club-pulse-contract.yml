@@ -31,6 +31,8 @@ jobs:
           node scriptable/club-pulse-bundesliga-venue-contract.test.js
           node scriptable/club-pulse-premier-league-venue-contract.test.js
           node scriptable/club-pulse-laliga-venue-contract.test.js
+          node scriptable/club-pulse-serie-a-venue-contract.test.js
+          node scriptable/club-pulse-ligue1-venue-contract.test.js
           node scriptable/club-pulse-cache-migration.test.js
           node scriptable/club-pulse-resilience.test.js
           node scriptable/club-pulse-data-policy.test.js
