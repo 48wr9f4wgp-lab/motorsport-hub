@@ -1,9 +1,19 @@
-// Club Pulse Small Presentation System v10.
+// Club Pulse Small Presentation System v11.
 // Canonical small-widget renderer for all supported clubs.
-// v10 keeps v9 geometry and scored-state protection, while preferring readable
-// Japanese club names up to nine characters before falling back to aliases/codes.
+// v11 keeps v10 geometry and scored-state protection, but stops shrinking long
+// Japanese club names into micro-text. Readable natural labels win before codes.
 
-const CP_SP_FULL_NAME_LIMIT=9;
+const CP_SP_FULL_NAME_LIMIT=6;
+const CP_SP_SOFT_NAME_LIMIT=9;
+const CP_SP_PREFERRED_LABELS={
+  'アストン・ヴィラ':'ヴィラ',
+  'レアル・ソシエダ':'ソシエダ',
+  'レヴァークーゼン':'Leverkusen',
+  'フランクフルト':'Frankfurt',
+  'シュトゥットガルト':'Stuttgart',
+  'フィオレンティーナ':'Fiorentina',
+  'フェイエノールト':'Feyenoord'
+};
 const CP_SP_TYPO={
   headerName:9.0,
   headerRank:10.0,
@@ -63,14 +73,27 @@ function cpSpCanonical(name){
 }
 function cpSpTeamLabel(name,fallback,isClub=false){
   let n=isClub?(club?.jp||club?.short||''):cpSpCanonical(name);
-  if(Array.from(n).length<=CP_SP_FULL_NAME_LIMIT)return n;
+  if(CP_SP_PREFERRED_LABELS[n])return CP_SP_PREFERRED_LABELS[n];
+  const len=Array.from(n).length;
+  if(len<=CP_SP_FULL_NAME_LIMIT)return n;
   if(CP_SP_SMALL_ALIASES[n])return CP_SP_SMALL_ALIASES[n];
+  if(len<=CP_SP_SOFT_NAME_LIMIT)return n;
   const fb=String(fallback||'').trim();
   if(/^[A-Z0-9.-]{2,5}$/i.test(fb))return fb;
   return n
 }
+function cpSpLatinLabel(label){
+  return /^[\x20-\x7E]+$/.test(String(label||''))
+}
 function cpSpTeamFont(label){
   const n=Array.from(String(label||'')).length;
+  if(cpSpLatinLabel(label)){
+    if(n<=3)return CP_SP_TYPO.team;
+    if(n<=6)return 9.2;
+    if(n<=8)return 8.7;
+    if(n<=10)return 8.2;
+    return 7.6
+  }
   if(n<=3)return CP_SP_TYPO.team;
   if(n===4)return 9.1;
   if(n===5)return 8.2;
