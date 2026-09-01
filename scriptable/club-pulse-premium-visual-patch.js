@@ -1,8 +1,10 @@
-// Club Pulse premium visual pass v4.
+// Club Pulse premium visual pass v5.
 // Rendering consumes the canonical design-system tokens instead of club-specific magic numbers.
-// v4 keeps generic Medium team labels on the active theme's cardText token, including light themes.
+// v5 keeps v4 theme-aware card text and hardens Medium headers, team labels, and score text
+// against wrapping/clipping across NEXT, LIVE, POST, stale, and long-name fixtures.
 
 const CP_PREMIUM_BASE_CARD_BG=cardBg,
+      CP_PREMIUM_BASE_HEADER_MEDIUM=buildHeaderMedium,
       CP_PREMIUM_BASE_MATCH_MEDIUM=buildMatchMedium,
       CP_PREMIUM_BASE_MATCH_SMALL=buildMatchSmall;
 const CP_PREMIUM_GENERIC_KEYS=new Set(
@@ -31,6 +33,28 @@ function cpPremiumCardMetrics(small=false){
     :{radius:c.radiusMedium??16,border:c.borderMedium??.85,alpha:c.borderAlphaMedium??.72}
 }
 function cpPremiumTextColor(t){return t.cardText||t.text||'#F8FAFC'}
+function cpPremiumGuardText(t,minScale=.76){
+  if(!t)return t;
+  t.lineLimit=1;
+  t.minimumScaleFactor=minScale;
+  return t
+}
+
+function cpPremiumHeaderMedium(w,d,img,t){
+  let h=w.addStack();
+  h.layoutHorizontally();
+  h.centerAlignContent();
+  h.setPadding(0,3,0,3);
+  badge(h,club.badge,img,20,club.p,club.s,CREST_SCALE[club.team]||.91);
+  h.addSpacer(7);
+  let l=h.addStack();l.layoutVertically();
+  cpPremiumGuardText(heavy(l,club.name,10.5,CP_COMMON_SHELL.text),.72);
+  cpPremiumGuardText(text(l,`${updated(d.fetchedAt)}${d.stale?' · 保存データ':''}`,6.6,false,.76,CP_COMMON_SHELL.muted),.82);
+  h.addSpacer();
+  let r=h.addStack();r.layoutVertically();r.centerAlignContent();
+  let rk=cpPremiumGuardText(heavy(r,d.rank!=null?`${d.rank}位`:'–',12.5,CP_COMMON_SHELL.text),.88);rk.rightAlignText();
+  let pt=cpPremiumGuardText(semibold(r,`勝点 ${d.points??'–'}`,7.2,.92,t.headerAccent||t.accentSoft||CP_COMMON_SHELL.muted),.84);pt.rightAlignText()
+}
 
 function cpPremiumTeamBlock(parent,opt,fg){
   let s=parent.addStack();
@@ -41,11 +65,11 @@ function cpPremiumTeamBlock(parent,opt,fg){
   logo.addSpacer();
   s.addSpacer(opt.nameGap??2);
   let name=s.addStack();name.layoutHorizontally();name.addSpacer();
-  let nm=heavy(name,opt.name,opt.nameSize||12,fg);nm.centerAlignText();
+  let nm=cpPremiumGuardText(heavy(name,opt.name,opt.nameSize||12,fg),.74);nm.centerAlignText();
   name.addSpacer();
   if(opt.sub){
     let sub=s.addStack();sub.layoutHorizontally();sub.addSpacer();
-    let sb=text(sub,opt.sub,opt.subSize||7,false,.56,fg);sb.centerAlignText();sub.addSpacer()
+    let sb=cpPremiumGuardText(text(sub,opt.sub,opt.subSize||7,false,.56,fg),.78);sb.centerAlignText();sub.addSpacer()
   }
   return s
 }
@@ -56,19 +80,19 @@ function cpPremiumExtraMatchMedium(w,d,imgs,t){
   c.borderWidth=q.border;c.borderColor=C(t.cardBorder||t.border||CP_COMMON_SHELL.edge,q.alpha);
   if(!m){heavy(c,'試合データ未取得',11,fg);return}
   let top=c.addStack();top.layoutHorizontally();top.centerAlignContent();
-  text(top,statusTitle(d,m),8,true,1,fg);
+  cpPremiumGuardText(text(top,statusTitle(d,m),8,true,1,fg),.88);
   top.addSpacer(6);competitionPill(top,m);
   if(d.mode==='POST'){top.addSpacer(5);resultPill(top,m)}
   top.addSpacer();
-  if(d.mode==='LIVE')heavy(top,m.minute||'LIVE',10,fg);
-  else if(d.mode==='POST'){let ft=heavy(top,'FT',10,t.muted||'#E4E4E8');ft.rightAlignText()}
+  if(d.mode==='LIVE')cpPremiumGuardText(heavy(top,m.minute||'LIVE',10,fg),.86);
+  else if(d.mode==='POST'){let ft=cpPremiumGuardText(heavy(top,'FT',10,t.muted||'#E4E4E8'),.90);ft.rightAlignText()}
   else sidePill(top,m);
   c.addSpacer(2);
   let outer=c.addStack();outer.layoutHorizontally();outer.centerAlignContent();outer.addSpacer();
   let row=outer.addStack();row.layoutHorizontally();row.centerAlignContent();
   cpPremiumTeamBlock(row,{img:imgs.club,name:club.jp,sub:'',fallback:club.badge,logoSize:56,nameSize:12,subSize:0,p1:club.p,p2:club.s,scale:CREST_SCALE[club.team]||.91,nameGap:1,width:94},fg);
   row.addSpacer(d.mode==='POST'?16:20);
-  let mid=heavy(row,centerMainText(d,m),d.mode==='POST'?27:d.mode==='NEXT'?14:22,fg);mid.centerAlignText();
+  let mid=cpPremiumGuardText(heavy(row,centerMainText(d,m),d.mode==='POST'?27:d.mode==='NEXT'?14:22,fg),.74);mid.centerAlignText();
   row.addSpacer(d.mode==='POST'?16:20);
   cpPremiumTeamBlock(row,{img:imgs.opp,name:m.opponentName,sub:'',fallback:m.opponentShort,logoSize:56,nameSize:12,subSize:0,p1:'#4A5568',p2:'#20242D',scale:CREST_SCALE[m.opponentId]||CREST_SCALE.opponent_default||.90,nameGap:1,width:94},fg);
   outer.addSpacer();c.addSpacer(2);
@@ -98,6 +122,12 @@ function cpPremiumExtraMatchSmall(w,d,imgs,t){
   outer.addSpacer();c.addSpacer(4);
   let meta=c.addStack();meta.layoutHorizontally();meta.addSpacer();cpMetaText(meta,m.kickoff,fg,true);meta.addSpacer()
 }
+
+buildHeaderMedium=function(w,d,img){
+  let t=typeof CP_ACTIVE_THEME==='function'?CP_ACTIVE_THEME():null;
+  if(t&&CP_PREMIUM_GENERIC_KEYS.has(t.key))return cpPremiumHeaderMedium(w,d,img,t);
+  return CP_PREMIUM_BASE_HEADER_MEDIUM(w,d,img)
+};
 
 buildMatchMedium=function(w,d,imgs){
   let t=typeof CP_ACTIVE_THEME==='function'?CP_ACTIVE_THEME():null;
