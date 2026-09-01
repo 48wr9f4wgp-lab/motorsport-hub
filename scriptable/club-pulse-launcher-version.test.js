@@ -17,6 +17,8 @@ check('launcher pins premium visual v6 commit',src.includes('ecc546bf6f1bfb3d82e
 check('launcher uses small presentation v11 local cache',src.includes('ClubPulseSmallPresentationPatch_v11.js'));
 check('launcher fetch tag is small-presentation11',src.includes("'small-presentation11'"));
 check('launcher pins small presentation v11 commit',src.includes('0191f8450c4ca7c3c8277da2223cdf5c6bb0f15b/scriptable/club-pulse-small-presentation-patch.js'));
+check('launcher uses canonical form system v1',src.includes('ClubPulseFormSystemPatch_v1.js')&&src.includes("'form-system1'"));
+check('launcher pins canonical form system v1',src.includes('41ce4238ea15fb7dc8eb668011c98e203acd1aa4/scriptable/club-pulse-form-system-patch.js'));
 check('launcher uses wave2 clubs and themes v5',src.includes('ClubPulseWave2ClubsPatch_v1.js')&&src.includes("'wave2-clubs1'")&&src.includes('ClubPulseWave2ThemesPatch_v5.js')&&src.includes("'wave2-themes5'"));
 check('launcher pins wave2 immutable commits',src.includes('c53a62e6308fb99d6605d9b6c8d960869140dd46/scriptable/club-pulse-wave2-clubs-patch.js')&&src.includes('5e6abb10e817d5dbebd0f2b95d9e8106da8ff401/scriptable/club-pulse-wave2-themes-patch.js'));
 check('launcher uses wave3 Netherlands v1 caches',src.includes('ClubPulseWave3NetherlandsClubsPatch_v1.js')&&src.includes("'wave3-nl-clubs1'")&&src.includes('ClubPulseWave3NetherlandsPatch_v1.js')&&src.includes("'wave3-netherlands1'"));
@@ -24,8 +26,8 @@ check('launcher pins wave3 immutable commits',src.includes('b6b1e42237d899fc3084
 check('launcher uses wave4 Lens v1 caches',src.includes('ClubPulseWave4LensClubPatch_v1.js')&&src.includes("'wave4-lens-club1'")&&src.includes('ClubPulseWave4LensPatch_v1.js')&&src.includes("'wave4-lens1'"));
 check('launcher pins wave4 Lens immutable commits',src.includes('28a95c8d790e4a15a9204ff45694d5dde361600e/scriptable/club-pulse-wave4-lens-club-patch.js')&&src.includes('6380251307413da618226363e5f22800df9301dc/scriptable/club-pulse-wave4-lens-patch.js'));
 check('wave4 registry injects before core parameter resolution',src.includes("c=c.slice(0,pk)+cr+'\\n'+ec+'\\n'+w2c+'\\n'+w3c+'\\n'+w4c+'\\n'+c.slice(pk)"));
-check('wave4 presentation runs after wave3 and Small',src.includes("+dp+'\\n'+sp+'\\n'+w2t+'\\n'+w3n+'\\n'+w4l"));
+check('canonical form system runs last',src.includes("+w4l+'\\n'+fs"));
 check('patch loader remains local-first',src.includes("if(F.fileExists(file)){let s=F.readString(file);if(s&&s.length>=min)return s}"));
-check('launcher documents 44-club architecture',src.includes('Club Pulse 44-club runtime')&&src.includes('Wave 4 adds RC Lens')&&src.includes('Data Policy v8')&&src.includes('Premium Visual v6')&&src.includes('Small Presentation v11')&&src.includes('Wave 2 Theme v5'));
+check('launcher documents 44-club architecture',src.includes('Club Pulse 44-club runtime')&&src.includes('Wave 4 adds RC Lens')&&src.includes('Data Policy v8')&&src.includes('Premium Visual v6')&&src.includes('Small Presentation v11')&&src.includes('Wave 2 Theme v5')&&src.includes('Canonical Form System v1'));
 if(failed){console.error(`\nLauncher version QA FAILED: ${failed}`);process.exit(1)}
 console.log('\nClub Pulse 44-club launcher version QA PASSED');
