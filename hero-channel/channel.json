@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-29T12:52:36.699Z",
+  "generatedAt": "2026-09-02T06:40:07.202Z",
   "publicationPolicy": "CI_GATED_LIVE_HERO_CHANNEL",
   "categories": {
     "WEC": {
@@ -50,6 +50,32 @@
         },
         "medium": {
           "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WRC/auto-eab23333e862-Ford-Puma-WRC.jpg-medium.jpg",
+          "width": 1380,
+          "height": 640
+        }
+      }
+    },
+    "F1": {
+      "category": "F1",
+      "assetId": "auto-3cf45aff0bde-Lando-Norris-Mclaren-F1-55383927449-.jpg",
+      "version": "25af27e3b789d3c9",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Lando_Norris_Mclaren_F1_(55383927449).jpg",
+      "sourceTitle": "File:Lando Norris Mclaren F1 (55383927449).jpg",
+      "author": "Jason Puddephatt",
+      "license": "CC BY-SA 4.0",
+      "sourceYear": 2026,
+      "sourceDate": "2026-07-04 15:14:31",
+      "role": "IDENTITY",
+      "qualityScore": 0.8631,
+      "promotedAt": "2026-09-02T06:40:07.199Z",
+      "images": {
+        "small": {
+          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/F1/auto-3cf45aff0bde-Lando-Norris-Mclaren-F1-55383927449-.jpg-small.jpg",
+          "width": 720,
+          "height": 720
+        },
+        "medium": {
+          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/F1/auto-3cf45aff0bde-Lando-Norris-Mclaren-F1-55383927449-.jpg-medium.jpg",
           "width": 1380,
           "height": 640
         }

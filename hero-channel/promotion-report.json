@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-29T12:52:36.699Z",
+  "generatedAt": "2026-09-02T06:40:07.202Z",
   "thresholds": {
     "minScore": 0.72,
     "minDetection": 0.55,
     "minSmallSubject": 0.14,
     "minMediumSubject": 0.1,
-    "minTextSafe": 0.68
+    "minTextSafe": 0.68,
+    "minLkgQualityGain": 0.02
   },
   "promoted": [
-    "WEC",
-    "WRC"
+    "F1"
   ],
   "categories": {
     "WEC": {
@@ -24,6 +24,12 @@
       "qualityScore": 0.9574,
       "sourceYear": 2026,
       "sourceTitle": "File:Ford Puma WRC.jpg"
+    },
+    "F1": {
+      "assetId": "auto-3cf45aff0bde-Lando-Norris-Mclaren-F1-55383927449-.jpg",
+      "qualityScore": 0.8631,
+      "sourceYear": 2026,
+      "sourceTitle": "File:Lando Norris Mclaren F1 (55383927449).jpg"
     }
   }
 }
