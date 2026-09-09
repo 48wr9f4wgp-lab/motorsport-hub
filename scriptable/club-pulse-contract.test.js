@@ -7,7 +7,7 @@ const files={
   ui:read('club-pulse-ui-patch.js'),comp:read('club-pulse-competition-logo-patch.js'),manutd:read('club-pulse-manutd-theme-patch.js'),
   themes:read('club-pulse-theme-registry-patch.js'),extraThemes:read('club-pulse-extra-theme-patch.js'),identity:read('club-pulse-identity-color-patch.js'),
   design:read('club-pulse-design-system-patch.js'),premium:read('club-pulse-premium-visual-patch.js'),
-  top:read('club-pulse-top-layout-patch.js'),readability:read('club-pulse-readability-guard-patch.js'),cacheMigration:read('club-pulse-cache-migration-patch.js'),finalPolish:read('club-pulse-final-polish-patch.js'),
+  top:read('club-pulse-top-layout-patch.js'),readability:read('club-pulse-readability-guard-patch.js'),cacheMigration:read('club-pulse-cache-migration-patch.js'),crestCache:read('club-pulse-crest-cache-namespace-patch.js'),finalPolish:read('club-pulse-final-polish-patch.js'),
   live:read('club-pulse-live-context-patch.js'),resilience:read('club-pulse-resilience-patch.js')
 };
 let failed=0;
@@ -27,7 +27,7 @@ check('launcher uses readability v8',has(files.launcher,'ClubPulseReadabilityGua
 check('launcher pins readability v8 commit',has(files.launcher,'9b6e1f82ad2d07d67628cd501723d5eba095908f'));
 check('launcher uses cache migration v1',has(files.launcher,'ClubPulseCacheMigrationPatch_v1.js')&&has(files.launcher,"'cache-migration1'")&&has(files.launcher,'986e4aa662f695d84b1174bf79917cb8e31a10f7'));
 check('launcher keeps final polish v3',has(files.launcher,'ClubPulseFinalPolishPatch_v3.js')&&has(files.launcher,"'final-polish3'"));
-check('canonical load order remains stable',has(files.launcher,"+u+'\\n'+i+'\\n'+ds+'\\n'+pv+'\\n'+rg+'\\n'+cm+'\\n'+fp+'\\n'+q+'\\n'+r"));
+check('canonical load order remains stable',has(files.launcher,"+u+'\\n'+i+'\\n'+ds+'\\n'+pv+'\\n'+rg+'\\n'+cm+'\\n'+ccn+'\\n'+fp+'\\n'+q+'\\n'+r"));
 check('launcher retains remote-to-local fallback',has(files.launcher,'if(F.fileExists(file))return F.readString(file)'));
 check('launcher retains QA persistence',has(files.launcher,'ClubPulseQAOverride_v1.json')&&has(files.launcher,'15*60*1000'));
 
@@ -55,6 +55,7 @@ check('mapMatch normalization happens before cache/render',has(files.readability
 check('cache migration wraps loadData',has(files.cacheMigration,'const CP_CM_BASE_LOAD_DATA=loadData')&&has(files.cacheMigration,'loadData=async function(t)'));
 check('cache migration handles legacy and missing venues',has(files.cacheMigration,"'プレゼロ・アレーナ':'SNPアレーナ'")&&has(files.cacheMigration,"CP_HOME_VENUE_BY_TEAM[out.opponentName]||'会場未定'"));
 check('cache migration stamps schema and avoids persisting stale flag',has(files.cacheMigration,"CP_CACHE_SCHEMA_VERSION='venue-2026-27-v1'")&&has(files.cacheMigration,'delete stored.stale'));
+check('crest cache is provider namespaced',has(files.crestCache,"CP_CREST_CACHE_VERSION='v2'")&&has(files.crestCache,"return'api_football'")&&has(files.crestCache,"return'football_data'"));
 check('pill geometry still reads canonical tokens',has(files.readability,"typeof CP_DESIGN_TOKENS==='object'")&&has(files.readability,'CP_DESIGN_TOKENS.pill'));
 check('competition crest treatment remains unified',has(files.readability,'function cpUnifiedCompetitionPill')&&has(files.readability,'plate.addImage(logo)'));
 check('readability contains no opponent-specific crest rescue',!has(files.readability,'CP_LOW_CONTRAST_CRESTS')&&!has(files.readability,'CP_RG_BASE_BADGE'));
