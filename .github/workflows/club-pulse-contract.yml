@@ -42,5 +42,6 @@ jobs:
           node scriptable/club-pulse-small-widget-contract.test.js
           node scriptable/club-pulse-medium-state-contract.test.js
           node scriptable/club-pulse-live-context-contract.test.js
+          node scriptable/club-pulse-crest-cache-contract.test.js
           node scriptable/club-pulse-form-system-contract.test.js
           node scriptable/club-pulse-launcher-version.test.js
