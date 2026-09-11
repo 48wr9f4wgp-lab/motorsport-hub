@@ -5,8 +5,9 @@ import assert from 'node:assert/strict';
 const arg=(name,fallback='')=>{const p=process.argv.find(x=>x.startsWith(`--${name}=`));return p?p.slice(name.length+3):fallback};
 const candidate=path.resolve(arg('candidate','hero-channel-candidate'));
 const previous=path.resolve(arg('previous','hero-channel-previous'));
-const allowedCategories=new Set(['F1','WEC','WRC','SUPERGT','MOTOGP','FDJ','D1GP','SUPERFORMULA','INDYCAR','NASCAR','GTWCEU']);
+const allowedCategories=new Set(['F1','WEC','WRC','SUPERGT','MOTOGP','FDJ','D1GP','SUPERFORMULA','INDYCAR','NASCAR','GTWCEU','DAKAR']);
 const allowedLicenses=new Set(['CC BY 2.0','CC BY 4.0','CC BY-SA 2.0','CC BY-SA 3.0','CC BY-SA 4.0','CC0 1.0']);
+const allowedPromotionModes=new Set(['INITIAL','QUALITY_UPGRADE','FRESHNESS_ROTATION']);
 const base='https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets';
 const safe=v=>/^[A-Za-z0-9._-]{1,100}$/.test(String(v||''));
 const readJSON=p=>JSON.parse(fs.readFileSync(p,'utf8'));
@@ -19,9 +20,10 @@ assert.equal(channel.schemaVersion,1);
 assert.equal(channel.publicationPolicy,'CI_GATED_LIVE_HERO_CHANNEL');
 assert(channel.categories&&typeof channel.categories==='object'&&!Array.isArray(channel.categories));
 assert(Array.isArray(report.promoted));
+assert(report.promotionModes&&typeof report.promotionModes==='object'&&!Array.isArray(report.promotionModes));
 assert.equal(new Set(report.promoted).size,report.promoted.length,'duplicate promoted categories');
-for(const cat of report.promoted)assert(allowedCategories.has(cat),`invalid promoted category ${cat}`);
-assert(!report.promoted.includes('DAKAR')&&!report.promoted.includes('QA'),'generic channel must not promote DAKAR/QA');
+for(const cat of report.promoted){assert(allowedCategories.has(cat),`invalid promoted category ${cat}`);assert(allowedPromotionModes.has(report.promotionModes[cat]),`${cat}: invalid promotion mode`)}
+assert(!report.promoted.includes('QA'),'Hero channel must never promote QA');
 
 for(const [cat,e] of Object.entries(channel.categories)){
   assert(allowedCategories.has(cat),`invalid live category ${cat}`);

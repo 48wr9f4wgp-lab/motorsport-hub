@@ -9,8 +9,9 @@ const artifactRoot=path.resolve(arg('artifacts',path.join(root,'refresh-artifact
 const outputDir=path.resolve(arg('output-dir',path.join(root,'hero-channel-candidate')));
 const previousDir=path.resolve(arg('previous-dir',path.join(root,'hero-channel-previous')));
 const currentYear=new Date().getUTCFullYear();
-const categories=['F1','WEC','WRC','SUPERGT','MOTOGP','FDJ','D1GP','SUPERFORMULA','INDYCAR','NASCAR','GTWCEU'];
+const categories=['F1','WEC','WRC','SUPERGT','MOTOGP','FDJ','D1GP','SUPERFORMULA','INDYCAR','NASCAR','GTWCEU','DAKAR'];
 const minScore=0.72,minDetection=.55,minSmallSubject=.14,minMediumSubject=.10,minTextSafe=.68,minLkgQualityGain=.02;
+const freshnessMinScore=.90,freshnessMaxQualityDrop=.03,freshnessMinAgeMs=48*3600000;
 const sha=v=>crypto.createHash('sha256').update(v).digest('hex');
 const slug=v=>String(v||'').replace(/^File:/,'').replace(/[^A-Za-z0-9._-]+/g,'-').replace(/^-+|-+$/g,'').slice(0,52)||'hero';
 const readJSON=p=>{try{return JSON.parse(fs.readFileSync(p,'utf8'))}catch(_){return null}};
@@ -42,22 +43,32 @@ function bestForDir(dir,category){
  for(const row of subject.results||[]){const meta=metaByTitle.get(row.title);if(!meta||!eligible(row,meta))continue;const q=quality(row,row.recommendedRole,meta);rows.push({row,meta,q})}
  rows.sort((a,b)=>b.q-a.q||Number(b.meta.sourceYear||0)-Number(a.meta.sourceYear||0)||a.row.title.localeCompare(b.row.title));return rows[0]||null;
 }
+function promotionMode(prev,q,meta){
+ if(!prev)return 'INITIAL';
+ const prevQuality=Number(prev.qualityScore);
+ if(Number.isFinite(prevQuality)&&q>=prevQuality+minLkgQualityGain)return 'QUALITY_UPGRADE';
+ const promotedAt=parseDate(prev.promotedAt)||parseDate(prev.sourceDate)||Date.UTC(Number(prev.sourceYear)||0,0,1);
+ const ageMs=Date.now()-promotedAt;
+ const differentAsset=String(prev.sourcePage||'')!==String(meta.sourcePage||'');
+ const qualityFloor=!Number.isFinite(prevQuality)||q>=prevQuality-freshnessMaxQualityDrop;
+ if(differentAsset&&ageMs>=freshnessMinAgeMs&&q>=freshnessMinScore&&qualityFloor)return 'FRESHNESS_ROTATION';
+ return null;
+}
 function copyTree(src,dst){if(!fs.existsSync(src))return;fs.mkdirSync(dst,{recursive:true});for(const e of fs.readdirSync(src,{withFileTypes:true})){const a=path.join(src,e.name),b=path.join(dst,e.name);if(e.isDirectory())copyTree(a,b);else fs.copyFileSync(a,b)}}
 fs.rmSync(outputDir,{recursive:true,force:true});fs.mkdirSync(outputDir,{recursive:true});copyTree(previousDir,outputDir);
-const previous=readJSON(path.join(previousDir,'channel.json'))||{schemaVersion:1,generatedAt:null,categories:{}};const next={schemaVersion:1,generatedAt:previous.generatedAt||new Date(0).toISOString(),publicationPolicy:'CI_GATED_LIVE_HERO_CHANNEL',categories:{...(previous.categories||{})}};const promoted=[];
+const previous=readJSON(path.join(previousDir,'channel.json'))||{schemaVersion:1,generatedAt:null,categories:{}};const next={schemaVersion:1,generatedAt:previous.generatedAt||new Date(0).toISOString(),publicationPolicy:'CI_GATED_LIVE_HERO_CHANNEL',categories:{...(previous.categories||{})}};const promoted=[],promotionModes={};
 for(const dir of artifactDirs()){
  const category=categoryFromDir(dir);if(!category)continue;const best=bestForDir(dir,category);if(!best)continue;
  const {row,meta,q}=best,prev=next.categories[category];const sourceTime=parseDate(meta.dateRaw)||Date.UTC(Number(meta.sourceYear)||0,0,1),prevTime=parseDate(prev?.sourceDate)||Date.UTC(Number(prev?.sourceYear)||0,0,1);
  if(prev&&sourceTime<=prevTime)continue;
- const prevQuality=Number(prev?.qualityScore);
- if(prev&&Number.isFinite(prevQuality)&&q<prevQuality+minLkgQualityGain)continue;
+ const mode=promotionMode(prev,q,meta);if(!mode)continue;
  const smallSrc=path.join(dir,row.derivatives.small.path),mediumSrc=path.join(dir,row.derivatives.medium.path);if(!fs.existsSync(smallSrc)||!fs.existsSync(mediumSrc))continue;
  const assetId=`auto-${sha(meta.sourcePage).slice(0,12)}-${slug(row.title)}`,catDir=path.join(outputDir,'assets',category);fs.rmSync(catDir,{recursive:true,force:true});fs.mkdirSync(catDir,{recursive:true});
  const smallName=`${assetId}-small.jpg`,mediumName=`${assetId}-medium.jpg`,smallDst=path.join(catDir,smallName),mediumDst=path.join(catDir,mediumName);fs.copyFileSync(smallSrc,smallDst);fs.copyFileSync(mediumSrc,mediumDst);
  const version=sha(Buffer.concat([fs.readFileSync(smallDst),fs.readFileSync(mediumDst)])).slice(0,16),base=`https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/${category}`;
- next.categories[category]={category,assetId,version,sourcePage:meta.sourcePage,sourceTitle:meta.title,author:meta.author,license:meta.license,sourceYear:meta.sourceYear,sourceDate:meta.dateRaw,role:row.recommendedRole,qualityScore:Number(q.toFixed(4)),promotedAt:new Date().toISOString(),images:{small:{url:`${base}/${smallName}`,width:720,height:720},medium:{url:`${base}/${mediumName}`,width:1380,height:640}}};promoted.push(category);
+ next.categories[category]={category,assetId,version,sourcePage:meta.sourcePage,sourceTitle:meta.title,author:meta.author,license:meta.license,sourceYear:meta.sourceYear,sourceDate:meta.dateRaw,role:row.recommendedRole,qualityScore:Number(q.toFixed(4)),promotedAt:new Date().toISOString(),images:{small:{url:`${base}/${smallName}`,width:720,height:720},medium:{url:`${base}/${mediumName}`,width:1380,height:640}}};promoted.push(category);promotionModes[category]=mode;
 }
 if(promoted.length)next.generatedAt=new Date().toISOString();
 fs.writeFileSync(path.join(outputDir,'channel.json'),JSON.stringify(next,null,2)+'\n');
-fs.writeFileSync(path.join(outputDir,'promotion-report.json'),JSON.stringify({schemaVersion:1,generatedAt:new Date().toISOString(),thresholds:{minScore,minDetection,minSmallSubject,minMediumSubject,minTextSafe,minLkgQualityGain},promoted,categories:Object.fromEntries(Object.entries(next.categories).map(([k,v])=>[k,{assetId:v.assetId,qualityScore:v.qualityScore,sourceYear:v.sourceYear,sourceTitle:v.sourceTitle}]))},null,2)+'\n');
-console.log(JSON.stringify({promoted,totalLive:Object.keys(next.categories).length}));
+fs.writeFileSync(path.join(outputDir,'promotion-report.json'),JSON.stringify({schemaVersion:1,generatedAt:new Date().toISOString(),thresholds:{minScore,minDetection,minSmallSubject,minMediumSubject,minTextSafe,minLkgQualityGain,freshnessMinScore,freshnessMaxQualityDrop,freshnessMinAgeHours:freshnessMinAgeMs/3600000},promoted,promotionModes,categories:Object.fromEntries(Object.entries(next.categories).map(([k,v])=>[k,{assetId:v.assetId,qualityScore:v.qualityScore,sourceYear:v.sourceYear,sourceTitle:v.sourceTitle}]))},null,2)+'\n');
+console.log(JSON.stringify({promoted,promotionModes,totalLive:Object.keys(next.categories).length}));
