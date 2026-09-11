@@ -128,7 +128,10 @@ const CP_PR_LSR_BASE_LOAD_DATA=loadData;
 loadData=async function(token){
   const d=await CP_PR_LSR_BASE_LOAD_DATA(token);
   if(!d)return d;
-  const history=await cpPrLastSeasonStandings(token);
+  const season=cpPrPreviousSeasonYear(),cached=readJSON(cpPrLastSeasonPath(season));
+  let history=null;
+  if(cached?.payload)history={season:cached.season||season,payload:cached.payload};
+  else if(!(cached?.error&&Date.now()-Number(cached.fetchedAt||0)<CP_PR_LSR_ERROR_TTL))history=await cpPrLastSeasonStandings(token);
   if(!history?.payload)return d;
   const row=standing(history.payload);
   return{
