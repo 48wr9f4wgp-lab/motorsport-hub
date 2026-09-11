@@ -1,4 +1,4 @@
-// Club Pulse Small UI Unification v2.
+// Club Pulse Small UI Unification v3.
 // Shared presentation behavior across every supported club.
 // Keeps club identity in colors/crests, while standardizing labels, footer structure,
 // provider-name normalization and venue presentation behavior.
@@ -17,15 +17,12 @@ const CP_UIU_JP_SMALL_LABELS={
   'エルヴァースベルク':'エルヴァース'
 };
 
-// Provider variants observed outside the exact canonical registry keys.
 const CP_UIU_TEAM_ALIASES={
   'SC Paderborn':'パーダーボルン',
   'SC Paderborn 07':'パーダーボルン',
   'Paderborn 07':'パーダーボルン'
 };
 
-// Eredivisie venue strings were previously allowed to leak through in English.
-// Keep one Japanese presentation layer for metadata regardless of provider/cache path.
 const CP_UIU_VENUE_ALIASES={
   'WerkTalent Stadion':'ワークタレント・スタジアム',
   'Johan Cruijff ArenA':'ヨハン・クライフ・アレナ',
@@ -76,21 +73,19 @@ function cpUiuCanonicalVenue(name){
   return CP_UIU_VENUE_ALIASES[registry]||registry||n
 }
 
-// Normalize football-data results too, including legacy cached provider spellings.
-if(typeof mapMatch==='function'){
-  const CP_UIU_BASE_MAP_MATCH=mapMatch;
-  mapMatch=function(m){
-    const out=CP_UIU_BASE_MAP_MATCH(m);
-    if(!out)return out;
-    out.opponentName=cpUiuCanonicalName(out.opponentName);
-    out.venue=cpUiuCanonicalVenue(out.venue);
-    return out
+function cpUiuNormalizeMatch(m){
+  if(!m)return m;
+  return {...m,
+    opponentName:cpUiuCanonicalName(m.opponentName),
+    venue:cpUiuCanonicalVenue(m.venue)
   }
 }
 
-// API-Football fixtures previously passed through teamName() but not the later
-// canonical display-name registry. Normalize from the provider's full team name
-// before rendering, so codes such as SVE do not leak into widgets.
+if(typeof mapMatch==='function'){
+  const CP_UIU_BASE_MAP_MATCH=mapMatch;
+  mapMatch=function(m){return cpUiuNormalizeMatch(CP_UIU_BASE_MAP_MATCH(m))}
+}
+
 if(typeof mapApiFixture==='function'){
   const CP_UIU_BASE_MAP_API_FIXTURE=mapApiFixture;
   mapApiFixture=function(f,teamId,live=false){
@@ -99,27 +94,36 @@ if(typeof mapApiFixture==='function'){
     const home=f?.teams?.home,away=f?.teams?.away,
           opp=home?.id===teamId?away:home,
           raw=String(opp?.name||out.opponentName||'').trim();
-    out.opponentName=cpUiuCanonicalName(raw||out.opponentName);
-    out.venue=cpUiuCanonicalVenue(out.venue);
-    return out
+    return cpUiuNormalizeMatch({...out,opponentName:raw||out.opponentName})
   }
 }
 
-// Cached match objects may predate v2 normalization. Normalize venue at the final
-// metadata boundary so existing cache does not require destructive deletion.
+// Final data boundary: normalize NEXT/LIVE/POST regardless of provider, stale cache,
+// resilience wrapper or earlier mapper. This keeps Medium and Small on one label source.
+if(typeof loadData==='function'){
+  const CP_UIU_BASE_LOAD_DATA=loadData;
+  loadData=async function(...args){
+    const d=await CP_UIU_BASE_LOAD_DATA(...args);
+    if(!d)return d;
+    return {...d,
+      liveMatch:cpUiuNormalizeMatch(d.liveMatch),
+      recentResult:cpUiuNormalizeMatch(d.recentResult),
+      nextMatch:cpUiuNormalizeMatch(d.nextMatch)
+    }
+  }
+}
+
+// Cached match objects may predate v3 normalization. Keep the metadata boundary safe
+// without deleting or rewriting user cache.
 if(typeof metaLine==='function'){
   const CP_UIU_BASE_META_LINE=metaLine;
   metaLine=function(d,m){
     if(!m)return CP_UIU_BASE_META_LINE(d,m);
-    const oldVenue=m.venue;
-    m.venue=cpUiuCanonicalVenue(oldVenue);
-    try{return CP_UIU_BASE_META_LINE(d,m)}
-    finally{m.venue=oldVenue}
+    const normalized=cpUiuNormalizeMatch(m);
+    return CP_UIU_BASE_META_LINE(d,normalized)
   }
 }
 
-// The canonical Small renderer prefers readable Japanese labels. English rescue
-// labels from older visual passes are intentionally bypassed here.
 if(typeof cpSpTeamLabel==='function'){
   cpSpTeamLabel=function(name,fallback,isClub=false){
     const raw=isClub?(club?.jp||club?.short||''):cpUiuCanonicalName(name),
@@ -152,7 +156,6 @@ function cpUiuFormRow(w,d,family='medium'){
     f.addSpacer()
   }
 
-  // One token prevents the arrow from being independently compressed/omitted.
   const latest=text(f,'最新 →',q.label,true,1,typeof cpFormShellText==='function'?cpFormShellText():'#F8FAFC');
   latest.lineLimit=1;latest.minimumScaleFactor=.92;
   f.addSpacer(family==='medium'?7:5);
