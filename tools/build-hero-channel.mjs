@@ -34,7 +34,7 @@ function eligible(row,meta){
  if(Number(row.selectedDetection?.score)<minDetection)return false;
  if(Number(rr.small.subjectFraction)<minSmallSubject||Number(rr.medium.subjectFraction)<minMediumSubject)return false;
  const s=Number(rr.small.effectiveTextSafeScore??rr.small.textSafeScore),m=Number(rr.medium.effectiveTextSafeScore??rr.medium.textSafeScore);
- if(s<minTextSafeFamily||m<minTextSafeFamily||(s+m)/2<minAverageTextSafe)return false;
+ if(s<minTextSafeFamily||m<minTextSafeFamily||(s+m)/2+1e-9<minAverageTextSafe)return false;
  return quality(row,role,meta)>=minScore;
 }
 function artifactDirs(){if(!fs.existsSync(artifactRoot))return[];return fs.readdirSync(artifactRoot,{withFileTypes:true}).filter(x=>x.isDirectory()&&x.name.startsWith('hero-refresh-')).map(x=>path.join(artifactRoot,x.name));}
