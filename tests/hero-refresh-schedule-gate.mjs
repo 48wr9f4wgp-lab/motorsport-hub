@@ -89,7 +89,9 @@ assert(publish.includes("github.event_name == 'schedule'")&&publish.includes("gi
 assert(!publish.includes("github.event_name == 'push'"),'push event must never publish live Hero assets');
 assert(publish.includes('ref: hero-live'),'publish job must checkout hero-live');
 assert(publish.includes('push origin HEAD:hero-live'),'publish job must update only hero-live');
-assert(publish.includes('promotion-report.json'),'publish job must inspect promoted categories');
+assert(publish.includes('promotion-report.json'),'publish job must inspect validated Hero report');
+assert(publish.includes('updatedCategories'),'pool-only channel changes must trigger publication');
+assert(publish.includes("id: updates")&&publish.includes("steps.updates.outputs.has_updates"),'publish condition must use generic Hero updates, not promotions only');
 assert(publish.includes('diff --cached --quiet'),'publish job must no-op when channel is unchanged');
-assert(publish.includes('publish gated active refresh'),'live commits must identify active refresh publication');
-console.log('Motorsport Hub hero active refresh gate: PASS');
+assert(publish.includes('publish gated active pool refresh'),'live commits must identify pool refresh publication');
+console.log('Motorsport Hub hero active pool refresh gate: PASS');
