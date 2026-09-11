@@ -5,6 +5,7 @@ const launcher=fs.readFileSync(path.join(__dirname,'club-pulse.js'),'utf8');
 let failed=0;
 const check=(name,ok)=>{if(ok)console.log(`✓ ${name}`);else{console.error(`✗ ${name}`);failed++}};
 
+try{new Function(patch);check('previous-result patch syntax',true)}catch(e){console.error(e);check('previous-result patch syntax',false)}
 check('launcher pins Previous Result v1 immutably',launcher.includes('b3acf9a5152856caf43990b6dd5068b48eb0bef2/scriptable/club-pulse-previous-result-patch.js'));
 check('launcher uses dedicated previous-result v1 cache',launcher.includes('ClubPulsePreviousResultPatch_v1.js')&&launcher.includes("'previous-result1'"));
 check('previous-result patch loads after UI unification',launcher.includes("+fs+'\\n'+sui+'\\n'+pr"));
