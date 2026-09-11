@@ -1,7 +1,7 @@
-// Club Pulse Small UI Unification v1.
-// Shared Small-widget behavior across every supported club.
+// Club Pulse Small UI Unification v2.
+// Shared presentation behavior across every supported club.
 // Keeps club identity in colors/crests, while standardizing labels, footer structure,
-// provider-name normalization and fallback presentation behavior.
+// provider-name normalization and venue presentation behavior.
 
 const CP_UIU_JP_SMALL_LABELS={
   'アストン・ヴィラ':'ヴィラ',
@@ -17,15 +17,80 @@ const CP_UIU_JP_SMALL_LABELS={
   'エルヴァースベルク':'エルヴァース'
 };
 
+// Provider variants observed outside the exact canonical registry keys.
+const CP_UIU_TEAM_ALIASES={
+  'SC Paderborn':'パーダーボルン',
+  'SC Paderborn 07':'パーダーボルン',
+  'Paderborn 07':'パーダーボルン'
+};
+
+// Eredivisie venue strings were previously allowed to leak through in English.
+// Keep one Japanese presentation layer for metadata regardless of provider/cache path.
+const CP_UIU_VENUE_ALIASES={
+  'WerkTalent Stadion':'ワークタレント・スタジアム',
+  'Johan Cruijff ArenA':'ヨハン・クライフ・アレナ',
+  'Johan Cruijff Arena':'ヨハン・クライフ・アレナ',
+  'AFAS Stadion':'AFASスタジアム',
+  'Stadion Woudestein':'ワウデステイン・スタジアム',
+  'Van Donge & De Roo Stadion':'ワウデステイン・スタジアム',
+  'De Euroborg':'ユーロボルフ',
+  'Euroborg':'ユーロボルフ',
+  'De Grolsch Veste':'デ・フロルシュ・フェステ',
+  'Grolsch Veste':'デ・フロルシュ・フェステ',
+  'Stadion Galgenwaard':'ガルヘンワールト・スタジアム',
+  'Galgenwaard Stadium':'ガルヘンワールト・スタジアム',
+  'Stadion Feijenoord':'デ・カイプ',
+  'De Kuip':'デ・カイプ',
+  'Fortuna Sittard Stadion':'フォルトゥナ・シッタルト・スタジアム',
+  'De Adelaarshorst':'デ・アデラールスホルスト',
+  'Adelaarshorst':'デ・アデラールスホルスト',
+  'Goffertstadion':'ホッフェルト・スタジアム',
+  'Stadion de Goffert':'ホッフェルト・スタジアム',
+  'MAC³PARK Stadion':'MAC³PARKスタジアム',
+  'MAC3PARK Stadion':'MAC³PARKスタジアム',
+  'Philips Stadion':'フィリップス・スタディオン',
+  'Philips Stadium':'フィリップス・スタディオン',
+  'Kooi Stadion':'コーイ・スタジアム',
+  'Cambuur Stadion':'コーイ・スタジアム',
+  'Abe Lenstra Stadion':'アベ・レンストラ・スタジアム',
+  'Spartastadion Het Kasteel':'ヘット・カステール',
+  'Sparta-Stadion Het Kasteel':'ヘット・カステール',
+  'Het Kasteel':'ヘット・カステール',
+  'BUKO Stadion':'BUKOスタジアム',
+  'Koning Willem II Stadion':'コーニング・ヴィレムII・スタジアム'
+};
+
 function cpUiuCanonicalName(name){
   const n=String(name||'').trim();
   if(!n)return'未定';
-  return typeof cpCanonicalTeamName==='function'?cpCanonicalTeamName(n):n
+  if(CP_UIU_TEAM_ALIASES[n])return CP_UIU_TEAM_ALIASES[n];
+  const canonical=typeof cpCanonicalTeamName==='function'?cpCanonicalTeamName(n):n;
+  return CP_UIU_TEAM_ALIASES[canonical]||canonical
+}
+
+function cpUiuCanonicalVenue(name){
+  const n=String(name||'').trim();
+  if(!n||n==='会場未定')return n||'会場未定';
+  if(CP_UIU_VENUE_ALIASES[n])return CP_UIU_VENUE_ALIASES[n];
+  const registry=typeof CP_VENUE_DISPLAY_NAMES==='object'?CP_VENUE_DISPLAY_NAMES[n]:null;
+  return CP_UIU_VENUE_ALIASES[registry]||registry||n
+}
+
+// Normalize football-data results too, including legacy cached provider spellings.
+if(typeof mapMatch==='function'){
+  const CP_UIU_BASE_MAP_MATCH=mapMatch;
+  mapMatch=function(m){
+    const out=CP_UIU_BASE_MAP_MATCH(m);
+    if(!out)return out;
+    out.opponentName=cpUiuCanonicalName(out.opponentName);
+    out.venue=cpUiuCanonicalVenue(out.venue);
+    return out
+  }
 }
 
 // API-Football fixtures previously passed through teamName() but not the later
 // canonical display-name registry. Normalize from the provider's full team name
-// before rendering, so codes such as SVE do not leak into Small widgets.
+// before rendering, so codes such as SVE do not leak into widgets.
 if(typeof mapApiFixture==='function'){
   const CP_UIU_BASE_MAP_API_FIXTURE=mapApiFixture;
   mapApiFixture=function(f,teamId,live=false){
@@ -35,7 +100,21 @@ if(typeof mapApiFixture==='function'){
           opp=home?.id===teamId?away:home,
           raw=String(opp?.name||out.opponentName||'').trim();
     out.opponentName=cpUiuCanonicalName(raw||out.opponentName);
+    out.venue=cpUiuCanonicalVenue(out.venue);
     return out
+  }
+}
+
+// Cached match objects may predate v2 normalization. Normalize venue at the final
+// metadata boundary so existing cache does not require destructive deletion.
+if(typeof metaLine==='function'){
+  const CP_UIU_BASE_META_LINE=metaLine;
+  metaLine=function(d,m){
+    if(!m)return CP_UIU_BASE_META_LINE(d,m);
+    const oldVenue=m.venue;
+    m.venue=cpUiuCanonicalVenue(oldVenue);
+    try{return CP_UIU_BASE_META_LINE(d,m)}
+    finally{m.venue=oldVenue}
   }
 }
 
