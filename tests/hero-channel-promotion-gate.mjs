@@ -17,16 +17,19 @@ function previousEntry(category,quality,hoursAgo,sourceDate=`${year}-06-01`){
  const shown=new Date(now-hoursAgo*3600000).toISOString();
  return {category,assetId,version:`old-${category.toLowerCase()}-version`,sourcePage:`https://commons.wikimedia.org/wiki/File:Old_${category}.jpg`,sourceTitle:`File:Old ${category}.jpg`,author:'Tester',license:'CC BY 4.0',sourceYear:year,sourceDate,role:'ACTION',qualityScore:quality,promotedAt:shown,lastRotatedAt:shown,recentAssetIds:[],images:{small:{url:`${liveBase}/${category}/${small}`,width:720,height:720},medium:{url:`${liveBase}/${category}/${medium}`,width:1380,height:640}}};
 }
+function toPoolAsset(e){return {category:e.category,assetId:e.assetId,version:e.version,sourcePage:e.sourcePage,sourceTitle:e.sourceTitle,author:e.author,license:e.license,sourceYear:e.sourceYear,sourceDate:e.sourceDate,role:e.role,qualityScore:e.qualityScore,addedAt:e.promotedAt,lastShownAt:e.promotedAt,images:e.images};}
 function poolAsset(category,name,quality,hoursSinceShown){
  const assetId=`auto-pool-${category.toLowerCase()}-${name}`,small=`${assetId}-small.jpg`,medium=`${assetId}-medium.jpg`,dir=path.join(prev,'assets',category);fs.mkdirSync(dir,{recursive:true});
  fs.writeFileSync(path.join(dir,small),Buffer.from(`${category}-${name}-small`));fs.writeFileSync(path.join(dir,medium),Buffer.from(`${category}-${name}-medium`));
  return {category,assetId,version:`pool-${name}-version`,sourcePage:`https://commons.wikimedia.org/wiki/File:${category}_${name}.jpg`,sourceTitle:`File:${category} ${name}.jpg`,author:'Tester',license:'CC BY 4.0',sourceYear:year,sourceDate:`${year}-05-15`,role:'ACTION',qualityScore:quality,addedAt:new Date(now-96*3600000).toISOString(),lastShownAt:new Date(now-hoursSinceShown*3600000).toISOString(),images:{small:{url:`${liveBase}/${category}/${small}`,width:720,height:720},medium:{url:`${liveBase}/${category}/${medium}`,width:1380,height:640}}};
 }
 const oldWrc=previousEntry('WRC',.95,72);
-const oldF1=previousEntry('F1',.95,72);
-const recentF1Alt=poolAsset('F1','recent-alt',.94,1);oldF1.pool=[{...oldF1,addedAt:oldF1.promotedAt,lastShownAt:oldF1.promotedAt,pool:undefined,recentAssetIds:undefined,lastRotatedAt:undefined,promotedAt:undefined},recentF1Alt];oldF1.recentAssetIds=[recentF1Alt.assetId];
+const oldF1=previousEntry('F1',.95,24);
 const oldSuperGt=previousEntry('SUPERGT',.80,1);
-fs.writeFileSync(path.join(prev,'channel.json'),JSON.stringify({schemaVersion:1,generatedAt:new Date(now-72*3600000).toISOString(),publicationPolicy:'CI_GATED_LIVE_HERO_CHANNEL',categories:{WRC:oldWrc,F1:oldF1,SUPERGT:oldSuperGt}},null,2));
+const oldNascar=previousEntry('NASCAR',.95,72);
+const recentNascarAlt=poolAsset('NASCAR','recent-alt',.94,1);
+oldNascar.pool=[toPoolAsset(oldNascar),recentNascarAlt];oldNascar.recentAssetIds=[recentNascarAlt.assetId];
+fs.writeFileSync(path.join(prev,'channel.json'),JSON.stringify({schemaVersion:1,generatedAt:new Date(now-72*3600000).toISOString(),publicationPolicy:'CI_GATED_LIVE_HERO_CHANNEL',categories:{WRC:oldWrc,F1:oldF1,SUPERGT:oldSuperGt,NASCAR:oldNascar}},null,2));
 fs.writeFileSync(path.join(prev,'promotion-report.json'),JSON.stringify({schemaVersion:1,promoted:[],poolUpdated:[],updatedCategories:[],promotionModes:{}}));
 
 function writeArtifact(category,{detection=.95,subjectSmall=.32,subjectMedium=.32,safeSmall=.80,safeMedium=.80,date=`${year}-07-01`,title=`File:${category} ${year} pool action.jpg`,page=`https://commons.wikimedia.org/wiki/File:${category}_${year}_Pool.jpg`}={}){
@@ -40,7 +43,8 @@ function writeArtifact(category,{detection=.95,subjectSmall=.32,subjectMedium=.3
 writeArtifact('WEC');
 writeArtifact('DAKAR',{safeSmall:.65,safeMedium:.71,title:`File:DAKAR ${year} text-safe edge.jpg`,page:`https://commons.wikimedia.org/wiki/File:DAKAR_${year}_Text_Safe_Edge.jpg`});
 writeArtifact('WRC',{subjectSmall:.30,subjectMedium:.30,safeSmall:.73,safeMedium:.73,date:`${year}-05-01`,title:`File:WRC ${year} older high quality alternate.jpg`,page:`https://commons.wikimedia.org/wiki/File:WRC_${year}_Older_Alternate.jpg`});
-writeArtifact('F1',{safeSmall:.79,safeMedium:.79,title:recentF1Alt.sourceTitle,page:recentF1Alt.sourcePage,date:recentF1Alt.sourceDate});
+writeArtifact('F1',{safeSmall:.79,safeMedium:.79,title:`File:F1 ${year} pool-only alternate.jpg`,page:`https://commons.wikimedia.org/wiki/File:F1_${year}_Pool_Only_Alternate.jpg`});
+writeArtifact('NASCAR',{safeSmall:.79,safeMedium:.79,title:recentNascarAlt.sourceTitle,page:recentNascarAlt.sourcePage,date:recentNascarAlt.sourceDate});
 writeArtifact('SUPERGT');
 writeArtifact('MOTOGP',{detection:.40,subjectSmall:.20,subjectMedium:.20,title:'File:MotoGP weak.jpg',page:'https://commons.wikimedia.org/wiki/File:MotoGP_Weak.jpg'});
 
@@ -61,10 +65,13 @@ assert.equal(report.promotionModes.WEC,'INITIAL');
 assert.equal(report.promotionModes.DAKAR,'INITIAL','DAKAR must enter the shared Hero pool');
 assert.equal(report.promotionModes.WRC,'POOL_ROTATION','old WRC live Hero must rotate to a distinct near-quality pool member');
 assert.equal(report.promotionModes.SUPERGT,'QUALITY_UPGRADE','+0.02 quality gain must still promote immediately');
-assert.equal(report.promotionModes.F1,undefined,'recently shown pool asset must respect 48h reuse cooldown');
-assert(report.poolUpdated.includes('F1'),'F1 candidate should still refresh the pool even when display cannot rotate');
+assert.equal(report.promotionModes.F1,undefined,'24h-old F1 live Hero must not rotate');
+assert(report.poolUpdated.includes('F1'),'new F1 alternate should populate the pool before the 48h display window');
 assert.equal(channel.categories.F1.assetId,oldF1.assetId,'pool-only update must preserve current F1 Hero');
-assert(channel.categories.F1.pool.some(x=>x.sourcePage===recentF1Alt.sourcePage),'F1 alternate must remain in pool');
+assert(channel.categories.F1.pool.some(x=>x.sourcePage.includes('Pool_Only_Alternate')),'F1 alternate must be retained in pool');
+assert.equal(report.promotionModes.NASCAR,undefined,'recently shown NASCAR pool asset must respect 48h reuse cooldown');
+assert.equal(channel.categories.NASCAR.assetId,oldNascar.assetId,'NASCAR reuse cooldown must preserve current live Hero');
+assert(channel.categories.NASCAR.pool.some(x=>x.assetId===recentNascarAlt.assetId),'recent NASCAR alternate must remain in pool');
 assert.equal(channel.categories.MOTOGP,undefined,'weak candidate must not enter pool or promote');
 assert(channel.categories.DAKAR?.images?.medium?.url.includes('/assets/DAKAR/'),'DAKAR live pool asset missing');
 assert(channel.categories.DAKAR.qualityScore>=.88,'DAKAR 0.65/0.71 text-safe pair should pass via average 0.68');
