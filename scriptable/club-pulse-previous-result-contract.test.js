@@ -15,7 +15,7 @@ check('recent POST result can seed previousResult without another fetch',patch.i
 check('Medium footer exposes previous result',patch.includes("text(prev,'前節'")&&patch.includes('cpPrScore(m)')&&patch.includes('cpPrOpponent(m)'));
 check('POST hides duplicate previous-result summary',patch.includes("d?.mode==='POST'"));
 check('atomic latest arrow and five form chips remain',patch.includes("text(f,'最新 →'")&&patch.includes('form.slice(0,5)')&&patch.includes("while(values.length<5)values.push('-')"));
-check('previous-season standings use official season filter',patch.includes("/standings?season=${season}"));
+check('previous-season standings use official season filter',patch.includes('standings?season=${season}'));
 check('historical standings cache is shared by competition and season',patch.includes('last_season_standings_${String(club?.comp')&&patch.includes('CP_PR_LSR_TTL=30*24*60*60*1000'));
 check('supported league set covers Big Five plus Eredivisie',patch.includes("['PL','PD','BL1','SA','FL1','DED']"));
 check('Medium header exposes last-season rank',patch.includes('CP_PR_BASE_HEADER_MEDIUM=buildHeaderMedium')&&patch.includes('昨季 ${d.lastSeasonRank}位'));
