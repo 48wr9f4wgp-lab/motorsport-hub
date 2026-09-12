@@ -1,15 +1,21 @@
-// Club Pulse Medium Scale Unification v1.
+// Club Pulse Medium Scale Unification v2.
 // Final Medium-only visual normalization layer.
-// Unifies header fit, crest scale, team-column geometry and label baselines across all clubs.
-// Small is intentionally untouched.
+// v2 adds automatic optical crest scaling by measuring alpha-visible bounds in a local canvas.
+// No club-specific scale table or renderer branches are used. Small is intentionally untouched.
 
 const CP_MSU_HEADER_CREST_SIZE=19;
 const CP_MSU_HEADER_CREST_SCALE=.90;
 const CP_MSU_TEAM_CREST_SIZE=52;
-const CP_MSU_TEAM_CREST_SCALE=.90;
+const CP_MSU_TEAM_CREST_FALLBACK_SCALE=.90;
 const CP_MSU_TEAM_WIDTH=96;
 const CP_MSU_LOGO_SLOT_HEIGHT=58;
 const CP_MSU_NAME_SLOT_HEIGHT=16;
+const CP_MSU_OPTICAL_TARGET=.83;
+const CP_MSU_OPTICAL_MIN=.88;
+const CP_MSU_OPTICAL_MAX=1.14;
+const CP_MSU_OPTICAL_CACHE_VERSION=2;
+const CP_MSU_OPTICAL_BY_IMAGE=new Map();
+const CP_MSU_BASE_IMAGE=image;
 
 function cpMsuTheme(){return typeof CP_ACTIVE_THEME==='function'?CP_ACTIVE_THEME():null}
 function cpMsuCardText(t){return t?.cardText||t?.text||CP_COMMON_SHELL?.text||'#F8FAFC'}
@@ -18,6 +24,67 @@ function cpMsuShellMuted(){return CP_COMMON_SHELL?.muted||'#AEB5C2'}
 function cpMsuGuard(t,min=.62){if(!t)return t;t.lineLimit=1;t.minimumScaleFactor=min;return t}
 function cpMsuHeaderNameSize(name){let n=String(name||'').length;return n>16?9.4:n>12?9.9:10.5}
 function cpMsuTeamNameSize(name){let n=String(name||'').length;return n>9?10.6:n>7?11.1:11.6}
+function cpMsuClamp(n,a,b){return Math.max(a,Math.min(b,n))}
+function cpMsuProvider(url){let u=String(url||'').toLowerCase();if(u.includes('football-data'))return'football_data';if(u.includes('api-sports')||u.includes('api-football'))return'api_football';return'external'}
+function cpMsuOpticalCachePath(){return path('medium_crest_optical_scale_v2.json')}
+function cpMsuOpticalCacheKey(url,key){return`${cpMsuProvider(url)}_${String(key??'unknown').replace(/[^\w-]/g,'_')}`}
+function cpMsuReadOpticalCache(){let c=readJSON(cpMsuOpticalCachePath(),null);return c?.version===CP_MSU_OPTICAL_CACHE_VERSION&&c?.values?c:{version:CP_MSU_OPTICAL_CACHE_VERSION,values:{}}}
+function cpMsuWriteOpticalCache(c){try{writeJSON(cpMsuOpticalCachePath(),c)}catch{}}
+function cpMsuOpticalScale(img){return img&&CP_MSU_OPTICAL_BY_IMAGE.has(img)?CP_MSU_OPTICAL_BY_IMAGE.get(img):CP_MSU_TEAM_CREST_FALLBACK_SCALE}
+
+async function cpMsuMeasureOpticalScale(img){
+  if(!img)return CP_MSU_TEAM_CREST_FALLBACK_SCALE;
+  try{
+    const b64=Data.fromPNG(img).toBase64String();
+    const web=new WebView();
+    await web.loadHTML('<html><body></body></html>');
+    const js=`
+      const done=(v)=>completion(v);
+      const im=new Image();
+      im.onload=()=>{
+        try{
+          const maxSide=160, ratio=Math.min(1,maxSide/Math.max(im.naturalWidth||1,im.naturalHeight||1));
+          const w=Math.max(1,Math.round((im.naturalWidth||1)*ratio));
+          const h=Math.max(1,Math.round((im.naturalHeight||1)*ratio));
+          const c=document.createElement('canvas');c.width=w;c.height=h;
+          const x=c.getContext('2d',{willReadFrequently:true});x.clearRect(0,0,w,h);x.drawImage(im,0,0,w,h);
+          const d=x.getImageData(0,0,w,h).data;
+          let minX=w,minY=h,maxX=-1,maxY=-1,count=0;
+          for(let y=0;y<h;y++)for(let xx=0;xx<w;xx++){
+            const a=d[(y*w+xx)*4+3];if(a>12){count++;if(xx<minX)minX=xx;if(xx>maxX)maxX=xx;if(y<minY)minY=y;if(y>maxY)maxY=y;}
+          }
+          if(!count||maxX<minX||maxY<minY){done(null);return;}
+          done(JSON.stringify({w,h,bw:maxX-minX+1,bh:maxY-minY+1,count}));
+        }catch(e){done(null)}
+      };
+      im.onerror=()=>done(null);
+      im.src='data:image/png;base64,${b64}';
+    `;
+    const raw=await web.evaluateJavaScript(js,true);
+    if(!raw)return CP_MSU_TEAM_CREST_FALLBACK_SCALE;
+    const m=typeof raw==='string'?JSON.parse(raw):raw;
+    if(!m?.w||!m?.h||!m?.bw||!m?.bh)return CP_MSU_TEAM_CREST_FALLBACK_SCALE;
+    const wx=cpMsuClamp(m.bw/m.w,.08,1),hy=cpMsuClamp(m.bh/m.h,.08,1);
+    const occupancy=Math.sqrt(wx*hy);
+    return cpMsuClamp(CP_MSU_OPTICAL_TARGET/occupancy,CP_MSU_OPTICAL_MIN,CP_MSU_OPTICAL_MAX);
+  }catch{return CP_MSU_TEAM_CREST_FALLBACK_SCALE}
+}
+
+image=async function(url,key){
+  const img=await CP_MSU_BASE_IMAGE(url,key);
+  if(family!=='medium'||!img)return img;
+  try{
+    const ck=cpMsuOpticalCacheKey(url,key),cache=cpMsuReadOpticalCache();
+    let scale=Number(cache.values[ck]);
+    if(!Number.isFinite(scale)){
+      scale=await cpMsuMeasureOpticalScale(img);
+      cache.values[ck]=Math.round(scale*1000)/1000;
+      cpMsuWriteOpticalCache(cache);
+    }
+    CP_MSU_OPTICAL_BY_IMAGE.set(img,cpMsuClamp(scale,CP_MSU_OPTICAL_MIN,CP_MSU_OPTICAL_MAX));
+  }catch{CP_MSU_OPTICAL_BY_IMAGE.set(img,CP_MSU_TEAM_CREST_FALLBACK_SCALE)}
+  return img
+};
 
 function cpMsuTeamBlock(parent,opt,fg){
   const s=parent.addStack();
@@ -29,7 +96,7 @@ function cpMsuTeamBlock(parent,opt,fg){
   logo.layoutHorizontally();
   logo.centerAlignContent();
   logo.addSpacer();
-  badge(logo,opt.fallback,opt.img,CP_MSU_TEAM_CREST_SIZE,opt.p1,opt.p2,CP_MSU_TEAM_CREST_SCALE);
+  badge(logo,opt.fallback,opt.img,CP_MSU_TEAM_CREST_SIZE,opt.p1,opt.p2,cpMsuOpticalScale(opt.img));
   logo.addSpacer();
 
   s.addSpacer(1);
