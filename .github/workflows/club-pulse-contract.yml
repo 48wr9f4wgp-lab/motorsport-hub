@@ -46,4 +46,5 @@ jobs:
           node scriptable/club-pulse-form-system-contract.test.js
           node scriptable/club-pulse-small-ui-unification-contract.test.js
           node scriptable/club-pulse-previous-result-contract.test.js
+          node scriptable/club-pulse-medium-scale-unification-contract.test.js
           node scriptable/club-pulse-launcher-version.test.js
