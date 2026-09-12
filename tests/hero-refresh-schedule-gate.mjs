@@ -19,6 +19,7 @@ assert(Number(src.maxCandidatesPerCategory)>=1&&Number(src.maxCandidatesPerCateg
 assert(Array.isArray(src.allowedLicenses)&&src.allowedLicenses.includes('CC BY-SA 4.0')&&src.allowedLicenses.includes('CC0 1.0'));
 assert(Array.isArray(src.globalForbiddenContext)&&src.globalForbiddenContext.includes('museum')&&src.globalForbiddenContext.includes('replica'));
 for(const term of ['safety car','pace car','race control','course car'])assert(src.globalForbiddenContext.includes(term),`race-only global exclusion missing: ${term}`);
+for(const term of ['exhibition','show car','motor show','auto show','static display','feria'])assert(src.relevance.DAKAR.forbiddenAny.includes(term),`DAKAR non-race exclusion missing: ${term}`);
 assert(src.relevance.NASCAR.requiredAny.includes('nascar cup')&&src.relevance.NASCAR.requiredAny.includes('nascar cup series'),'NASCAR refresh must require Cup identity');
 assert(!src.relevance.NASCAR.requiredAny.includes('nascar'),'generic NASCAR identity is too broad for Cup Hero publication');
 assert(src.relevance.NASCAR.forbiddenAny.includes('american speedfest')&&src.relevance.NASCAR.forbiddenAny.includes('brands hatch'),'known non-Cup NASCAR context exclusion missing');
@@ -37,6 +38,7 @@ for(const id of expected){
   assert(cfg.searchQueries.every(q=>!q.includes('{year}')&&!q.includes('{prevYear}')));
   assert.deepEqual(cfg.relevance.requiredAny,rel.requiredAny);
   assert(cfg.relevance.forbiddenAny.length>=src.globalForbiddenContext.length);
+  if(id==='DAKAR')for(const term of ['replica','exhibition','feria'])assert(cfg.relevance.forbiddenAny.includes(term),`DAKAR generated config missing ${term}`);
   fs.rmSync(tmp,{force:true});
   if(id==='DAKAR')assert(fs.existsSync(path.join(root,'hero-selection-policy.json')),'DAKAR policy missing');
   else assert(fs.existsSync(path.join(root,'hero-pilot-policies',`${id.toLowerCase()}.json`)),`${id}: pilot policy missing`);
