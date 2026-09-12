@@ -1,6 +1,6 @@
-// Club Pulse Medium Scale Unification v2.
+// Club Pulse Medium Scale Unification v3.
 // Final Medium-only visual normalization layer.
-// v2 adds automatic optical crest scaling by measuring alpha-visible bounds in a local canvas.
+// v3 measures both alpha-visible bounds and visible-pixel density so sparse, intricate crests do not look undersized.
 // No club-specific scale table or renderer branches are used. Small is intentionally untouched.
 
 const CP_MSU_HEADER_CREST_SIZE=19;
@@ -11,9 +11,11 @@ const CP_MSU_TEAM_WIDTH=96;
 const CP_MSU_LOGO_SLOT_HEIGHT=58;
 const CP_MSU_NAME_SLOT_HEIGHT=16;
 const CP_MSU_OPTICAL_TARGET=.83;
+const CP_MSU_DENSITY_TARGET=.74;
+const CP_MSU_DENSITY_EXPONENT=.20;
 const CP_MSU_OPTICAL_MIN=.88;
 const CP_MSU_OPTICAL_MAX=1.14;
-const CP_MSU_OPTICAL_CACHE_VERSION=2;
+const CP_MSU_OPTICAL_CACHE_VERSION=3;
 const CP_MSU_OPTICAL_BY_IMAGE=new Map();
 const CP_MSU_BASE_IMAGE=image;
 
@@ -26,7 +28,7 @@ function cpMsuHeaderNameSize(name){let n=String(name||'').length;return n>16?9.4
 function cpMsuTeamNameSize(name){let n=String(name||'').length;return n>9?10.6:n>7?11.1:11.6}
 function cpMsuClamp(n,a,b){return Math.max(a,Math.min(b,n))}
 function cpMsuProvider(url){let u=String(url||'').toLowerCase();if(u.includes('football-data'))return'football_data';if(u.includes('api-sports')||u.includes('api-football'))return'api_football';return'external'}
-function cpMsuOpticalCachePath(){return path('medium_crest_optical_scale_v2.json')}
+function cpMsuOpticalCachePath(){return path('medium_crest_optical_scale_v3.json')}
 function cpMsuOpticalCacheKey(url,key){return`${cpMsuProvider(url)}_${String(key??'unknown').replace(/[^\w-]/g,'_')}`}
 function cpMsuReadOpticalCache(){let c=readJSON(cpMsuOpticalCachePath(),null);return c?.version===CP_MSU_OPTICAL_CACHE_VERSION&&c?.values?c:{version:CP_MSU_OPTICAL_CACHE_VERSION,values:{}}}
 function cpMsuWriteOpticalCache(c){try{writeJSON(cpMsuOpticalCachePath(),c)}catch{}}
@@ -63,10 +65,13 @@ async function cpMsuMeasureOpticalScale(img){
     const raw=await web.evaluateJavaScript(js,true);
     if(!raw)return CP_MSU_TEAM_CREST_FALLBACK_SCALE;
     const m=typeof raw==='string'?JSON.parse(raw):raw;
-    if(!m?.w||!m?.h||!m?.bw||!m?.bh)return CP_MSU_TEAM_CREST_FALLBACK_SCALE;
+    if(!m?.w||!m?.h||!m?.bw||!m?.bh||!m?.count)return CP_MSU_TEAM_CREST_FALLBACK_SCALE;
     const wx=cpMsuClamp(m.bw/m.w,.08,1),hy=cpMsuClamp(m.bh/m.h,.08,1);
-    const occupancy=Math.sqrt(wx*hy);
-    return cpMsuClamp(CP_MSU_OPTICAL_TARGET/occupancy,CP_MSU_OPTICAL_MIN,CP_MSU_OPTICAL_MAX);
+    const bboxOccupancy=Math.sqrt(wx*hy);
+    const fill=cpMsuClamp(m.count/(m.bw*m.bh),.12,1);
+    const densityBoost=fill<CP_MSU_DENSITY_TARGET?Math.pow(CP_MSU_DENSITY_TARGET/fill,CP_MSU_DENSITY_EXPONENT):1;
+    const rawScale=(CP_MSU_OPTICAL_TARGET/bboxOccupancy)*densityBoost;
+    return cpMsuClamp(rawScale,CP_MSU_OPTICAL_MIN,CP_MSU_OPTICAL_MAX);
   }catch{return CP_MSU_TEAM_CREST_FALLBACK_SCALE}
 }
 
