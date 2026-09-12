@@ -43,6 +43,6 @@
     "INDYCAR": {"requiredAny":["indycar","indy car","ntt indycar"],"forbiddenAny":["indy nxt","indy lights"]},
     "NASCAR": {"requiredAny":["nascar cup","nascar cup series"],"forbiddenAny":["xfinity","craftsman truck","american speedfest","brands hatch"]},
     "GTWCEU": {"requiredAny":["gt world challenge europe","gtwc europe","world challenge europe"],"forbiddenAny":[]},
-    "DAKAR": {"requiredAny":["dakar"],"forbiddenAny":[]}
+    "DAKAR": {"requiredAny":["dakar"],"forbiddenAny":["exhibition","show car","motor show","auto show","static display","feria"]}
   }
 }
