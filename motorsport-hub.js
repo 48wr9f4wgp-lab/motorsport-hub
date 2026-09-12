@@ -32,7 +32,7 @@ const ROUTES={
  QA:{file:'motorsport-diagnostics-v890.js',key:'diagnostics-v890',marker:'QA diagnostics'}
 };
 
-const HERO_CHANNEL_SCHEMA=1,HERO_CHANNEL_BRANCH='hero-live',HERO_CHANNEL_TTL=6*3600000;
+const HERO_CHANNEL_SCHEMA=1,HERO_CHANNEL_BRANCH='hero-live',HERO_CHANNEL_TTL=15*60000;
 const HERO_CHANNEL_BASE=`https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/${HERO_CHANNEL_BRANCH}/hero-channel`;
 const HERO_CHANNEL_LICENSES=new Set(['CC BY 2.0','CC BY 4.0','CC BY-SA 2.0','CC BY-SA 3.0','CC BY-SA 4.0','CC0 1.0']);
 const heroSafe=v=>String(v||'').replace(/[^A-Za-z0-9._-]/g,'-').slice(0,100);
