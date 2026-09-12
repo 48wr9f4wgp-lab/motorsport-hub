@@ -7,10 +7,14 @@ const candidate=path.resolve(arg('candidate','hero-channel-candidate'));
 const previous=path.resolve(arg('previous','hero-channel-previous'));
 const allowedCategories=new Set(['F1','WEC','WRC','SUPERGT','MOTOGP','FDJ','D1GP','SUPERFORMULA','INDYCAR','NASCAR','GTWCEU','DAKAR']);
 const allowedLicenses=new Set(['CC BY 2.0','CC BY 4.0','CC BY-SA 2.0','CC BY-SA 3.0','CC BY-SA 4.0','CC0 1.0']);
-const allowedPromotionModes=new Set(['INITIAL','QUALITY_UPGRADE','POOL_ROTATION']);
+const allowedPromotionModes=new Set(['INITIAL','QUALITY_UPGRADE','POOL_ROTATION','POLICY_REPAIR']);
 const base='https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets';
 const safe=v=>/^[A-Za-z0-9._-]{1,100}$/.test(String(v||''));
 const readJSON=p=>JSON.parse(fs.readFileSync(p,'utf8'));
+const sourceRules=readJSON(path.resolve('hero-refresh-sources.json'));
+const fold=v=>String(v||'').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[_-]+/g,' ').replace(/\s+/g,' ').trim();
+const forbiddenTerms=category=>[...(Array.isArray(sourceRules.globalForbiddenContext)?sourceRules.globalForbiddenContext:[]),...(Array.isArray(sourceRules.relevance?.[category]?.forbiddenAny)?sourceRules.relevance[category].forbiddenAny:[])].map(fold).filter(Boolean);
+const assetForbidden=(asset,category)=>{const text=fold(asset?.sourceTitle||'');return !!text&&forbiddenTerms(category).some(t=>text.includes(t));};
 const parseDate=v=>{const t=Date.parse(String(v||''));return Number.isFinite(t)?t:0};
 const liveCore=e=>e?{category:e.category,assetId:e.assetId,version:e.version,sourcePage:e.sourcePage,sourceTitle:e.sourceTitle,author:e.author,license:e.license,sourceYear:e.sourceYear,sourceDate:e.sourceDate,role:e.role,qualityScore:e.qualityScore,images:e.images}:null;
 
@@ -79,6 +83,11 @@ if(fs.existsSync(path.join(previous,'channel.json'))){
    if(mode==='POOL_ROTATION'){
     assert(Number(n.qualityScore)>=Math.max(.72,Number(e.qualityScore)-Number(report.thresholds.poolMaxQualityDrop)),`${cat}: pool rotation quality drop too large`);
     const last=parseDate(e.lastRotatedAt)||parseDate(e.promotedAt)||parseDate(e.sourceDate);assert(Date.now()-last>=Number(report.thresholds.rotationMinAgeHours)*3600000,`${cat}: pool rotation before minimum age`);
+   }
+   if(mode==='POLICY_REPAIR'){
+    assert(assetForbidden(e,cat),`${cat}: policy repair requires a previously forbidden live Hero`);
+    assert(!assetForbidden(n,cat),`${cat}: policy repair replacement is still forbidden`);
+    assert(Number(n.qualityScore)>=Number(report.thresholds.poolInitialMinScore),`${cat}: policy repair replacement below initial quality floor`);
    }
   }
  }
