@@ -27,9 +27,13 @@ const oldWrc=previousEntry('WRC',.95,72);
 const oldF1=previousEntry('F1',.95,24);
 const oldSuperGt=previousEntry('SUPERGT',.80,1);
 const oldNascar=previousEntry('NASCAR',.95,72);
+const oldDakar=previousEntry('DAKAR',.916,72);
+oldDakar.sourceTitle='File:Réplica Renault 18 Break 4x4 Rally Paris-Dakar 1987 en la Feria Internacional.jpg';
+oldDakar.sourcePage='https://commons.wikimedia.org/wiki/File:Replica_Renault_18_Dakar.jpg';
+oldDakar.pool=[toPoolAsset(oldDakar)];
 const recentNascarAlt=poolAsset('NASCAR','recent-alt',.94,1);
 oldNascar.pool=[toPoolAsset(oldNascar),recentNascarAlt];oldNascar.recentAssetIds=[recentNascarAlt.assetId];
-fs.writeFileSync(path.join(prev,'channel.json'),JSON.stringify({schemaVersion:1,generatedAt:new Date(now-72*3600000).toISOString(),publicationPolicy:'CI_GATED_LIVE_HERO_CHANNEL',categories:{WRC:oldWrc,F1:oldF1,SUPERGT:oldSuperGt,NASCAR:oldNascar}},null,2));
+fs.writeFileSync(path.join(prev,'channel.json'),JSON.stringify({schemaVersion:1,generatedAt:new Date(now-72*3600000).toISOString(),publicationPolicy:'CI_GATED_LIVE_HERO_CHANNEL',categories:{WRC:oldWrc,F1:oldF1,SUPERGT:oldSuperGt,NASCAR:oldNascar,DAKAR:oldDakar}},null,2));
 fs.writeFileSync(path.join(prev,'promotion-report.json'),JSON.stringify({schemaVersion:1,promoted:[],poolUpdated:[],updatedCategories:[],promotionModes:{}}));
 
 function writeArtifact(category,{detection=.95,subjectSmall=.32,subjectMedium=.32,safeSmall=.80,safeMedium=.80,date=`${year}-07-01`,title=`File:${category} ${year} pool action.jpg`,page=`https://commons.wikimedia.org/wiki/File:${category}_${year}_Pool.jpg`}={}){
@@ -62,7 +66,7 @@ assert.equal(report.thresholds.rotationMinAgeHours,48);
 assert.equal(report.thresholds.rotationReuseCooldownHours,48);
 assert.deepEqual([...report.promoted].sort(),['DAKAR','SUPERGT','WEC','WRC'].sort());
 assert.equal(report.promotionModes.WEC,'INITIAL');
-assert.equal(report.promotionModes.DAKAR,'INITIAL','DAKAR must enter the shared Hero pool');
+assert.equal(report.promotionModes.DAKAR,'POLICY_REPAIR','forbidden legacy DAKAR Hero must be repaired without waiting for the normal rotation window');
 assert.equal(report.promotionModes.WRC,'POOL_ROTATION','old WRC live Hero must rotate to a distinct near-quality pool member');
 assert.equal(report.promotionModes.SUPERGT,'QUALITY_UPGRADE','+0.02 quality gain must still promote immediately');
 assert.equal(report.promotionModes.F1,undefined,'24h-old F1 live Hero must not rotate');
@@ -74,7 +78,9 @@ assert.equal(channel.categories.NASCAR.assetId,oldNascar.assetId,'NASCAR reuse c
 assert(channel.categories.NASCAR.pool.some(x=>x.assetId===recentNascarAlt.assetId),'recent NASCAR alternate must remain in pool');
 assert.equal(channel.categories.MOTOGP,undefined,'weak candidate must not enter pool or promote');
 assert(channel.categories.DAKAR?.images?.medium?.url.includes('/assets/DAKAR/'),'DAKAR live pool asset missing');
-assert(channel.categories.DAKAR.qualityScore>=.88,'DAKAR 0.65/0.71 text-safe pair should pass via average 0.68');
+assert(channel.categories.DAKAR.qualityScore>=.88,'DAKAR policy repair replacement must clear the initial quality floor');
+assert.notEqual(channel.categories.DAKAR.assetId,oldDakar.assetId,'forbidden legacy DAKAR Hero must be replaced');
+assert(!channel.categories.DAKAR.pool.some(x=>x.assetId===oldDakar.assetId),'forbidden legacy DAKAR asset must be removed from the pool after repair');
 assert(channel.categories.WRC.sourceDate<oldWrc.sourceDate,'pool rotation must not require a newer sourceDate');
 assert(channel.categories.WRC.qualityScore>=.92&&channel.categories.WRC.qualityScore<.95,'WRC rotation must prove controlled <=0.03 quality tradeoff');
 assert(channel.categories.WRC.pool.some(x=>x.assetId===oldWrc.assetId),'previous live WRC must remain in rotation pool');

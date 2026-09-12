@@ -28,4 +28,7 @@ const museum=evaluateCandidate({...base,title:'File:Formula One RB4 museum.jpg',
 assert(museum.reasons.includes('CATEGORY_FORBIDDEN_CONTEXT'));
 const action=evaluateCandidate({...base,title:'File:2026 Formula One Grand Prix action.jpg',description:'Formula One Grand Prix race action'},f1);
 assert.equal(action.eligibleForReview,true);
+const dakar={...config,category:'DAKAR',relevance:{requiredAny:['dakar'],forbiddenAny:['replica','exhibition','feria']}};
+const accentedReplica=evaluateCandidate({...base,title:'File:Réplica Renault 18 Dakar.jpg',description:'Réplica Dakar expuesta en la Feria Internacional'},dakar);
+assert(accentedReplica.reasons.includes('CATEGORY_FORBIDDEN_CONTEXT'),'accented replica/exhibition context must be folded and rejected');
 console.log('Motorsport Hub Hero discovery gate: PASS');
