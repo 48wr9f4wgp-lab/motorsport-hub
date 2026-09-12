@@ -15,6 +15,10 @@ const poolInitialMinScore=.88,poolMaxQualityDrop=.03,poolMaxSize=5,recentHistory
 const sha=v=>crypto.createHash('sha256').update(v).digest('hex');
 const slug=v=>String(v||'').replace(/^File:/,'').replace(/[^A-Za-z0-9._-]+/g,'-').replace(/^-+|-+$/g,'').slice(0,52)||'hero';
 const readJSON=p=>{try{return JSON.parse(fs.readFileSync(p,'utf8'))}catch(_){return null}};
+const sourceRules=readJSON(path.join(root,'hero-refresh-sources.json'))||{};
+const fold=v=>String(v||'').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[_-]+/g,' ').replace(/\s+/g,' ').trim();
+const forbiddenTerms=category=>[...(Array.isArray(sourceRules.globalForbiddenContext)?sourceRules.globalForbiddenContext:[]),...(Array.isArray(sourceRules.relevance?.[category]?.forbiddenAny)?sourceRules.relevance[category].forbiddenAny:[])].map(fold).filter(Boolean);
+const assetForbidden=(asset,category)=>{const text=fold(asset?.sourceTitle||'');return !!text&&forbiddenTerms(category).some(t=>text.includes(t));};
 const parseDate=v=>{const t=Date.parse(String(v||''));return Number.isFinite(t)?t:0};
 const clamp01=v=>Math.max(0,Math.min(1,Number(v)||0));
 const coreAsset=e=>e?{category:e.category,assetId:e.assetId,version:e.version,sourcePage:e.sourcePage,sourceTitle:e.sourceTitle,author:e.author,license:e.license,sourceYear:e.sourceYear,sourceDate:e.sourceDate,role:e.role,qualityScore:Number(e.qualityScore),images:e.images,addedAt:e.addedAt||e.promotedAt||nowIso,lastShownAt:e.lastShownAt||e.lastRotatedAt||e.promotedAt||null}:null;
@@ -63,23 +67,29 @@ const previous=readJSON(path.join(previousDir,'channel.json'))||{schemaVersion:1
 const next={schemaVersion:1,generatedAt:previous.generatedAt||new Date(0).toISOString(),publicationPolicy:'CI_GATED_LIVE_HERO_CHANNEL',categories:{...(previous.categories||{})}};
 const promoted=[],promotionModes={},poolUpdated=[],updatedCategories=[];
 for(const dir of artifactDirs()){
- const category=categoryFromDir(dir);if(!category)continue;const rows=candidatesForDir(dir);if(!rows.length)continue;
- const prev=next.categories[category]||null,prevQuality=Number(prev?.qualityScore),liveId=prev?.assetId||null;
- const priorPool=Array.isArray(prev?.pool)&&prev.pool.length?prev.pool.map(coreAsset):(prev?[coreAsset(prev)]:[]);
- let pool=priorPool.filter(x=>!prev||x.assetId===liveId||Number(x.qualityScore)>=Math.max(minScore,prevQuality-poolMaxQualityDrop));
+ const category=categoryFromDir(dir);if(!category)continue;const rows=candidatesForDir(dir);
+ const rawPrev=next.categories[category]||null,prevForbidden=!!(rawPrev&&assetForbidden(rawPrev,category));
+ const prevQuality=Number(rawPrev?.qualityScore),liveId=rawPrev?.assetId||null;
+ const rawPriorPool=Array.isArray(rawPrev?.pool)&&rawPrev.pool.length?rawPrev.pool.map(coreAsset):(rawPrev?[coreAsset(rawPrev)]:[]);
+ const priorPool=rawPriorPool.filter(x=>!assetForbidden(x,category)),sanitizedPool=priorPool.length!==rawPriorPool.length;
+ let pool=priorPool.filter(x=>!rawPrev||prevForbidden||x.assetId===liveId||Number(x.qualityScore)>=Math.max(minScore,prevQuality-poolMaxQualityDrop));
  const beforePool=JSON.stringify(pool.map(x=>[x.assetId,x.version,x.lastShownAt]));
- for(const item of rows){const threshold=prev?Math.max(minScore,prevQuality-poolMaxQualityDrop):poolInitialMinScore;if(item.q<threshold)continue;const existing=pool.find(x=>x.sourcePage===item.meta.sourcePage||x.assetId===`auto-${sha(item.meta.sourcePage).slice(0,12)}-${slug(item.row.title)}`);const asset=assetFromCandidate(dir,category,item,existing);if(asset)pool.push(asset)}
- pool=rankPool(dedupePool(pool),liveId);
- if(prev&&liveId&&!pool.some(x=>x.assetId===liveId))pool=rankPool([coreAsset(prev),...pool],liveId);
+ for(const item of rows){if(assetForbidden({sourceTitle:item.meta.title},category))continue;const threshold=rawPrev&&!prevForbidden?Math.max(minScore,prevQuality-poolMaxQualityDrop):poolInitialMinScore;if(item.q<threshold)continue;const existing=pool.find(x=>x.sourcePage===item.meta.sourcePage||x.assetId===`auto-${sha(item.meta.sourcePage).slice(0,12)}-${slug(item.row.title)}`);const asset=assetFromCandidate(dir,category,item,existing);if(asset)pool.push(asset)}
+ pool=rankPool(dedupePool(pool),prevForbidden?null:liveId);
+ if(rawPrev&&!prevForbidden&&liveId&&!pool.some(x=>x.assetId===liveId))pool=rankPool([coreAsset(rawPrev),...pool],liveId);
  const afterPool=JSON.stringify(pool.map(x=>[x.assetId,x.version,x.lastShownAt]));
  let mode=null,selected=null;
- if(!prev){selected=pool.find(x=>Number(x.qualityScore)>=poolInitialMinScore)||null;if(selected)mode='INITIAL'}
+ if(prevForbidden){selected=pool.filter(x=>Number(x.qualityScore)>=poolInitialMinScore).sort((a,b)=>Number(b.qualityScore)-Number(a.qualityScore)||(parseDate(b.sourceDate)-parseDate(a.sourceDate)))[0]||null;if(selected)mode='POLICY_REPAIR'}
+ else if(!rawPrev){selected=pool.find(x=>Number(x.qualityScore)>=poolInitialMinScore)||null;if(selected)mode='INITIAL'}
  else{
   selected=pool.filter(x=>x.assetId!==liveId&&Number(x.qualityScore)>=prevQuality+minLkgQualityGain).sort((a,b)=>Number(b.qualityScore)-Number(a.qualityScore))[0]||null;if(selected)mode='QUALITY_UPGRADE';
-  if(!selected){const last=parseDate(prev.lastRotatedAt)||parseDate(prev.promotedAt)||parseDate(prev.sourceDate);if(now-last>=rotationMinAgeMs){selected=pool.filter(x=>x.assetId!==liveId&&Number(x.qualityScore)>=Math.max(minScore,prevQuality-poolMaxQualityDrop)&&(!parseDate(x.lastShownAt)||now-parseDate(x.lastShownAt)>=rotationReuseCooldownMs)).sort((a,b)=>Number(b.qualityScore)-Number(a.qualityScore)||(parseDate(b.sourceDate)-parseDate(a.sourceDate)))[0]||null;if(selected)mode='POOL_ROTATION';}}
+  if(!selected){const last=parseDate(rawPrev.lastRotatedAt)||parseDate(rawPrev.promotedAt)||parseDate(rawPrev.sourceDate);if(now-last>=rotationMinAgeMs){selected=pool.filter(x=>x.assetId!==liveId&&Number(x.qualityScore)>=Math.max(minScore,prevQuality-poolMaxQualityDrop)&&(!parseDate(x.lastShownAt)||now-parseDate(x.lastShownAt)>=rotationReuseCooldownMs)).sort((a,b)=>Number(b.qualityScore)-Number(a.qualityScore)||(parseDate(b.sourceDate)-parseDate(a.sourceDate)))[0]||null;if(selected)mode='POOL_ROTATION';}}
  }
- if(selected){const live=liveFromPool(prev,selected,pool,mode);next.categories[category]=live;promoted.push(category);promotionModes[category]=mode;updatedCategories.push(category)}
- else if(prev){const migrated={...prev,pool,recentAssetIds:Array.isArray(prev.recentAssetIds)?prev.recentAssetIds.slice(0,recentHistorySize):[],lastRotatedAt:prev.lastRotatedAt||prev.promotedAt||prev.sourceDate||null};next.categories[category]=migrated;if(beforePool!==afterPool||!Array.isArray(prev.pool)){poolUpdated.push(category);updatedCategories.push(category)}}
+ if(selected){const live=liveFromPool(rawPrev,selected,pool,mode);next.categories[category]=live;promoted.push(category);promotionModes[category]=mode;updatedCategories.push(category)}
+ else if(rawPrev){
+  if(prevForbidden){next.categories[category]=rawPrev;}
+  else{const migrated={...rawPrev,pool,recentAssetIds:Array.isArray(rawPrev.recentAssetIds)?rawPrev.recentAssetIds.slice(0,recentHistorySize):[],lastRotatedAt:rawPrev.lastRotatedAt||rawPrev.promotedAt||rawPrev.sourceDate||null};next.categories[category]=migrated;if(sanitizedPool||beforePool!==afterPool||!Array.isArray(rawPrev.pool)){poolUpdated.push(category);updatedCategories.push(category)}}
+ }
  if(next.categories[category])pruneAssets(category,next.categories[category]);
 }
 const uniqUpdated=[...new Set(updatedCategories)];if(uniqUpdated.length)next.generatedAt=nowIso;
