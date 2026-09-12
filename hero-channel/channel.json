@@ -1,59 +1,239 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-02T06:40:07.202Z",
+  "generatedAt": "2026-09-12T00:37:33.027Z",
   "publicationPolicy": "CI_GATED_LIVE_HERO_CHANNEL",
   "categories": {
     "WEC": {
       "category": "WEC",
-      "assetId": "auto-28736576071f-24-Heures-du-Mans-2026-Hypercar-No.-51-Ferrari-499P-",
-      "version": "e0340bbbf1bca564",
-      "sourcePage": "https://commons.wikimedia.org/wiki/File:24_Heures_du_Mans_2026_Hypercar_No._51_Ferrari_499P_(back).jpg",
-      "sourceTitle": "File:24 Heures du Mans 2026 Hypercar No. 51 Ferrari 499P (back).jpg",
+      "assetId": "auto-a177615d7def-24-Heures-du-Mans-2026-Hypercar-No.-94-Peugeot-9X8-l",
+      "version": "d778fad173844f07",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:24_Heures_du_Mans_2026_Hypercar_No._94_Peugeot_9X8_(left_side).jpg",
+      "sourceTitle": "File:24 Heures du Mans 2026 Hypercar No. 94 Peugeot 9X8 (left side).jpg",
       "author": "T GOUREAU",
       "license": "CC BY-SA 4.0",
       "sourceYear": 2026,
-      "sourceDate": "2026-06-07 11:00:41",
+      "sourceDate": "2026-06-07 17:27:35",
       "role": "IDENTITY",
-      "qualityScore": 0.9319,
-      "promotedAt": "2026-08-29T12:52:36.697Z",
+      "qualityScore": 0.9242,
+      "addedAt": "2026-09-12T00:37:33.027Z",
+      "lastShownAt": null,
       "images": {
         "small": {
-          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WEC/auto-28736576071f-24-Heures-du-Mans-2026-Hypercar-No.-51-Ferrari-499P--small.jpg",
+          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WEC/auto-a177615d7def-24-Heures-du-Mans-2026-Hypercar-No.-94-Peugeot-9X8-l-small.jpg",
           "width": 720,
           "height": 720
         },
         "medium": {
-          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WEC/auto-28736576071f-24-Heures-du-Mans-2026-Hypercar-No.-51-Ferrari-499P--medium.jpg",
+          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WEC/auto-a177615d7def-24-Heures-du-Mans-2026-Hypercar-No.-94-Peugeot-9X8-l-medium.jpg",
           "width": 1380,
           "height": 640
         }
-      }
+      },
+      "promotedAt": "2026-09-12T00:37:33.027Z",
+      "lastRotatedAt": "2026-09-12T00:37:33.027Z",
+      "pool": [
+        {
+          "category": "WEC",
+          "assetId": "auto-28736576071f-24-Heures-du-Mans-2026-Hypercar-No.-51-Ferrari-499P-",
+          "version": "e0340bbbf1bca564",
+          "sourcePage": "https://commons.wikimedia.org/wiki/File:24_Heures_du_Mans_2026_Hypercar_No._51_Ferrari_499P_(back).jpg",
+          "sourceTitle": "File:24 Heures du Mans 2026 Hypercar No. 51 Ferrari 499P (back).jpg",
+          "author": "T GOUREAU",
+          "license": "CC BY-SA 4.0",
+          "sourceYear": 2026,
+          "sourceDate": "2026-06-07 11:00:41",
+          "role": "IDENTITY",
+          "qualityScore": 0.9319,
+          "images": {
+            "small": {
+              "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WEC/auto-28736576071f-24-Heures-du-Mans-2026-Hypercar-No.-51-Ferrari-499P--small.jpg",
+              "width": 720,
+              "height": 720
+            },
+            "medium": {
+              "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WEC/auto-28736576071f-24-Heures-du-Mans-2026-Hypercar-No.-51-Ferrari-499P--medium.jpg",
+              "width": 1380,
+              "height": 640
+            }
+          },
+          "addedAt": "2026-08-29T12:52:36.697Z",
+          "lastShownAt": "2026-08-29T12:52:36.697Z"
+        },
+        {
+          "category": "WEC",
+          "assetId": "auto-a177615d7def-24-Heures-du-Mans-2026-Hypercar-No.-94-Peugeot-9X8-l",
+          "version": "d778fad173844f07",
+          "sourcePage": "https://commons.wikimedia.org/wiki/File:24_Heures_du_Mans_2026_Hypercar_No._94_Peugeot_9X8_(left_side).jpg",
+          "sourceTitle": "File:24 Heures du Mans 2026 Hypercar No. 94 Peugeot 9X8 (left side).jpg",
+          "author": "T GOUREAU",
+          "license": "CC BY-SA 4.0",
+          "sourceYear": 2026,
+          "sourceDate": "2026-06-07 17:27:35",
+          "role": "IDENTITY",
+          "qualityScore": 0.9242,
+          "addedAt": "2026-09-12T00:37:33.027Z",
+          "lastShownAt": "2026-09-12T00:37:33.027Z",
+          "images": {
+            "small": {
+              "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WEC/auto-a177615d7def-24-Heures-du-Mans-2026-Hypercar-No.-94-Peugeot-9X8-l-small.jpg",
+              "width": 720,
+              "height": 720
+            },
+            "medium": {
+              "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WEC/auto-a177615d7def-24-Heures-du-Mans-2026-Hypercar-No.-94-Peugeot-9X8-l-medium.jpg",
+              "width": 1380,
+              "height": 640
+            }
+          }
+        },
+        {
+          "category": "WEC",
+          "assetId": "auto-cf8cd0965f62-24-Heures-du-Mans-2026-Hypercar-No.-38-Cadillac-V-Se",
+          "version": "e0b2d4e0a40887ef",
+          "sourcePage": "https://commons.wikimedia.org/wiki/File:24_Heures_du_Mans_2026_Hypercar_No._38_Cadillac_V-Series.R_(night).jpg",
+          "sourceTitle": "File:24 Heures du Mans 2026 Hypercar No. 38 Cadillac V-Series.R (night).jpg",
+          "author": "T GOUREAU",
+          "license": "CC BY-SA 4.0",
+          "sourceYear": 2026,
+          "sourceDate": "2026-06-14 02:57:32",
+          "role": "IDENTITY",
+          "qualityScore": 0.9211,
+          "addedAt": "2026-09-12T00:37:33.027Z",
+          "lastShownAt": null,
+          "images": {
+            "small": {
+              "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WEC/auto-cf8cd0965f62-24-Heures-du-Mans-2026-Hypercar-No.-38-Cadillac-V-Se-small.jpg",
+              "width": 720,
+              "height": 720
+            },
+            "medium": {
+              "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WEC/auto-cf8cd0965f62-24-Heures-du-Mans-2026-Hypercar-No.-38-Cadillac-V-Se-medium.jpg",
+              "width": 1380,
+              "height": 640
+            }
+          }
+        },
+        {
+          "category": "WEC",
+          "assetId": "auto-0c071c4dfc45-24-Heures-du-Mans-2026-Hypercar-No.-12-Cadillac-V-Se",
+          "version": "ea52c331bc568bc3",
+          "sourcePage": "https://commons.wikimedia.org/wiki/File:24_Heures_du_Mans_2026_Hypercar_No._12_Cadillac_V-Series.R_(night).jpg",
+          "sourceTitle": "File:24 Heures du Mans 2026 Hypercar No. 12 Cadillac V-Series.R (night).jpg",
+          "author": "T GOUREAU",
+          "license": "CC BY-SA 4.0",
+          "sourceYear": 2026,
+          "sourceDate": "2026-06-14 02:51:02",
+          "role": "IDENTITY",
+          "qualityScore": 0.9095,
+          "addedAt": "2026-09-12T00:37:33.027Z",
+          "lastShownAt": null,
+          "images": {
+            "small": {
+              "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WEC/auto-0c071c4dfc45-24-Heures-du-Mans-2026-Hypercar-No.-12-Cadillac-V-Se-small.jpg",
+              "width": 720,
+              "height": 720
+            },
+            "medium": {
+              "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WEC/auto-0c071c4dfc45-24-Heures-du-Mans-2026-Hypercar-No.-12-Cadillac-V-Se-medium.jpg",
+              "width": 1380,
+              "height": 640
+            }
+          }
+        }
+      ],
+      "recentAssetIds": [
+        "auto-28736576071f-24-Heures-du-Mans-2026-Hypercar-No.-51-Ferrari-499P-"
+      ],
+      "rotationMode": "POOL_ROTATION"
     },
     "WRC": {
       "category": "WRC",
-      "assetId": "auto-eab23333e862-Ford-Puma-WRC.jpg",
-      "version": "f196661cd24b46f6",
-      "sourcePage": "https://commons.wikimedia.org/wiki/File:Ford_Puma_WRC.jpg",
-      "sourceTitle": "File:Ford Puma WRC.jpg",
-      "author": "Geonich",
+      "assetId": "auto-42ed14b4d3ab-FordWRC.jpg",
+      "version": "050a579d62792ee8",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:FordWRC.jpg",
+      "sourceTitle": "File:FordWRC.jpg",
+      "author": "AnDr0 Gr0zNy",
       "license": "CC BY 4.0",
       "sourceYear": 2026,
-      "sourceDate": "2026-06-27 13:35:45",
+      "sourceDate": "2026-04-11 17:37:11",
       "role": "IDENTITY",
-      "qualityScore": 0.9574,
-      "promotedAt": "2026-08-29T12:52:36.699Z",
+      "qualityScore": 0.951,
+      "addedAt": "2026-09-12T00:37:33.027Z",
+      "lastShownAt": null,
       "images": {
         "small": {
-          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WRC/auto-eab23333e862-Ford-Puma-WRC.jpg-small.jpg",
+          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WRC/auto-42ed14b4d3ab-FordWRC.jpg-small.jpg",
           "width": 720,
           "height": 720
         },
         "medium": {
-          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WRC/auto-eab23333e862-Ford-Puma-WRC.jpg-medium.jpg",
+          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WRC/auto-42ed14b4d3ab-FordWRC.jpg-medium.jpg",
           "width": 1380,
           "height": 640
         }
-      }
+      },
+      "promotedAt": "2026-09-12T00:37:33.027Z",
+      "lastRotatedAt": "2026-09-12T00:37:33.027Z",
+      "pool": [
+        {
+          "category": "WRC",
+          "assetId": "auto-eab23333e862-Ford-Puma-WRC.jpg",
+          "version": "f196661cd24b46f6",
+          "sourcePage": "https://commons.wikimedia.org/wiki/File:Ford_Puma_WRC.jpg",
+          "sourceTitle": "File:Ford Puma WRC.jpg",
+          "author": "Geonich",
+          "license": "CC BY 4.0",
+          "sourceYear": 2026,
+          "sourceDate": "2026-06-27 13:35:45",
+          "role": "IDENTITY",
+          "qualityScore": 0.9574,
+          "images": {
+            "small": {
+              "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WRC/auto-eab23333e862-Ford-Puma-WRC.jpg-small.jpg",
+              "width": 720,
+              "height": 720
+            },
+            "medium": {
+              "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WRC/auto-eab23333e862-Ford-Puma-WRC.jpg-medium.jpg",
+              "width": 1380,
+              "height": 640
+            }
+          },
+          "addedAt": "2026-08-29T12:52:36.699Z",
+          "lastShownAt": "2026-08-29T12:52:36.699Z"
+        },
+        {
+          "category": "WRC",
+          "assetId": "auto-42ed14b4d3ab-FordWRC.jpg",
+          "version": "050a579d62792ee8",
+          "sourcePage": "https://commons.wikimedia.org/wiki/File:FordWRC.jpg",
+          "sourceTitle": "File:FordWRC.jpg",
+          "author": "AnDr0 Gr0zNy",
+          "license": "CC BY 4.0",
+          "sourceYear": 2026,
+          "sourceDate": "2026-04-11 17:37:11",
+          "role": "IDENTITY",
+          "qualityScore": 0.951,
+          "addedAt": "2026-09-12T00:37:33.027Z",
+          "lastShownAt": "2026-09-12T00:37:33.027Z",
+          "images": {
+            "small": {
+              "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WRC/auto-42ed14b4d3ab-FordWRC.jpg-small.jpg",
+              "width": 720,
+              "height": 720
+            },
+            "medium": {
+              "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WRC/auto-42ed14b4d3ab-FordWRC.jpg-medium.jpg",
+              "width": 1380,
+              "height": 640
+            }
+          }
+        }
+      ],
+      "recentAssetIds": [
+        "auto-eab23333e862-Ford-Puma-WRC.jpg"
+      ],
+      "rotationMode": "POOL_ROTATION"
     },
     "F1": {
       "category": "F1",
@@ -79,7 +259,158 @@
           "width": 1380,
           "height": 640
         }
-      }
+      },
+      "pool": [
+        {
+          "category": "F1",
+          "assetId": "auto-3cf45aff0bde-Lando-Norris-Mclaren-F1-55383927449-.jpg",
+          "version": "25af27e3b789d3c9",
+          "sourcePage": "https://commons.wikimedia.org/wiki/File:Lando_Norris_Mclaren_F1_(55383927449).jpg",
+          "sourceTitle": "File:Lando Norris Mclaren F1 (55383927449).jpg",
+          "author": "Jason Puddephatt",
+          "license": "CC BY-SA 4.0",
+          "sourceYear": 2026,
+          "sourceDate": "2026-07-04 15:14:31",
+          "role": "IDENTITY",
+          "qualityScore": 0.8631,
+          "images": {
+            "small": {
+              "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/F1/auto-3cf45aff0bde-Lando-Norris-Mclaren-F1-55383927449-.jpg-small.jpg",
+              "width": 720,
+              "height": 720
+            },
+            "medium": {
+              "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/F1/auto-3cf45aff0bde-Lando-Norris-Mclaren-F1-55383927449-.jpg-medium.jpg",
+              "width": 1380,
+              "height": 640
+            }
+          },
+          "addedAt": "2026-09-02T06:40:07.199Z",
+          "lastShownAt": "2026-09-02T06:40:07.199Z"
+        }
+      ],
+      "recentAssetIds": [],
+      "lastRotatedAt": "2026-09-02T06:40:07.199Z"
+    },
+    "DAKAR": {
+      "category": "DAKAR",
+      "assetId": "auto-2b63a820d7f5-R-plica-Renault-18-Break-4x4-Rally-Paris-Dakar-1987-",
+      "version": "68cb713c41782583",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:R%C3%A9plica_Renault_18_Break_4x4_(Rally_Paris-Dakar_1987)_en_la_50.%C2%AA_Feria_Internacional_del_Libro_de_Buenos_Aires_-_(1).jpg",
+      "sourceTitle": "File:Réplica Renault 18 Break 4x4 (Rally Paris-Dakar 1987) en la 50.ª Feria Internacional del Libro de Buenos Aires - (1).jpg",
+      "author": "Just a Man",
+      "license": "CC BY 4.0",
+      "sourceYear": 2026,
+      "sourceDate": "2026-05-01 17:11:10",
+      "role": "IDENTITY",
+      "qualityScore": 0.916,
+      "addedAt": "2026-09-12T00:37:33.027Z",
+      "lastShownAt": null,
+      "images": {
+        "small": {
+          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/DAKAR/auto-2b63a820d7f5-R-plica-Renault-18-Break-4x4-Rally-Paris-Dakar-1987--small.jpg",
+          "width": 720,
+          "height": 720
+        },
+        "medium": {
+          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/DAKAR/auto-2b63a820d7f5-R-plica-Renault-18-Break-4x4-Rally-Paris-Dakar-1987--medium.jpg",
+          "width": 1380,
+          "height": 640
+        }
+      },
+      "promotedAt": "2026-09-12T00:37:33.027Z",
+      "lastRotatedAt": "2026-09-12T00:37:33.027Z",
+      "pool": [
+        {
+          "category": "DAKAR",
+          "assetId": "auto-2b63a820d7f5-R-plica-Renault-18-Break-4x4-Rally-Paris-Dakar-1987-",
+          "version": "68cb713c41782583",
+          "sourcePage": "https://commons.wikimedia.org/wiki/File:R%C3%A9plica_Renault_18_Break_4x4_(Rally_Paris-Dakar_1987)_en_la_50.%C2%AA_Feria_Internacional_del_Libro_de_Buenos_Aires_-_(1).jpg",
+          "sourceTitle": "File:Réplica Renault 18 Break 4x4 (Rally Paris-Dakar 1987) en la 50.ª Feria Internacional del Libro de Buenos Aires - (1).jpg",
+          "author": "Just a Man",
+          "license": "CC BY 4.0",
+          "sourceYear": 2026,
+          "sourceDate": "2026-05-01 17:11:10",
+          "role": "IDENTITY",
+          "qualityScore": 0.916,
+          "addedAt": "2026-09-12T00:37:33.027Z",
+          "lastShownAt": "2026-09-12T00:37:33.027Z",
+          "images": {
+            "small": {
+              "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/DAKAR/auto-2b63a820d7f5-R-plica-Renault-18-Break-4x4-Rally-Paris-Dakar-1987--small.jpg",
+              "width": 720,
+              "height": 720
+            },
+            "medium": {
+              "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/DAKAR/auto-2b63a820d7f5-R-plica-Renault-18-Break-4x4-Rally-Paris-Dakar-1987--medium.jpg",
+              "width": 1380,
+              "height": 640
+            }
+          }
+        }
+      ],
+      "recentAssetIds": [],
+      "rotationMode": "INITIAL"
+    },
+    "SUPERFORMULA": {
+      "category": "SUPERFORMULA",
+      "assetId": "auto-707eb5c3387a-Super-Formula-Round-5-Suzuka-Post-Race-2026---1.jpg",
+      "version": "447ec3917e00d570",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Super_Formula_Round_5_Suzuka_Post-Race_2026_-_1.jpg",
+      "sourceTitle": "File:Super Formula Round 5 Suzuka Post-Race 2026 - 1.jpg",
+      "author": "BWard 1997",
+      "license": "CC BY 4.0",
+      "sourceYear": 2026,
+      "sourceDate": "2026-05-24 16:01:40",
+      "role": "IDENTITY",
+      "qualityScore": 0.887,
+      "addedAt": "2026-09-12T00:37:33.027Z",
+      "lastShownAt": null,
+      "images": {
+        "small": {
+          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/SUPERFORMULA/auto-707eb5c3387a-Super-Formula-Round-5-Suzuka-Post-Race-2026---1.jpg-small.jpg",
+          "width": 720,
+          "height": 720
+        },
+        "medium": {
+          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/SUPERFORMULA/auto-707eb5c3387a-Super-Formula-Round-5-Suzuka-Post-Race-2026---1.jpg-medium.jpg",
+          "width": 1380,
+          "height": 640
+        }
+      },
+      "promotedAt": "2026-09-12T00:37:33.027Z",
+      "lastRotatedAt": "2026-09-12T00:37:33.027Z",
+      "pool": [
+        {
+          "category": "SUPERFORMULA",
+          "assetId": "auto-707eb5c3387a-Super-Formula-Round-5-Suzuka-Post-Race-2026---1.jpg",
+          "version": "447ec3917e00d570",
+          "sourcePage": "https://commons.wikimedia.org/wiki/File:Super_Formula_Round_5_Suzuka_Post-Race_2026_-_1.jpg",
+          "sourceTitle": "File:Super Formula Round 5 Suzuka Post-Race 2026 - 1.jpg",
+          "author": "BWard 1997",
+          "license": "CC BY 4.0",
+          "sourceYear": 2026,
+          "sourceDate": "2026-05-24 16:01:40",
+          "role": "IDENTITY",
+          "qualityScore": 0.887,
+          "addedAt": "2026-09-12T00:37:33.027Z",
+          "lastShownAt": "2026-09-12T00:37:33.027Z",
+          "images": {
+            "small": {
+              "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/SUPERFORMULA/auto-707eb5c3387a-Super-Formula-Round-5-Suzuka-Post-Race-2026---1.jpg-small.jpg",
+              "width": 720,
+              "height": 720
+            },
+            "medium": {
+              "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/SUPERFORMULA/auto-707eb5c3387a-Super-Formula-Round-5-Suzuka-Post-Race-2026---1.jpg-medium.jpg",
+              "width": 1380,
+              "height": 640
+            }
+          }
+        }
+      ],
+      "recentAssetIds": [],
+      "rotationMode": "INITIAL"
     }
   }
 }

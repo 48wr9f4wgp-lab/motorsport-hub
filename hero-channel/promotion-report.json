@@ -1,35 +1,78 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-02T06:40:07.202Z",
+  "generatedAt": "2026-09-12T00:37:33.027Z",
   "thresholds": {
     "minScore": 0.72,
     "minDetection": 0.55,
     "minSmallSubject": 0.14,
     "minMediumSubject": 0.1,
-    "minTextSafe": 0.68,
-    "minLkgQualityGain": 0.02
+    "minTextSafeFamily": 0.65,
+    "minAverageTextSafe": 0.68,
+    "minLkgQualityGain": 0.02,
+    "poolInitialMinScore": 0.88,
+    "poolMaxQualityDrop": 0.03,
+    "poolMaxSize": 5,
+    "recentHistorySize": 2,
+    "rotationMinAgeHours": 48,
+    "rotationReuseCooldownHours": 48
   },
   "promoted": [
+    "DAKAR",
+    "SUPERFORMULA",
+    "WEC",
+    "WRC"
+  ],
+  "promotionModes": {
+    "DAKAR": "INITIAL",
+    "SUPERFORMULA": "INITIAL",
+    "WEC": "POOL_ROTATION",
+    "WRC": "POOL_ROTATION"
+  },
+  "poolUpdated": [
     "F1"
+  ],
+  "updatedCategories": [
+    "DAKAR",
+    "F1",
+    "SUPERFORMULA",
+    "WEC",
+    "WRC"
   ],
   "categories": {
     "WEC": {
-      "assetId": "auto-28736576071f-24-Heures-du-Mans-2026-Hypercar-No.-51-Ferrari-499P-",
-      "qualityScore": 0.9319,
-      "sourceYear": 2026,
-      "sourceTitle": "File:24 Heures du Mans 2026 Hypercar No. 51 Ferrari 499P (back).jpg"
+      "assetId": "auto-a177615d7def-24-Heures-du-Mans-2026-Hypercar-No.-94-Peugeot-9X8-l",
+      "qualityScore": 0.9242,
+      "poolSize": 4,
+      "sourceTitle": "File:24 Heures du Mans 2026 Hypercar No. 94 Peugeot 9X8 (left side).jpg",
+      "rotationMode": "POOL_ROTATION"
     },
     "WRC": {
-      "assetId": "auto-eab23333e862-Ford-Puma-WRC.jpg",
-      "qualityScore": 0.9574,
-      "sourceYear": 2026,
-      "sourceTitle": "File:Ford Puma WRC.jpg"
+      "assetId": "auto-42ed14b4d3ab-FordWRC.jpg",
+      "qualityScore": 0.951,
+      "poolSize": 2,
+      "sourceTitle": "File:FordWRC.jpg",
+      "rotationMode": "POOL_ROTATION"
     },
     "F1": {
       "assetId": "auto-3cf45aff0bde-Lando-Norris-Mclaren-F1-55383927449-.jpg",
       "qualityScore": 0.8631,
-      "sourceYear": 2026,
-      "sourceTitle": "File:Lando Norris Mclaren F1 (55383927449).jpg"
+      "poolSize": 1,
+      "sourceTitle": "File:Lando Norris Mclaren F1 (55383927449).jpg",
+      "rotationMode": null
+    },
+    "DAKAR": {
+      "assetId": "auto-2b63a820d7f5-R-plica-Renault-18-Break-4x4-Rally-Paris-Dakar-1987-",
+      "qualityScore": 0.916,
+      "poolSize": 1,
+      "sourceTitle": "File:Réplica Renault 18 Break 4x4 (Rally Paris-Dakar 1987) en la 50.ª Feria Internacional del Libro de Buenos Aires - (1).jpg",
+      "rotationMode": "INITIAL"
+    },
+    "SUPERFORMULA": {
+      "assetId": "auto-707eb5c3387a-Super-Formula-Round-5-Suzuka-Post-Race-2026---1.jpg",
+      "qualityScore": 0.887,
+      "poolSize": 1,
+      "sourceTitle": "File:Super Formula Round 5 Suzuka Post-Race 2026 - 1.jpg",
+      "rotationMode": "INITIAL"
     }
   }
 }
