@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
   "channel": "stable",
-  "sequence": 1,
-  "version": "9.5.10",
-  "releasedAt": "2026-09-13T03:30:43Z",
-  "sourceRef": "b62fc2bf73b1afbe0eb7d84402a082a1e275b518",
-  "releaseId": "mh-b62fc2bf73b1",
+  "sequence": 2,
+  "version": "9.5.12",
+  "releasedAt": "2026-09-13T11:17:24Z",
+  "sourceRef": "9465c6d41b7f95894039bbabaa05352a1f9db813",
+  "releaseId": "mh-9465c6d41b7f",
   "routerSchema": 5,
   "categoryManifest": "F1,WEC,WRC,SUPERGT,MOTOGP,FDJ,D1GP,SUPERFORMULA,INDYCAR,NASCAR,GTWCEU,DAKAR,QA",
   "router": {
     "path": "motorsport-hub.js",
-    "sha256": "a77deaebda6ce8781855271b2d501192f0f5c0077419c16ab1a4fbcc9e4141fb",
-    "bytes": 13015
+    "sha256": "30aa55831eb5367591061b890f2bf0d3c3948e9978e5dc8bf7702c3cf02defd7",
+    "bytes": 14252
   },
   "files": {
     "f1-widget-flat-v1000.js": {"sha256": "01c3bd674337d0e5f7ff4daf846d71d6289240ec74f092dab913157235439e22", "bytes": 17248},
@@ -29,8 +29,8 @@
     "motorsport-diagnostics-v890.js": {"sha256": "9554fe4e2824b59c15200da185202b7b0e706d8a198fd3512a8a285a09a88e16", "bytes": 5451}
   },
   "validatedBy": {
-    "releaseRef": "4829514678f347af270f4fe25c26bb110d42fc4e",
+    "releaseRef": "588d35c50d83b56ed7317f3ebde02e182b71164d",
     "workflow": "Motorsport Hub Release Candidate CI",
-    "runId": 34736284478
+    "runId": 34754051615
   }
 }
