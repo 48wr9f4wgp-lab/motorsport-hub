@@ -65,10 +65,7 @@ jobs:
             tools/build-large-hero-derivatives.mjs \
             tools/augment-hero-channel-large.mjs \
             tests/hero-large-pipeline-gate.mjs \
-            tests/large-layout-all-categories-gate.mjs \
-            .github/workflows/hero-discovery.yml \
-            .github/workflows/hardening-ci.yml \
-            .github/workflows/release-candidate-ci.yml
+            tests/large-layout-all-categories-gate.mjs
           git diff --cached --check
           git commit -m 'feat: extend Large widgets and Hero pipeline to all categories'
           git push origin HEAD:improve/v9.5.15-large-all-categories
