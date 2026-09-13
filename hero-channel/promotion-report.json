@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-13T13:16:42.971Z",
+  "generatedAt": "2026-09-13T22:35:01.445Z",
   "thresholds": {
     "minScore": 0.72,
     "minDetection": 0.55,
@@ -19,12 +19,12 @@
   "promoted": [],
   "promotionModes": {},
   "poolUpdated": [
-    "F1",
-    "WEC"
+    "WRC",
+    "SUPERFORMULA"
   ],
   "updatedCategories": [
-    "F1",
-    "WEC"
+    "WRC",
+    "SUPERFORMULA"
   ],
   "categories": {
     "WEC": {

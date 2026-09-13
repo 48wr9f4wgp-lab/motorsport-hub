@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-13T12:43:54.878Z",
+  "generatedAt": "2026-09-13T22:35:01.445Z",
   "publicationPolicy": "CI_GATED_LIVE_HERO_CHANNEL",
   "categories": {
     "WEC": {
@@ -173,7 +173,7 @@
     "WRC": {
       "category": "WRC",
       "assetId": "auto-42ed14b4d3ab-FordWRC.jpg",
-      "version": "050a579d62792ee8",
+      "version": "3ff258b08d94a112",
       "sourcePage": "https://commons.wikimedia.org/wiki/File:FordWRC.jpg",
       "sourceTitle": "File:FordWRC.jpg",
       "author": "AnDr0 Gr0zNy",
@@ -194,6 +194,12 @@
           "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WRC/auto-42ed14b4d3ab-FordWRC.jpg-medium.jpg",
           "width": 1380,
           "height": 640
+        },
+        "large": {
+          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WRC/auto-42ed14b4d3ab-FordWRC.jpg-large.jpg",
+          "width": 1600,
+          "height": 1600,
+          "layoutMode": "CONTAINED_SOURCE"
         }
       },
       "promotedAt": "2026-09-12T00:37:33.027Z",
@@ -201,8 +207,41 @@
       "pool": [
         {
           "category": "WRC",
+          "assetId": "auto-42ed14b4d3ab-FordWRC.jpg",
+          "version": "3ff258b08d94a112",
+          "sourcePage": "https://commons.wikimedia.org/wiki/File:FordWRC.jpg",
+          "sourceTitle": "File:FordWRC.jpg",
+          "author": "AnDr0 Gr0zNy",
+          "license": "CC BY 4.0",
+          "sourceYear": 2026,
+          "sourceDate": "2026-04-11 17:37:11",
+          "role": "IDENTITY",
+          "qualityScore": 0.951,
+          "images": {
+            "small": {
+              "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WRC/auto-42ed14b4d3ab-FordWRC.jpg-small.jpg",
+              "width": 720,
+              "height": 720
+            },
+            "medium": {
+              "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WRC/auto-42ed14b4d3ab-FordWRC.jpg-medium.jpg",
+              "width": 1380,
+              "height": 640
+            },
+            "large": {
+              "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WRC/auto-42ed14b4d3ab-FordWRC.jpg-large.jpg",
+              "width": 1600,
+              "height": 1600,
+              "layoutMode": "CONTAINED_SOURCE"
+            }
+          },
+          "addedAt": "2026-09-12T00:37:33.027Z",
+          "lastShownAt": "2026-09-12T00:37:33.027Z"
+        },
+        {
+          "category": "WRC",
           "assetId": "auto-eab23333e862-Ford-Puma-WRC.jpg",
-          "version": "f196661cd24b46f6",
+          "version": "00cbec6119adde41",
           "sourcePage": "https://commons.wikimedia.org/wiki/File:Ford_Puma_WRC.jpg",
           "sourceTitle": "File:Ford Puma WRC.jpg",
           "author": "Geonich",
@@ -221,37 +260,16 @@
               "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WRC/auto-eab23333e862-Ford-Puma-WRC.jpg-medium.jpg",
               "width": 1380,
               "height": 640
+            },
+            "large": {
+              "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WRC/auto-eab23333e862-Ford-Puma-WRC.jpg-large.jpg",
+              "width": 1600,
+              "height": 1600,
+              "layoutMode": "CONTAINED_SOURCE"
             }
           },
           "addedAt": "2026-08-29T12:52:36.699Z",
           "lastShownAt": "2026-08-29T12:52:36.699Z"
-        },
-        {
-          "category": "WRC",
-          "assetId": "auto-42ed14b4d3ab-FordWRC.jpg",
-          "version": "050a579d62792ee8",
-          "sourcePage": "https://commons.wikimedia.org/wiki/File:FordWRC.jpg",
-          "sourceTitle": "File:FordWRC.jpg",
-          "author": "AnDr0 Gr0zNy",
-          "license": "CC BY 4.0",
-          "sourceYear": 2026,
-          "sourceDate": "2026-04-11 17:37:11",
-          "role": "IDENTITY",
-          "qualityScore": 0.951,
-          "addedAt": "2026-09-12T00:37:33.027Z",
-          "lastShownAt": "2026-09-12T00:37:33.027Z",
-          "images": {
-            "small": {
-              "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WRC/auto-42ed14b4d3ab-FordWRC.jpg-small.jpg",
-              "width": 720,
-              "height": 720
-            },
-            "medium": {
-              "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WRC/auto-42ed14b4d3ab-FordWRC.jpg-medium.jpg",
-              "width": 1380,
-              "height": 640
-            }
-          }
         }
       ],
       "recentAssetIds": [
@@ -391,7 +409,7 @@
     "SUPERFORMULA": {
       "category": "SUPERFORMULA",
       "assetId": "auto-707eb5c3387a-Super-Formula-Round-5-Suzuka-Post-Race-2026---1.jpg",
-      "version": "447ec3917e00d570",
+      "version": "3c3baf7277d29ba7",
       "sourcePage": "https://commons.wikimedia.org/wiki/File:Super_Formula_Round_5_Suzuka_Post-Race_2026_-_1.jpg",
       "sourceTitle": "File:Super Formula Round 5 Suzuka Post-Race 2026 - 1.jpg",
       "author": "BWard 1997",
@@ -412,6 +430,12 @@
           "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/SUPERFORMULA/auto-707eb5c3387a-Super-Formula-Round-5-Suzuka-Post-Race-2026---1.jpg-medium.jpg",
           "width": 1380,
           "height": 640
+        },
+        "large": {
+          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/SUPERFORMULA/auto-707eb5c3387a-Super-Formula-Round-5-Suzuka-Post-Race-2026---1.jpg-large.jpg",
+          "width": 1600,
+          "height": 1600,
+          "layoutMode": "CONTAINED_SOURCE"
         }
       },
       "promotedAt": "2026-09-12T00:37:33.027Z",
@@ -420,7 +444,7 @@
         {
           "category": "SUPERFORMULA",
           "assetId": "auto-707eb5c3387a-Super-Formula-Round-5-Suzuka-Post-Race-2026---1.jpg",
-          "version": "447ec3917e00d570",
+          "version": "3c3baf7277d29ba7",
           "sourcePage": "https://commons.wikimedia.org/wiki/File:Super_Formula_Round_5_Suzuka_Post-Race_2026_-_1.jpg",
           "sourceTitle": "File:Super Formula Round 5 Suzuka Post-Race 2026 - 1.jpg",
           "author": "BWard 1997",
@@ -429,8 +453,6 @@
           "sourceDate": "2026-05-24 16:01:40",
           "role": "IDENTITY",
           "qualityScore": 0.887,
-          "addedAt": "2026-09-12T00:37:33.027Z",
-          "lastShownAt": "2026-09-12T00:37:33.027Z",
           "images": {
             "small": {
               "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/SUPERFORMULA/auto-707eb5c3387a-Super-Formula-Round-5-Suzuka-Post-Race-2026---1.jpg-small.jpg",
@@ -441,8 +463,16 @@
               "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/SUPERFORMULA/auto-707eb5c3387a-Super-Formula-Round-5-Suzuka-Post-Race-2026---1.jpg-medium.jpg",
               "width": 1380,
               "height": 640
+            },
+            "large": {
+              "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/SUPERFORMULA/auto-707eb5c3387a-Super-Formula-Round-5-Suzuka-Post-Race-2026---1.jpg-large.jpg",
+              "width": 1600,
+              "height": 1600,
+              "layoutMode": "CONTAINED_SOURCE"
             }
-          }
+          },
+          "addedAt": "2026-09-12T00:37:33.027Z",
+          "lastShownAt": "2026-09-12T00:37:33.027Z"
         }
       ],
       "recentAssetIds": [],
