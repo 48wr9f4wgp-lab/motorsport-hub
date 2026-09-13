@@ -22,6 +22,24 @@ assert(router.includes("startsWith('https://commons.wikimedia.org/wiki/File:')")
 assert(router.includes('HERO_CHANNEL_LICENSES'));
 assert(router.includes('motorsport-hero-channel-v1-${cat}-${fam}-lkg.jpg'));
 assert(!router.includes('Request.prototype.loadString='));
+
+for(const token of [
+ 'HERO_LARGE_CANVAS=1200',
+ 'HERO_LARGE_FALLBACK_INSET=.96',
+ 'LARGE_CONTAINED_FALLBACK',
+ "config.widgetFamily==='large'?'large':'medium'",
+ "requested==='large'&&heroUrlOK(e.images?.large?.url,cat)?'large'",
+ "finishHeroChannelImage(hfm.readImage(p),fam)",
+ "e.images?.large?.url&&!heroUrlOK(e.images.large.url,cat)"
+]){
+ assert(router.includes(token),`Router Large Hero contract missing: ${token}`);
+ assert(patcher.includes(token),`Hero runtime patcher Large contract missing: ${token}`);
+}
+assert(router.includes("heroDrawAspect(ctx,img,W,H,'fit',HERO_LARGE_FALLBACK_INSET,.44)"),'Large fallback must aspect-fit the sharp foreground instead of stretching it to square');
+assert(router.includes("heroDrawAspect(ctx,img,W,H,'fill',1,.5)"),'Large fallback must use a dark aspect-fill backdrop behind the contained foreground');
+assert(router.includes("large?HERO_LARGE_CANVAS:(small?720:1380)"),'Large Hero must render to an explicit square canvas');
+assert(router.includes("large&&sourceFamily!=='large'"),'Large-specific derivative must bypass the compatibility fallback when available');
+
 for(const name of modules){
  const src=fs.readFileSync(path.join(root,name),'utf8');
  assert.equal((src.match(/__MH_HERO_OVERRIDE_IMAGE/g)||[]).length,1,`${name}: dynamic Hero hook missing/drifted`);
