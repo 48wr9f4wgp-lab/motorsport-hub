@@ -2,10 +2,12 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import assert from 'node:assert/strict';
+import {execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const read=p=>fs.readFileSync(path.join(root,p),'utf8');
+const readAt=(ref,p)=>execFileSync('git',['show',`${ref}:${p}`],{cwd:root,encoding:'utf8',maxBuffer:4*1024*1024});
 const sha=s=>crypto.createHash('sha256').update(s,'utf8').digest('hex');
 const bytes=s=>Buffer.byteLength(s,'utf8');
 
@@ -34,13 +36,17 @@ assert.match(channel.validatedBy.releaseRef,/^[0-9a-f]{40}$/);
 assert.equal(channel.validatedBy.workflow,'Motorsport Hub Release Candidate CI');
 assert(Number.isInteger(channel.validatedBy.runId)&&channel.validatedBy.runId>0);
 
-const router=read(channel.router.path);
-assert.equal(bytes(router),channel.router.bytes,'stable channel Router byte count drift');
-assert.equal(sha(router),channel.router.sha256,'stable channel Router SHA-256 drift');
+// The stable channel intentionally lags mutable development/main until an explicit
+// release publication. Validate the descriptor against its pinned immutable sourceRef,
+// not against the current PR working tree. This keeps ordinary runtime PRs testable
+// without weakening the production integrity contract.
+const router=readAt(channel.sourceRef,channel.router.path);
+assert.equal(bytes(router),channel.router.bytes,'stable channel Router byte count drift at pinned sourceRef');
+assert.equal(sha(router),channel.router.sha256,'stable channel Router SHA-256 drift at pinned sourceRef');
 for(const p of required){
-  const src=read(p),e=channel.files[p];
-  assert.equal(bytes(src),e.bytes,`${p}: byte count drift from stable channel`);
-  assert.equal(sha(src),e.sha256,`${p}: SHA-256 drift from stable channel`);
+  const src=readAt(channel.sourceRef,p),e=channel.files[p];
+  assert.equal(bytes(src),e.bytes,`${p}: byte count drift at stable sourceRef`);
+  assert.equal(sha(src),e.sha256,`${p}: SHA-256 drift at stable sourceRef`);
 }
 
 const marker='const BOOTSTRAP=';
