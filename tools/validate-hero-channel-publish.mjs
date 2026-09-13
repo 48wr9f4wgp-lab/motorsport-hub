@@ -1,7 +1,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
+import {fileURLToPath} from 'node:url';
 
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const arg=(name,fallback='')=>{const p=process.argv.find(x=>x.startsWith(`--${name}=`));return p?p.slice(name.length+3):fallback};
 const candidate=path.resolve(arg('candidate','hero-channel-candidate'));
 const previous=path.resolve(arg('previous','hero-channel-previous'));
@@ -11,7 +13,7 @@ const allowedPromotionModes=new Set(['INITIAL','QUALITY_UPGRADE','POOL_ROTATION'
 const base='https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets';
 const safe=v=>/^[A-Za-z0-9._-]{1,100}$/.test(String(v||''));
 const readJSON=p=>JSON.parse(fs.readFileSync(p,'utf8'));
-const sourceRules=readJSON(path.resolve('hero-refresh-sources.json'));
+const sourceRules=readJSON(path.join(root,'hero-refresh-sources.json'));
 const fold=v=>String(v||'').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[_-]+/g,' ').replace(/\s+/g,' ').trim();
 const forbiddenTerms=category=>[...(Array.isArray(sourceRules.globalForbiddenContext)?sourceRules.globalForbiddenContext:[]),...(Array.isArray(sourceRules.relevance?.[category]?.forbiddenAny)?sourceRules.relevance[category].forbiddenAny:[])].map(fold).filter(Boolean);
 const assetForbidden=(asset,category)=>{const text=fold(asset?.sourceTitle||'');return !!text&&forbiddenTerms(category).some(t=>text.includes(t));};
