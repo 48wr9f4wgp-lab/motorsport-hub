@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-13T22:35:01.445Z",
+  "generatedAt": "2026-09-13T22:57:52.924Z",
   "thresholds": {
     "minScore": 0.72,
     "minDetection": 0.55,
@@ -16,14 +16,17 @@
     "rotationMinAgeHours": 48,
     "rotationReuseCooldownHours": 48
   },
-  "promoted": [],
-  "promotionModes": {},
+  "promoted": [
+    "F1"
+  ],
+  "promotionModes": {
+    "F1": "QUALITY_UPGRADE"
+  },
   "poolUpdated": [
-    "WRC",
     "SUPERFORMULA"
   ],
   "updatedCategories": [
-    "WRC",
+    "F1",
     "SUPERFORMULA"
   ],
   "categories": {
@@ -42,11 +45,11 @@
       "rotationMode": "POOL_ROTATION"
     },
     "F1": {
-      "assetId": "auto-3cf45aff0bde-Lando-Norris-Mclaren-F1-55383927449-.jpg",
-      "qualityScore": 0.8631,
-      "poolSize": 1,
-      "sourceTitle": "File:Lando Norris Mclaren F1 (55383927449).jpg",
-      "rotationMode": null
+      "assetId": "auto-5c0f62518898-2025-Japan-GP---Ferrari---Lewis-Hamilton---FP1.jpg",
+      "qualityScore": 0.8914,
+      "poolSize": 3,
+      "sourceTitle": "File:2025 Japan GP - Ferrari - Lewis Hamilton - FP1.jpg",
+      "rotationMode": "QUALITY_UPGRADE"
     },
     "DAKAR": {
       "assetId": "auto-2b63a820d7f5-R-plica-Renault-18-Break-4x4-Rally-Paris-Dakar-1987-",
@@ -58,7 +61,7 @@
     "SUPERFORMULA": {
       "assetId": "auto-707eb5c3387a-Super-Formula-Round-5-Suzuka-Post-Race-2026---1.jpg",
       "qualityScore": 0.887,
-      "poolSize": 1,
+      "poolSize": 2,
       "sourceTitle": "File:Super Formula Round 5 Suzuka Post-Race 2026 - 1.jpg",
       "rotationMode": "INITIAL"
     }
