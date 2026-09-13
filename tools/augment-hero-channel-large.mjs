@@ -38,8 +38,16 @@ export function augmentLargeVariants({artifactRoot,candidateDir}){
  const channel=readJSON(channelPath),report=readJSON(reportPath),promoted=new Set(report.promoted||[]);let added=0;
  report.poolUpdated=Array.isArray(report.poolUpdated)?report.poolUpdated:[];report.updatedCategories=Array.isArray(report.updatedCategories)?report.updatedCategories:[];
  for(const category of enabled){const live=channel.categories?.[category];if(!live)continue;let categoryChanged=false;
-  for(const asset of live.pool||[]){const ev=evidence.get(`${category}|${asset.sourcePage}`);if(!ev)continue;const dir=path.join(candidateDir,'assets',category);fs.mkdirSync(dir,{recursive:true});const name=`${asset.assetId}-large.jpg`,dst=path.join(dir,name);fs.copyFileSync(ev.path,dst);asset.images={...(asset.images||{}),large:{url:`${base}/${category}/${name}`,width:ev.width,height:ev.height,layoutMode:ev.layoutMode}};asset.version=recomputeVersion(candidateDir,category,asset);categoryChanged=true;added++;
-   if(promoted.has(category)&&asset.assetId===live.assetId){live.images=asset.images;live.version=asset.version;}
+  for(const asset of live.pool||[]){
+   const ev=evidence.get(`${category}|${asset.sourcePage}`);if(!ev)continue;
+   const dir=path.join(candidateDir,'assets',category);fs.mkdirSync(dir,{recursive:true});
+   const name=`${asset.assetId}-large.jpg`,dst=path.join(dir,name);fs.copyFileSync(ev.path,dst);
+   asset.images={...(asset.images||{}),large:{url:`${base}/${category}/${name}`,width:ev.width,height:ev.height,layoutMode:ev.layoutMode}};
+   asset.version=recomputeVersion(candidateDir,category,asset);categoryChanged=true;added++;
+   // A Large derivative is display metadata for the same immutable Hero identity.
+   // Synchronize it to the live entry immediately when the pool asset is the current
+   // live asset; this is not a promotion and must not alter source/quality/rotation.
+   if(asset.assetId===live.assetId){live.images=asset.images;live.version=asset.version;}
   }
   if(categoryChanged&&!promoted.has(category)){addUnique(report.poolUpdated,category);addUnique(report.updatedCategories,category);}
  }
