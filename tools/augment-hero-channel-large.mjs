@@ -17,7 +17,12 @@ function evidenceMap(artifactRoot){
   if(!ent.isDirectory())continue;const dir=path.join(artifactRoot,ent.name),category=categoryFromDir(dir);if(!category)continue;
   const reportPath=path.join(dir,'hero-subject-report.json');if(!fs.existsSync(reportPath))continue;
   const report=readJSON(reportPath);
-  for(const row of report.results||[]){const large=row?.derivatives?.large;if(!large?.path||!row.sourcePage)continue;const src=path.resolve(root,large.path);const alt=path.join(dir,large.path.replace(/^hero-crop-previews[\\/]/,''));const actual=fs.existsSync(src)?src:(fs.existsSync(alt)?alt:null);if(!actual)continue;out.set(`${category}|${row.sourcePage}`,{category,sourcePage:row.sourcePage,path:actual,width:Number(large.width)||1600,height:Number(large.height)||1600,layoutMode:large.layoutMode||'CONTAINED_SOURCE'});}
+  for(const row of report.results||[]){
+   const large=row?.derivatives?.large;if(!large?.path||!row.sourcePage)continue;
+   const repoPath=path.resolve(root,large.path),artifactPath=path.join(dir,large.path),actual=fs.existsSync(artifactPath)?artifactPath:(fs.existsSync(repoPath)?repoPath:null);
+   if(!actual)continue;
+   out.set(`${category}|${row.sourcePage}`,{category,sourcePage:row.sourcePage,path:actual,width:Number(large.width)||1600,height:Number(large.height)||1600,layoutMode:large.layoutMode||'CONTAINED_SOURCE'});
+  }
  }
  return out;
 }
