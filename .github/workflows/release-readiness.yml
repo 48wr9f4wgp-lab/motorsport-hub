@@ -10,15 +10,18 @@ on:
       - 'hero-assets.json'
       - 'hero-refresh-sources.json'
       - 'hero-pilot-policies/**'
+      - 'release-channel.json'
       - 'README.md'
       - 'scriptable-loader.js'
       - 'scriptable-loader-v5.js'
       - 'scriptable-loader-v6-qa.js'
+      - 'scriptable-loader-v7.js'
       - 'tools/generate-release-package.mjs'
       - 'tools/prepare-main-release.mjs'
       - 'tools/build-hero-channel.mjs'
       - 'tools/validate-hero-channel-publish.mjs'
       - 'tests/loader-distribution-gate.mjs'
+      - 'tests/stable-loader-v7-gate.mjs'
       - 'tests/main-release-readiness-gate.mjs'
       - 'tests/main-release-transformed-gate.mjs'
       - 'tests/release-gate.mjs'
@@ -54,6 +57,8 @@ jobs:
         run: node tests/main-release-readiness-gate.mjs
       - name: Verify canonical loader distribution
         run: node tests/loader-distribution-gate.mjs
+      - name: Verify stable Loader v7 channel contract
+        run: node tests/stable-loader-v7-gate.mjs
       - name: Re-run critical hardening RC gates
         run: |
           set -euo pipefail
@@ -66,6 +71,7 @@ jobs:
           node tests/hero-refresh-schedule-gate.mjs
           node tests/integrity-gate.mjs
           node tests/release-package-generator-gate.mjs
+          node tests/stable-loader-v7-gate.mjs
           node tests/render-smoke-gate.mjs
       - name: Simulate approved release transform locally
         run: |
@@ -73,6 +79,7 @@ jobs:
           GITHUB_REF_NAME=release/validation node tools/prepare-main-release.mjs --write --status=RELEASED
           node tests/main-release-transformed-gate.mjs
           node tests/loader-distribution-gate.mjs
+          node tests/stable-loader-v7-gate.mjs
           node tests/release-gate.mjs
           node tests/router-hardening-gate.mjs
           node tests/registry-gate.mjs
