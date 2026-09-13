@@ -110,7 +110,7 @@ jobs:
             echo 'No publishable Hero updates.'
             exit 0
           fi
-          git clone --depth 1 --branch hero-live "https://github.com/${GITHUB_REPOSITORY}.git" hero-live-worktree
+          git worktree add --detach hero-live-worktree origin/hero-live
           rm -rf hero-channel-current
           mkdir -p hero-channel-current
           if [ -d hero-live-worktree/hero-channel ]; then
