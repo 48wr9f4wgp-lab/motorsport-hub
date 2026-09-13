@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "channel": "stable",
+  "sequence": 1,
+  "version": "9.5.10",
+  "releasedAt": "2026-09-13T03:30:43Z",
+  "sourceRef": "b62fc2bf73b1afbe0eb7d84402a082a1e275b518",
+  "releaseId": "mh-b62fc2bf73b1",
+  "routerSchema": 5,
+  "categoryManifest": "F1,WEC,WRC,SUPERGT,MOTOGP,FDJ,D1GP,SUPERFORMULA,INDYCAR,NASCAR,GTWCEU,DAKAR,QA",
+  "router": {
+    "path": "motorsport-hub.js",
+    "sha256": "a77deaebda6ce8781855271b2d501192f0f5c0077419c16ab1a4fbcc9e4141fb",
+    "bytes": 13015
+  },
+  "files": {
+    "f1-widget-flat-v1000.js": {"sha256": "01c3bd674337d0e5f7ff4daf846d71d6289240ec74f092dab913157235439e22", "bytes": 17248},
+    "wec-widget-flat-v1000.js": {"sha256": "d6aafaf69a636c1a16719ddc191892372119bf6292696d59dce1607677d93fb5", "bytes": 16472},
+    "wrc-widget-flat-v1000.js": {"sha256": "90518da53fe3375456e5b6029722e13724a47bfb2131d4955beb896c6c72497a", "bytes": 14242},
+    "supergt-widget-flat-v1000.js": {"sha256": "2ffb47ef08bf53836a1da743d290a5af58ac5f667de4f148f13e0120a45e233f", "bytes": 13005},
+    "motogp-widget-flat-v1000.js": {"sha256": "8927ec9f3d67c3b91a8d24d606c02cba9ac68858725a71d601eaa4a0dd014533", "bytes": 14364},
+    "fdj-widget-flat-v1000.js": {"sha256": "c0e98fc9165d9f094d8d2498d18dfb5a9fda1a3fd3ebf7984fb6d574ec684aa5", "bytes": 11900},
+    "d1gp-widget-flat-v1000.js": {"sha256": "6ee252f4de4632cf8a1d687bb5fd3730592f3bc78065907757e5a9731c7bacf9", "bytes": 12150},
+    "superformula-widget.js": {"sha256": "17949d2edd761ebbe14e26537e5f9f05dc59da5a426e62d897bc3f87dfbb0e8a", "bytes": 12422},
+    "indycar-widget.js": {"sha256": "6d002581482d10993be665811f21c83ea20847f900850d7df39b77fa013dc284", "bytes": 12693},
+    "nascar-widget.js": {"sha256": "c68fa5e5924cdf60044eb8b8ff66c28b9f0cd02a042b1b171ecd8e66d4458ad3", "bytes": 12804},
+    "gtwc-europe-widget.js": {"sha256": "dd7a2f78c4ce132143628817814acd9559484a605f162a318ae6558f2b61d28f", "bytes": 12970},
+    "dakar-widget.js": {"sha256": "55b8f27b991c80117481f8904fa672b142047e58178d4392e0d639b25b38799e", "bytes": 18890},
+    "motorsport-diagnostics-v890.js": {"sha256": "9554fe4e2824b59c15200da185202b7b0e706d8a198fd3512a8a285a09a88e16", "bytes": 5451}
+  },
+  "validatedBy": {
+    "releaseRef": "4829514678f347af270f4fe25c26bb110d42fc4e",
+    "workflow": "Motorsport Hub Release Candidate CI",
+    "runId": 34736284478
+  }
+}
