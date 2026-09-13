@@ -54,7 +54,32 @@ const start=loader.indexOf(marker);
 const end=loader.indexOf(';\nconst fm=',start);
 assert(start>=0&&end>start,'Loader v7 bootstrap descriptor missing');
 const bootstrap=JSON.parse(loader.slice(start+marker.length,end));
-assert.deepEqual(bootstrap,channel,'installed Loader v7 bootstrap must match initial stable channel exactly');
+
+// Loader v7 is install-once. Its embedded BOOTSTRAP is a permanent recovery anchor,
+// while release-channel.json advances independently through monotonically increasing
+// stable sequences. Never force the Loader source to change merely because the channel
+// moves forward.
+assert.equal(bootstrap.schemaVersion,1);
+assert.equal(bootstrap.channel,'stable');
+assert.equal(bootstrap.sequence,1,'Loader v7 bootstrap sequence must remain the initial release');
+assert.equal(bootstrap.version,'9.5.10','Loader v7 bootstrap version is the permanent initial recovery anchor');
+assert.equal(bootstrap.sourceRef,'b62fc2bf73b1afbe0eb7d84402a082a1e275b518','Loader v7 bootstrap sourceRef must remain immutable');
+assert.equal(bootstrap.releaseId,'mh-b62fc2bf73b1');
+assert.equal(bootstrap.routerSchema,5);
+assert.equal(bootstrap.categoryManifest,expected);
+assert.equal(bootstrap.router.path,'motorsport-hub.js');
+assert.deepEqual(Object.keys(bootstrap.files).sort(),[...required].sort());
+assert(bootstrap.sequence<=channel.sequence,'stable channel must never precede Loader bootstrap');
+if(bootstrap.sequence===channel.sequence)assert.equal(bootstrap.sourceRef,channel.sourceRef,'equal sequence cannot point to a different stable source');
+
+const bootstrapRouter=readAt(bootstrap.sourceRef,bootstrap.router.path);
+assert.equal(bytes(bootstrapRouter),bootstrap.router.bytes,'Loader bootstrap Router byte count drift');
+assert.equal(sha(bootstrapRouter),bootstrap.router.sha256,'Loader bootstrap Router SHA-256 drift');
+for(const p of required){
+  const src=readAt(bootstrap.sourceRef,p),e=bootstrap.files[p];
+  assert.equal(bytes(src),e.bytes,`${p}: Loader bootstrap byte count drift`);
+  assert.equal(sha(src),e.sha256,`${p}: Loader bootstrap SHA-256 drift`);
+}
 
 for(const token of [
   'loader v7 — stable release channel + immutable SHA-256 verification',
