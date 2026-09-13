@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - 'hardening/v9.3-codex-handoff'
+      - 'ops/hero-refresh-v9.5.15-all'
     paths:
       - 'hero-refresh-sources.json'
       - 'tools/build-hero-refresh-config.mjs'
@@ -92,7 +93,7 @@ jobs:
             --output=hero-subject-report.json \
             --preview-dir=hero-crop-previews \
             --limit=4
-      - name: Generate F1/WEC Large Hero candidates from original sources
+      - name: Generate Large Hero candidates from original sources
         env:
           TF_CPP_MIN_LOG_LEVEL: '2'
         run: node tools/build-large-hero-derivatives.mjs --report=hero-subject-report.json --output-dir=hero-crop-previews
@@ -164,7 +165,7 @@ jobs:
 
   publish-live-channel:
     needs: build-promotion-candidate
-    if: ${{ needs.build-promotion-candidate.result == 'success' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
+    if: ${{ needs.build-promotion-candidate.result == 'success' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref_name == 'ops/hero-refresh-v9.5.15-all')) }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
