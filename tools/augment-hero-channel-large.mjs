@@ -40,6 +40,12 @@ export function augmentLargeVariants({artifactRoot,candidateDir}){
  for(const category of enabled){const live=channel.categories?.[category];if(!live)continue;let categoryChanged=false;
   for(const asset of live.pool||[]){
    const ev=evidence.get(`${category}|${asset.sourcePage}`);if(!ev)continue;
+   // Large derivatives become immutable once attached to an asset identity. A
+   // scheduled refresh may rediscover the same source and regenerate JPEG bytes,
+   // but replacing those bytes at the same hero-live URL would mutate an already
+   // published asset and spuriously advance its version. Only fill a missing Large
+   // family; a genuinely new Large rendition must use a new asset identity/promotion.
+   if(asset.images?.large)continue;
    const dir=path.join(candidateDir,'assets',category);fs.mkdirSync(dir,{recursive:true});
    const name=`${asset.assetId}-large.jpg`,dst=path.join(dir,name);fs.copyFileSync(ev.path,dst);
    asset.images={...(asset.images||{}),large:{url:`${base}/${category}/${name}`,width:ev.width,height:ev.height,layoutMode:ev.layoutMode}};

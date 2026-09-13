@@ -58,6 +58,18 @@ assert.notEqual(after.version,before.version,'same-Hero Large family addition mu
 assert.equal(alternateAfter.images.large.width,1600);assert(alternateAfter.images.large.url.endsWith(`/${alternate.assetId}-large.jpg`));
 assert(report.poolUpdated.includes('F1'));assert(report.updatedCategories.includes('F1'));assert.equal(report.promoted.length,0,'Large family sync is not a Hero promotion');
 for(const a of [current,alternate])assert(fs.existsSync(path.join(candidate,'assets','F1',`${a.assetId}-large.jpg`)));
+
+// Re-discovering the same asset must be idempotent. Even if a fresh encoder would
+// produce different bytes, an already-published Large URL/version is immutable and
+// cannot be silently overwritten under the same asset identity.
+const channelAfterFirst=fs.readFileSync(path.join(candidate,'channel.json'),'utf8'),reportAfterFirst=fs.readFileSync(path.join(candidate,'promotion-report.json'),'utf8');
+const publishedLarge=new Map([current,alternate].map(a=>[a.assetId,fs.readFileSync(path.join(candidate,'assets','F1',`${a.assetId}-large.jpg`))]));
+for(const a of [current,alternate])fs.writeFileSync(path.join(preview,`${a.assetId}-large.jpg`),Buffer.from(`${a.assetId}-regenerated-different-large-bytes`));
+const repeat=augmentLargeVariants({artifactRoot:artifacts,candidateDir:candidate});assert.equal(repeat.added,0,'repeat refresh must not reattach an existing Large family');
+assert.equal(fs.readFileSync(path.join(candidate,'channel.json'),'utf8'),channelAfterFirst,'repeat refresh mutated channel metadata');
+assert.equal(fs.readFileSync(path.join(candidate,'promotion-report.json'),'utf8'),reportAfterFirst,'repeat refresh mutated promotion evidence');
+for(const a of [current,alternate])assert.deepEqual(fs.readFileSync(path.join(candidate,'assets','F1',`${a.assetId}-large.jpg`)),publishedLarge.get(a.assetId),`${a.assetId}: repeat refresh overwrote immutable Large bytes`);
+
 execFileSync(process.execPath,[path.join(root,'tools/validate-hero-channel-publish.mjs'),`--candidate=${candidate}`,`--previous=${previous}`],{cwd:root,stdio:'pipe'});
 fs.rmSync(tmp,{recursive:true,force:true});
 console.log('Motorsport Hub Large Hero + all-category layout gate: PASS');
