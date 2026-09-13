@@ -30,14 +30,14 @@ jobs:
       - name: Install build-time subject detector
         run: npm install --no-save --no-package-lock @tensorflow/tfjs-node@4.22.0 @tensorflow-models/coco-ssd@2.2.3
 
-      - name: Discover, validate and derive all category Hero candidates
+      - name: Discover, validate and derive F1/WEC Hero candidates
         shell: bash
         env:
           TF_CPP_MIN_LOG_LEVEL: '2'
         run: |
           set -euo pipefail
           mkdir -p refresh-artifacts
-          categories=(F1 WEC WRC SUPERGT MOTOGP FDJ D1GP SUPERFORMULA INDYCAR NASCAR GTWCEU DAKAR)
+          categories=(F1 WEC)
           for category in "${categories[@]}"; do
             echo "::group::Hero refresh $category"
             lower="$(printf '%s' "$category" | tr '[:upper:]' '[:lower:]')"
@@ -53,11 +53,7 @@ jobs:
             node tools/validate-discovered-hero-images.mjs \
               --input="$dir/hero-discovery-report.json" \
               --output="$dir/hero-image-validation-report.json"
-            if [ "$category" = 'DAKAR' ]; then
-              policy='hero-selection-policy.json'
-            else
-              policy="hero-pilot-policies/${lower}.json"
-            fi
+            policy="hero-pilot-policies/${lower}.json"
             node --import ./tools/install-fetch-retry-hook.mjs tools/detect-hero-subjects.mjs \
               --mode=discovery \
               --policy="$policy" \
