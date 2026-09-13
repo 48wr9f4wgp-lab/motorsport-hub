@@ -16,7 +16,8 @@ const fold=v=>String(v||'').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toL
 const forbiddenTerms=category=>[...(Array.isArray(sourceRules.globalForbiddenContext)?sourceRules.globalForbiddenContext:[]),...(Array.isArray(sourceRules.relevance?.[category]?.forbiddenAny)?sourceRules.relevance[category].forbiddenAny:[])].map(fold).filter(Boolean);
 const assetForbidden=(asset,category)=>{const text=fold(asset?.sourceTitle||'');return !!text&&forbiddenTerms(category).some(t=>text.includes(t));};
 const parseDate=v=>{const t=Date.parse(String(v||''));return Number.isFinite(t)?t:0};
-const liveCore=e=>e?{category:e.category,assetId:e.assetId,version:e.version,sourcePage:e.sourcePage,sourceTitle:e.sourceTitle,author:e.author,license:e.license,sourceYear:e.sourceYear,sourceDate:e.sourceDate,role:e.role,qualityScore:e.qualityScore,images:e.images}:null;
+const liveIdentity=e=>e?{category:e.category,assetId:e.assetId,sourcePage:e.sourcePage,sourceTitle:e.sourceTitle,author:e.author,license:e.license,sourceYear:e.sourceYear,sourceDate:e.sourceDate,role:e.role,qualityScore:e.qualityScore,promotedAt:e.promotedAt??null,lastShownAt:e.lastShownAt??null,lastRotatedAt:e.lastRotatedAt??null,rotationMode:e.rotationMode??null,recentAssetIds:e.recentAssetIds??[]}:null;
+const sameJSON=(a,b)=>JSON.stringify(a??null)===JSON.stringify(b??null);
 
 assert(fs.existsSync(candidate),'candidate directory missing');
 const channel=readJSON(path.join(candidate,'channel.json'));
@@ -35,6 +36,13 @@ for(const cat of report.promoted){assert(allowedCategories.has(cat),`invalid pro
 for(const cat of report.poolUpdated)assert(allowedCategories.has(cat),`invalid pool-updated category ${cat}`);
 assert(!report.updatedCategories.includes('QA'),'Hero channel must never update QA');
 
+function validateImage(cat,img,label,family,w,h){
+ assert(img,`${label}/${family}: image metadata missing`);assert.equal(Number(img.width),w);assert.equal(Number(img.height),h);
+ const prefix=`${base}/${cat}/`;assert(String(img.url||'').startsWith(prefix),`${label}/${family}: unexpected URL`);
+ const name=path.basename(new URL(img.url).pathname);assert(name.endsWith(`-${family}.jpg`),`${label}/${family}: filename mismatch`);
+ const local=path.join(candidate,'assets',cat,name);assert(fs.existsSync(local),`${label}/${family}: asset missing`);assert(fs.statSync(local).size>0,`${label}/${family}: empty asset`);
+ if(family==='large')assert.equal(img.layoutMode,'CONTAINED_SOURCE',`${label}/large: layoutMode invalid`);
+}
 function validateAsset(cat,e,label){
  assert(e&&typeof e==='object',`${label}: asset missing`);
  if(e.category!=null)assert.equal(e.category,cat,`${label}: category mismatch`);
@@ -44,12 +52,9 @@ function validateAsset(cat,e,label){
  assert(String(e.sourcePage||'').startsWith('https://commons.wikimedia.org/wiki/File:'),`${label}: sourcePage must be Wikimedia Commons File page`);
  assert(Number(e.sourceYear)>=2020&&Number(e.sourceYear)<=new Date().getUTCFullYear()+1,`${label}: sourceYear invalid`);
  assert(Number(e.qualityScore)>=.72&&Number(e.qualityScore)<=1,`${label}: qualityScore invalid`);
- for(const [family,w,h] of [['small',720,720],['medium',1380,640]]){
-  const img=e.images?.[family];assert(img,`${label}/${family}: image metadata missing`);assert.equal(Number(img.width),w);assert.equal(Number(img.height),h);
-  const prefix=`${base}/${cat}/`;assert(String(img.url||'').startsWith(prefix),`${label}/${family}: unexpected URL`);
-  const name=path.basename(new URL(img.url).pathname);assert(name.endsWith(`-${family}.jpg`),`${label}/${family}: filename mismatch`);
-  const local=path.join(candidate,'assets',cat,name);assert(fs.existsSync(local),`${label}/${family}: asset missing`);assert(fs.statSync(local).size>0,`${label}/${family}: empty asset`);
- }
+ validateImage(cat,e.images?.small,label,'small',720,720);
+ validateImage(cat,e.images?.medium,label,'medium',1380,640);
+ if(e.images?.large)validateImage(cat,e.images.large,label,'large',1600,1600);
 }
 
 for(const [cat,e] of Object.entries(channel.categories)){
@@ -57,6 +62,8 @@ for(const [cat,e] of Object.entries(channel.categories)){
  assert(Array.isArray(e.pool)&&e.pool.length>=1&&e.pool.length<=Number(report.thresholds.poolMaxSize||5),`${cat}: pool size invalid`);
  const ids=e.pool.map(x=>x.assetId);assert.equal(new Set(ids).size,ids.length,`${cat}: duplicate pool asset`);assert(ids.includes(e.assetId),`${cat}: live asset must be in pool`);
  for(const [i,a] of e.pool.entries())validateAsset(cat,a,`${cat}/pool[${i}]`);
+ const livePool=e.pool.find(x=>x.assetId===e.assetId);
+ if(e.images?.large){assert(livePool?.images?.large,`${cat}: live Large metadata missing from matching pool asset`);assert.deepEqual(e.images.large,livePool.images.large,`${cat}: live Large metadata drifted from matching pool asset`);assert.equal(e.version,livePool.version,`${cat}: live version must match Large-enabled pool asset`);}
  assert(Array.isArray(e.recentAssetIds),`${cat}: recentAssetIds missing`);assert(e.recentAssetIds.length<=Number(report.thresholds.recentHistorySize||2),`${cat}: recent history too large`);assert.equal(new Set(e.recentAssetIds).size,e.recentAssetIds.length,`${cat}: duplicate recent history`);
  assert(parseDate(e.lastRotatedAt)>0,`${cat}: lastRotatedAt missing`);
 }
@@ -76,7 +83,15 @@ if(fs.existsSync(path.join(previous,'channel.json'))){
  for(const [cat,e] of Object.entries(prev.categories||{})){
   const n=channel.categories[cat];assert(n,`${cat}: previous LKG entry was deleted`);
   if(!updated.has(cat)){assert.deepEqual(n,e,`${cat}: unchanged entry mutated`);continue;}
-  if(poolUpdated.has(cat)&&!promoted.has(cat))assert.deepEqual(liveCore(n),liveCore(e),`${cat}: pool-only update changed live Hero`);
+  if(poolUpdated.has(cat)&&!promoted.has(cat)){
+   assert.deepEqual(liveIdentity(n),liveIdentity(e),`${cat}: pool-only update changed live Hero identity/rotation`);
+   assert.deepEqual(n.images?.small,e.images?.small,`${cat}: pool-only update changed live Small image`);
+   assert.deepEqual(n.images?.medium,e.images?.medium,`${cat}: pool-only update changed live Medium image`);
+   const oldLarge=e.images?.large??null,newLarge=n.images?.large??null;
+   if(oldLarge&&!newLarge)assert.fail(`${cat}: pool-only update removed live Large image`);
+   if(sameJSON(oldLarge,newLarge))assert.equal(n.version,e.version,`${cat}: live version changed without a Large-family change`);
+   else assert.notEqual(n.version,e.version,`${cat}: Large-family change must advance live version`);
+  }
   if(promoted.has(cat)){
    assert.notEqual(n.assetId,e.assetId,`${cat}: promotion must change live asset`);const mode=report.promotionModes[cat];
    if(mode==='QUALITY_UPGRADE')assert(Number(n.qualityScore)>=Number(e.qualityScore)+Number(report.thresholds.minLkgQualityGain),`${cat}: quality upgrade below margin`);
