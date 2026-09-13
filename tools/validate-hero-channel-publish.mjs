@@ -24,6 +24,7 @@ const sameJSON=(a,b)=>JSON.stringify(a??null)===JSON.stringify(b??null);
 assert(fs.existsSync(candidate),'candidate directory missing');
 const channel=readJSON(path.join(candidate,'channel.json'));
 const report=readJSON(path.join(candidate,'promotion-report.json'));
+const suppressedList=Array.isArray(report.suppressed)?report.suppressed:[];
 assert.equal(channel.schemaVersion,1);
 assert.equal(channel.publicationPolicy,'CI_GATED_LIVE_HERO_CHANNEL');
 assert(channel.categories&&typeof channel.categories==='object'&&!Array.isArray(channel.categories));
@@ -31,11 +32,13 @@ for(const key of ['promoted','poolUpdated','updatedCategories'])assert(Array.isA
 assert(report.promotionModes&&typeof report.promotionModes==='object'&&!Array.isArray(report.promotionModes));
 assert.equal(new Set(report.promoted).size,report.promoted.length,'duplicate promoted categories');
 assert.equal(new Set(report.poolUpdated).size,report.poolUpdated.length,'duplicate pool-updated categories');
+assert.equal(new Set(suppressedList).size,suppressedList.length,'duplicate suppressed categories');
 assert.equal(new Set(report.updatedCategories).size,report.updatedCategories.length,'duplicate updated categories');
-const expectedUpdated=new Set([...report.promoted,...report.poolUpdated]);
-assert.deepEqual(new Set(report.updatedCategories),expectedUpdated,'updatedCategories must equal promoted ∪ poolUpdated');
+const expectedUpdated=new Set([...report.promoted,...report.poolUpdated,...suppressedList]);
+assert.deepEqual(new Set(report.updatedCategories),expectedUpdated,'updatedCategories must equal promoted ∪ poolUpdated ∪ suppressed');
 for(const cat of report.promoted){assert(allowedCategories.has(cat),`invalid promoted category ${cat}`);assert(allowedPromotionModes.has(report.promotionModes[cat]),`${cat}: invalid promotion mode`)}
 for(const cat of report.poolUpdated)assert(allowedCategories.has(cat),`invalid pool-updated category ${cat}`);
+for(const cat of suppressedList){assert(allowedCategories.has(cat),`invalid suppressed category ${cat}`);assert(!report.promoted.includes(cat),`${cat}: suppressed category cannot also be promoted`);assert(!report.poolUpdated.includes(cat),`${cat}: suppressed category cannot also be pool-updated`)}
 assert(!report.updatedCategories.includes('QA'),'Hero channel must never update QA');
 
 function validateImage(cat,img,label,family,w,h){
@@ -81,9 +84,18 @@ function walk(dir,rel=''){
 walk(candidate);
 
 if(fs.existsSync(path.join(previous,'channel.json'))){
- const prev=readJSON(path.join(previous,'channel.json')),promoted=new Set(report.promoted),updated=new Set(report.updatedCategories),poolUpdated=new Set(report.poolUpdated);
+ const prev=readJSON(path.join(previous,'channel.json')),promoted=new Set(report.promoted),updated=new Set(report.updatedCategories),poolUpdated=new Set(report.poolUpdated),suppressed=new Set(suppressedList);
+ for(const cat of suppressed)assert(prev.categories?.[cat],`${cat}: suppression requires a previous live Hero`);
  for(const [cat,e] of Object.entries(prev.categories||{})){
-  const n=channel.categories[cat];assert(n,`${cat}: previous LKG entry was deleted`);
+  const n=channel.categories[cat];
+  if(suppressed.has(cat)){
+   assert(updated.has(cat),`${cat}: suppression must be reported as updated`);
+   assert(assetForbidden(e,cat),`${cat}: only a forbidden live Hero may be suppressed`);
+   assert.equal(n,undefined,`${cat}: suppressed Hero must be absent from live channel`);
+   assert(!fs.existsSync(path.join(candidate,'assets',cat)),`${cat}: suppressed Hero assets must not remain publishable`);
+   continue;
+  }
+  assert(n,`${cat}: previous LKG entry was deleted without suppression`);
   if(!updated.has(cat)){assert.deepEqual(n,e,`${cat}: unchanged entry mutated`);continue;}
   if(poolUpdated.has(cat)&&!promoted.has(cat)){
    assert.deepEqual(liveIdentity(n),liveIdentity(e),`${cat}: pool-only update changed live Hero identity/rotation`);
@@ -111,4 +123,4 @@ if(fs.existsSync(path.join(previous,'channel.json'))){
  for(const cat of report.promoted)if(!prev.categories?.[cat])assert.equal(report.promotionModes[cat],'INITIAL',`${cat}: new live category must use INITIAL mode`);
 }
 
-console.log(`Motorsport Hub Hero channel publish validation: PASS (${Object.keys(channel.categories).length} live / ${report.promoted.length} promoted / ${report.poolUpdated.length} pool-only)`);
+console.log(`Motorsport Hub Hero channel publish validation: PASS (${Object.keys(channel.categories).length} live / ${report.promoted.length} promoted / ${report.poolUpdated.length} pool-only / ${suppressedList.length} suppressed)`);

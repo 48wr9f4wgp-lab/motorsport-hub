@@ -31,10 +31,14 @@ const oldDakar=previousEntry('DAKAR',.916,72);
 oldDakar.sourceTitle='File:Réplica Renault 18 Break 4x4 Rally Paris-Dakar 1987 en la Feria Internacional.jpg';
 oldDakar.sourcePage='https://commons.wikimedia.org/wiki/File:Replica_Renault_18_Dakar.jpg';
 oldDakar.pool=[toPoolAsset(oldDakar)];
+const oldFdj=previousEntry('FDJ',.90,72);
+oldFdj.sourceTitle='File:FDJ museum replica drift car.jpg';
+oldFdj.sourcePage='https://commons.wikimedia.org/wiki/File:FDJ_Museum_Replica.jpg';
+oldFdj.pool=[toPoolAsset(oldFdj)];
 const recentNascarAlt=poolAsset('NASCAR','recent-alt',.94,1);
 oldNascar.pool=[toPoolAsset(oldNascar),recentNascarAlt];oldNascar.recentAssetIds=[recentNascarAlt.assetId];
-fs.writeFileSync(path.join(prev,'channel.json'),JSON.stringify({schemaVersion:1,generatedAt:new Date(now-72*3600000).toISOString(),publicationPolicy:'CI_GATED_LIVE_HERO_CHANNEL',categories:{WRC:oldWrc,F1:oldF1,SUPERGT:oldSuperGt,NASCAR:oldNascar,DAKAR:oldDakar}},null,2));
-fs.writeFileSync(path.join(prev,'promotion-report.json'),JSON.stringify({schemaVersion:1,promoted:[],poolUpdated:[],updatedCategories:[],promotionModes:{}}));
+fs.writeFileSync(path.join(prev,'channel.json'),JSON.stringify({schemaVersion:1,generatedAt:new Date(now-72*3600000).toISOString(),publicationPolicy:'CI_GATED_LIVE_HERO_CHANNEL',categories:{WRC:oldWrc,F1:oldF1,SUPERGT:oldSuperGt,NASCAR:oldNascar,DAKAR:oldDakar,FDJ:oldFdj}},null,2));
+fs.writeFileSync(path.join(prev,'promotion-report.json'),JSON.stringify({schemaVersion:1,promoted:[],poolUpdated:[],suppressed:[],updatedCategories:[],promotionModes:{}}));
 
 function writeArtifact(category,{detection=.95,subjectSmall=.32,subjectMedium=.32,safeSmall=.80,safeMedium=.80,date=`${year}-07-01`,title=`File:${category} ${year} pool action.jpg`,page=`https://commons.wikimedia.org/wiki/File:${category}_${year}_Pool.jpg`}={}){
  const dir=path.join(arts,`hero-refresh-${category}-test`),previews=path.join(dir,'hero-crop-previews');fs.mkdirSync(previews,{recursive:true});
@@ -51,6 +55,7 @@ writeArtifact('F1',{safeSmall:.79,safeMedium:.79,title:`File:F1 ${year} pool-onl
 writeArtifact('NASCAR',{safeSmall:.79,safeMedium:.79,title:recentNascarAlt.sourceTitle,page:recentNascarAlt.sourcePage,date:recentNascarAlt.sourceDate});
 writeArtifact('SUPERGT');
 writeArtifact('MOTOGP',{detection:.40,subjectSmall:.20,subjectMedium:.20,title:'File:MotoGP weak.jpg',page:'https://commons.wikimedia.org/wiki/File:MotoGP_Weak.jpg'});
+writeArtifact('FDJ',{detection:.40,subjectSmall:.20,subjectMedium:.20,title:'File:FDJ weak repair.jpg',page:'https://commons.wikimedia.org/wiki/File:FDJ_Weak_Repair.jpg'});
 
 execFileSync(process.execPath,[path.join(root,'tools/build-hero-channel.mjs'),`--artifacts=${arts}`,`--previous-dir=${prev}`,`--output-dir=${out}`],{cwd:root,stdio:'pipe'});
 execFileSync(process.execPath,[path.join(root,'tools/validate-hero-channel-publish.mjs'),`--candidate=${out}`,`--previous=${prev}`],{cwd:root,stdio:'pipe'});
@@ -81,6 +86,10 @@ assert(channel.categories.DAKAR?.images?.medium?.url.includes('/assets/DAKAR/'),
 assert(channel.categories.DAKAR.qualityScore>=.88,'DAKAR policy repair replacement must clear the initial quality floor');
 assert.notEqual(channel.categories.DAKAR.assetId,oldDakar.assetId,'forbidden legacy DAKAR Hero must be replaced');
 assert(!channel.categories.DAKAR.pool.some(x=>x.assetId===oldDakar.assetId),'forbidden legacy DAKAR asset must be removed from the pool after repair');
+assert(report.suppressed.includes('FDJ'),'forbidden live Hero without a qualifying repair must be fail-closed');
+assert.equal(channel.categories.FDJ,undefined,'suppressed FDJ Active Hero must be removed so runtime can use its embedded audited fallback');
+assert(!fs.existsSync(path.join(out,'assets','FDJ')),'suppressed FDJ Active Hero assets must be removed');
+assert(report.updatedCategories.includes('FDJ'),'suppression must be publishable as an explicit channel update');
 assert(channel.categories.WRC.sourceDate<oldWrc.sourceDate,'pool rotation must not require a newer sourceDate');
 assert(channel.categories.WRC.qualityScore>=.92&&channel.categories.WRC.qualityScore<.95,'WRC rotation must prove controlled <=0.03 quality tradeoff');
 assert(channel.categories.WRC.pool.some(x=>x.assetId===oldWrc.assetId),'previous live WRC must remain in rotation pool');

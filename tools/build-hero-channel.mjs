@@ -65,7 +65,7 @@ function liveFromPool(prev,asset,pool,mode){return {...asset,promotedAt:nowIso,l
 fs.rmSync(outputDir,{recursive:true,force:true});fs.mkdirSync(outputDir,{recursive:true});copyTree(previousDir,outputDir);
 const previous=readJSON(path.join(previousDir,'channel.json'))||{schemaVersion:1,generatedAt:null,categories:{}};
 const next={schemaVersion:1,generatedAt:previous.generatedAt||new Date(0).toISOString(),publicationPolicy:'CI_GATED_LIVE_HERO_CHANNEL',categories:{...(previous.categories||{})}};
-const promoted=[],promotionModes={},poolUpdated=[],updatedCategories=[];
+const promoted=[],promotionModes={},poolUpdated=[],suppressed=[],updatedCategories=[];
 for(const dir of artifactDirs()){
  const category=categoryFromDir(dir);if(!category)continue;const rows=candidatesForDir(dir);
  const rawPrev=next.categories[category]||null,prevForbidden=!!(rawPrev&&assetForbidden(rawPrev,category));
@@ -87,12 +87,13 @@ for(const dir of artifactDirs()){
  }
  if(selected){const live=liveFromPool(rawPrev,selected,pool,mode);next.categories[category]=live;promoted.push(category);promotionModes[category]=mode;updatedCategories.push(category)}
  else if(rawPrev){
-  if(prevForbidden){next.categories[category]=rawPrev;}
+  if(prevForbidden){delete next.categories[category];fs.rmSync(path.join(outputDir,'assets',category),{recursive:true,force:true});suppressed.push(category);updatedCategories.push(category)}
   else{const migrated={...rawPrev,pool,recentAssetIds:Array.isArray(rawPrev.recentAssetIds)?rawPrev.recentAssetIds.slice(0,recentHistorySize):[],lastRotatedAt:rawPrev.lastRotatedAt||rawPrev.promotedAt||rawPrev.sourceDate||null};next.categories[category]=migrated;if(sanitizedPool||beforePool!==afterPool||!Array.isArray(rawPrev.pool)){poolUpdated.push(category);updatedCategories.push(category)}}
  }
  if(next.categories[category])pruneAssets(category,next.categories[category]);
 }
 const uniqUpdated=[...new Set(updatedCategories)];if(uniqUpdated.length)next.generatedAt=nowIso;
+const uniqPoolUpdated=[...new Set(poolUpdated)],uniqSuppressed=[...new Set(suppressed)];
 fs.writeFileSync(path.join(outputDir,'channel.json'),JSON.stringify(next,null,2)+'\n');
-fs.writeFileSync(path.join(outputDir,'promotion-report.json'),JSON.stringify({schemaVersion:1,generatedAt:nowIso,thresholds:{minScore,minDetection,minSmallSubject,minMediumSubject,minTextSafeFamily,minAverageTextSafe,minLkgQualityGain,poolInitialMinScore,poolMaxQualityDrop,poolMaxSize,recentHistorySize,rotationMinAgeHours:rotationMinAgeMs/3600000,rotationReuseCooldownHours:rotationReuseCooldownMs/3600000},promoted,promotionModes,poolUpdated:[...new Set(poolUpdated)],updatedCategories:uniqUpdated,categories:Object.fromEntries(Object.entries(next.categories).map(([k,v])=>[k,{assetId:v.assetId,qualityScore:v.qualityScore,poolSize:Array.isArray(v.pool)?v.pool.length:0,sourceTitle:v.sourceTitle,rotationMode:v.rotationMode||null}]))},null,2)+'\n');
-console.log(JSON.stringify({promoted,promotionModes,poolUpdated:[...new Set(poolUpdated)],updatedCategories:uniqUpdated,totalLive:Object.keys(next.categories).length}));
+fs.writeFileSync(path.join(outputDir,'promotion-report.json'),JSON.stringify({schemaVersion:1,generatedAt:nowIso,thresholds:{minScore,minDetection,minSmallSubject,minMediumSubject,minTextSafeFamily,minAverageTextSafe,minLkgQualityGain,poolInitialMinScore,poolMaxQualityDrop,poolMaxSize,recentHistorySize,rotationMinAgeHours:rotationMinAgeMs/3600000,rotationReuseCooldownHours:rotationReuseCooldownMs/3600000},promoted,promotionModes,poolUpdated:uniqPoolUpdated,suppressed:uniqSuppressed,updatedCategories:uniqUpdated,categories:Object.fromEntries(Object.entries(next.categories).map(([k,v])=>[k,{assetId:v.assetId,qualityScore:v.qualityScore,poolSize:Array.isArray(v.pool)?v.pool.length:0,sourceTitle:v.sourceTitle,rotationMode:v.rotationMode||null}]))},null,2)+'\n');
+console.log(JSON.stringify({promoted,promotionModes,poolUpdated:uniqPoolUpdated,suppressed:uniqSuppressed,updatedCategories:uniqUpdated,totalLive:Object.keys(next.categories).length}));
