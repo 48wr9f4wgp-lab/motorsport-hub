@@ -72,4 +72,21 @@ for(const a of [current,alternate])assert.deepEqual(fs.readFileSync(path.join(ca
 
 execFileSync(process.execPath,[path.join(root,'tools/validate-hero-channel-publish.mjs'),`--candidate=${candidate}`,`--previous=${previous}`],{cwd:root,stdio:'pipe'});
 fs.rmSync(tmp,{recursive:true,force:true});
+
+// A normal channel rebuild copies the previous hero-live tree first, then prunes
+// unused bytes for categories that were refreshed. Existing Large assets are part
+// of the LKG contract and must survive that prune even when no new candidate wins.
+const lkgTmp=fs.mkdtempSync(path.join(os.tmpdir(),'mh-large-lkg-')),lkgArtifacts=path.join(lkgTmp,'artifacts'),lkgPrevious=path.join(lkgTmp,'previous'),lkgOutput=path.join(lkgTmp,'candidate'),lkgArtifact=path.join(lkgArtifacts,'hero-refresh-WEC-test'),lkgAssetId='lkg-wec';
+fs.mkdirSync(lkgArtifact,{recursive:true});fs.mkdirSync(path.join(lkgPrevious,'assets','WEC'),{recursive:true});
+const lkgBase='https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WEC';
+for(const family of ['small','medium','large'])fs.writeFileSync(path.join(lkgPrevious,'assets','WEC',`${lkgAssetId}-${family}.jpg`),Buffer.from(`lkg-${family}-bytes`));
+const lkgCore={category:'WEC',assetId:lkgAssetId,version:'lkg-version',sourcePage:'https://commons.wikimedia.org/wiki/File:LKG_WEC.jpg',sourceTitle:'File:LKG WEC.jpg',author:'Tester',license:'CC BY 4.0',sourceYear:year,sourceDate:`${year}-09-01`,role:'ACTION',qualityScore:.9,addedAt:`${year}-09-01T00:00:00Z`,lastShownAt:`${year}-09-01T00:00:00Z`,images:{small:{url:`${lkgBase}/${lkgAssetId}-small.jpg`,width:720,height:720},medium:{url:`${lkgBase}/${lkgAssetId}-medium.jpg`,width:1380,height:640},large:{url:`${lkgBase}/${lkgAssetId}-large.jpg`,width:1600,height:1600,layoutMode:'CONTAINED_SOURCE'}}};
+const lkgLive={...lkgCore,promotedAt:`${year}-09-01T00:00:00Z`,lastRotatedAt:`${year}-09-01T00:00:00Z`,pool:[lkgCore],recentAssetIds:[]};
+fs.writeFileSync(path.join(lkgPrevious,'channel.json'),JSON.stringify({schemaVersion:1,generatedAt:`${year}-09-01T00:00:00Z`,publicationPolicy:'CI_GATED_LIVE_HERO_CHANNEL',categories:{WEC:lkgLive}},null,2));
+execFileSync(process.execPath,[path.join(root,'tools/build-hero-channel.mjs'),`--artifacts=${lkgArtifacts}`,`--previous-dir=${lkgPrevious}`,`--output-dir=${lkgOutput}`],{cwd:root,stdio:'pipe'});
+for(const family of ['small','medium','large'])assert(fs.existsSync(path.join(lkgOutput,'assets','WEC',`${lkgAssetId}-${family}.jpg`)),`inherited WEC ${family} asset was pruned`);
+const rebuilt=JSON.parse(fs.readFileSync(path.join(lkgOutput,'channel.json'),'utf8')).categories.WEC;
+assert.deepEqual(rebuilt.images.large,lkgLive.images.large,'inherited Large metadata changed during LKG rebuild');
+fs.rmSync(lkgTmp,{recursive:true,force:true});
+
 console.log('Motorsport Hub Large Hero + all-category layout gate: PASS');
