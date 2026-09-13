@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-13T22:57:52.924Z",
+  "generatedAt": "2026-09-13T23:06:22.380Z",
   "publicationPolicy": "CI_GATED_LIVE_HERO_CHANNEL",
   "categories": {
     "WEC": {
@@ -308,6 +308,66 @@
       "pool": [
         {
           "category": "F1",
+          "assetId": "auto-5c0f62518898-2025-Japan-GP---Ferrari---Lewis-Hamilton---FP1.jpg",
+          "version": "dc0c435952a1021f",
+          "sourcePage": "https://commons.wikimedia.org/wiki/File:2025_Japan_GP_-_Ferrari_-_Lewis_Hamilton_-_FP1.jpg",
+          "sourceTitle": "File:2025 Japan GP - Ferrari - Lewis Hamilton - FP1.jpg",
+          "author": "Liauzh",
+          "license": "CC BY-SA 4.0",
+          "sourceYear": 2025,
+          "sourceDate": "2025-04-04 11:28:32",
+          "role": "IDENTITY",
+          "qualityScore": 0.8914,
+          "images": {
+            "small": {
+              "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/F1/auto-5c0f62518898-2025-Japan-GP---Ferrari---Lewis-Hamilton---FP1.jpg-small.jpg",
+              "width": 720,
+              "height": 720
+            },
+            "medium": {
+              "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/F1/auto-5c0f62518898-2025-Japan-GP---Ferrari---Lewis-Hamilton---FP1.jpg-medium.jpg",
+              "width": 1380,
+              "height": 640
+            }
+          },
+          "addedAt": "2026-09-13T22:57:52.924Z",
+          "lastShownAt": "2026-09-13T22:57:52.924Z"
+        },
+        {
+          "category": "F1",
+          "assetId": "auto-7a14e267162f-2025-Japan-GP---McLaren---Oscar-Piastri---FP1.jpg",
+          "version": "c5620b0679837b2e",
+          "sourcePage": "https://commons.wikimedia.org/wiki/File:2025_Japan_GP_-_McLaren_-_Oscar_Piastri_-_FP1.jpg",
+          "sourceTitle": "File:2025 Japan GP - McLaren - Oscar Piastri - FP1.jpg",
+          "author": "Liauzh",
+          "license": "CC BY-SA 4.0",
+          "sourceYear": 2025,
+          "sourceDate": "2025-04-04 10:46:31",
+          "role": "IDENTITY",
+          "qualityScore": 0.8884,
+          "images": {
+            "small": {
+              "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/F1/auto-7a14e267162f-2025-Japan-GP---McLaren---Oscar-Piastri---FP1.jpg-small.jpg",
+              "width": 720,
+              "height": 720
+            },
+            "medium": {
+              "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/F1/auto-7a14e267162f-2025-Japan-GP---McLaren---Oscar-Piastri---FP1.jpg-medium.jpg",
+              "width": 1380,
+              "height": 640
+            },
+            "large": {
+              "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/F1/auto-7a14e267162f-2025-Japan-GP---McLaren---Oscar-Piastri---FP1.jpg-large.jpg",
+              "width": 1600,
+              "height": 1600,
+              "layoutMode": "CONTAINED_SOURCE"
+            }
+          },
+          "addedAt": "2026-09-13T22:57:52.924Z",
+          "lastShownAt": null
+        },
+        {
+          "category": "F1",
           "assetId": "auto-3cf45aff0bde-Lando-Norris-Mclaren-F1-55383927449-.jpg",
           "version": "fcdffa88db11c2bf",
           "sourcePage": "https://commons.wikimedia.org/wiki/File:Lando_Norris_Mclaren_F1_(55383927449).jpg",
@@ -338,132 +398,12 @@
           },
           "addedAt": "2026-09-02T06:40:07.199Z",
           "lastShownAt": "2026-09-02T06:40:07.199Z"
-        },
-        {
-          "category": "F1",
-          "assetId": "auto-5c0f62518898-2025-Japan-GP---Ferrari---Lewis-Hamilton---FP1.jpg",
-          "version": "dc0c435952a1021f",
-          "sourcePage": "https://commons.wikimedia.org/wiki/File:2025_Japan_GP_-_Ferrari_-_Lewis_Hamilton_-_FP1.jpg",
-          "sourceTitle": "File:2025 Japan GP - Ferrari - Lewis Hamilton - FP1.jpg",
-          "author": "Liauzh",
-          "license": "CC BY-SA 4.0",
-          "sourceYear": 2025,
-          "sourceDate": "2025-04-04 11:28:32",
-          "role": "IDENTITY",
-          "qualityScore": 0.8914,
-          "addedAt": "2026-09-13T22:57:52.924Z",
-          "lastShownAt": "2026-09-13T22:57:52.924Z",
-          "images": {
-            "small": {
-              "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/F1/auto-5c0f62518898-2025-Japan-GP---Ferrari---Lewis-Hamilton---FP1.jpg-small.jpg",
-              "width": 720,
-              "height": 720
-            },
-            "medium": {
-              "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/F1/auto-5c0f62518898-2025-Japan-GP---Ferrari---Lewis-Hamilton---FP1.jpg-medium.jpg",
-              "width": 1380,
-              "height": 640
-            }
-          }
-        },
-        {
-          "category": "F1",
-          "assetId": "auto-7a14e267162f-2025-Japan-GP---McLaren---Oscar-Piastri---FP1.jpg",
-          "version": "c5620b0679837b2e",
-          "sourcePage": "https://commons.wikimedia.org/wiki/File:2025_Japan_GP_-_McLaren_-_Oscar_Piastri_-_FP1.jpg",
-          "sourceTitle": "File:2025 Japan GP - McLaren - Oscar Piastri - FP1.jpg",
-          "author": "Liauzh",
-          "license": "CC BY-SA 4.0",
-          "sourceYear": 2025,
-          "sourceDate": "2025-04-04 10:46:31",
-          "role": "IDENTITY",
-          "qualityScore": 0.8884,
-          "addedAt": "2026-09-13T22:57:52.924Z",
-          "lastShownAt": null,
-          "images": {
-            "small": {
-              "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/F1/auto-7a14e267162f-2025-Japan-GP---McLaren---Oscar-Piastri---FP1.jpg-small.jpg",
-              "width": 720,
-              "height": 720
-            },
-            "medium": {
-              "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/F1/auto-7a14e267162f-2025-Japan-GP---McLaren---Oscar-Piastri---FP1.jpg-medium.jpg",
-              "width": 1380,
-              "height": 640
-            },
-            "large": {
-              "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/F1/auto-7a14e267162f-2025-Japan-GP---McLaren---Oscar-Piastri---FP1.jpg-large.jpg",
-              "width": 1600,
-              "height": 1600,
-              "layoutMode": "CONTAINED_SOURCE"
-            }
-          }
         }
       ],
       "recentAssetIds": [
         "auto-3cf45aff0bde-Lando-Norris-Mclaren-F1-55383927449-.jpg"
       ],
       "rotationMode": "QUALITY_UPGRADE"
-    },
-    "DAKAR": {
-      "category": "DAKAR",
-      "assetId": "auto-2b63a820d7f5-R-plica-Renault-18-Break-4x4-Rally-Paris-Dakar-1987-",
-      "version": "68cb713c41782583",
-      "sourcePage": "https://commons.wikimedia.org/wiki/File:R%C3%A9plica_Renault_18_Break_4x4_(Rally_Paris-Dakar_1987)_en_la_50.%C2%AA_Feria_Internacional_del_Libro_de_Buenos_Aires_-_(1).jpg",
-      "sourceTitle": "File:Réplica Renault 18 Break 4x4 (Rally Paris-Dakar 1987) en la 50.ª Feria Internacional del Libro de Buenos Aires - (1).jpg",
-      "author": "Just a Man",
-      "license": "CC BY 4.0",
-      "sourceYear": 2026,
-      "sourceDate": "2026-05-01 17:11:10",
-      "role": "IDENTITY",
-      "qualityScore": 0.916,
-      "addedAt": "2026-09-12T00:37:33.027Z",
-      "lastShownAt": null,
-      "images": {
-        "small": {
-          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/DAKAR/auto-2b63a820d7f5-R-plica-Renault-18-Break-4x4-Rally-Paris-Dakar-1987--small.jpg",
-          "width": 720,
-          "height": 720
-        },
-        "medium": {
-          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/DAKAR/auto-2b63a820d7f5-R-plica-Renault-18-Break-4x4-Rally-Paris-Dakar-1987--medium.jpg",
-          "width": 1380,
-          "height": 640
-        }
-      },
-      "promotedAt": "2026-09-12T00:37:33.027Z",
-      "lastRotatedAt": "2026-09-12T00:37:33.027Z",
-      "pool": [
-        {
-          "category": "DAKAR",
-          "assetId": "auto-2b63a820d7f5-R-plica-Renault-18-Break-4x4-Rally-Paris-Dakar-1987-",
-          "version": "68cb713c41782583",
-          "sourcePage": "https://commons.wikimedia.org/wiki/File:R%C3%A9plica_Renault_18_Break_4x4_(Rally_Paris-Dakar_1987)_en_la_50.%C2%AA_Feria_Internacional_del_Libro_de_Buenos_Aires_-_(1).jpg",
-          "sourceTitle": "File:Réplica Renault 18 Break 4x4 (Rally Paris-Dakar 1987) en la 50.ª Feria Internacional del Libro de Buenos Aires - (1).jpg",
-          "author": "Just a Man",
-          "license": "CC BY 4.0",
-          "sourceYear": 2026,
-          "sourceDate": "2026-05-01 17:11:10",
-          "role": "IDENTITY",
-          "qualityScore": 0.916,
-          "addedAt": "2026-09-12T00:37:33.027Z",
-          "lastShownAt": "2026-09-12T00:37:33.027Z",
-          "images": {
-            "small": {
-              "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/DAKAR/auto-2b63a820d7f5-R-plica-Renault-18-Break-4x4-Rally-Paris-Dakar-1987--small.jpg",
-              "width": 720,
-              "height": 720
-            },
-            "medium": {
-              "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/DAKAR/auto-2b63a820d7f5-R-plica-Renault-18-Break-4x4-Rally-Paris-Dakar-1987--medium.jpg",
-              "width": 1380,
-              "height": 640
-            }
-          }
-        }
-      ],
-      "recentAssetIds": [],
-      "rotationMode": "INITIAL"
     },
     "SUPERFORMULA": {
       "category": "SUPERFORMULA",
@@ -545,8 +485,6 @@
           "sourceDate": "2026-05-24 16:00:24",
           "role": "IDENTITY",
           "qualityScore": 0.8882,
-          "addedAt": "2026-09-13T22:57:52.924Z",
-          "lastShownAt": null,
           "images": {
             "small": {
               "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/SUPERFORMULA/auto-cf12e6198f65-Igor-Fraga-Super-Formula-Round-5-Suzuka-Post-Race-20-small.jpg",
@@ -564,7 +502,9 @@
               "height": 1600,
               "layoutMode": "CONTAINED_SOURCE"
             }
-          }
+          },
+          "addedAt": "2026-09-13T22:57:52.924Z",
+          "lastShownAt": null
         }
       ],
       "recentAssetIds": [],

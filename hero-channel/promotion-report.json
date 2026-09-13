@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-13T22:57:52.924Z",
+  "generatedAt": "2026-09-13T23:06:22.380Z",
   "thresholds": {
     "minScore": 0.72,
     "minDetection": 0.55,
@@ -16,18 +16,17 @@
     "rotationMinAgeHours": 48,
     "rotationReuseCooldownHours": 48
   },
-  "promoted": [
+  "promoted": [],
+  "promotionModes": {},
+  "poolUpdated": [
     "F1"
   ],
-  "promotionModes": {
-    "F1": "QUALITY_UPGRADE"
-  },
-  "poolUpdated": [
-    "SUPERFORMULA"
+  "suppressed": [
+    "DAKAR"
   ],
   "updatedCategories": [
-    "F1",
-    "SUPERFORMULA"
+    "DAKAR",
+    "F1"
   ],
   "categories": {
     "WEC": {
@@ -50,13 +49,6 @@
       "poolSize": 3,
       "sourceTitle": "File:2025 Japan GP - Ferrari - Lewis Hamilton - FP1.jpg",
       "rotationMode": "QUALITY_UPGRADE"
-    },
-    "DAKAR": {
-      "assetId": "auto-2b63a820d7f5-R-plica-Renault-18-Break-4x4-Rally-Paris-Dakar-1987-",
-      "qualityScore": 0.916,
-      "poolSize": 1,
-      "sourceTitle": "File:Réplica Renault 18 Break 4x4 (Rally Paris-Dakar 1987) en la 50.ª Feria Internacional del Libro de Buenos Aires - (1).jpg",
-      "rotationMode": "INITIAL"
     },
     "SUPERFORMULA": {
       "assetId": "auto-707eb5c3387a-Super-Formula-Round-5-Suzuka-Post-Race-2026---1.jpg",
