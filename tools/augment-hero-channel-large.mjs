@@ -5,7 +5,7 @@ import {fileURLToPath} from 'node:url';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const arg=(name,fallback)=>{const p=process.argv.find(x=>x.startsWith(`--${name}=`));return p?p.slice(name.length+3):fallback};
-const enabled=new Set(['F1','WEC']);
+const enabled=new Set(["F1","WEC","WRC","SUPERGT","MOTOGP","FDJ","D1GP","SUPERFORMULA","INDYCAR","NASCAR","GTWCEU","DAKAR"]);
 const base='https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets';
 const readJSON=p=>JSON.parse(fs.readFileSync(p,'utf8'));
 const sha=v=>crypto.createHash('sha256').update(v).digest('hex');

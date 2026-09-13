@@ -4,7 +4,7 @@ import {fileURLToPath} from 'node:url';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const arg=(name,fallback)=>{const p=process.argv.find(x=>x.startsWith(`--${name}=`));return p?p.slice(name.length+3):fallback};
-export const LARGE_HERO_CATEGORIES=new Set(['F1','WEC']);
+export const LARGE_HERO_CATEGORIES=new Set(["F1","WEC","WRC","SUPERGT","MOTOGP","FDJ","D1GP","SUPERFORMULA","INDYCAR","NASCAR","GTWCEU","DAKAR"]);
 export const LARGE_HERO_SIZE=1600;
 export const LARGE_MIN_LONG_EDGE=1800;
 export const LARGE_MIN_SHORT_EDGE=900;

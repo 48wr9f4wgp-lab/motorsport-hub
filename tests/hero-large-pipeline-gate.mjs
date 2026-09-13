@@ -4,7 +4,7 @@ import path from 'node:path';
 import assert from 'node:assert/strict';
 import {execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
-import {largeEligibility,LARGE_HERO_SIZE,LARGE_MIN_LONG_EDGE,LARGE_MIN_SHORT_EDGE,LARGE_MAX_SUBJECT_AREA} from '../tools/build-large-hero-derivatives.mjs';
+import {largeEligibility,LARGE_HERO_CATEGORIES,LARGE_HERO_SIZE,LARGE_MIN_LONG_EDGE,LARGE_MIN_SHORT_EDGE,LARGE_MAX_SUBJECT_AREA} from '../tools/build-large-hero-derivatives.mjs';
 import {augmentLargeVariants} from '../tools/augment-hero-channel-large.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
@@ -13,7 +13,8 @@ assert.equal(largeEligibility(good,'F1').eligible,true);
 assert.equal(LARGE_HERO_SIZE,1600);assert.equal(LARGE_MIN_LONG_EDGE,1800);assert.equal(LARGE_MIN_SHORT_EDGE,900);assert.equal(LARGE_MAX_SUBJECT_AREA,.38);
 assert(largeEligibility({...good,image:{width:1380,height:640}},'F1').reasons.includes('SOURCE_RESOLUTION_TOO_LOW_FOR_LARGE'));
 assert(largeEligibility({...good,selectedDetection:{areaFraction:.55}},'WEC').reasons.includes('SUBJECT_TOO_CLOSE_FOR_LARGE'));
-assert.equal(largeEligibility(good,'WRC').eligible,false,'Large pilot must remain F1/WEC only');
+assert.equal(LARGE_HERO_CATEGORIES.size,12);
+for(const category of ["F1","WEC","WRC","SUPERGT","MOTOGP","FDJ","D1GP","SUPERFORMULA","INDYCAR","NASCAR","GTWCEU","DAKAR"])assert.equal(largeEligibility(good,category).eligible,true,`${category} must support Large Hero`);
 
 const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'mh-large-')),artifacts=path.join(tmp,'artifacts'),candidate=path.join(tmp,'candidate'),previous=path.join(tmp,'previous'),art=path.join(artifacts,'hero-refresh-F1-test'),preview=path.join(art,'hero-crop-previews');
 fs.mkdirSync(preview,{recursive:true});fs.mkdirSync(path.join(candidate,'assets','F1'),{recursive:true});fs.mkdirSync(previous,{recursive:true});
