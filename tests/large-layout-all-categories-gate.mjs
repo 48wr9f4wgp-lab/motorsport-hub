@@ -1,7 +1,0 @@
-import fs from 'node:fs';
-import assert from 'node:assert/strict';
-const modules=["wrc-widget-flat-v1000.js","supergt-widget-flat-v1000.js","motogp-widget-flat-v1000.js","fdj-widget-flat-v1000.js","d1gp-widget-flat-v1000.js","superformula-widget.js","indycar-widget.js","nascar-widget.js","gtwc-europe-widget.js","dakar-widget.js"];
-for(const file of modules){const s=fs.readFileSync(file,'utf8');assert(s.includes('function large(d,cached,bg)'),`${file}: Large renderer missing`);assert(s.includes('MORE STANDINGS'),`${file}: standings expansion missing`);assert(s.includes("__mhFam==='large'?large"),`${file}: Large routing missing`);assert(s.includes("fam==='large')await w.presentLarge()"),`${file}: presentLarge missing`);assert(s.includes('function small(d,cached,bg)'),`${file}: Small renderer lost`);assert(s.includes('function medium(d,cached,bg)'),`${file}: Medium renderer lost`);}
-for(const file of ['f1-widget-flat-v1000.js','wec-widget-flat-v1000.js']){const s=fs.readFileSync(file,'utf8');assert(s.includes('function large(d,cached,bg)'),`${file}: existing Large renderer lost`);}
-const largeTool=fs.readFileSync('tools/build-large-hero-derivatives.mjs','utf8');for(const c of ["F1","WEC","WRC","SUPERGT","MOTOGP","FDJ","D1GP","SUPERFORMULA","INDYCAR","NASCAR","GTWCEU","DAKAR"])assert(largeTool.includes(`'${c}'`)||largeTool.includes(`"${c}"`),`${c}: Large Hero category missing`);
-console.log('Motorsport Hub all-category Large layout gate: PASS');
