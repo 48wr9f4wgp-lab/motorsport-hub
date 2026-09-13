@@ -4,16 +4,32 @@ import path from 'node:path';
 import assert from 'node:assert/strict';
 import {execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
-import {largeEligibility,LARGE_HERO_SIZE,LARGE_MIN_LONG_EDGE,LARGE_MIN_SHORT_EDGE,LARGE_MAX_SUBJECT_AREA} from '../tools/build-large-hero-derivatives.mjs';
+import {largeEligibility,LARGE_HERO_CATEGORIES,LARGE_HERO_SIZE,LARGE_MIN_LONG_EDGE,LARGE_MIN_SHORT_EDGE,LARGE_MAX_SUBJECT_AREA} from '../tools/build-large-hero-derivatives.mjs';
 import {augmentLargeVariants} from '../tools/augment-hero-channel-large.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const allCategories=['F1','WEC','WRC','SUPERGT','MOTOGP','FDJ','D1GP','SUPERFORMULA','INDYCAR','NASCAR','GTWCEU','DAKAR'];
+const largeModules=['f1-widget-flat-v1000.js','wec-widget-flat-v1000.js','wrc-widget-flat-v1000.js','supergt-widget-flat-v1000.js','motogp-widget-flat-v1000.js','fdj-widget-flat-v1000.js','d1gp-widget-flat-v1000.js','superformula-widget.js','indycar-widget.js','nascar-widget.js','gtwc-europe-widget.js','dakar-widget.js'];
 const good={status:'VISUAL_REVIEW_CANDIDATE',runtimeUrl:'https://upload.wikimedia.org/a.jpg',image:{width:2400,height:1350},selectedDetection:{areaFraction:.24},recommendedRole:'ACTION',roleResults:{ACTION:{medium:{effectiveTextSafeScore:.79}}},derivatives:{small:{path:'s.jpg'},medium:{path:'m.jpg'}}};
 assert.equal(largeEligibility(good,'F1').eligible,true);
 assert.equal(LARGE_HERO_SIZE,1600);assert.equal(LARGE_MIN_LONG_EDGE,1800);assert.equal(LARGE_MIN_SHORT_EDGE,900);assert.equal(LARGE_MAX_SUBJECT_AREA,.38);
 assert(largeEligibility({...good,image:{width:1380,height:640}},'F1').reasons.includes('SOURCE_RESOLUTION_TOO_LOW_FOR_LARGE'));
 assert(largeEligibility({...good,selectedDetection:{areaFraction:.55}},'WEC').reasons.includes('SUBJECT_TOO_CLOSE_FOR_LARGE'));
-assert.equal(largeEligibility(good,'WRC').eligible,false,'Large pilot must remain F1/WEC only');
+assert.equal(LARGE_HERO_CATEGORIES.size,12);
+for(const category of allCategories)assert.equal(largeEligibility(good,category).eligible,true,`${category} must support Large Hero`);
+
+// Large is a first-class widget family across every product category. The existing
+// Small/Medium renderers remain present so this rollout cannot silently collapse
+// the previously validated families into a Large-only implementation.
+for(const file of largeModules){
+ const source=fs.readFileSync(path.join(root,file),'utf8');
+ assert(source.includes('function small(d,cached,bg)'),`${file}: Small renderer missing`);
+ assert(source.includes('function medium(d,cached,bg)'),`${file}: Medium renderer missing`);
+ assert(source.includes('function large(d,cached,bg)'),`${file}: Large renderer missing`);
+ assert(source.includes('MORE STANDINGS'),`${file}: Large standings expansion missing`);
+ assert(/presentLarge\(\)/.test(source),`${file}: presentLarge routing missing`);
+ assert(/===['"]large['"]\?large/.test(source),`${file}: widgetFamily Large routing missing`);
+}
 
 const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'mh-large-')),artifacts=path.join(tmp,'artifacts'),candidate=path.join(tmp,'candidate'),previous=path.join(tmp,'previous'),art=path.join(artifacts,'hero-refresh-F1-test'),preview=path.join(art,'hero-crop-previews');
 fs.mkdirSync(preview,{recursive:true});fs.mkdirSync(path.join(candidate,'assets','F1'),{recursive:true});fs.mkdirSync(previous,{recursive:true});
@@ -44,4 +60,4 @@ assert(report.poolUpdated.includes('F1'));assert(report.updatedCategories.includ
 for(const a of [current,alternate])assert(fs.existsSync(path.join(candidate,'assets','F1',`${a.assetId}-large.jpg`)));
 execFileSync(process.execPath,[path.join(root,'tools/validate-hero-channel-publish.mjs'),`--candidate=${candidate}`,`--previous=${previous}`],{cwd:root,stdio:'pipe'});
 fs.rmSync(tmp,{recursive:true,force:true});
-console.log('Motorsport Hub Large Hero pipeline gate: PASS');
+console.log('Motorsport Hub Large Hero + all-category layout gate: PASS');
