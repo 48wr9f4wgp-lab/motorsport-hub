@@ -1,0 +1,31 @@
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import {largeEligibility,LARGE_HERO_SIZE,LARGE_MIN_LONG_EDGE,LARGE_MIN_SHORT_EDGE,LARGE_MAX_SUBJECT_AREA} from '../tools/build-large-hero-derivatives.mjs';
+import {augmentLargeVariants} from '../tools/augment-hero-channel-large.mjs';
+
+const good={status:'VISUAL_REVIEW_CANDIDATE',runtimeUrl:'https://upload.wikimedia.org/a.jpg',image:{width:2400,height:1350},selectedDetection:{areaFraction:.24},recommendedRole:'ACTION',roleResults:{ACTION:{medium:{effectiveTextSafeScore:.79}}},derivatives:{small:{path:'s.jpg'},medium:{path:'m.jpg'}}};
+assert.equal(largeEligibility(good,'F1').eligible,true);
+assert.equal(LARGE_HERO_SIZE,1600);assert.equal(LARGE_MIN_LONG_EDGE,1800);assert.equal(LARGE_MIN_SHORT_EDGE,900);assert.equal(LARGE_MAX_SUBJECT_AREA,.38);
+assert(largeEligibility({...good,image:{width:1380,height:640}},'F1').reasons.includes('SOURCE_RESOLUTION_TOO_LOW_FOR_LARGE'));
+assert(largeEligibility({...good,selectedDetection:{areaFraction:.55}},'WEC').reasons.includes('SUBJECT_TOO_CLOSE_FOR_LARGE'));
+assert.equal(largeEligibility(good,'WRC').eligible,false,'Large pilot must remain F1/WEC only');
+
+const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'mh-large-')),artifacts=path.join(tmp,'artifacts'),candidate=path.join(tmp,'candidate'),art=path.join(artifacts,'hero-refresh-F1-test'),preview=path.join(art,'hero-crop-previews');
+fs.mkdirSync(preview,{recursive:true});fs.mkdirSync(path.join(candidate,'assets','F1'),{recursive:true});
+const sourcePage='https://commons.wikimedia.org/wiki/File:F1_Large_Test.jpg',assetId='auto-f1-large-test',base='https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/F1';
+fs.writeFileSync(path.join(preview,'f1-large.jpg'),Buffer.from('large-image-bytes'));
+fs.writeFileSync(path.join(art,'hero-subject-report.json'),JSON.stringify({category:'F1',results:[{sourcePage,derivatives:{large:{path:'hero-crop-previews/f1-large.jpg',width:1600,height:1600,layoutMode:'CONTAINED_SOURCE'}}}]}));
+for(const [name,data] of [['small','small-bytes'],['medium','medium-bytes']])fs.writeFileSync(path.join(candidate,'assets','F1',`${assetId}-${name}.jpg`),Buffer.from(data));
+const poolAsset={category:'F1',assetId,version:'oldversion',sourcePage,sourceTitle:'File:F1 Large Test.jpg',author:'Tester',license:'CC BY 4.0',sourceYear:new Date().getUTCFullYear(),sourceDate:'2026-09-01',role:'ACTION',qualityScore:.9,images:{small:{url:`${base}/${assetId}-small.jpg`,width:720,height:720},medium:{url:`${base}/${assetId}-medium.jpg`,width:1380,height:640}}};
+const live={...poolAsset,assetId:'current-f1',sourcePage:'https://commons.wikimedia.org/wiki/File:Current_F1.jpg',version:'current',images:{small:{url:`${base}/current-f1-small.jpg`,width:720,height:720},medium:{url:`${base}/current-f1-medium.jpg`,width:1380,height:640}},pool:[poolAsset],recentAssetIds:[],lastRotatedAt:'2026-09-01T00:00:00Z'};
+fs.writeFileSync(path.join(candidate,'channel.json'),JSON.stringify({schemaVersion:1,generatedAt:new Date().toISOString(),publicationPolicy:'CI_GATED_LIVE_HERO_CHANNEL',categories:{F1:live}},null,2));
+fs.writeFileSync(path.join(candidate,'promotion-report.json'),JSON.stringify({schemaVersion:1,promoted:[],poolUpdated:[],updatedCategories:[],promotionModes:{},thresholds:{poolMaxSize:5,recentHistorySize:2}},null,2));
+const result=augmentLargeVariants({artifactRoot:artifacts,candidateDir:candidate});assert.equal(result.added,1);
+const channel=JSON.parse(fs.readFileSync(path.join(candidate,'channel.json'),'utf8')),report=JSON.parse(fs.readFileSync(path.join(candidate,'promotion-report.json'),'utf8')),p=channel.categories.F1.pool[0];
+assert.equal(channel.categories.F1.assetId,'current-f1','pool-only Large variant must not mutate current live Hero');
+assert.equal(p.images.large.width,1600);assert.equal(p.images.large.height,1600);assert(p.images.large.url.endsWith(`/${assetId}-large.jpg`));assert.notEqual(p.version,'oldversion');
+assert(report.poolUpdated.includes('F1'));assert(report.updatedCategories.includes('F1'));assert(fs.existsSync(path.join(candidate,'assets','F1',`${assetId}-large.jpg`)));
+fs.rmSync(tmp,{recursive:true,force:true});
+console.log('Motorsport Hub Large Hero pipeline gate: PASS');

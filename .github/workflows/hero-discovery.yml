@@ -10,6 +10,8 @@ on:
       - 'tools/commons-hero-discovery.mjs'
       - 'tools/validate-discovered-hero-images.mjs'
       - 'tools/detect-hero-subjects.mjs'
+      - 'tools/build-large-hero-derivatives.mjs'
+      - 'tools/augment-hero-channel-large.mjs'
       - 'tools/fetch-with-retry.mjs'
       - 'tools/install-fetch-retry-hook.mjs'
       - 'tools/build-hero-channel.mjs'
@@ -17,6 +19,7 @@ on:
       - 'hero-selection-policy.json'
       - 'hero-pilot-policies/**'
       - 'tests/hero-channel-promotion-gate.mjs'
+      - 'tests/hero-large-pipeline-gate.mjs'
       - 'tests/hero-refresh-schedule-gate.mjs'
       - '.github/workflows/hero-discovery.yml'
   schedule:
@@ -89,6 +92,10 @@ jobs:
             --output=hero-subject-report.json \
             --preview-dir=hero-crop-previews \
             --limit=4
+      - name: Generate F1/WEC Large Hero candidates from original sources
+        env:
+          TF_CPP_MIN_LOG_LEVEL: '2'
+        run: node tools/build-large-hero-derivatives.mjs --report=hero-subject-report.json --output-dir=hero-crop-previews
       - name: Upload category refresh evidence
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
@@ -134,12 +141,17 @@ jobs:
             fi
           fi
       - name: Build category-isolated promotion candidate
-        run: node tools/build-hero-channel.mjs --artifacts=refresh-artifacts --previous-dir=hero-channel-previous --output-dir=hero-channel-candidate
+        run: |
+          node tools/build-hero-channel.mjs --artifacts=refresh-artifacts --previous-dir=hero-channel-previous --output-dir=hero-channel-candidate
+          node tools/augment-hero-channel-large.mjs --artifacts=refresh-artifacts --candidate=hero-channel-candidate
       - name: Validate candidate channel and LKG preservation
         run: |
           node --check tools/build-hero-channel.mjs
+          node --check tools/build-large-hero-derivatives.mjs
+          node --check tools/augment-hero-channel-large.mjs
           node --check tools/validate-hero-channel-publish.mjs
           node tests/hero-channel-promotion-gate.mjs
+          node tests/hero-large-pipeline-gate.mjs
           node tools/validate-hero-channel-publish.mjs --candidate=hero-channel-candidate --previous=hero-channel-previous
           cat hero-channel-candidate/promotion-report.json
       - name: Upload promotion candidate for audit

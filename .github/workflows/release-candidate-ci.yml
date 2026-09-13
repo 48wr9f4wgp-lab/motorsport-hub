@@ -57,6 +57,7 @@ jobs:
             tests/hero-runtime-crop-gate.mjs
             tests/hero-channel-runtime-gate.mjs
             tests/hero-channel-promotion-gate.mjs
+            tests/hero-large-pipeline-gate.mjs
             tests/hero-refresh-schedule-gate.mjs
             tests/f1-wec-hero-runtime-gate.mjs
             tests/domestic-hero-runtime-gate.mjs
