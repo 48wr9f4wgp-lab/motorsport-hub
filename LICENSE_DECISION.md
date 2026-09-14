@@ -2,51 +2,39 @@
 
 Updated: 2026-09-14 JST
 
-This document records the recommended licensing direction for Motorsport Hub. It does **not** grant a license and does not authorize public GA by itself.
+## Decision
 
-## Recommendation
+**APPROVED: Mozilla Public License 2.0 (MPL-2.0).**
 
-**Preferred software license: Mozilla Public License 2.0 (MPL-2.0), after the repository scope problem below is resolved.**
+The owner explicitly approved both:
 
-Why MPL-2.0 is the best fit for the current product direction:
+- separating Club Pulse from the Motorsport Hub repository; and
+- applying MPL-2.0 to Motorsport Hub software source code after that product split is safely completed.
 
-- it permits public use, modification, distribution and commercial use;
-- modifications to MPL-covered source files must remain available under MPL-2.0 when distributed;
-- it is weaker than GPL-style whole-work copyleft, so unrelated larger works can remain under other terms;
-- it provides a better reciprocity/defensibility balance than MIT or Apache-2.0 for a public source-distributed Scriptable product;
-- it avoids inventing a custom source-available license.
+The standard MPL-2.0 text is included in root `LICENSE` on the prepared split branch. `LICENSE_SCOPE.md` clarifies that third-party Hero imagery and other third-party materials are not relicensed by the software license.
 
-This is a product recommendation, not legal advice.
+## Why MPL-2.0
 
-## Why MIT / Apache-2.0 are not the first choice
+MPL-2.0 fits the product because it permits use, modification, distribution and commercial use while retaining file-level source reciprocity for modified covered files. It is less expansive than whole-work GPL copyleft and provides more reciprocity than permissive MIT/Apache-2.0 licensing.
 
-MIT and Apache-2.0 are excellent permissive licenses, but they allow a third party to copy, modify, redistribute and commercially package the software with relatively few obligations. That maximizes adoption but offers little source-level reciprocity.
+This is a product decision, not legal advice.
 
-Apache-2.0 adds an express patent grant and notice/change obligations, but remains permissive. If the strategic priority changes to maximum ecosystem adoption over reciprocity, Apache-2.0 would be the preferred permissive alternative.
+## Club Pulse separation requirement
 
-## Why GPLv3 is not the first choice
+Club Pulse is a separate product. Before the Motorsport Hub split/removal PR is merged:
 
-GPLv3 provides stronger copyleft than is currently needed. For this Scriptable/widget distribution model, MPL-2.0 is the cleaner middle ground: modified covered files stay open while unrelated larger-work files can use other terms.
+1. create the intended Club Pulse destination repository;
+2. copy the complete source snapshot identified in `CLUB_PULSE_MIGRATION.md`;
+3. migrate/adapt the Club Pulse CI workflow;
+4. verify Club Pulse contract tests in the destination;
+5. update and test any source-repository URL assumptions.
 
-## Repository-scope blocker
+Only after those checks pass may `scriptable/` and `.github/workflows/club-pulse-contract.yml` be removed from Motorsport Hub main.
 
-The repository is named `motorsport-hub`, but it also contains Club Pulse implementation/workflow files, including `scriptable/club-pulse*`.
+## Third-party material
 
-A root `LICENSE` should therefore **not** be added casually, because it could be read as licensing Club Pulse under the same terms. The project rule is also to keep title-specific decisions isolated.
+MPL-2.0 is the software license. It does not replace Creative Commons or other licenses governing third-party Hero photographs. Those obligations remain documented in `ATTRIBUTION.md` and the generated live Hero attribution surface.
 
-Before adding the actual software license, choose one of these approaches:
+## Release authorization
 
-1. **Preferred:** move Club Pulse into its own repository, leaving this repository product-pure for Motorsport Hub; or
-2. deliberately license both products under the same license with explicit owner approval; or
-3. use a carefully scoped per-product licensing structure reviewed for clarity before distribution.
-
-Option 1 is the cleanest long-term repository/product architecture. The move itself is a separate external/destructive operation and requires explicit approval and migration planning.
-
-## Decision required from owner
-
-No license file should be added until the owner explicitly approves both:
-
-- the intended license (`MPL-2.0` recommended); and
-- the repository scope/migration approach.
-
-Until then, the existing repository remains under default copyright rules for software code that has no explicit license.
+The licensing decision does **not** itself authorize broad GA, Store submission, paid distribution, Stable publication, external analytics, or any paid service contract. Those remain separate release decisions.
