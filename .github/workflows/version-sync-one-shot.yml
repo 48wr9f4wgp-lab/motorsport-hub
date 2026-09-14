@@ -28,7 +28,7 @@ jobs:
           changes = {
             'wec-widget-flat-v1000.js': [("const V='10.0.4-hardening',K='wec'", "const V='10.0.5-hardening',K='wec'")],
             'supergt-widget-flat-v1000.js': [("const V='10.0.4-hardening',K='supergt'", "const V='10.0.5-hardening',K='supergt'")],
-            'tests/f1-wec-hero-runtime-gate.mjs': [(r"assert.match(wec,/v10\\.0\\.4-hardening/);", r"assert.match(wec,/v10\\.0\\.5-hardening/);")],
+            'tests/f1-wec-hero-runtime-gate.mjs': [(r"assert.match(wec,/v10\.0\.4-hardening/);", r"assert.match(wec,/v10\.0\.5-hardening/);")],
             'tests/domestic-hero-runtime-gate.mjs': [("SUPERGT:\"const V='10.0.4-hardening'\"", "SUPERGT:\"const V='10.0.5-hardening'\"")],
           }
           for name, reps in changes.items():
