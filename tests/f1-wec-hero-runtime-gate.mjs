@@ -9,7 +9,7 @@ const wec=fs.readFileSync(path.join(root,'wec-widget-flat-v1000.js'),'utf8');
 const manifest=JSON.parse(fs.readFileSync(path.join(root,'hero-assets.json'),'utf8'));
 
 assert.match(f1,/v10\.0\.2-hardening/);
-assert.match(wec,/v10\.0\.2-hardening/);
+assert.match(wec,/v10\.0\.4-hardening/);
 assert.match(f1,/motorsport-hero-v1000-crop2-/,'F1 must invalidate pre-crop2 Hero cache');
 assert.match(wec,/motorsport-hero-v1000-crop2-/,'WEC must invalidate pre-crop2 Hero cache');
 assert.match(f1,/function heroCropRect\(/);

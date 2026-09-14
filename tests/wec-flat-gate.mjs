@@ -48,7 +48,7 @@ async function run({now,seedCache=null,html=null,family='medium'}){
  const r=await run({now:'2026-11-08T22:00:00+01:00',seedCache:JSON.stringify({ranking:{}})});assert.equal(r.files.has(r.cachePath),false,'malformed WEC cache must be removed');assert.equal(r.setWidget,1);assert.equal(r.complete,1);
 }
 
-const validHtml=`<html><body><h1>Manufacturers' standings</h1><h2>FIA Hypercar World Endurance Manufacturers Championship</h2><table>
+const validHtml=`<html><body><h1><span>Manufacturers'</span><br><span>standings</span></h1><h2>FIA Hypercar <span>World Endurance</span> Manufacturers Championship</h2><table>
 <tr><th>Pos.</th><th>Manufacturer</th><th>Points</th></tr>
 <tr><td>1</td><td>TOYOTA</td><td>132</td></tr>
 <tr><td>2</td><td>BMW</td><td>127</td></tr>

@@ -1,15 +1,15 @@
-// Motorsport Hub v10.0.2-hardening — flattened WEC module
+// Motorsport Hub v10.0.4-hardening — flattened WEC module
 // Completed WEC runtime: official manufacturers standings + current 2026 tail + TR010/TOYOTA RACING canonical naming + validated cache.
 (async()=>{
-const V='10.0.2-hardening',K='wec',SEASON=2026,CACHE_SCHEMA=1,CACHE_MAX_AGE=7*86400000;
+const V='10.0.4-hardening',K='wec',SEASON=2026,CACHE_SCHEMA=1,CACHE_MAX_AGE=7*86400000;
 const DATA_SOURCE='https://www.fiawec.com/en/page/manufacturers-classification/34';
 const S={label:'WEC',accent:'#18BFD3',rank:'メーカー',url:'https://www.fiawec.com/'};
 const C={bg:'#06080B',text:'#F7F9FB',muted:'#B9C2CC',dim:'#8D98A4',good:'#58DA8A',warn:'#FFB84D'};
 const fm=FileManager.local(),DOC=fm.documentsDirectory(),CACHE=fm.joinPath(DOC,'motorsport-data-v1000-wec.json');
 const SNAP={race:'Lone Star Le Mans',date:'2026-09-06T13:00:00-05:00',timeTbd:false,circuit:'Circuit of the Americas',seasonEnded:false,lifecycle:'UPCOMING',ranking:[
- {pos:1,name:'TOYOTA',points:'132 pts',maker:'TOYOTA',machine:'TR010 Hybrid',team:'TOYOTA RACING'},
- {pos:2,name:'BMW',points:'127 pts',maker:'BMW',machine:'M Hybrid V8',team:'BMW M Team WRT'},
- {pos:3,name:'FERRARI',points:'88 pts',maker:'FERRARI',machine:'499P',team:'Ferrari AF Corse'}
+ {pos:1,name:'TOYOTA',points:'140 pts',maker:'TOYOTA',machine:'TR010 Hybrid',team:'TOYOTA RACING'},
+ {pos:2,name:'BMW',points:'131 pts',maker:'BMW',machine:'M Hybrid V8',team:'BMW M Team WRT'},
+ {pos:3,name:'FERRARI',points:'114 pts',maker:'FERRARI',machine:'499P',team:'Ferrari AF Corse'}
 ]};
 const CAL=[
  ['Lone Star Le Mans','2026-09-06T13:00:00-05:00','Circuit of the Americas',false],
@@ -39,7 +39,7 @@ function save(d){try{if(!validData(d))return;fm.writeString(CACHE,JSON.stringify
 function cache(){try{if(!fm.fileExists(CACHE))return null;const p=JSON.parse(fm.readString(CACHE)),age=Date.now()-Number(p?.fetchedAt);if(p?.schemaVersion!==CACHE_SCHEMA||p?.category!==K||Number(p?.season)!==SEASON||p?.source!==DATA_SOURCE||!Number.isFinite(age)||age<0||age>CACHE_MAX_AGE||!validRanking(p?.ranking)||!p?.event||!validData(p?.data)){removeCache();return null}return p.data}catch(_){removeCache();return null}}
 function makerName(raw){return String(raw||'').replace(/\bImage\b/gi,' ').replace(/\s+/g,' ').trim().toUpperCase()}
 async function update(d){
- const h=await txt(DATA_SOURCE);if(!/Manufacturers['’]?\s*standings/i.test(h)||!/FIA Hypercar World Endurance Manufacturers/i.test(h))throw Error('WEC table identity');const a=[];
+ const h=await txt(DATA_SOURCE),plain=clean(h);if(!/Manufacturers['’]?\s*standings/i.test(plain)||!/FIA Hypercar World Endurance Manufacturers/i.test(plain))throw Error('WEC table identity');const a=[];
  for(const c of rows(h)){if(c.length<3)continue;const p=num(c[0]),maker=makerName(c[1]),pts=num(c[c.length-1]);if(!(p>=1&&p<=30)||!maker||!isFinite(pts))continue;const m=META[maker]||['',''];a.push({pos:p,name:maker,points:`${pts} pts`,maker,machine:m[0],team:m[1]})}
  a.sort((x,y)=>x.pos-y.pos);const seen=new Set(),u=[];for(const r of a){if(seen.has(r.pos))continue;seen.add(r.pos);u.push(r);if(u.length>=5)break}if(u.length<3||u[0].pos!==1)throw Error('WEC standings');d.ranking=u;return nextEvent(d)
 }
