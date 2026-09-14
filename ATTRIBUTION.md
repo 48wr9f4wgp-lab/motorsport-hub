@@ -11,9 +11,13 @@ Motorsport Hub has two distinct Hero surfaces and they must not be confused.
 
 ### 1. Active `hero-live` channel
 
-The active Hero channel changes independently from executable Stable. Its current machine-readable source of truth is:
+The active Hero channel changes independently from executable Stable. Its machine-readable source of truth is:
 
 `hero-live/hero-channel/channel.json`
+
+The GA attribution publisher generates a human-readable companion from that exact channel:
+
+`hero-live/hero-channel/ATTRIBUTION.md`
 
 Each published active/pool asset records at least:
 
@@ -27,9 +31,21 @@ Each published active/pool asset records at least:
 - role/quality metadata;
 - published derivative URLs and dimensions.
 
-The runtime accepts only approved license identifiers and requires Commons source-page provenance for live Hero entries. CI validates channel publication before `hero-live` is updated.
+The runtime accepts only approved license identifiers and requires Commons source-page provenance for live Hero entries. CI validates channel publication. The public attribution generator/validator additionally requires a non-empty source title, author, supported license, exact Commons source page, license link, and a modification notice for every unique currently publishable pool asset.
 
-Because `hero-live` is dynamic, a static list in `main` must **not** be treated as an exhaustive list of the images a user can see at an arbitrary later time. Re-fetch the current `hero-live/hero-channel/channel.json` for current live-pool attribution.
+Because `hero-live` is dynamic, the generated `hero-live/hero-channel/ATTRIBUTION.md` is the preferred public credit surface for the live pool. A static list in `main` must **not** be treated as an exhaustive list of images a user can see at an arbitrary later time.
+
+### Current live-pool audit snapshot — 2026-09-14
+
+The current `hero-live` channel contains five live categories:
+
+- WEC — CC BY-SA 4.0 pool;
+- WRC — CC BY 4.0 pool;
+- Formula 1 — CC BY-SA 4.0 pool;
+- SUPER FORMULA — CC BY 4.0 pool;
+- NASCAR — CC BY-SA 4.0 pool.
+
+All current live-pool entries inspected in this audit carry source-page, author and license metadata. This snapshot is evidence only; the generated live attribution file remains the ongoing source for dynamic public credits.
 
 ### 2. Embedded/static fallback Hero inventory
 
@@ -50,7 +66,7 @@ The following audit identities are intentionally retained because release gates 
 - GT World Challenge Europe: audited Nürburgring No.48 fallback. Author: **Lukas Raich**. License: **CC BY-SA 4.0**.
 - Dakar: audited Dacia Sandrider identity fallback. Author: **Alexander-93**. License: **CC BY-SA 4.0**; Dakar action fallbacks include **CC BY 2.0** assets.
 
-These records describe the audited fallback/runtime baseline. They do not replace the current `hero-live` manifest for dynamically published imagery.
+These records describe the audited fallback/runtime baseline. They do not replace the current `hero-live` attribution for dynamically published imagery.
 
 ## Modification notice
 
@@ -63,16 +79,21 @@ Motorsport Hub presentation can include the following modifications to source im
 - dark overlay / gradient veil for text readability;
 - selection/rotation among an approved category pool.
 
-These are presentation modifications; Motorsport Hub does not claim ownership of third-party source photographs.
+These are presentation modifications; Motorsport Hub does not claim ownership of third-party source photographs and does not imply creator endorsement.
 
 ## License handling
 
 The Hero pipeline currently accepts the approved Creative Commons license set enforced in runtime/CI, including CC BY, CC BY-SA and CC0 variants used by the audited assets.
 
-For CC BY / CC BY-SA assets, preserve the recorded source page, author, license, and modification notice when redistributing the derivative. CC BY-SA obligations may also apply to the redistributed derivative according to the source license terms.
+For CC BY / CC BY-SA assets, preserve the recorded source page, author, license and modification notice when redistributing the derivative. ShareAlike obligations remain applicable to adaptations where required by the source license. CC0 assets do not require attribution, but retaining source metadata remains useful provenance practice.
 
 ## Distribution-level GA gate
 
-Runtime/CI provenance checks are implemented, and the live channel carries the metadata needed to trace current images. However, before **broad GA distribution**, perform one final distribution-level review that the public attribution surface delivered with Motorsport Hub is sufficient for the then-current `hero-live` pool and its applicable licenses.
+The technical attribution path is considered **implementation-ready** when all of the following are true:
 
-That final legal/compliance review is tracked in `GA_READINESS.md`. This document does not itself approve broad public distribution or replace the underlying Creative Commons license terms.
+1. `tools/build-hero-public-attribution.mjs` and `tools/validate-hero-public-attribution.mjs` are merged;
+2. the `Motorsport Hub Hero Public Attribution` workflow has successfully published `hero-live/hero-channel/ATTRIBUTION.md` from the current live channel;
+3. the public install/README path points users to the attribution surface;
+4. the exact file is checked once immediately before broad GA.
+
+This document does not itself approve broad public distribution or replace the underlying Creative Commons license terms.
