@@ -1,4 +1,4 @@
-// Motorsport Hub v9.5.4-hardening — DAKAR dedicated rally-raid module
+// Motorsport Hub v9.5.5-hardening — DAKAR dedicated rally-raid module
 // MH_LIFECYCLE_BAKED=1
 // 2027 next-stage route + CAR overall TOP3/time-gap surface. Pre-start overall uses official 2026 final classification.
 // Tap Action v2.1: tap widget to cycle visually distinct persisted Hero photos (show car + Dakar action); Medium DAKAR badge opens official site.
