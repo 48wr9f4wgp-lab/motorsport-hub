@@ -42,17 +42,17 @@ const Font={heavySystemFont(){},boldSystemFont(){},semiboldSystemFont(){},system
 function FixedDateFactory(ms){return class FixedDate extends Date{constructor(...a){super(...a)}static now(){return ms}static parse(s){return Date.parse(s)}}}
 const HERO_IMAGE_SIZES=[{width:3840,height:2562},{width:3840,height:2555},{width:3840,height:2560}];
 
-async function render(now,family='medium',heroVariant=0){
- const sink=[],files=new Map(),DateClass=FixedDateFactory(Date.parse(now)),heroRects=[];let setWidget=0,complete=0,repoRequests=0,rankingRequests=0,imageRequests=0;
- files.set('/docs/motorsport-ui-v1-dakar.json',JSON.stringify({schemaVersion:1,heroVariant}));
+async function render(now,family='medium',heroVariant=0,opts={}){
+ const sink=[],files=new Map(),DateClass=FixedDateFactory(Date.parse(now)),heroRects=[],rankingUrls=[];let setWidget=0,complete=0,repoRequests=0,rankingRequests=0,imageRequests=0;
+ files.set('/docs/motorsport-ui-v1-dakar.json',JSON.stringify({schemaVersion:1,heroVariant}));if(opts.initialCache)files.set('/docs/motorsport-data-v950-dakar.json',JSON.stringify(opts.initialCache));
  const fm={documentsDirectory:()=>'/docs',joinPath:(a,b)=>`${a}/${b}`,fileExists:p=>files.has(p),readImage:p=>files.get(p),writeImage:(p,img)=>files.set(p,img),readString:p=>files.get(p),writeString:(p,s)=>files.set(p,String(s)),remove:p=>files.delete(p)};
- class Request{constructor(url){this.url=url;this.headers={}}async loadString(){if(this.url.includes('dakar-widget.js')){repoRequests++;return moduleSrc}rankingRequests++;return FIXTURE}async loadImage(){imageRequests++;return{size:HERO_IMAGE_SIZES[heroVariant]}}async loadJSON(){throw Error('unexpected json')}}
+ class Request{constructor(url){this.url=url;this.headers={}}async loadString(){if(this.url.includes('dakar-widget.js')){repoRequests++;return moduleSrc}rankingRequests++;rankingUrls.push(this.url);if(opts.failRanking)throw Error('ranking unavailable');return opts.fixture||FIXTURE}async loadImage(){imageRequests++;return{size:HERO_IMAGE_SIZES[heroVariant]}}async loadJSON(){throw Error('unexpected json')}}
  class DrawContext{constructor(){this.size=new Size(0,0);this.opaque=false;this.respectScreenScale=false}setFillColor(){}fillRect(){}drawImageInRect(_img,rect){heroRects.push(rect)}getImage(){return{size:{width:this.size.width,height:this.size.height}}}}
  const CtxListWidget=class extends ListWidget{constructor(){super(sink)}};
  const ctx={args:{widgetParameter:'DAKAR',queryParameters:{}},config:{runsInWidget:true,widgetFamily:family},FileManager:{local:()=>fm},Request,ListWidget:CtxListWidget,DrawContext,Rect,Color,LinearGradient,Size,Font,Date:DateClass,Math,Map,Set,JSON,Number,String,Array,Object,RegExp,Error,Promise,isFinite,Script:{setWidget(){setWidget++},complete(){complete++}}};ctx.globalThis=ctx;
  vm.createContext(ctx);await vm.runInContext(router,ctx,{timeout:5000});
  assert.equal(repoRequests,1);assert.equal(setWidget,1);assert.equal(complete,1);assert(rankingRequests>=1);assert.equal(imageRequests,1);assert.equal(heroRects.length,1);
- return{sink,text:sink.join(' | '),files,heroRect:heroRects[0]};
+ return{sink,text:sink.join(' | '),files,heroRect:heroRects[0],rankingUrls};
 }
 
 function recoveredCrop(rect,family){const W=family==='small'?720:1380,H=family==='small'?720:640;return{x:-rect.x/rect.width,y:-rect.y/rect.height,w:W/rect.width,h:H/rect.height}}
@@ -79,4 +79,34 @@ function assertCropClose(actual,expected,label,tol=.002){for(const k of ['x','y'
   assertCropClose(actual,expected,`H${heroVariant+1} ${family}`);
  }
 }
+
+function rolloverCache(rankingSeason,label,prefix,fetchedAt){
+ const ranking=[1,2,3].map((pos,i)=>({pos,no:String(900+i),name:prefix+' '+String.fromCharCode(65+i),gap:pos===1?'—':'+'+i+':00',time:'4'+i+'h 00',team:'TEST',machine:'TEST'}));
+ const data={stageId:'1',stage:'STAGE 1',start:'2027-01-02T00:00:00+03:00',end:'2027-01-03T00:00:00+03:00',dateLabel:'1/2(土)',route:'King Abdullah EC → Yanbu',routeShort:'KAEC → Yanbu',special:350,seasonEnded:false,lifecycle:'UPCOMING',rankingSeason,rankingLabel:label,ranking};
+ return{schemaVersion:1,category:'dakar',season:2027,fetchedAt:Date.parse(fetchedAt),source:'dakar:car-overall',ranking,event:{stageId:data.stageId,stage:data.stage,start:data.start,end:data.end,route:data.route,special:data.special,seasonEnded:false,lifecycle:data.lifecycle},data};
+}
+{
+ const r=await render('2026-12-31T12:00:00+03:00','medium');
+ assert(r.rankingUrls.some(u=>u.includes('stage-13/auto?year=2026')),'pre-start must use 2026 final source: '+r.rankingUrls.join(','));
+ assert(r.text.includes('2026 FINAL'));
+}
+{
+ const r=await render('2027-01-03T00:05:00+03:00','medium');
+ assert(r.rankingUrls.some(u=>u.includes('stage-1/auto?year=2027')),'after Stage 1 must request 2027 Stage 1 source: '+r.rankingUrls.join(','));
+ assert(r.text.includes('2027 AFTER S1'),'2027 rollover label missing: '+r.text);
+}
+{
+ const stale=rolloverCache(2026,'STALE 2026 CACHE','STALE-2026','2027-01-03T00:04:00+03:00');
+ const r=await render('2027-01-03T00:05:00+03:00','medium',0,{failRanking:true,initialCache:stale});
+ assert(!r.text.includes('STALE-2026'),'2026 ranking cache must not be reused after 2027 standings become expected');
+ assert(r.text.includes('2026 FINAL'),'without 2027 LKG, failure must fall back transparently to embedded 2026 final');
+ assert(!r.files.has('/docs/motorsport-data-v950-dakar.json'),'season-mismatched ranking cache must be removed');
+}
+{
+ const lkg=rolloverCache(2027,'2027 AFTER S1','LKG-2027','2027-01-03T00:04:00+03:00');
+ const r=await render('2027-01-03T00:05:00+03:00','medium',0,{failRanking:true,initialCache:lkg});
+ assert(r.text.includes('LKG-2027 A'),'matching 2027 LKG must remain usable during temporary source failure');
+ assert(r.text.includes('2027 AFTER S1'));
+}
+
 console.log('Motorsport Hub Dakar gate: PASS');

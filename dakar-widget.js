@@ -1,9 +1,9 @@
-// Motorsport Hub v9.5.4-hardening — DAKAR dedicated rally-raid module
+// Motorsport Hub v9.5.5-hardening — DAKAR dedicated rally-raid module
 // MH_LIFECYCLE_BAKED=1
 // 2027 next-stage route + CAR overall TOP3/time-gap surface. Pre-start overall uses official 2026 final classification.
 // Tap Action v2.1: tap widget to cycle visually distinct persisted Hero photos (show car + Dakar action); Medium DAKAR badge opens official site.
 (async()=>{
-const V='9.5.4-hardening',K='dakar',SEASON=2027,CACHE_SCHEMA=1,CACHE_MAX_AGE=7*86400000;
+const V='9.5.5-hardening',K='dakar',SEASON=2027,CACHE_SCHEMA=1,CACHE_MAX_AGE=7*86400000;
 const FINAL_2026_SOURCE='https://www.dakar.com/fr/webview/rankings/stage-13/auto?year=2026';
 const S={label:'DAKAR',accent:'#D4A62A',url:'https://www.dakar.com/en/'};
 const C={bg:'#070705',text:'#F8F7F2',muted:'#C9C4B5',dim:'#9C9789',good:'#58DA8A',warn:'#FFB84D'};
@@ -74,14 +74,14 @@ const META={
 const col=(h,a=1)=>new Color(h,a),clone=o=>JSON.parse(JSON.stringify(o)),num=v=>{const m=String(v||'').replace(/,/g,'').match(/-?\d+(?:\.\d+)?/);return m?Number(m[0]):NaN};
 const clean=s=>String(s||'').replace(/<script[\s\S]*?<\/script>/gi,' ').replace(/<style[\s\S]*?<\/style>/gi,' ').replace(/<[^>]+>/g,' ').replace(/&nbsp;|&#160;/gi,' ').replace(/&amp;/gi,'&').replace(/&#39;|&apos;/gi,"'").replace(/\s+/g,' ').trim();
 function rows(h){const out=[];for(const tr of String(h||'').match(/<tr\b[\s\S]*?<\/tr>/gi)||[]){const a=[];let m,re=/<t[dh]\b[^>]*>([\s\S]*?)<\/t[dh]>/gi;while((m=re.exec(tr)))a.push(clean(m[1]));if(a.length)out.push(a)}return out}
-async function txt(url){const r=new Request(url);r.timeoutInterval=10;r.headers={'User-Agent':'Mozilla/5.0 MotorsportHub/9.5.4','Cache-Control':'no-cache'};return await r.loadString()}
+async function txt(url){const r=new Request(url);r.timeoutInterval=10;r.headers={'User-Agent':'Mozilla/5.0 MotorsportHub/9.5.5','Cache-Control':'no-cache'};return await r.loadString()}
 function nextStage(d){const now=Date.now();for(const e of CAL){const s=Date.parse(e.start),end=Date.parse(e.end);if(now<end)return{...d,...e,seasonEnded:false,lifecycle:now>=s?'ACTIVE':'UPCOMING'}}const last=CAL[CAL.length-1];return{...d,...last,seasonEnded:true,lifecycle:'SEASON_ENDED'}}
 function rankingContext(){const now=Date.now(),stage1=Date.parse(CAL.find(e=>e.stageId==='1').start);if(now<stage1)return{season:2026,label:'2026 FINAL',source:FINAL_2026_SOURCE};let completed=0;for(const e of CAL){if(e.stageId==='P')continue;if(now>=Date.parse(e.end))completed=Math.max(completed,Number(e.stageId));}if(completed<1)return{season:2026,label:'2026 FINAL',source:FINAL_2026_SOURCE};return{season:2027,label:`2027 AFTER S${completed}`,source:`https://www.dakar.com/fr/webview/rankings/stage-${completed}/auto?year=2027`}}
 function validRanking(a){return Array.isArray(a)&&a.length>=3&&a.slice(0,5).every(r=>r&&Number(r.pos)>=1&&String(r.name||'').trim()&&String(r.gap||'').trim())}
 function validData(d){return !!d&&typeof d==='object'&&validRanking(d.ranking)&&String(d.stage||'').trim()&&String(d.route||'').trim()&&Number.isFinite(Date.parse(d.start))&&Number.isFinite(Date.parse(d.end))&&['UPCOMING','ACTIVE','SEASON_ENDED'].includes(d.lifecycle)}
 function removeCache(){try{if(fm.fileExists(CACHE))fm.remove(CACHE)}catch(_){} }
 function save(d){try{if(!validData(d))return;fm.writeString(CACHE,JSON.stringify({schemaVersion:CACHE_SCHEMA,category:K,season:SEASON,fetchedAt:Date.now(),source:'dakar:car-overall',ranking:d.ranking,event:{stageId:d.stageId,stage:d.stage,start:d.start,end:d.end,route:d.route,special:d.special,seasonEnded:!!d.seasonEnded,lifecycle:d.lifecycle},data:d}))}catch(_){} }
-function cache(){try{if(!fm.fileExists(CACHE))return null;const p=JSON.parse(fm.readString(CACHE)),age=Date.now()-Number(p?.fetchedAt);if(p?.schemaVersion!==CACHE_SCHEMA||p?.category!==K||Number(p?.season)!==SEASON||p?.source!=='dakar:car-overall'||!Number.isFinite(age)||age<0||age>CACHE_MAX_AGE||!validRanking(p?.ranking)||!p?.event||!validData(p?.data)){removeCache();return null}return p.data}catch(_){removeCache();return null}}
+function cache(expectedRankingSeason=null){try{if(!fm.fileExists(CACHE))return null;const p=JSON.parse(fm.readString(CACHE)),age=Date.now()-Number(p?.fetchedAt),cachedRankingSeason=Number(p?.data?.rankingSeason);if(p?.schemaVersion!==CACHE_SCHEMA||p?.category!==K||Number(p?.season)!==SEASON||p?.source!=='dakar:car-overall'||!Number.isFinite(age)||age<0||age>CACHE_MAX_AGE||!validRanking(p?.ranking)||!p?.event||!validData(p?.data)||(expectedRankingSeason!==null&&cachedRankingSeason!==Number(expectedRankingSeason))){removeCache();return null}return p.data}catch(_){removeCache();return null}}
 function titleName(s){return String(s||'').trim().split(/\s+/).map(w=>w.length<=3?w.toUpperCase():w.charAt(0).toUpperCase()+w.slice(1).toLowerCase()).join(' ').replace(/Al-attiyah/g,'Al-Attiyah').replace(/Ekström/i,'Ekström')}
 function parseRanking(h){
  const out=[];
@@ -97,8 +97,8 @@ function parseRanking(h){
  }
  out.sort((a,b)=>a.pos-b.pos);const seen=new Set(),u=[];for(const r of out){if(seen.has(r.pos))continue;seen.add(r.pos);u.push(r);if(u.length>=5)break}return u
 }
-async function update(d){const ctx=rankingContext(),h=await txt(ctx.source),r=parseRanking(h);if(r.length<3)throw Error('DAKAR CAR standings');return nextStage({...d,ranking:r,rankingSeason:ctx.season,rankingLabel:ctx.label})}
-async function load(){const base=nextStage(clone(SNAP));try{const d=await update(base);save(d);return{d,cached:false}}catch(_){const c=cache();return{d:nextStage(c||base),cached:true}}}
+async function update(d,ctx=rankingContext()){const h=await txt(ctx.source),r=parseRanking(h);if(r.length<3)throw Error('DAKAR CAR standings');return nextStage({...d,ranking:r,rankingSeason:ctx.season,rankingLabel:ctx.label})}
+async function load(){const base=nextStage(clone(SNAP)),ctx=rankingContext();try{const d=await update(base,ctx);save(d);return{d,cached:false}}catch(_){const c=cache(ctx.season);return{d:nextStage(c||base),cached:true}}}
 
 function smooth(t){return t*t*(3-2*t)}
 function cropRect(img,W,H,crop){const iw=img.size.width||1,ih=img.size.height||1;if(!crop)return new Rect(0,0,W,H);const sx=iw*crop.x,sy=ih*crop.y,sw=iw*crop.w,sh=ih*crop.h,s=Math.max(W/Math.max(1,sw),H/Math.max(1,sh));return new Rect(-sx*s,-sy*s,iw*s,ih*s)}
