@@ -18,6 +18,8 @@ Repository `main` can be newer than Stable. Loader v7 does not execute mutable `
 
 Start with **[INSTALL.md](INSTALL.md)**.
 
+Use `scriptable-loader-v7.js` as the installed production loader.
+
 The short version:
 
 1. Install Scriptable on the iPhone.
@@ -69,7 +71,7 @@ release-channel.json
         ↓
 GitHub-verified immutable source commit
         ↓
-SHA-256 / byte-length verification
+SHA-256 / byte-length integrity
         ↓
 Motorsport Hub Router
         ↓
