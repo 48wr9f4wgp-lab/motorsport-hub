@@ -130,6 +130,7 @@ async function runAttempt({record,router,moduleSource,fetchImpl,nowMs}){
   const ctx={
     args:{widgetParameter:record.id},
     config:{runsInWidget:true,widgetFamily:'medium'},
+    __MH_REMOTE_OFFLINE:true,
     FileManager:{local:()=>fm},Request,ListWidget:CtxListWidget,Color,LinearGradient,Size,DateFormatter,Font,
     Date:DateClass,Math,Map,Set,JSON,Number,String,Array,Object,RegExp,Error,Promise,decodeURIComponent,isFinite,
     Script:{setWidget(){setWidget++},complete(){complete++}},
