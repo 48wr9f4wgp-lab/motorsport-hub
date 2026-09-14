@@ -8,7 +8,7 @@ const read=p=>fs.readFileSync(path.join(root,p),'utf8');
 const parse=(name,src)=>{try{new Function(src)}catch(e){throw new Error(`${name}: syntax error: ${e.message}`)}};
 
 const modules={SUPERGT:read('supergt-widget-flat-v1000.js'),FDJ:read('fdj-widget-flat-v1000.js'),D1GP:read('d1gp-widget-flat-v1000.js')};
-const expectedVersions={SUPERGT:"const V='10.0.4-hardening'",FDJ:"const V='10.0.3-hardening'",D1GP:"const V='10.0.3-hardening'"};
+const expectedVersions={SUPERGT:"const V='10.0.5-hardening'",FDJ:"const V='10.0.3-hardening'",D1GP:"const V='10.0.3-hardening'"};
 for(const [id,src] of Object.entries(modules)){
   parse(id,src);
   assert(src.includes(expectedVersions[id]),`${id}: runtime version drift`);

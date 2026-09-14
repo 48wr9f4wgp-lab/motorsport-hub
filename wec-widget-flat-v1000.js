@@ -1,7 +1,7 @@
 // Motorsport Hub v10.0.5-hardening — flattened WEC module
 // Completed WEC runtime: official manufacturers standings + current 2026 tail + TR010/TOYOTA RACING canonical naming + validated cache.
 (async()=>{
-const V='10.0.4-hardening',K='wec',SEASON=2026,CACHE_SCHEMA=1,CACHE_MAX_AGE=7*86400000;
+const V='10.0.5-hardening',K='wec',SEASON=2026,CACHE_SCHEMA=1,CACHE_MAX_AGE=7*86400000;
 const DATA_SOURCE='https://www.fiawec.com/en/page/manufacturers-classification/34';
 const S={label:'WEC',accent:'#18BFD3',rank:'メーカー',url:'https://www.fiawec.com/'};
 const C={bg:'#06080B',text:'#F7F9FB',muted:'#B9C2CC',dim:'#8D98A4',good:'#58DA8A',warn:'#FFB84D'};

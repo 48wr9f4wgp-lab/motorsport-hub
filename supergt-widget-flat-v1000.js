@@ -1,7 +1,7 @@
 // Motorsport Hub v10.0.5-hardening — flattened SUPER GT module
 // Completed GT500 runtime: official driver ranking + 2026 domestic tail + verified 2024 race-action Hero + validated cache.
 (async()=>{
-const V='10.0.4-hardening',K='supergt',SEASON=2026,CACHE_SCHEMA=1,CACHE_MAX_AGE=7*86400000;
+const V='10.0.5-hardening',K='supergt',SEASON=2026,CACHE_SCHEMA=1,CACHE_MAX_AGE=7*86400000;
 const DATA_SOURCE='https://supergt.net/driver_ranking?gt_class=gt500&series=2026';
 const S={label:'SUPER GT',accent:'#F5B942',rank:'GT500',url:'https://supergt.net/'};
 const C={bg:'#06080B',text:'#F7F9FB',muted:'#B9C2CC',dim:'#8D98A4',good:'#58DA8A',warn:'#FFB84D'};
