@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "channel": "stable",
-  "sequence": 5,
-  "version": "9.5.24",
-  "releasedAt": "2026-09-14T04:56:24Z",
-  "sourceRef": "bd677ba4ae20a95501cbc043b34a6ca1a1ca8c39",
-  "releaseId": "mh-bd677ba4ae20",
+  "sequence": 6,
+  "version": "9.5.28",
+  "releasedAt": "2026-09-14T10:39:07Z",
+  "sourceRef": "938cc2e646ac83c4363f81bc8a68f8d50ee2153d",
+  "releaseId": "mh-938cc2e646ac",
   "routerSchema": 5,
   "categoryManifest": "F1,WEC,WRC,SUPERGT,MOTOGP,FDJ,D1GP,SUPERFORMULA,INDYCAR,NASCAR,GTWCEU,DAKAR,QA",
   "router": {
@@ -15,9 +15,9 @@
   },
   "files": {
     "f1-widget-flat-v1000.js": {"sha256": "5099bcbaa8e798235481db9b5a4dbd5b4434565d25e009e7caa8d1f86deff63f", "bytes": 17401},
-    "wec-widget-flat-v1000.js": {"sha256": "9f5b4e4b7457dd6a98665fa28fef82e346a2e197cda45c59f0006e797e62e4bb", "bytes": 16625},
+    "wec-widget-flat-v1000.js": {"sha256": "a5a85f8296db5e24dc6848f794b3739aba325b1cb7eeee9bce546fe48a2f0800", "bytes": 16649},
     "wrc-widget-flat-v1000.js": {"sha256": "1165f2a74f6af4dcb16e050cc12ab809b8b77317624e9988141ae3ec9e849ea7", "bytes": 18215},
-    "supergt-widget-flat-v1000.js": {"sha256": "bf75a3a1a7cc9a57f76432aee45b6c410f2c3020c51444b503afacfaf56b2475", "bytes": 16959},
+    "supergt-widget-flat-v1000.js": {"sha256": "c0e0f0e7042e2c279eeaf6874c32eaa068b098638a249b797b75354e72f92192", "bytes": 17182},
     "motogp-widget-flat-v1000.js": {"sha256": "ac8a01158bad3f3efe922d0ac79b5f5b408b8ca758f5ba82e3976c48346479d7", "bytes": 18346},
     "fdj-widget-flat-v1000.js": {"sha256": "7a6e60a6e7493f1d21901f18cf7ed433b209e1223b23972f470c09b9f58b9539", "bytes": 15873},
     "d1gp-widget-flat-v1000.js": {"sha256": "d70e93ecb8da7ebb1365aca55d40154cf99db5b5cdd6d87ec2fe72afd2ff8c5e", "bytes": 16158},
@@ -29,8 +29,8 @@
     "motorsport-diagnostics-v890.js": {"sha256": "9554fe4e2824b59c15200da185202b7b0e706d8a198fd3512a8a285a09a88e16", "bytes": 5451}
   },
   "validatedBy": {
-    "releaseRef": "3e4b2b64cd51a91c0a85e81a728f3be291b3de3c",
+    "releaseRef": "12548e1c4d591c167505e49cfa9d55430f069449",
     "workflow": "Motorsport Hub Release Candidate CI",
-    "runId": 34807835159
+    "runId": 34834240958
   }
 }
