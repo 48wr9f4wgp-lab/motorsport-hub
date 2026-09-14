@@ -69,7 +69,8 @@ async function hero(){
   ctx.setFillColor(col(S.accent,.92));ctx.fillRect(new Rect(0,0,W,5));const out=ctx.getImage();try{fm.writeImage(p,out)}catch(_){}return out
  }catch(_){return null}
 }
-function T(st,s,z,c,w='regular',n=1){const t=st.addText(String(s??''));t.font=w==='heavy'?Font.heavySystemFont(z):w==='bold'?Font.boldSystemFont(z):w==='semibold'?Font.semiboldSystemFont(z):Font.systemFont(z);t.textColor=c;t.lineLimit=n;t.minimumScaleFactor=.66;return t}
+const LARGE_TYPO_SCALE=1.12;
+function T(st,s,z,c,w='regular',n=1){const __mhZ=(config.widgetFamily||'medium')==='large'?z*LARGE_TYPO_SCALE:z;const t=st.addText(String(s??''));t.font=w==='heavy'?Font.heavySystemFont(__mhZ):w==='bold'?Font.boldSystemFont(__mhZ):w==='semibold'?Font.semiboldSystemFont(__mhZ):Font.systemFont(__mhZ);t.textColor=c;t.lineLimit=n;t.minimumScaleFactor=.66;return t}
 function base(bg){const w=new ListWidget();if(bg)w.backgroundImage=bg;else{const g=new LinearGradient();g.colors=[col(S.accent,.16),col(C.bg)];g.locations=[0,1];w.backgroundGradient=g}w.url=S.url;return w}
 function pill(st,label,accent=false){const p=st.addStack();p.backgroundColor=accent?col(S.accent,.22):col('#000000',.38);p.cornerRadius=8;p.setPadding(3,7,3,7);T(p,label,accent?9.0:9.1,accent?col(S.accent):col(C.muted),'heavy');return p}
 function dateText(d){const f=new DateFormatter();f.locale='ja_JP';f.timeZone='Asia/Tokyo';f.dateFormat='M/d(E) HH:mm';return f.string(new Date(d.start))}
