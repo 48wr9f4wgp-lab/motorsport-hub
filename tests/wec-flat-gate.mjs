@@ -72,4 +72,10 @@ const validHtml=`<html><body><h1><span>Manufacturers'</span><br><span>standings<
  for(const label of ['MORE STANDINGS','SEASON','2026','PREVIOUS','NEXT','CADILLAC','ALPINE','ローンスター・ル・マン','バルセロナ6時間'])assert(r.sink.includes(label),`WEC Large missing ${label}`);
 }
 
+// Regression: device-shaped no-table WEC response must parse from normalized text.
+{
+ const html="<html><body><div>Manufacturers' standings</div><div>FIA Hypercar World Endurance Manufacturers Championship Pos. Manufacturer Race pts Total points 1 TOYOTA 8 140 2 BMW 4 131 3 FERRARI 25 +1 114 4 CADILLAC 20 80 5 ALPINE 25 66 FIA Hypercar World Endurance Drivers Championship</div></body></html>";
+ const r=await run({now:'2026-09-20T12:00:00+09:00',html}),p=JSON.parse(r.files.get(r.cachePath));assert.equal(p.ranking.length,5,'device-shaped no-table WEC must keep top five');assert.deepEqual(p.ranking.map(x=>x.points),['140 pts','131 pts','114 pts','80 pts','66 pts']);assert(!r.sink.includes('• 更新待ち'));
+}
+
 console.log('Motorsport Hub flattened WEC gate: PASS');

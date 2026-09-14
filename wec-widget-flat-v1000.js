@@ -1,4 +1,4 @@
-// Motorsport Hub v10.0.4-hardening — flattened WEC module
+// Motorsport Hub v10.0.5-hardening — flattened WEC module
 // Completed WEC runtime: official manufacturers standings + current 2026 tail + TR010/TOYOTA RACING canonical naming + validated cache.
 (async()=>{
 const V='10.0.4-hardening',K='wec',SEASON=2026,CACHE_SCHEMA=1,CACHE_MAX_AGE=7*86400000;
@@ -38,10 +38,17 @@ function removeCache(){try{if(fm.fileExists(CACHE))fm.remove(CACHE)}catch(_){} }
 function save(d){try{if(!validData(d))return;fm.writeString(CACHE,JSON.stringify({schemaVersion:CACHE_SCHEMA,category:K,season:SEASON,fetchedAt:Date.now(),source:DATA_SOURCE,ranking:d.ranking,event:{race:d.race,date:d.date,circuit:d.circuit,timeTbd:!!d.timeTbd,seasonEnded:!!d.seasonEnded,lifecycle:d.lifecycle,previous:d.previous||null,following:d.following||null},data:d}))}catch(_){} }
 function cache(){try{if(!fm.fileExists(CACHE))return null;const p=JSON.parse(fm.readString(CACHE)),age=Date.now()-Number(p?.fetchedAt);if(p?.schemaVersion!==CACHE_SCHEMA||p?.category!==K||Number(p?.season)!==SEASON||p?.source!==DATA_SOURCE||!Number.isFinite(age)||age<0||age>CACHE_MAX_AGE||!validRanking(p?.ranking)||!p?.event||!validData(p?.data)){removeCache();return null}return p.data}catch(_){removeCache();return null}}
 function makerName(raw){return String(raw||'').replace(/\bImage\b/gi,' ').replace(/\s+/g,' ').trim().toUpperCase()}
+const escRe=s=>String(s).replace(/[.*+?^$()|[\]\\]/g,'\\$&');
+const WEC_MAKER_RE=Object.keys(META).sort((a,b)=>b.length-a.length).map(escRe).join('|');
+function wecPlainRows(plain){
+ let section=String(plain||''),start=section.search(/FIA Hypercar World Endurance Manufacturers/i);if(start<0)return[];section=section.slice(start);const end=section.search(/FIA Hypercar World Endurance Drivers/i);section=end>0?section.slice(0,end):section.slice(0,6000);
+ const marks=[],re=new RegExp('(?:^|\\s)(\\d{1,2})\\s+(?:Image\\s+)?('+WEC_MAKER_RE+')(?=\\s)','gi');let m;while((m=re.exec(section)))marks.push({pos:Number(m[1]),maker:makerName(m[2]),start:m.index,end:re.lastIndex});
+ const out=[];for(let i=0;i<marks.length;i++){const q=marks[i],chunk=section.slice(q.end,i+1<marks.length?marks[i+1].start:section.length),nums=(chunk.match(/-?\d+(?:\.\d+)?/g)||[]).map(Number).filter(Number.isFinite),pts=nums.length?nums[nums.length-1]:NaN;if(!(q.pos>=1&&q.pos<=30)||!META[q.maker]||!isFinite(pts))continue;const meta=META[q.maker];out.push({pos:q.pos,name:q.maker,points:String(pts)+' pts',maker:q.maker,machine:meta[0],team:meta[1]})}return out
+}
 async function update(d){
- const h=await txt(DATA_SOURCE),plain=clean(h);if(!/Manufacturers['’]?\s*standings/i.test(plain)||!/FIA Hypercar World Endurance Manufacturers/i.test(plain))throw Error('WEC table identity');const a=[];
- for(const c of rows(h)){if(c.length<3)continue;const p=num(c[0]),maker=makerName(c[1]),pts=num(c[c.length-1]);if(!(p>=1&&p<=30)||!maker||!isFinite(pts))continue;const m=META[maker]||['',''];a.push({pos:p,name:maker,points:`${pts} pts`,maker,machine:m[0],team:m[1]})}
- a.sort((x,y)=>x.pos-y.pos);const seen=new Set(),u=[];for(const r of a){if(seen.has(r.pos))continue;seen.add(r.pos);u.push(r);if(u.length>=5)break}if(u.length<3||u[0].pos!==1)throw Error('WEC standings');d.ranking=u;return nextEvent(d)
+ const h=await txt(DATA_SOURCE),plain=clean(h);if(!/Manufacturers['’]?\s*standings/i.test(plain)||!/FIA Hypercar World Endurance Manufacturers/i.test(plain))throw Error('WEC table identity');let a=[];
+ for(const c of rows(h)){if(c.length<3)continue;const p=num(c[0]),maker=makerName(c[1]),pts=num(c[c.length-1]);if(!(p>=1&&p<=30)||!META[maker]||!isFinite(pts))continue;const m=META[maker];a.push({pos:p,name:maker,points:String(pts)+' pts',maker,machine:m[0],team:m[1]})}
+ if(a.length<3)a=wecPlainRows(plain);a.sort((x,y)=>x.pos-y.pos);const seen=new Set(),u=[];for(const r of a){if(seen.has(r.pos))continue;seen.add(r.pos);u.push(r);if(u.length>=5)break}if(u.length<3||u[0].pos!==1)throw Error('WEC standings');d.ranking=u;return nextEvent(d)
 }
 async function load(){const base=nextEvent(clone(SNAP));try{const d=await update(base);save(d);return{d,cached:false}}catch(_){const c=cache();return{d:nextEvent(c||base),cached:true}}}
 function smooth(t){return t*t*(3-2*t)}

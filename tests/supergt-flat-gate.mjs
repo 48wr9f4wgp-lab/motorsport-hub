@@ -49,4 +49,10 @@ const validHtml=`<html><body><nav>GT500 GT300</nav><h1>GT500 ドライバーラ�
 {
  const wrong=`<html><body><h1>GT300 ドライバーランキング</h1><table>${row(1,56,'Fake',999)}${row(2,777,'Fake2',998)}${row(3,7,'Fake3',997)}</table></body></html>`;const r=await run({now:'2026-08-26T12:00:00+09:00',html:wrong});assert.equal(r.files.has(r.cachePath),false,'GT300 table must never be promoted as GT500');assert(r.sink.includes('• 更新待ち'));
 }
+// Regression: device-shaped no-table SUPER GT response must parse from normalized text.
+{
+ const html="<html><body><div>GT500 ドライバーランキング</div><div>順位 No. ドライバー Rd1 Rd2 Rd3 Rd4 Rd5 Rd6 Rd7 Rd8 合計 差 SW 1 36 坪井　翔 山下　健太 20 20 － 8 2 50 100 2 16 野尻　智紀 佐藤　蓮 5 6 － 2 20 33 -17 66 3 14 福住　仁嶺 大嶋　和也 8 16 － 4 3 31 -19 62 4 100 山本　尚貴 牧野　任祐 4 3 － 20 27 -23 54 5 8 太田　格之進 大津　弘樹 16 11 27 -23 54 決勝順位 1位 2位</div></body></html>";
+ const r=await run({now:'2026-09-14T19:49:00+09:00',html}),p=JSON.parse(r.files.get(r.cachePath));assert.equal(p.ranking.length,5,'device-shaped no-table SUPER GT must keep top five');assert.deepEqual(p.ranking.map(x=>x.points),['50 pts','33 pts','31 pts','27 pts','27 pts']);assert.equal(p.ranking[3].no,'100');assert.equal(p.ranking[4].no,'8');assert(!r.sink.includes('• 更新待ち'));
+}
+
 console.log('Motorsport Hub flattened SUPER GT gate: PASS');
