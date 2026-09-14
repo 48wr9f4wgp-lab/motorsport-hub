@@ -85,7 +85,7 @@ async function run({seed=null,choices=[0]}={}){
   assert.equal(payload.events.length,200);
   const last=payload.events.at(-1);
   assert.equal(last.category,'WRCSCRIPT');
-  assert.equal(last.family,'largescript');
+  assert.equal(last.family,'large');
   assert.equal(last.path,'CANDIDATESCRIPT');
   assert.equal(last.errorCode,'HTTP_500SCRIPT');
   assert.equal(last.sourceRef,'abcdef123456');
