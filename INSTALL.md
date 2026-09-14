@@ -58,13 +58,13 @@ Do **not** replace the installed loader for every release. Loader v7 reads the a
 
 The current Stable version is recorded in `release-channel.json`; repository `main` can be newer than Stable and is not executed directly by Loader v7.
 
-## Hero credits and redistribution
+## License, Hero credits and redistribution
 
-Motorsport Hub uses licensed third-party Hero imagery. The fallback attribution policy is documented in `ATTRIBUTION.md`, and the current dynamic Hero pool is designed to publish a generated human-readable credit file at `hero-live/hero-channel/ATTRIBUTION.md` alongside its machine-readable `channel.json`.
+Motorsport Hub software source code is distributed under **Mozilla Public License 2.0 (MPL-2.0)**. See `LICENSE` and `LICENSE_SCOPE.md`.
 
-Do not remove source/author/license information when redistributing Hero derivatives.
+Licensed third-party Hero imagery is separate from the software license. The fallback attribution policy is documented in `ATTRIBUTION.md`, and the current dynamic Hero pool publishes a generated human-readable credit file at `hero-live/hero-channel/ATTRIBUTION.md` alongside its machine-readable `channel.json`.
 
-The repository is public, but the Motorsport Hub software license has **not yet been finally approved**. Public visibility is not itself permission to redistribute or commercially package the software. See `LICENSE_DECISION.md` and `GA_READINESS.md` before redistribution.
+When redistributing or modifying the software, follow MPL-2.0. When redistributing Hero derivatives, also preserve the applicable source/author/license and modification information required by their Creative Commons licenses.
 
 ## Troubleshooting
 
