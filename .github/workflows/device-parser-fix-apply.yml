@@ -22,11 +22,7 @@ jobs:
         with:
           node-version: 22
       - name: Apply parser fallback patch
-        run: node tools/apply-device-parser-fallback-v3.mjs
-      - name: Show focused SUPER GT fixture context
-        run: |
-          nl -ba tests/supergt-flat-gate.mjs | tail -n 28
-          grep -n "function supergtPlainRows\|GT500_NOS\|async function update" supergt-widget-flat-v1000.js || true
+        run: node tools/apply-device-parser-fallback-v4.mjs
       - name: Verify focused regression gates
         run: |
           set -euo pipefail
