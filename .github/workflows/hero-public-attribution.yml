@@ -1,0 +1,67 @@
+name: Motorsport Hub Hero Public Attribution
+
+on:
+  workflow_run:
+    workflows:
+      - 'Motorsport Hub Hero Active Refresh'
+    types:
+      - completed
+  workflow_dispatch:
+
+concurrency:
+  group: motorsport-hero-public-attribution
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  publish-attribution:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout attribution generator source
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: source
+
+      - name: Checkout live Hero channel
+        uses: actions/checkout@v4
+        with:
+          ref: hero-live
+          path: hero-live-worktree
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Generate and validate public Hero attribution
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f hero-live-worktree/hero-channel/channel.json
+          node source/tools/build-hero-public-attribution.mjs \
+            --channel=hero-live-worktree/hero-channel/channel.json \
+            --output=/tmp/motorsport-hub-live-hero-attribution.md
+          node source/tools/validate-hero-public-attribution.mjs \
+            --channel=hero-live-worktree/hero-channel/channel.json \
+            --attribution=/tmp/motorsport-hub-live-hero-attribution.md
+          cp /tmp/motorsport-hub-live-hero-attribution.md hero-live-worktree/hero-channel/ATTRIBUTION.md
+
+      - name: Publish attribution-only Hero metadata update
+        shell: bash
+        run: |
+          set -euo pipefail
+          git -C hero-live-worktree add hero-channel/ATTRIBUTION.md
+          if git -C hero-live-worktree diff --cached --quiet -- hero-channel/ATTRIBUTION.md; then
+            echo 'Hero public attribution already current.'
+            exit 0
+          fi
+          git -C hero-live-worktree diff --cached --check
+          git -C hero-live-worktree config user.name 'github-actions[bot]'
+          git -C hero-live-worktree config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git -C hero-live-worktree commit -m 'hero: publish current public attribution'
+          git -C hero-live-worktree push origin HEAD:hero-live
