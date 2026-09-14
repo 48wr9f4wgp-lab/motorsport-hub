@@ -51,14 +51,16 @@ Do not reopen per-category Hero or spacing micro-tuning without a concrete regre
 
 ### P1-A — Large automated rendering coverage
 
-The historical render smoke covered only 12 categories × Small/Medium = 24 cases. Since Large is now a first-class family across all 12 categories, the completion-hardening change extends this to:
+**Completed.**
+
+The deterministic render smoke now covers all 12 categories across all three widget families:
 
 - Small: 12
 - Medium: 12
 - Large: 12
 - **Total: 36 deterministic render cases**
 
-Large checks include event identity, standings surface, `MORE STANDINGS`, and the lower `SEASON` / Dakar `STAGE` context panel.
+Large checks include event identity, standings surface, `MORE STANDINGS`, and the lower `SEASON` / Dakar `STAGE` context panel. The completion-hardening PR passed both Hardening CI and Release Candidate CI before merge.
 
 ### P1-B — final exact-current device resilience check
 
@@ -73,17 +75,15 @@ This is one consolidated risk-based device session, not a return to 12×manual s
 
 ### P1-C — observability / analytics decision for public distribution
 
-The repository currently has local QA diagnostics and deterministic CI, but no identified production analytics / crash telemetry integration.
+The codebase now includes a **privacy-safe local Loader v7 observability layer**. It writes only to the device-local `motorsport-hub-observability-v1.json` file, keeps at most 200 events, and records release identity, category, widget family, Loader execution path, success/failure and elapsed time. It does not transmit analytics externally and does not collect device identifiers, email, latitude/longitude or advertising identifiers.
 
-For a private/personal Scriptable install this can remain intentionally absent. For general public distribution, the release plan must explicitly decide how to observe at minimum:
-- release version;
-- device / OS class where permitted;
-- runtime exception / stack information;
-- upstream/API failure class;
-- crash-free or successful-run rate proxy;
-- privacy-safe breadcrumbs sufficient to diagnose release regressions.
+Loader execution paths include Candidate, trusted release LKG/fetch, bootstrap LKG/fetch and terminal failure. This materially improves supportability without adding an external service or privacy surface.
 
-No external analytics/crash service is added by this audit. Choosing or contracting an external service, transmitting user/device data, and defining retention/privacy disclosure require a separate explicit approval and privacy review.
+Because Loader v7 is intentionally install-once, devices that installed Loader v7 before this observability change must reinstall the updated Loader once to receive the instrumentation. Stable-channel advancement updates the immutable runtime release, not the Loader source itself.
+
+For general public distribution, one policy decision remains: whether local-only diagnostics are sufficient for the initial release, or whether centralized production telemetry is required for aggregate crash/success-rate monitoring. An external service would be needed to observe population-level metrics such as crash-free rate, OS/device-class distribution or fleet-wide API failure rates.
+
+No external analytics/crash service is added by this pass. Choosing or contracting an external service, transmitting user/device data, and defining retention/privacy disclosure require a separate explicit approval and privacy review.
 
 ## P2 — backlog / polish, not current release blockers
 
@@ -95,16 +95,16 @@ No external analytics/crash service is added by this audit. Choosing or contract
 
 ## QA / release engineering state
 
-Current release engineering already provides:
+Current release engineering provides:
 - short-lived branches + PR review;
 - Hardening CI and Release Candidate CI;
 - syntax and deterministic product gates;
 - immutable per-release package generation;
 - stable-channel sequence/version/source pinning;
 - Loader v7 validation and LKG rollback safety;
-- retained release metadata and artifact evidence.
-
-The current completion-hardening pass adds Large to the render regression matrix. CI must be green before this audit is treated as accepted.
+- retained release metadata and artifact evidence;
+- 36-case Small/Medium/Large render regression coverage;
+- bounded local Loader observability with deterministic contract coverage.
 
 ## Current decision
 
@@ -113,8 +113,8 @@ The current completion-hardening pass adds Large to the render regression matrix
 **Public Release Candidate approval: NOT YET.**
 
 The remaining public-RC gates are intentionally narrow:
-1. 36-case render smoke green in CI;
+1. merge and validate the local-observability pass, then reinstall the updated Loader v7 once on the test device;
 2. one consolidated exact-current online + fully-offline iPhone verification;
-3. explicit observability/privacy decision appropriate to the intended public distribution model.
+3. explicitly decide whether local-only diagnostics are sufficient for initial public distribution or whether centralized telemetry is required.
 
 Do not resume broad Hero/UI polishing until one of those gates produces evidence requiring a visual change.
