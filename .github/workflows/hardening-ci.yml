@@ -40,10 +40,7 @@ jobs:
             node --check "$file"
           done < <(find . -type f \( -name '*.js' -o -name '*.mjs' \) \
             -not -path './.git/*' \
-            -not -path './scriptable/club-pulse.js' \
             -print0)
-          # Club Pulse launcher uses Scriptable-supported top-level await and is
-          # syntax-checked in Club Pulse Contract QA inside an async wrapper.
 
       - name: Run all deterministic gates
         shell: bash
