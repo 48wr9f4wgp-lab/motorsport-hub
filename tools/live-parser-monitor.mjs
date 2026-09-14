@@ -146,7 +146,8 @@ async function runAttempt({record,router,moduleSource,fetchImpl,nowMs}){
     await vm.runInContext(router,ctx,{timeout:20000});
   }catch(error){runtimeError=error}
 
-  const cacheWrites=reportCacheWrites(files,startedAt);
+  const freshnessClock=Number.isFinite(nowMs)?nowMs:startedAt;
+  const cacheWrites=reportCacheWrites(files,freshnessClock);
   const text=sink.join(' | ');
   const externalRequests=requestLog.filter(x=>x.kind!=='module');
   const moduleRequests=requestLog.filter(x=>x.kind==='module');
