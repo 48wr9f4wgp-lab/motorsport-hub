@@ -1,0 +1,61 @@
+name: Synchronize parser module version contracts
+
+on:
+  push:
+    branches:
+      - fix/device-parser-fallback-v9.5.29
+    paths:
+      - .github/workflows/version-sync-one-shot.yml
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Synchronize runtime and contract versions
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          changes = {
+            'wec-widget-flat-v1000.js': [("const V='10.0.4-hardening',K='wec'", "const V='10.0.5-hardening',K='wec'")],
+            'supergt-widget-flat-v1000.js': [("const V='10.0.4-hardening',K='supergt'", "const V='10.0.5-hardening',K='supergt'")],
+            'tests/f1-wec-hero-runtime-gate.mjs': [(r"assert.match(wec,/v10\\.0\\.4-hardening/);", r"assert.match(wec,/v10\\.0\\.5-hardening/);")],
+            'tests/domestic-hero-runtime-gate.mjs': [("SUPERGT:\"const V='10.0.4-hardening'\"", "SUPERGT:\"const V='10.0.5-hardening'\"")],
+          }
+          for name, reps in changes.items():
+              p = Path(name)
+              s = p.read_text()
+              for old, new in reps:
+                  if old not in s:
+                      raise SystemExit(f'missing target in {name}: {old}')
+                  s = s.replace(old, new, 1)
+              p.write_text(s)
+          PY
+      - name: Verify focused contracts
+        run: |
+          set -euo pipefail
+          node --check wec-widget-flat-v1000.js
+          node --check supergt-widget-flat-v1000.js
+          node tests/wec-flat-gate.mjs
+          node tests/supergt-flat-gate.mjs
+          node tests/f1-wec-hero-runtime-gate.mjs
+          node tests/domestic-hero-runtime-gate.mjs
+          grep -n "10.0.4-hardening" wec-widget-flat-v1000.js supergt-widget-flat-v1000.js tests/f1-wec-hero-runtime-gate.mjs tests/domestic-hero-runtime-gate.mjs && exit 1 || true
+      - name: Commit synchronized contracts
+        run: |
+          set -euo pipefail
+          git config user.name github-actions-bot
+          git config user.email 41898282+github-actions-bot@users.noreply.github.com
+          git add wec-widget-flat-v1000.js supergt-widget-flat-v1000.js tests/f1-wec-hero-runtime-gate.mjs tests/domestic-hero-runtime-gate.mjs
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "fix: align device parser runtime version contracts"
+          git push origin HEAD:fix/device-parser-fallback-v9.5.29
