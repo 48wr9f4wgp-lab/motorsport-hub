@@ -70,6 +70,7 @@ jobs:
             tests/observability-support-export-gate.mjs
             tests/diagnostics-loader-path-gate.mjs
             tests/workflow-hygiene-gate.mjs
+            tests/public-ga-docs-gate.mjs
             tests/render-smoke-gate.mjs
             tests/f1-flat-gate.mjs
             tests/wec-flat-gate.mjs

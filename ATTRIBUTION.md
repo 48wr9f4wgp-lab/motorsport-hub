@@ -1,114 +1,78 @@
 # Motorsport Hub — Hero Image Attribution
 
-Last audited: 2026-08-28 JST
-Scope: current hardening builds / 12 category hero assets used by the Scriptable widget.
+Updated: 2026-09-14 JST
+Scope: current hardening builds
 
-All hero images are cropped/resized and darkened for widget presentation. Where the source license requires attribution or ShareAlike, redistribution must preserve those obligations. The machine-readable runtime inventory is `hero-assets.json` and is enforced by `tests/hero-manifest-gate.mjs`.
+Motorsport Hub uses licensed motorsport imagery as widget Hero backgrounds. Images may be cropped, resized, recomposed into contained derivatives, and darkened/veiled for text readability. Where a source license requires attribution, ShareAlike, or modification notice, those obligations remain applicable to the redistributed derivative.
 
-## Formula 1 (F1)
-- Current Action Hero set: **Lewis Hamilton / Ferrari SF-25 FP1**, **Oscar Piastri / McLaren MCL39 FP1**, and **George Russell / Mercedes W16 FP3** from the 2025 Japanese Grand Prix.
-- Author: **Liauzh**.
-- License: **CC BY-SA 4.0 International** for all three current runtime assets.
-- Runtime treatment: subject-aware crop, resize, and darkening; modification notice and ShareAlike obligations remain applicable.
-- File pages:
-  - https://commons.wikimedia.org/wiki/File:2025_Japan_GP_-_Ferrari_-_Lewis_Hamilton_-_FP1.jpg
-  - https://commons.wikimedia.org/wiki/File:2025_Japan_GP_-_McLaren_-_Oscar_Piastri_-_FP1.jpg
-  - https://commons.wikimedia.org/wiki/File:2025_Japan_GP_-_Mercedes_-_George_Russell_-_FP3.jpg
+## Attribution sources of truth
 
-## FIA World Rally Championship (WRC)
-- **2025 Toyota GR Yaris Rally 1 Katsuta.jpg** and Ogier fallback.
-- Author: **TTTNIS**.
-- License: **CC0 1.0 Universal**.
-- File page: https://commons.wikimedia.org/wiki/File:2025_Toyota_GR_Yaris_Rally_1_Katsuta.jpg
+Motorsport Hub has two distinct Hero surfaces and they must not be confused.
 
-## MotoGP
-- Aprilia Bezzecchi and Ducati Bagnaia 2025 Malaysian GP runtime assets.
-- Author: **Liauzh**.
-- License: **CC BY-SA 4.0 International**.
-- Primary file page: https://commons.wikimedia.org/wiki/File:MotoGP_2025_Malaysian_Grand_Prix_-_Aprilia_Racing_-_Marco_Bezzecchi.jpg
+### 1. Active `hero-live` channel
 
-## FIA World Endurance Championship (WEC)
-- Toyota No.7 / No.8 Spa 2024 runtime assets.
-- Author: **MarcelX42**.
-- License: **CC BY-SA 4.0 International**.
-- Primary file page: https://commons.wikimedia.org/wiki/File:2024_6_Hours_of_Spa-Francorchamps_Toyota_Gazoo_Racing_Toyota_GR010_Hybrid_No.7_(DSC04523).jpg
+The active Hero channel changes independently from executable Stable. Its current machine-readable source of truth is:
 
-## Formula Drift Japan (FDJ)
-- **DRIFT-0ae1a2ba-2d7b-4d51-b082-b698f2fbb2f1.jpg**.
-- Source: Wikimedia Commons / Pixabay.
-- License: **CC0 1.0 Universal**.
-- Runtime treatment: accepted subject-aware Small/Medium crop, resize, and darkening.
-- File page: https://commons.wikimedia.org/wiki/File:DRIFT-0ae1a2ba-2d7b-4d51-b082-b698f2fbb2f1.jpg
+`hero-live/hero-channel/channel.json`
 
-## D1 GRAND PRIX (D1GP)
-- **D1GP (5679098995).jpg** — actual D1 Grand Prix action photograph from 2011.
-- Author: **Rick Flores** (Flickr metadata: Ricky Flores).
-- License: **CC BY 2.0 Generic**.
-- Runtime treatment: subject-aware crop, resize, and darkening; attribution and modification notice obligations remain applicable.
-- File page: https://commons.wikimedia.org/wiki/File:D1GP_(5679098995).jpg
+Each published active/pool asset records at least:
 
-## SUPER GT
-- **MOTUL AUTECH Z 2024 rd.2 FUJI.jpg** — 2024 SUPER GT race-action photograph.
-- Author: **Abarabone1206**.
-- License: **CC BY 4.0 International**.
-- Runtime treatment: subject-aware crop, resize, and darkening; attribution and modification notice obligations remain applicable.
-- File page: https://commons.wikimedia.org/wiki/File:MOTUL_AUTECH_Z_2024_rd.2_FUJI.jpg
-- The superseded Osaka Auto Messe showroom Hero is no longer reachable from runtime.
+- category;
+- asset identifier/version;
+- exact Wikimedia Commons `sourcePage`;
+- source title;
+- author;
+- license;
+- source year/date where available;
+- role/quality metadata;
+- published derivative URLs and dimensions.
 
-## SUPER FORMULA
-- **Igor Fraga Super Formula Round 5 Suzuka Post-Race 2026.jpg**.
-- Author: **BWard 1997**.
-- License: **CC BY 4.0 International**.
-- File page: https://commons.wikimedia.org/wiki/File:Igor_Fraga_Super_Formula_Round_5_Suzuka_Post-Race_2026.jpg
+The runtime accepts only approved license identifiers and requires Commons source-page provenance for live Hero entries. CI validates channel publication before `hero-live` is updated.
 
-## INDYCAR
-- **Alex Palou (54686833932).jpg**.
-- Author: **Ben Goyette**.
-- License: **CC BY-SA 4.0 International**.
-- File page: https://commons.wikimedia.org/wiki/File:Alex_Palou_(54686833932).jpg
+Because `hero-live` is dynamic, a static list in `main` must **not** be treated as an exhaustive list of the images a user can see at an arbitrary later time. Re-fetch the current `hero-live/hero-channel/channel.json` for current live-pool attribution.
 
-## NASCAR Cup Series
-- **Denny Hamlin 11 Las Vegas 2025.jpg**.
-- Author: **TaurusEmerald**.
-- License: **CC BY-SA 4.0 International**.
-- File page: https://commons.wikimedia.org/wiki/File:Denny_Hamlin_11_Las_Vegas_2025.jpg
+### 2. Embedded/static fallback Hero inventory
 
-## GT World Challenge Europe
-- **GT World Challenge Europe 2024 Nürburg Nr. 48 Auer, Engel, Morad (1).jpg**.
-- Author: **Lukas Raich**.
-- License: **CC BY-SA 4.0 International**.
-- File page: https://commons.wikimedia.org/wiki/File:GT_World_Challenge_Europe_2024_N%C3%BCrburg_Nr._48_Auer,_Engel,_Morad_(1).jpg
+The executable runtime also carries audited fallback Hero assets. The machine-readable fallback inventory is `hero-assets.json`, and equality/provenance expectations are enforced by Hero manifest/runtime gates.
 
-## Dakar Rally — Tap Action v2.1
-The widget cycles three visually distinct Hero photos: one current Dacia Sandrider design reference plus two real Dakar action frames.
+The following audit identities are intentionally retained because release gates use them to prove the embedded/fallback attribution baseline has not been silently erased:
 
-### Hero 1 — current car identity
-- **Dacia Sandrider GIMS 2024 1X7A2026.jpg**.
-- Author: **Alexander-93**.
-- License: **CC BY-SA 4.0 International** — exact file page verified.
-- Original resolution: 5,378 × 3,588.
-- File page: https://commons.wikimedia.org/wiki/File:Dacia_Sandrider_GIMS_2024_1X7A2026.jpg
+- Formula 1: **Lewis Hamilton / Ferrari SF-25 FP1**, **Oscar Piastri / McLaren MCL39 FP1**, and **George Russell / Mercedes W16 FP3**. Author: **Liauzh**. License: **CC BY-SA 4.0**.
+- WRC: Toyota GR Yaris Rally 1 fallback set. Author: **TTTNIS**. License: **CC0 1.0 Universal**.
+- WEC: Toyota GR010 Hybrid fallback set. Author: **MarcelX42**. License: **CC BY-SA 4.0**.
+- MotoGP: audited 2025 Malaysia fallback assets. Author: **Liauzh**. License: **CC BY-SA 4.0**.
+- Formula Drift Japan: audited drift fallback. License: **CC0 1.0 Universal**.
+- D1GP: `D1GP (5679098995).jpg`. Author: **Rick Flores (Flickr: Ricky Flores)**. License: **CC BY 2.0 Generic**. Runtime derivative uses the accepted subject-aware Small/Medium crop.
+- SUPER GT: `MOTUL AUTECH Z 2024 rd.2 FUJI.jpg`. Author: **Abarabone1206**. License: **CC BY 4.0**. Runtime derivative uses the accepted subject-aware Small/Medium crop.
+- SUPER FORMULA: audited Suzuka fallback. Author: **BWard 1997**. License: **CC BY 4.0**.
+- INDYCAR: audited Alex Palou fallback. Author: **Ben Goyette**. License: **CC BY-SA 4.0**.
+- NASCAR Cup: audited Denny Hamlin fallback. Author: **TaurusEmerald**. License: **CC BY-SA 4.0**.
+- GT World Challenge Europe: audited Nürburgring No.48 fallback. Author: **Lukas Raich**. License: **CC BY-SA 4.0**.
+- Dakar: audited Dacia Sandrider identity fallback. Author: **Alexander-93**. License: **CC BY-SA 4.0**; Dakar action fallbacks include **CC BY 2.0** assets.
 
-### Hero 2 — action
-- **Dakar Rally 2021 - Stage 05 (50810898083).jpg**.
-- Commons author: **EKSRX**; source metadata credits **Eric Vargiolu / DPPI**.
-- License: **CC BY 2.0 Generic** — exact Commons file page verified; Flickr license review recorded by Commons.
-- Original resolution: 4,800 × 3,194.
-- File page: https://commons.wikimedia.org/wiki/File:Dakar_Rally_2021_-_Stage_05_(50810898083).jpg
+These records describe the audited fallback/runtime baseline. They do not replace the current `hero-live` manifest for dynamically published imagery.
 
-### Hero 3 — action / environmental variation
-- **Dakar Rally 2021 - Stage 10 (50832314671).jpg**.
-- Commons author: **EKSRX**; source metadata credits **Antonin Vincent / DPPI**.
-- License: **CC BY 2.0 Generic** — exact Commons file page verified; Flickr license review recorded by Commons.
-- Original resolution: 4,800 × 3,200.
-- File page: https://commons.wikimedia.org/wiki/File:Dakar_Rally_2021_-_Stage_10_(50832314671).jpg
+## Modification notice
 
-All three widget variants are cropped/resized and darkened for presentation. Attribution and modification notice obligations remain applicable where required.
+Motorsport Hub presentation can include the following modifications to source imagery:
 
-## Audit decision
-- All runtime hero URLs reachable from the current 12-category Registry have a `hero-assets.json` record and runtime/manifest set equality is enforced automatically.
-- Former SUPER GT public-distribution blocker remains closed.
-- Dakar Tap Action v2.1 runtime inventory: **PASS**.
-- Dakar Hero 1/2/3 exact-page license metadata verification: **PASS**.
-- Dakar Tap Action v2.1 device visual confirmation: **PENDING**.
-- Public release remains blocked by the overall Release/QA process; the selected Dakar Hero records no longer carry a pending exact-page-license check.
+- subject-aware crop;
+- resize/downscale;
+- square or wide derivative generation;
+- contained-source recomposition for Large widgets;
+- dark overlay / gradient veil for text readability;
+- selection/rotation among an approved category pool.
+
+These are presentation modifications; Motorsport Hub does not claim ownership of third-party source photographs.
+
+## License handling
+
+The Hero pipeline currently accepts the approved Creative Commons license set enforced in runtime/CI, including CC BY, CC BY-SA and CC0 variants used by the audited assets.
+
+For CC BY / CC BY-SA assets, preserve the recorded source page, author, license, and modification notice when redistributing the derivative. CC BY-SA obligations may also apply to the redistributed derivative according to the source license terms.
+
+## Distribution-level GA gate
+
+Runtime/CI provenance checks are implemented, and the live channel carries the metadata needed to trace current images. However, before **broad GA distribution**, perform one final distribution-level review that the public attribution surface delivered with Motorsport Hub is sufficient for the then-current `hero-live` pool and its applicable licenses.
+
+That final legal/compliance review is tracked in `GA_READINESS.md`. This document does not itself approve broad public distribution or replace the underlying Creative Commons license terms.

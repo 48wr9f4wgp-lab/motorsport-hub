@@ -1,75 +1,79 @@
 # Motorsport Hub
 
-iPhone home-screen motorsport widget for Scriptable.
+Motorsport Hub is an iPhone home-screen motorsport widget system for [Scriptable](https://scriptable.app/). One installed loader serves 12 championships plus QA diagnostics, with Small / Medium / Large layouts, live/current standings, event context, resilient local fallback, and licensed Hero imagery.
 
 ## Current status
-- Production baseline: **12 categories + QA diagnostics** on `main`.
-- Current stable channel: **v9.5.24 / sequence 5**.
-- Direct Router architecture: one selected category → one category module.
-- Small / Medium / Large production layouts across all 12 categories.
-- Large typography v1 and adaptive vertical layout v1 are accepted on the current visual path.
-- Active Hero: CI-gated live channel with pool rotation, fail-closed policy and local LKG.
-- Immutable release packaging: **implemented**.
-- Stable installed Loader v7 with approved-release auto-update: **implemented and in production use**.
 
-`main` remains the canonical production code baseline. A release is not considered approved merely because code is merged or CI is green; stable-channel publication remains an explicit release action.
+- Public Release Candidate: **approved**.
+- Current Stable: **v9.5.29 / sequence 7**.
+- Stable source: immutable sourceRef `7f3fc1eb6fa93c619c1def732b18d091c9e949ce`.
+- WEC / SUPER GT Stable v9.5.29 parser repair: **physical iPhone PASS**.
+- Production surface: **12 categories + QA diagnostics**.
+- Installed production loader: **`scriptable-loader-v7.js`**.
+- Centralized analytics: **none**; bounded local observability only.
 
-## Categories / Widget Parameter
-- `F1` — Formula 1
-- `WEC` — FIA World Endurance Championship
-- `WRC` — FIA World Rally Championship
-- `SUPERGT` — SUPER GT
-- `MOTOGP` — MotoGP
-- `FDJ` — FDJ
-- `D1GP` — D1 Grand Prix
-- `SUPERFORMULA` — SUPER FORMULA (`SF` alias)
-- `INDYCAR` — NTT INDYCAR SERIES (`INDY` alias)
-- `NASCAR` — NASCAR Cup Series (`CUP` / `NASCAR CUP` aliases)
-- `GTWCEU` — GT World Challenge Europe (`GTWC` / `GTWC EUROPE` aliases)
-- `DAKAR` — Dakar Rally
-- `QA` — diagnostics when launched directly / selected through the Router UI
+Repository `main` can be newer than Stable. Loader v7 does not execute mutable `main` directly.
 
-One Scriptable loader is shared by every category. Set only the widget **Parameter**; category-specific scripts are not installed separately.
+## Install
 
----
+Start with **[INSTALL.md](INSTALL.md)**.
 
-## Canonical Scriptable loader
-### Installed production loader
-**Use `scriptable-loader-v7.js` as the installed production loader.**
+Use `scriptable-loader-v7.js` as the installed production loader.
 
-Loader v7 is installed once. It does not execute mutable `main` code directly. Instead it:
+The short version:
 
-1. reads `release-channel.json` from the stable channel;
-2. requires a monotonic release sequence and rejects rollback/fork updates;
-3. requires the immutable source commit to be GitHub-verified;
-4. requires successful `Motorsport Hub Release Candidate CI` evidence from a `release/*` validation ref;
-5. requires that validation ref to differ from the source commit only by `.release/` metadata;
-6. verifies Router byte length + SHA-256;
-7. passes the full immutable 12-category + QA integrity descriptor to the Router;
-8. promotes only after the Router boots successfully;
-9. keeps a local last-known-good release for fallback.
+1. Install Scriptable on the iPhone.
+2. Create a Scriptable script named `Motorsport Hub` and paste the complete contents of `scriptable-loader-v7.js`.
+3. Run it once in Scriptable.
+4. Add a Scriptable home-screen widget, select `Motorsport Hub`, and set the widget **Parameter** to the championship you want.
+5. Run the `QA` parameter once to verify the device/data path.
 
-The initial bootstrap is the validated v9.5.10 runtime. Future approved releases change `release-channel.json`; the installed Loader v7 itself does not need to be replaced.
+Future approved Stable releases are discovered by Loader v7 automatically; the installed loader normally does not need to be replaced for each release.
 
-### Release validation artifact
-`scriptable-loader-v6.js` remains the per-release immutable CI artifact generated from an exact release validation commit.
+### Loader file roles
 
-It is produced by `tools/generate-release-package.mjs` together with `release-integrity.json`. v6 remains useful as immutable release evidence and device-isolation QA, but is no longer the canonical installed loader after v7 rollout.
-
-### Repository loader files
-- `scriptable-loader-v7.js` — **canonical installed production loader**; stable-channel discovery + immutable verification + LKG.
-- `scriptable-loader-v6.js` — generated per-release immutable validation artifact.
+- `scriptable-loader-v7.js` — **canonical installed production loader**; Stable-channel discovery, immutable verification, promotion and local LKG.
+- `scriptable-loader-v6.js` remains the per-release immutable CI artifact generated from an exact validated release source.
 - `scriptable-loader.js` — **legacy v4 compatibility loader**.
 - `scriptable-loader-v5.js` — **legacy transactional compatibility loader**.
 - `scriptable-loader-v6-qa.js` — **retired historical QA snapshot**.
-- `scriptable-loader-hardening-v5.js` — hardening/device-test utility only.
 
----
+## Widget Parameters
 
-## Architecture
+| Championship | Parameter | Alias examples |
+| --- | --- | --- |
+| Formula 1 | `F1` | `FORMULA1` |
+| FIA WEC | `WEC` | — |
+| FIA WRC | `WRC` | — |
+| SUPER GT | `SUPERGT` | — |
+| MotoGP | `MOTOGP` | — |
+| Formula Drift Japan | `FDJ` | `FORMULADRIFTJAPAN` |
+| D1 Grand Prix | `D1GP` | `D1`, `D1GRANDPRIX` |
+| SUPER FORMULA | `SUPERFORMULA` | `SF` |
+| INDYCAR | `INDYCAR` | `INDY` |
+| NASCAR Cup Series | `NASCAR` | `CUP`, `NASCARCUP` |
+| GT World Challenge Europe | `GTWCEU` | `GTWC`, `GTWCEUROPE` |
+| Dakar Rally | `DAKAR` | `DAKARRALLY` |
+| Diagnostics | `QA` | — |
+
+A blank widget Parameter currently defaults to F1. An invalid non-empty Parameter renders a configuration error instead of silently routing to another category.
+
+## What the widget shows
+
+Circuit-racing categories generally provide:
+
+- Small: next/current event, countdown and venue/context;
+- Medium: event context plus top-three standings;
+- Large: event context, top five, `MORE STANDINGS`, and lower season/round context.
+
+Dakar uses rally-raid-specific stage, route, SS distance and GAP semantics rather than forcing circuit-racing labels.
+
+## Reliability and updates
+
+The production path is:
 
 ```text
-Scriptable stable Loader v7
+Scriptable Loader v7
         ↓
 release-channel.json
         ↓
@@ -81,99 +85,48 @@ Motorsport Hub Router
         ↓
 exactly one selected category module
         ↓
-data/cache + approved Active Hero
+data/cache + approved Hero channel
         ↓
-Small / Medium / Large Widget
+Small / Medium / Large widget
 ```
 
-The Loader channel pointer is mutable; executable release code is not. A channel update is accepted only after sequence, ancestry, GitHub commit verification, Release Candidate CI evidence, and integrity checks pass.
+Loader v7 requires a monotonic Stable sequence, verified immutable source, successful Release Candidate CI evidence, and exact integrity metadata before promoting an update. It retains local last-known-good release state for recovery. Category modules also use validated local caches/fallback data when a live refresh cannot be trusted.
 
-Current architecture deliberately avoids:
-- the historical serial reliability-wrapper waterfall;
-- Router-time source rewriting;
-- silent fallback from an invalid widget parameter to F1;
-- executing mutable `main` as the production code source;
-- accepting a channel rollback or release fork;
-- promoting code that does not match its immutable SHA-256 descriptor.
+All 12 categories are covered by deterministic Small / Medium / Large render smoke tests (36 cases total). A scheduled live parser monitor checks the production category parsers separately from ordinary PR CI.
 
-All 12 category data caches use schema version 1.
+## Hero imagery and attribution
 
----
+Hero assets are CI-gated for provenance, licensing, image validity and category relevance. The active `hero-live` channel carries per-asset source page, author and license metadata. See **[ATTRIBUTION.md](ATTRIBUTION.md)** for the distribution attribution baseline.
 
-## Widget information model
-Circuit-racing categories generally use:
-- Small: next event / countdown / venue;
-- Medium: next event / countdown / top three / points;
-- Large: next event / countdown / top five / previous-next context / season or round context.
+Do not strip attribution/license metadata from redistributed Hero assets.
 
-Large uses the shared visual contract across all 12 categories:
-- 1.12× Large typography scale;
-- positions 4–5 under `MORE STANDINGS`;
-- adaptive flex spacing before the lower information block;
-- bottom-weighted lower context panel so sparse data does not leave accidental dead space.
+## Privacy and support
 
-Dakar deliberately uses a rally-raid hierarchy:
-- Small: next stage / countdown / stage / SS distance / route;
-- Medium: stage information + overall CAR top three / GAP;
-- Large: overall CAR top five / GAP + previous-next stage context.
+- Privacy behavior: **[PRIVACY.md](PRIVACY.md)**
+- Troubleshooting / bug reports: **[SUPPORT.md](SUPPORT.md)**
+- Broad-public-release gate: **[GA_READINESS.md](GA_READINESS.md)**
 
----
+Motorsport Hub has no user account/backend and no automatic external analytics. Loader v7 stores bounded local observability for troubleshooting.
 
-## Hero / licensing pipeline
-All runtime Hero assets must be approved by the Hero publication pipeline and retain source/license metadata.
+## Development / release references
 
-The production line includes build/CI tools for:
-- approved-source provenance and licensing;
-- Wikimedia candidate discovery;
-- HTTP / MIME / actual image-dimension checks;
-- subject detection;
-- `IDENTITY`, `ACTION`, `ENVIRONMENT` roles;
-- Small / Medium subject-aware crop generation;
-- Large 1600×1600 contained derivatives when a source passes Large-specific composition gates;
-- text-safe / veil-aware checks;
-- Hero Pool Rotation and recent-display cooldown;
-- scoped fallback and fail-closed handling;
-- LKG/rejection behavior;
-- visual-regression artifacts.
+- `HANDOFF.md` — current development handoff and canonical operational state.
+- `COMPLETION_AUDIT.md` — current completion/release assessment.
+- `DEVICE_QA_POLICY.md` — physical-device QA policy.
+- `RC_FIELD_VALIDATION.md` — evidence-driven field validation procedure.
+- `PARSER_MONITORING.md` — live parser-monitoring design.
+- `CHANGELOG.md` — release/runtime history.
+- `.github/workflows/hardening-ci.yml` — deterministic hardening gates.
+- `.github/workflows/release-candidate-ci.yml` — immutable Release Candidate validation.
 
-Image ML runs at build/CI time, **not inside Scriptable runtime**.
+Visual v1 is locked unless a concrete regression or materially better compliant asset justifies reopening it.
 
----
+## Stable release rule
 
-## QA and release gates
-Primary current references:
-- `COMPLETION_AUDIT.md` — **current completion / public-RC decision**;
-- `DEVICE_QA_POLICY.md` — risk-based physical-device QA policy;
-- `CODEX_HANDOFF.md`;
-- `ATTRIBUTION.md`;
-- `.github/workflows/hardening-ci.yml`;
-- `.github/workflows/release-readiness.yml`;
-- `.github/workflows/release-candidate-ci.yml`.
+Merging code to `main` is **not** the same as publishing Stable. Stable publication is a separate approved operation: runtime source is fixed, validated on a `release/*` ref, packaged with immutable integrity evidence, and only then referenced by a monotonically increasing `release-channel.json` descriptor.
 
-Historical references:
-- `RC_QA.md` — 2026-08-28 hardening snapshot; its release-status conclusion is superseded by `COMPLETION_AUDIT.md`.
-- `RELEASE_AUDIT.md` — 2026-08-28 hardening snapshot; its release-status conclusion is superseded by `COMPLETION_AUDIT.md`.
+## Distribution license status
 
-Automated coverage includes syntax, Router/Registry consistency, caches, lifecycle, Hero provenance/selection, immutable integrity, Loader v7 stable-channel policy, release-package generation, diagnostics, category-specific invariants and **36-case Small/Medium/Large render smoke**.
+The repository is publicly visible, but an explicit software distribution license has **not yet been selected**. Broad GA/redistribution remains gated on an owner-approved software-license decision; public repository visibility should not be interpreted as a blanket redistribution grant.
 
-Physical-device QA remains risk-based. Renderer/layout/font/Hero/Loader changes require representative real-iPhone verification before being treated as visually complete.
-
----
-
-## Stable release process
-1. Merge the desired runtime changes to `main` after their own review and CI.
-2. Record that verified `main` merge commit as the immutable `sourceRef`.
-3. Create a dedicated `release/*` branch from that exact source commit.
-4. Add only `.release/` metadata to trigger Release Candidate CI.
-5. Require `Motorsport Hub Release Candidate CI` to pass.
-6. Generate the immutable v6 validation artifact and retain its run ID / validation ref.
-7. Update `release-channel.json` with:
-   - a strictly increasing sequence;
-   - the verified immutable `sourceRef`;
-   - Router/module SHA-256 + byte counts;
-   - the successful release validation ref and run ID.
-8. Run Loader v7 / stable-channel deterministic gates.
-9. Obtain explicit owner approval before merging the channel publication change.
-10. After publication, installed Loader v7 clients discover the approved release automatically; no Scriptable code replacement is required.
-
-No Store submission, public distribution, deployment or stable-channel publication is authorized merely because automated gates are green.
+No Store submission, paid distribution, broad public launch, external analytics contract, or Stable publication is authorized merely because CI is green.

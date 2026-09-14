@@ -1,5 +1,36 @@
 # Changelog
 
+## Unreleased — main only
+
+These changes are merged to `main` but are **not** part of Stable v9.5.29 unless/until a later Stable descriptor is explicitly published:
+
+- Dakar 2027 rollover hardening: season-aware cache/LKG behavior prevents a cached 2026 final ranking from being treated as the 2027 live-ranking LKG after 2027 standings are expected; deterministic tests cover pre-start, Stage 1 rollover, stale-2026 rejection and valid-2027 LKG recovery.
+- GA workflow hygiene: Hardening CI is read-only; obsolete v9.3 branch mutation paths and the consumed WRC one-shot write workflow were removed; a workflow-hygiene regression gate protects the new permission boundary.
+- Public GA documentation/onboarding work is being prepared separately and does not change Stable runtime behavior.
+
+## v9.5.29 — Stable device parser repair
+
+- Current Stable: **sequence 7**.
+- Stable sourceRef: `7f3fc1eb6fa93c619c1def732b18d091c9e949ce`.
+- Added device-safe WEC standings text fallback while preserving the structured-table parser.
+- Added device-safe SUPER GT GT500 text fallback with overlapping rank-marker parsing so score-column numbers cannot consume the next legitimate rank/car marker.
+- Added no-table/device-shaped regression fixtures for WEC and SUPER GT.
+- Physical iPhone validation: WEC and SUPER GT no longer showed `更新待ち`; both displayed Top 5, including SUPER GT positions 4–5; no visible Large-layout regression was observed.
+
+## v9.5.28 — Stable parser-monitor hardening
+
+- Added scheduled/manual 12-category Live Parser Monitor.
+- Monitor requires fresh schema-1 cache generation rather than HTTP 200 alone.
+- Repaired server/CI-visible WEC and SUPER GT parser drift.
+- Physical iPhone testing then exposed an additional device-response parser shape difference, addressed in v9.5.29.
+
+## v9.5.24 — Public RC baseline
+
+- Public RC baseline before the WEC / SUPER GT parser incident.
+- Loader v7 stable-channel delivery, local observability, immutable release verification and 36-case render smoke were in place.
+
+---
+
 ## v9.3.0 — GT World Challenge Europe expansion build
 
 ### Category expansion
