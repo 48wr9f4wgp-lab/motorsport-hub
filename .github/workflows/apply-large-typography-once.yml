@@ -46,7 +46,8 @@ jobs:
               throw new Error(`${file}: unexpected T helper font implementation`);
             }
             fn=fn.replace(signature+'{',signature+"{const __mhZ=(config.widgetFamily||'medium')==='large'?z*LARGE_TYPO_SCALE:z;")
-                 .replaceAll('SystemFont(z)','SystemFont(__mhZ)');
+                 .replaceAll('SystemFont(z)','SystemFont(__mhZ)')
+                 .replaceAll('Font.systemFont(z)','Font.systemFont(__mhZ)');
             src=src.slice(0,matches[0].index)+scaleDecl+'\n'+fn+src.slice(matches[0].index+matches[0][0].length);
             fs.writeFileSync(file,src);
             console.log(`${file}: Large typography scale applied`);
