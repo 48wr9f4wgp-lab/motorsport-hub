@@ -35,15 +35,10 @@ jobs:
           function extractFunction(src,name){
             const start=src.indexOf(`function ${name}(`);
             if(start<0)throw new Error(`${name}: function not found`);
-            const brace=src.indexOf('{',start);
-            let depth=0;
+            const brace=src.indexOf('{',start); let depth=0;
             for(let i=brace;i<src.length;i++){
-              const ch=src[i];
-              if(ch==='{')depth++;
-              else if(ch==='}'){
-                depth--;
-                if(depth===0)return{start,end:i+1,text:src.slice(start,i+1)};
-              }
+              if(src[i]==='{')depth++;
+              else if(src[i]==='}'&&--depth===0)return{start,end:i+1,text:src.slice(start,i+1)};
             }
             throw new Error(`${name}: unbalanced braces`);
           }
@@ -55,16 +50,14 @@ jobs:
             const labelAt=fn.text.indexOf('MORE STANDINGS');
             if(labelAt<0)throw new Error(`${file}: MORE STANDINGS missing in Large renderer`);
             const prefix=fn.text.slice(0,labelAt);
-            const re=/w\.addSpacer\((\d+(?:\.\d+)?)\);/g;
-            const matches=[...prefix.matchAll(re)];
+            const matches=[...prefix.matchAll(/w\.addSpacer\((\d+(?:\.\d+)?)\);/g)];
             if(!matches.length)throw new Error(`${file}: no fixed root spacer before lower panel`);
             const target=matches[matches.length-1];
             if(labelAt-(target.index+target[0].length)>900)throw new Error(`${file}: candidate spacer too far from lower panel`);
-            const replacement=`w.addSpacer();${marker}`;
-            const local=fn.text.slice(0,target.index)+replacement+fn.text.slice(target.index+target[0].length);
+            const local=fn.text.slice(0,target.index)+`w.addSpacer();${marker}`+fn.text.slice(target.index+target[0].length);
             src=src.slice(0,fn.start)+local+src.slice(fn.end);
             fs.writeFileSync(file,src);
-            console.log(`${file}: lower panel converted to flexible bottom anchor (was ${target[0]})`);
+            console.log(`${file}: flexible lower anchor applied (was ${target[0]})`);
           }
           NODE
 
@@ -102,26 +95,13 @@ jobs:
           for f in f1-widget-flat-v1000.js wec-widget-flat-v1000.js wrc-widget-flat-v1000.js supergt-widget-flat-v1000.js motogp-widget-flat-v1000.js fdj-widget-flat-v1000.js d1gp-widget-flat-v1000.js superformula-widget.js indycar-widget.js nascar-widget.js gtwc-europe-widget.js dakar-widget.js tests/large-vertical-layout-gate.mjs; do
             node --check "$f"
           done
-
-          node <<'NODE'
-          const fs=require('fs');
-          for(const file of ['.github/workflows/hardening-ci.yml','.github/workflows/release-candidate-ci.yml']){
-            let s=fs.readFileSync(file,'utf8');
-            if(s.includes('tests/large-vertical-layout-gate.mjs'))continue;
-            const anchor='            tests/large-typography-gate.mjs\n';
-            if(!s.includes(anchor))throw new Error(`${file}: large typography gate anchor missing`);
-            s=s.replace(anchor,anchor+'            tests/large-vertical-layout-gate.mjs\n');
-            fs.writeFileSync(file,s);
-          }
-          NODE
-
           git diff --check
+
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add \
             f1-widget-flat-v1000.js wec-widget-flat-v1000.js wrc-widget-flat-v1000.js supergt-widget-flat-v1000.js \
             motogp-widget-flat-v1000.js fdj-widget-flat-v1000.js d1gp-widget-flat-v1000.js superformula-widget.js \
-            indycar-widget.js nascar-widget.js gtwc-europe-widget.js dakar-widget.js \
-            tests/large-vertical-layout-gate.mjs .github/workflows/hardening-ci.yml .github/workflows/release-candidate-ci.yml
+            indycar-widget.js nascar-widget.js gtwc-europe-widget.js dakar-widget.js tests/large-vertical-layout-gate.mjs
           git commit -m 'ui: rebalance Large widget vertical layout across all categories'
           git push origin HEAD:improve/v9.5.24-large-vertical-layout
