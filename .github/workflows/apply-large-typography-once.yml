@@ -1,0 +1,98 @@
+name: Apply shared Large typography scale once
+
+on:
+  push:
+    branches:
+      - 'improve/v9.5.23-large-typography'
+    paths:
+      - '.github/workflows/apply-large-typography-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: improve/v9.5.23-large-typography
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Apply one shared Large typography policy to all 12 modules
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs=require('fs');
+          const modules=[
+            'f1-widget-flat-v1000.js','wec-widget-flat-v1000.js','wrc-widget-flat-v1000.js','supergt-widget-flat-v1000.js',
+            'motogp-widget-flat-v1000.js','fdj-widget-flat-v1000.js','d1gp-widget-flat-v1000.js','superformula-widget.js',
+            'indycar-widget.js','nascar-widget.js','gtwc-europe-widget.js','dakar-widget.js'
+          ];
+          const scaleDecl='const LARGE_TYPO_SCALE=1.12;';
+          const signature="function T(st,s,z,c,w='regular',n=1)";
+          const bodyRe=/function T\(st,s,z,c,w='regular',n=1\)\{[^\n]*?return t\}/g;
+          for(const file of modules){
+            let src=fs.readFileSync(file,'utf8');
+            if(!src.includes('function large('))throw new Error(`${file}: Large renderer missing`);
+            const matches=[...src.matchAll(bodyRe)];
+            if(matches.length!==1)throw new Error(`${file}: expected exactly one shared T helper, got ${matches.length}`);
+            if(src.includes(scaleDecl))throw new Error(`${file}: typography scale already present`);
+            let fn=matches[0][0];
+            if(!fn.includes('Font.heavySystemFont(z)')||!fn.includes('Font.boldSystemFont(z)')||!fn.includes('Font.semiboldSystemFont(z)')||!fn.includes('Font.systemFont(z)')){
+              throw new Error(`${file}: unexpected T helper font implementation`);
+            }
+            fn=fn.replace(signature+'{',signature+"{const __mhZ=(config.widgetFamily||'medium')==='large'?z*LARGE_TYPO_SCALE:z;")
+                 .replaceAll('SystemFont(z)','SystemFont(__mhZ)');
+            src=src.slice(0,matches[0].index)+scaleDecl+'\n'+fn+src.slice(matches[0].index+matches[0][0].length);
+            fs.writeFileSync(file,src);
+            console.log(`${file}: Large typography scale applied`);
+          }
+          NODE
+
+          cat > tests/large-typography-gate.mjs <<'NODE'
+          import fs from 'node:fs';
+          import assert from 'node:assert/strict';
+          const modules=[
+            'f1-widget-flat-v1000.js','wec-widget-flat-v1000.js','wrc-widget-flat-v1000.js','supergt-widget-flat-v1000.js',
+            'motogp-widget-flat-v1000.js','fdj-widget-flat-v1000.js','d1gp-widget-flat-v1000.js','superformula-widget.js',
+            'indycar-widget.js','nascar-widget.js','gtwc-europe-widget.js','dakar-widget.js'
+          ];
+          for(const file of modules){
+            const src=fs.readFileSync(file,'utf8');
+            assert.equal((src.match(/const LARGE_TYPO_SCALE=1\.12;/g)||[]).length,1,`${file}: shared Large typography scale missing or duplicated`);
+            assert(src.includes("const __mhZ=(config.widgetFamily||'medium')==='large'?z*LARGE_TYPO_SCALE:z;"),`${file}: Large-only scale guard missing`);
+            for(const kind of ['heavy','bold','semibold'])assert(src.includes(`Font.${kind}SystemFont(__mhZ)`),`${file}: ${kind} font bypasses Large scale`);
+            assert(src.includes('Font.systemFont(__mhZ)'),`${file}: regular font bypasses Large scale`);
+            assert(src.includes('function large('),`${file}: Large renderer missing`);
+          }
+          console.log('Motorsport Hub Large typography gate: PASS (12/12 modules, Large-only 1.12x scale)');
+          NODE
+
+          python3 - <<'PY'
+          from pathlib import Path
+          for p in [Path('.github/workflows/hardening-ci.yml'),Path('.github/workflows/release-candidate-ci.yml')]:
+              s=p.read_text()
+              if 'tests/large-typography-gate.mjs' in s:
+                  continue
+              anchor='            tests/hero-large-pipeline-gate.mjs\n'
+              if anchor not in s:
+                  raise SystemExit(f'{p}: gate insertion anchor missing')
+              s=s.replace(anchor,anchor+'            tests/large-typography-gate.mjs\n',1)
+              p.write_text(s)
+          PY
+
+          node tests/large-typography-gate.mjs
+          for f in f1-widget-flat-v1000.js wec-widget-flat-v1000.js wrc-widget-flat-v1000.js supergt-widget-flat-v1000.js motogp-widget-flat-v1000.js fdj-widget-flat-v1000.js d1gp-widget-flat-v1000.js superformula-widget.js indycar-widget.js nascar-widget.js gtwc-europe-widget.js dakar-widget.js tests/large-typography-gate.mjs; do
+            node --check "$f"
+          done
+          git diff --check
+
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add f1-widget-flat-v1000.js wec-widget-flat-v1000.js wrc-widget-flat-v1000.js supergt-widget-flat-v1000.js motogp-widget-flat-v1000.js fdj-widget-flat-v1000.js d1gp-widget-flat-v1000.js superformula-widget.js indycar-widget.js nascar-widget.js gtwc-europe-widget.js dakar-widget.js tests/large-typography-gate.mjs .github/workflows/hardening-ci.yml .github/workflows/release-candidate-ci.yml
+          git commit -m 'ui: enlarge Large widget typography across all categories'
+          git push origin HEAD:improve/v9.5.23-large-typography
