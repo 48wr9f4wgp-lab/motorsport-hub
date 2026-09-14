@@ -5,6 +5,7 @@ import path from 'node:path';
 import {execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 import {reportFromApiResponses,evaluateCandidate} from '../tools/commons-hero-discovery.mjs';
+import {matchesPolicyTerm} from '../tools/hero-policy-text.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const config=JSON.parse(fs.readFileSync(path.join(root,'hero-source-discovery.json'),'utf8'));
@@ -33,6 +34,17 @@ assert.equal(action.eligibleForReview,true);
 const dakar={...config,minSourceYear:2020,category:'DAKAR',relevance:{requiredAny:['dakar'],forbiddenAny:['replica','exhibition','feria']}};
 const accentedReplica=evaluateCandidate({...base,title:'File:Réplica Renault 18 Dakar.jpg',description:'Réplica Dakar expuesta en la Feria Internacional'},dakar);
 assert(accentedReplica.reasons.includes('CATEGORY_FORBIDDEN_CONTEXT'),'accented replica/exhibition context must be folded and rejected');
+
+assert.equal(matchesPolicyTerm('Denny Hamlin No. 11 Toyota NASCAR Cup car','toy'),false,'toy must not match Toyota');
+assert.equal(matchesPolicyTerm('NASCAR Cup toy car model','toy'),true,'standalone toy token must still match');
+const nascar={...config,minSourceYear:2020,allowedLicenses:['CC BY-SA 4.0'],category:'NASCAR',relevance:{requiredAny:['nascar cup'],forbiddenAny:['toy']}};
+const toyota=evaluateCandidate({...base,title:'File:Denny Hamlin 11 Las Vegas 2025.jpg',description:"Denny Hamlin's No. 11 Yahoo! Toyota NASCAR Cup car",sourceYear:2025,license:'CC BY-SA 4.0'},nascar);
+assert.equal(toyota.eligibleForReview,true,'Toyota must not be rejected by the forbidden toy token');
+const actualToy=evaluateCandidate({...base,title:'File:NASCAR Cup toy car.jpg',description:'NASCAR Cup toy car model',sourceYear:2025,license:'CC BY-SA 4.0'},nascar);
+assert(actualToy.reasons.includes('CATEGORY_FORBIDDEN_CONTEXT'),'actual toy content must remain forbidden');
+const d1gp={...config,minSourceYear:2020,category:'D1GP',relevance:{requiredAny:['d1 grand prix','d1gp'],forbiddenAny:['auto messe','auto salon','show car','static display']}};
+const d1Show=evaluateCandidate({...base,title:'File:Osaka Auto Messe 2025 - No.95 DRIVE TO DRIFT GR86 in 2025 D1 GRAND PRIX.jpg',description:'D1 Grand Prix vehicle at Osaka Auto Messe 2025'},d1gp);
+assert(d1Show.reasons.includes('CATEGORY_FORBIDDEN_CONTEXT'),'D1GP showroom imagery must be rejected');
 
 const inventory=JSON.parse(fs.readFileSync(path.join(root,'hero-assets.json'),'utf8'));
 const expected=['F1','WEC','WRC','SUPERGT','MOTOGP','FDJ','D1GP','SUPERFORMULA','INDYCAR','NASCAR','GTWCEU','DAKAR'];
