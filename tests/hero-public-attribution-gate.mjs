@@ -19,5 +19,11 @@ execFileSync(process.execPath,[path.join(root,'tools/validate-hero-public-attrib
 const text=fs.readFileSync(attributionPath,'utf8');
 for(const token of ['Creator A','Creator B','Creator C','CC BY-SA 4.0','CC BY 4.0','creativecommons.org/licenses/by-sa/4.0/','creativecommons.org/licenses/by/4.0/','Changes made by Motorsport Hub','Total credited Hero pool assets: **3**.'])assert(text.includes(token),`missing attribution token: ${token}`);
 assert.equal((text.match(/https:\/\/commons\.wikimedia\.org\/wiki\/File:/g)||[]).length,3,'each unique pool asset must appear exactly once');
+
+const workflow=fs.readFileSync(path.join(root,'.github/workflows/hero-public-attribution.yml'),'utf8');
+for(const token of ["workflows:\n      - 'Motorsport Hub Hero Active Refresh'",'github.event.workflow_run.conclusion == \'success\'','ref: hero-live','build-hero-public-attribution.mjs','validate-hero-public-attribution.mjs','git -C hero-live-worktree add hero-channel/ATTRIBUTION.md','git -C hero-live-worktree push origin HEAD:hero-live'])assert(workflow.includes(token),`Hero attribution workflow contract missing: ${token}`);
+assert(!workflow.includes('git add -A'),'attribution publisher must not stage the full Hero channel');
+assert(!workflow.includes('release-channel.json'),'attribution publisher must not mutate Stable');
+
 fs.rmSync(tmp,{recursive:true,force:true});
 console.log('Motorsport Hub public Hero attribution gate: PASS');
