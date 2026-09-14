@@ -1,0 +1,25 @@
+name: One-shot approved Hero verification refresh
+
+on:
+  push:
+    branches:
+      - 'ops/hero-verify-v9.5.21'
+    paths:
+      - '.github/workflows/hero-verify-dispatch-once.yml'
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch canonical Hero refresh on verification ref
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh workflow run hero-discovery.yml \
+            --repo "${{ github.repository }}" \
+            --ref "${{ github.ref_name }}"
