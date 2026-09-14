@@ -7,6 +7,7 @@
   "resultsPerQuery": 12,
   "thumbWidth": 2048,
   "minSourceLongEdge": 2048,
+  "minSourceYear": 2020,
   "maxCandidatesPerCategory": 4,
   "allowedLicenses": [
     "CC BY 2.0",
