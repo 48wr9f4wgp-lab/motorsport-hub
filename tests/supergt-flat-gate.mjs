@@ -42,7 +42,7 @@ async function run({now,seedCache=null,html=null}){
 }
 
 const row=(p,no,name,total,behind='',sw='')=>`<tr><td>${p}</td><td>${no}</td><td>${name}</td><td>1</td><td>1</td><td>－</td><td>1</td><td>1</td><td></td><td></td><td></td><td>${total}</td><td>${behind}</td><td>${sw}</td></tr>`;
-const validHtml=`<html><body><h1>GT500 ドライバーランキング</h1><table><tr><th>順位</th><th>No.</th><th>ドライバー</th><th>Rd1</th><th>Rd2</th><th>Rd3</th><th>Rd4</th><th>Rd5</th><th>Rd6</th><th>Rd7</th><th>Rd8</th><th>合計</th><th>差</th><th>SW</th></tr>${row(1,36,'坪井　翔 山下　健太',50,'',100)}${row(2,16,'野尻　智紀 佐藤　蓮',33,-17,66)}${row(3,14,'福住　仁嶺 大嶋　和也',31,-19,62)}</table><h1>GT300 ドライバーランキング</h1></body></html>`;
+const validHtml=`<html><body><nav>GT500 GT300</nav><h1>GT500 ドライバーランキング</h1><table><tr><th>順位</th><th>No.</th><th>ドライバー</th><th>Rd1</th><th>Rd2</th><th>Rd3</th><th>Rd4</th><th>Rd5</th><th>Rd6</th><th>Rd7</th><th>Rd8</th><th>合計</th><th>差</th><th>SW</th></tr>${row(1,36,'坪井　翔 山下　健太',50,'',100)}${row(2,16,'野尻　智紀 佐藤　蓮',33,-17,66)}${row(3,14,'福住　仁嶺 大嶋　和也',31,-19,62)}</table><h1>GT300 ドライバーランキング</h1></body></html>`;
 {
  const r=await run({now:'2026-08-26T12:00:00+09:00',html:validHtml}),p=JSON.parse(r.files.get(r.cachePath));assert.equal(p.schemaVersion,1);assert.equal(p.category,'supergt');assert.equal(p.season,2026);assert.equal(p.ranking[0].name,'坪井 翔 / 山下 健太');assert.equal(p.ranking[1].machine,'PRELUDE-GT');assert.equal(p.ranking[2].team,'ROOKIE');assert(r.sink.some(x=>x.includes("TOYOTA · GR Supra")&&x.includes("au TOM'S")));assert(r.sink.some(x=>x.includes('HONDA · PRELUDE-GT')&&x.includes('ARTA')));
 }
