@@ -1,0 +1,63 @@
+name: Motorsport Hub Live Parser Monitor
+
+on:
+  schedule:
+    - cron: '17 */6 * * *'
+  workflow_dispatch:
+  push:
+    branches:
+      - 'monitor/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'motorsport-hub.js'
+      - 'category-registry.json'
+      - '*widget*.js'
+      - 'tools/live-parser-monitor.mjs'
+      - 'tests/live-parser-monitor-gate.mjs'
+      - '.github/workflows/parser-monitor.yml'
+
+concurrency:
+  group: motorsport-parser-monitor-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  deterministic-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax audit monitor code
+        run: |
+          node --check tools/live-parser-monitor.mjs
+          node --check tests/live-parser-monitor-gate.mjs
+      - name: Verify live-monitor contract deterministically
+        run: node tests/live-parser-monitor-gate.mjs
+
+  live-upstream:
+    if: ${{ github.event_name != 'pull_request' }}
+    needs: deterministic-contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Exercise all production parsers against live upstreams
+        run: node tools/live-parser-monitor.mjs --attempts=2 --write=parser-monitor-report.json
+      - name: Upload sanitized parser-monitor report
+        if: ${{ always() && hashFiles('parser-monitor-report.json') != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: motorsport-parser-monitor-${{ github.run_id }}
+          retention-days: 14
+          if-no-files-found: error
+          path: parser-monitor-report.json
