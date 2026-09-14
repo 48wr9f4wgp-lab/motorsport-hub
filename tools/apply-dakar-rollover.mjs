@@ -52,36 +52,38 @@ test = replaceOnce(test,
 
 const marker = "console.log('Motorsport Hub Dakar gate: PASS');";
 if (!test.includes(marker)) throw new Error('missing Dakar test end marker');
-const extra = String.raw`
-function rolloverCache(rankingSeason,label,prefix,fetchedAt){
- const ranking=[1,2,3].map((pos,i)=>({pos,no:String(900+i),name:`${prefix} ${String.fromCharCode(65+i)}`,gap:pos===1?'—':`+${i}:00`,time:`4${i}h 00`,team:'TEST',machine:'TEST'}));
- const data={stageId:'1',stage:'STAGE 1',start:'2027-01-02T00:00:00+03:00',end:'2027-01-03T00:00:00+03:00',dateLabel:'1/2(土)',route:'King Abdullah EC → Yanbu',routeShort:'KAEC → Yanbu',special:350,seasonEnded:false,lifecycle:'UPCOMING',rankingSeason,rankingLabel:label,ranking};
- return{schemaVersion:1,category:'dakar',season:2027,fetchedAt:Date.parse(fetchedAt),source:'dakar:car-overall',ranking,event:{stageId:data.stageId,stage:data.stage,start:data.start,end:data.end,route:data.route,special:data.special,seasonEnded:false,lifecycle:data.lifecycle},data};
-}
-{
- const r=await render('2026-12-31T12:00:00+03:00','medium');
- assert(r.rankingUrls.some(u=>u.includes('stage-13/auto?year=2026')),`pre-start must use 2026 final source: ${r.rankingUrls}`);
- assert(r.text.includes('2026 FINAL'));
-}
-{
- const r=await render('2027-01-03T00:05:00+03:00','medium');
- assert(r.rankingUrls.some(u=>u.includes('stage-1/auto?year=2027')),`after Stage 1 must request 2027 Stage 1 source: ${r.rankingUrls}`);
- assert(r.text.includes('2027 AFTER S1'),`2027 rollover label missing: ${r.text}`);
-}
-{
- const stale=rolloverCache(2026,'STALE 2026 CACHE','STALE-2026','2027-01-03T00:04:00+03:00');
- const r=await render('2027-01-03T00:05:00+03:00','medium',0,{failRanking:true,initialCache:stale});
- assert(!r.text.includes('STALE-2026'),'2026 ranking cache must not be reused after 2027 standings become expected');
- assert(r.text.includes('2026 FINAL'),'without 2027 LKG, failure must fall back transparently to embedded 2026 final');
- assert(!r.files.has('/docs/motorsport-data-v950-dakar.json'),'season-mismatched ranking cache must be removed');
-}
-{
- const lkg=rolloverCache(2027,'2027 AFTER S1','LKG-2027','2027-01-03T00:04:00+03:00');
- const r=await render('2027-01-03T00:05:00+03:00','medium',0,{failRanking:true,initialCache:lkg});
- assert(r.text.includes('LKG-2027 A'),'matching 2027 LKG must remain usable during temporary source failure');
- assert(r.text.includes('2027 AFTER S1'));
-}
-`;
-test = test.replace(marker, `${extra}\n${marker}`);
+const extra = [
+  '',
+  'function rolloverCache(rankingSeason,label,prefix,fetchedAt){',
+  " const ranking=[1,2,3].map((pos,i)=>({pos,no:String(900+i),name:prefix+' '+String.fromCharCode(65+i),gap:pos===1?'—':'+'+i+':00',time:'4'+i+'h 00',team:'TEST',machine:'TEST'}));",
+  " const data={stageId:'1',stage:'STAGE 1',start:'2027-01-02T00:00:00+03:00',end:'2027-01-03T00:00:00+03:00',dateLabel:'1/2(土)',route:'King Abdullah EC → Yanbu',routeShort:'KAEC → Yanbu',special:350,seasonEnded:false,lifecycle:'UPCOMING',rankingSeason,rankingLabel:label,ranking};",
+  " return{schemaVersion:1,category:'dakar',season:2027,fetchedAt:Date.parse(fetchedAt),source:'dakar:car-overall',ranking,event:{stageId:data.stageId,stage:data.stage,start:data.start,end:data.end,route:data.route,special:data.special,seasonEnded:false,lifecycle:data.lifecycle},data};",
+  '}',
+  '{',
+  " const r=await render('2026-12-31T12:00:00+03:00','medium');",
+  " assert(r.rankingUrls.some(u=>u.includes('stage-13/auto?year=2026')),'pre-start must use 2026 final source: '+r.rankingUrls.join(','));",
+  " assert(r.text.includes('2026 FINAL'));",
+  '}',
+  '{',
+  " const r=await render('2027-01-03T00:05:00+03:00','medium');",
+  " assert(r.rankingUrls.some(u=>u.includes('stage-1/auto?year=2027')),'after Stage 1 must request 2027 Stage 1 source: '+r.rankingUrls.join(','));",
+  " assert(r.text.includes('2027 AFTER S1'),'2027 rollover label missing: '+r.text);",
+  '}',
+  '{',
+  " const stale=rolloverCache(2026,'STALE 2026 CACHE','STALE-2026','2027-01-03T00:04:00+03:00');",
+  " const r=await render('2027-01-03T00:05:00+03:00','medium',0,{failRanking:true,initialCache:stale});",
+  " assert(!r.text.includes('STALE-2026'),'2026 ranking cache must not be reused after 2027 standings become expected');",
+  " assert(r.text.includes('2026 FINAL'),'without 2027 LKG, failure must fall back transparently to embedded 2026 final');",
+  " assert(!r.files.has('/docs/motorsport-data-v950-dakar.json'),'season-mismatched ranking cache must be removed');",
+  '}',
+  '{',
+  " const lkg=rolloverCache(2027,'2027 AFTER S1','LKG-2027','2027-01-03T00:04:00+03:00');",
+  " const r=await render('2027-01-03T00:05:00+03:00','medium',0,{failRanking:true,initialCache:lkg});",
+  " assert(r.text.includes('LKG-2027 A'),'matching 2027 LKG must remain usable during temporary source failure');",
+  " assert(r.text.includes('2027 AFTER S1'));",
+  '}',
+  ''
+].join('\n');
+test = test.replace(marker, extra+'\n'+marker);
 fs.writeFileSync('tests/dakar-gate.mjs', test);
 console.log('Applied Dakar 2027 rollover hardening patch.');
