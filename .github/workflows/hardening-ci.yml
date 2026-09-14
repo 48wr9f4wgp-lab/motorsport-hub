@@ -112,6 +112,7 @@ jobs:
             tests/hero-channel-runtime-gate.mjs
             tests/hero-large-pipeline-gate.mjs
             tests/large-typography-gate.mjs
+            tests/large-vertical-layout-gate.mjs
             tests/image-probe-gate.mjs
             tests/hero-subject-crop-gate.mjs
             tests/hero-selection-gate.mjs
