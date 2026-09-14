@@ -14,35 +14,70 @@ This file tracks what is still required before **broad public General Availabili
 - `main` contains later, not-yet-published hardening for Dakar 2027 rollover plus GA workflow-permission cleanup.
 - Centralized production telemetry: **not enabled**.
 
-## Must be resolved before broad GA
+## Resolved GA preparation items
 
-### 1. Self-service installation/support documentation
+### Self-service installation/support documentation
 
-**In progress in this docs branch.**
+**READY.**
 
-Required public surfaces:
+The public self-service surfaces are present and CI-gated:
 
-- `INSTALL.md` — first installation, widget Parameter setup, QA verification, updates;
+- `INSTALL.md` — first installation, widget Parameter setup, QA verification and updates;
 - `SUPPORT.md` — reproducible issue evidence and diagnostic interpretation;
 - `PRIVACY.md` — current local-storage/network/observability behavior;
-- current README and changelog that do not advertise obsolete Stable state;
-- public issue template that asks for the evidence needed to diagnose device/source/parser failures.
+- current README and changelog;
+- public bug-report issue template;
+- `GA_LAUNCH_CHECKLIST.md` for the final release operation.
 
-### 2. Software distribution license decision
+## Must be resolved before broad GA
+
+### 1. Software distribution license + repository scope
 
 **BLOCKER — owner decision required.**
 
-The GitHub repository is public but currently reports `license: null`. Public visibility is not a substitute for an explicit software redistribution/use license. Before broad public distribution, choose and add the intended software license after explicit owner approval.
+The GitHub repository is public but currently reports `license: null`. Public visibility is not a substitute for an explicit software redistribution/use license.
 
-This audit does not choose MIT, Apache-2.0, GPL, proprietary terms, or any other license on the owner's behalf.
+The licensing audit found an additional scope problem: this repository also contains Club Pulse implementation/workflow files such as `scriptable/club-pulse*`. A root license must not be added casually because it could be read as licensing Club Pulse under the same terms.
 
-### 3. Public Hero attribution/compliance surface
+Current product recommendation:
 
-**REVIEW REQUIRED before broad GA.**
+- preferred Motorsport Hub license: **MPL-2.0**;
+- preferred repository architecture before applying it: **move Club Pulse to its own repository**, then license the product-pure Motorsport Hub repository;
+- permissive fallback if maximum ecosystem adoption is preferred over reciprocity: Apache-2.0.
 
-The runtime/CI already validates Hero source pages, author/license metadata and approved licenses. The live Hero channel also carries per-asset `sourcePage`, `author`, and `license` metadata. `ATTRIBUTION.md` documents modification treatment and the audited baseline.
+See `LICENSE_DECISION.md`. No license is granted by this recommendation. The owner must explicitly approve both the license and the scope/migration approach before a real `LICENSE` file is added.
 
-Before broad GA, perform one final distribution-level review that the attribution surface delivered with the product is sufficient for the currently published `hero-live` pool and its applicable CC BY / CC BY-SA obligations. Do not weaken or strip this metadata.
+### 2. Public Hero attribution publication
+
+**TECHNICALLY PREPARED; one live publication proof remains before GA.**
+
+The current `hero-live` audit found five live categories (WEC, WRC, F1, SUPER FORMULA, NASCAR). Their current live/pool entries carry source page, author and license metadata. The observed live licenses are CC BY-SA 4.0 and CC BY 4.0.
+
+This GA hardening adds:
+
+- `tools/build-hero-public-attribution.mjs`;
+- `tools/validate-hero-public-attribution.mjs`;
+- deterministic attribution CI coverage;
+- `Motorsport Hub Hero Public Attribution`, which publishes only `hero-live/hero-channel/ATTRIBUTION.md` after a successful Hero refresh (or an explicitly dispatched run).
+
+The generated file covers every unique currently publishable Hero pool asset, includes the exact Commons source page, author, license/link and modification notice, and is kept separate from the software license.
+
+Before broad GA, confirm one successful generated attribution publication exists at `hero-live/hero-channel/ATTRIBUTION.md` and validate it against the then-current `channel.json`.
+
+### 3. Final physical-device GA smoke
+
+**REQUIRED immediately before broad GA.**
+
+Run a short representative session on the exact Stable intended for public distribution:
+
+- canonical Loader v7 fresh-install/copy path;
+- QA diagnostics;
+- one Small, one Medium and one Large widget;
+- online refresh;
+- LKG/offline recovery if the GA Stable changes Loader/runtime-sensitive behavior;
+- no visible startup, routing or clipping blocker.
+
+Risk-based testing remains preferred over a full 36-screenshot manual loop.
 
 ### 4. Explicit GA/public-distribution approval
 
@@ -67,17 +102,6 @@ This is not a runtime blocker for the widget itself.
 
 Actual Dakar 2027 live endpoint/parser behavior cannot be empirically proven until the live 2027 standings surface exists.
 
-### Final public smoke session
-
-Immediately before broad GA, run a short representative physical-device session using the exact Stable intended for distribution:
-
-- Loader v7 fresh install/update path;
-- at least one Small, Medium and Large widget;
-- QA diagnostics;
-- one online refresh and one validated LKG/offline recovery check when the release changes Loader/runtime-sensitive behavior.
-
-Risk-based testing remains preferred over a full 36-screenshot manual loop.
-
 ## Not a GA blocker by itself
 
 - Centralized telemetry. Local observability + scheduled live parser monitoring are acceptable for the current architecture unless scale/support evidence demonstrates a need for fleet-wide telemetry.
@@ -93,4 +117,11 @@ Risk-based testing remains preferred over a full 36-screenshot manual loop.
 
 **Broad GA authorization: NOT YET.**
 
-The remaining hard gates are primarily distribution/onboarding/compliance decisions rather than a known core-runtime defect. The highest-value next steps are to merge the self-service documentation after CI, make the software-license decision, complete the final attribution/distribution review, then prepare the exact Stable/public-release approval when the owner is ready.
+The remaining hard path is now narrow:
+
+1. resolve software-license/repository scope and add the approved license;
+2. confirm the generated live Hero attribution publication;
+3. perform the final physical iPhone smoke on the exact GA Stable;
+4. obtain explicit owner authorization for broad GA.
+
+No Store submission, paid distribution, broad public launch, external analytics contract or new Stable publication is authorized by this document.
