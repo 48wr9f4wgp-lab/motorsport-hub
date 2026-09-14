@@ -24,7 +24,7 @@ const expected={
 };
 
 class Text {constructor(v,s){this.value=String(v);s.push(this.value)} rightAlignText(){}}
-class Stack {constructor(s){this.s=s} addText(v){return new Text(v,this.s)} addSpacer(){} addStack(){return new Stack(this.s)} setPadding(){} layoutHorizontally(){} centerAlignContent(){}}
+class Stack {constructor(s){this.s=s} addText(v){return new Text(v,this.s)} addSpacer(){} addStack(){return new Stack(this.s)} setPadding(){} layoutHorizontally(){} layoutVertically(){} centerAlignContent(){}}
 class ListWidget extends Stack {constructor(s){super(s);this.refreshAfterDate=null}}
 class Color {constructor(){} static white(){return new Color()}}
 class LinearGradient {constructor(){this.colors=[];this.locations=[]}}
