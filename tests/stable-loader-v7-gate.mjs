@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import vm from 'node:vm';
 import assert from 'node:assert/strict';
 import {execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
@@ -94,10 +95,49 @@ for(const token of [
   'ROLLBACK_OR_FORK',
   'VALIDATION_REF_MUTATES_RUNTIME',
   'motorsport-hub-loader-v7-state.json',
+  'motorsport-hub-observability-v1.json',
   'motorsport-hub-router-v7-${d.releaseId}-lkg.js',
   'sha256Hex(s)===String(d.router.sha256).toLowerCase()',
-  '__MH_RELEASE_INTEGRITY=release'
+  '__MH_RELEASE_INTEGRITY=release',
+  "writeObs('CANDIDATE',true,candidate)",
+  "writeObs('TRUSTED_LKG',true,trusted)",
+  "writeObs('BOOTSTRAP_LKG',true,BOOTSTRAP)"
 ]) assert(loader.includes(token),`Loader v7 contract missing: ${token}`);
 
 assert(!loader.includes("globalThis.__MH_SOURCE_REF='main'"),'Loader v7 must never execute mutable main as a code source');
+for(const token of ['deviceId','email','latitude','longitude','advertisingId'])assert(!loader.includes(token),`Loader v7 local observability must not collect ${token}`);
+
+// Deterministic local-observability smoke: execute a valid cached Router under a fresh
+// trusted state so no network is required, then verify the bounded privacy-safe event.
+const syntheticSourceRef='a'.repeat(40);
+const syntheticRouter=`// Motorsport Hub synthetic module router\n// MH_ROUTER_SCHEMA=5\n// MH_CATEGORY_MANIFEST=${expected}\n(async()=>{globalThis.__MH_ROUTER_BOOT_OK=true;globalThis.__MH_ROUTER_SCHEMA=5;globalThis.__MH_ROUTER_MANIFEST='${expected}';Script.complete()})();\n`;
+const syntheticRelease={
+  schemaVersion:1,channel:'stable',sequence:7,version:'9.9.9',releasedAt:new Date(Date.now()-60000).toISOString(),
+  sourceRef:syntheticSourceRef,releaseId:`mh-${syntheticSourceRef.slice(0,12)}`,routerSchema:5,categoryManifest:expected,
+  router:{path:'motorsport-hub.js',sha256:sha(syntheticRouter),bytes:bytes(syntheticRouter)},
+  files:Object.fromEntries(required.map(p=>[p,{sha256:'b'.repeat(64),bytes:1}])),
+  validatedBy:{releaseRef:'c'.repeat(40),workflow:'Motorsport Hub Release Candidate CI',runId:1}
+};
+const statePath='/docs/motorsport-hub-loader-v7-state.json';
+const lkgPath=`/docs/motorsport-hub-router-v7-${syntheticRelease.releaseId}-lkg.js`;
+const obsPath='/docs/motorsport-hub-observability-v1.json';
+const oldObs={schemaVersion:1,events:Array.from({length:200},(_,i)=>({ts:String(i),releaseId:'old',category:'F1',family:'small',path:'TRUSTED_LKG',ok:true,ms:1}))};
+const files=new Map([[statePath,JSON.stringify({checkedAt:Date.now(),release:syntheticRelease})],[lkgPath,syntheticRouter],[obsPath,JSON.stringify(oldObs)]]);
+const fm={documentsDirectory:()=>'/docs',joinPath:(a,b)=>`${a}/${b}`,fileExists:p=>files.has(p),readString:p=>{if(!files.has(p))throw Error('missing');return files.get(p)},writeString:(p,s)=>files.set(p,String(s)),remove:p=>files.delete(p)};
+let requests=0,completed=0,setWidget=0;
+class Request{constructor(){requests++;this.headers={}}async loadJSON(){throw Error('network forbidden')}async loadString(){throw Error('network forbidden')}}
+class Stack{addText(){return{}}addSpacer(){}setPadding(){}}
+class ListWidget extends Stack{}
+class Color{constructor(){}static white(){return new Color()}}
+const Font={boldSystemFont(){},systemFont(){}};
+const ctx={args:{widgetParameter:'SUPER GT',queryParameters:{}},config:{runsInWidget:true,widgetFamily:'large'},FileManager:{local:()=>fm},Request,ListWidget,Color,Font,Date,Math,JSON,String,Number,Array,Object,RegExp,Error,Promise,Script:{complete(){completed++},setWidget(){setWidget++}}};
+ctx.globalThis=ctx;vm.createContext(ctx);await vm.runInContext(loader,ctx,{timeout:5000});
+assert.equal(requests,0,'fresh trusted Loader v7 LKG path must not make a network request');
+assert.equal(completed,1,'synthetic Router should complete once');
+assert.equal(setWidget,0,'successful synthetic Router should not render Loader failure UI');
+const obs=JSON.parse(files.get(obsPath));
+assert.equal(obs.schemaVersion,1);assert.equal(obs.events.length,200,'local observability must remain bounded to 200 events');
+const last=obs.events.at(-1);assert.equal(last.releaseId,syntheticRelease.releaseId);assert.equal(last.version,'9.9.9');assert.equal(last.sourceRef,syntheticSourceRef.slice(0,12));assert.equal(last.sequence,7);assert.equal(last.category,'SUPERGT');assert.equal(last.family,'large');assert.equal(last.path,'TRUSTED_LKG');assert.equal(last.ok,true);assert(Number.isFinite(last.ms)&&last.ms>=0);
+for(const key of ['deviceId','email','latitude','longitude','advertisingId'])assert(!(key in last),`observability event must not contain ${key}`);
+
 console.log('Motorsport Hub stable Loader v7 gate: PASS');
