@@ -73,19 +73,6 @@ jobs:
           console.log('Motorsport Hub Large typography gate: PASS (12/12 modules, Large-only 1.12x scale)');
           NODE
 
-          python3 - <<'PY'
-          from pathlib import Path
-          for p in [Path('.github/workflows/hardening-ci.yml'),Path('.github/workflows/release-candidate-ci.yml')]:
-              s=p.read_text()
-              if 'tests/large-typography-gate.mjs' in s:
-                  continue
-              anchor='            tests/hero-large-pipeline-gate.mjs\n'
-              if anchor not in s:
-                  raise SystemExit(f'{p}: gate insertion anchor missing')
-              s=s.replace(anchor,anchor+'            tests/large-typography-gate.mjs\n',1)
-              p.write_text(s)
-          PY
-
           node tests/large-typography-gate.mjs
           for f in f1-widget-flat-v1000.js wec-widget-flat-v1000.js wrc-widget-flat-v1000.js supergt-widget-flat-v1000.js motogp-widget-flat-v1000.js fdj-widget-flat-v1000.js d1gp-widget-flat-v1000.js superformula-widget.js indycar-widget.js nascar-widget.js gtwc-europe-widget.js dakar-widget.js tests/large-typography-gate.mjs; do
             node --check "$f"
@@ -94,6 +81,6 @@ jobs:
 
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add f1-widget-flat-v1000.js wec-widget-flat-v1000.js wrc-widget-flat-v1000.js supergt-widget-flat-v1000.js motogp-widget-flat-v1000.js fdj-widget-flat-v1000.js d1gp-widget-flat-v1000.js superformula-widget.js indycar-widget.js nascar-widget.js gtwc-europe-widget.js dakar-widget.js tests/large-typography-gate.mjs .github/workflows/hardening-ci.yml .github/workflows/release-candidate-ci.yml
+          git add f1-widget-flat-v1000.js wec-widget-flat-v1000.js wrc-widget-flat-v1000.js supergt-widget-flat-v1000.js motogp-widget-flat-v1000.js fdj-widget-flat-v1000.js d1gp-widget-flat-v1000.js superformula-widget.js indycar-widget.js nascar-widget.js gtwc-europe-widget.js dakar-widget.js tests/large-typography-gate.mjs
           git commit -m 'ui: enlarge Large widget typography across all categories'
           git push origin HEAD:improve/v9.5.23-large-typography
