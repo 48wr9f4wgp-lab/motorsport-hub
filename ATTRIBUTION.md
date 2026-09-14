@@ -34,7 +34,22 @@ Because `hero-live` is dynamic, a static list in `main` must **not** be treated 
 
 The executable runtime also carries audited fallback Hero assets. The machine-readable fallback inventory is `hero-assets.json`, and equality/provenance expectations are enforced by Hero manifest/runtime gates.
 
-Historical named fallback examples include licensed assets for F1, WEC, WRC, SUPER GT, MotoGP, FDJ, D1GP, SUPER FORMULA, INDYCAR, NASCAR, GT World Challenge Europe, and Dakar. Earlier detailed asset-by-asset audit history remains available in Git history and the machine-readable inventory.
+The following audit identities are intentionally retained because release gates use them to prove the embedded/fallback attribution baseline has not been silently erased:
+
+- Formula 1: **Lewis Hamilton / Ferrari SF-25 FP1**, **Oscar Piastri / McLaren MCL39 FP1**, and **George Russell / Mercedes W16 FP3**. Author: **Liauzh**. License: **CC BY-SA 4.0**.
+- WRC: Toyota GR Yaris Rally 1 fallback set. Author: **TTTNIS**. License: **CC0 1.0 Universal**.
+- WEC: Toyota GR010 Hybrid fallback set. Author: **MarcelX42**. License: **CC BY-SA 4.0**.
+- MotoGP: audited 2025 Malaysia fallback assets. Author: **Liauzh**. License: **CC BY-SA 4.0**.
+- Formula Drift Japan: audited drift fallback. License: **CC0 1.0 Universal**.
+- D1GP: audited D1 Grand Prix action fallback. Author: **Rick Flores**. License: **CC BY 2.0**.
+- SUPER GT: MOTUL AUTECH Z race-action fallback. Author: **Abarabone1206**. License: **CC BY 4.0**.
+- SUPER FORMULA: audited Suzuka fallback. Author: **BWard 1997**. License: **CC BY 4.0**.
+- INDYCAR: audited Alex Palou fallback. Author: **Ben Goyette**. License: **CC BY-SA 4.0**.
+- NASCAR Cup: audited Denny Hamlin fallback. Author: **TaurusEmerald**. License: **CC BY-SA 4.0**.
+- GT World Challenge Europe: audited Nürburgring No.48 fallback. Author: **Lukas Raich**. License: **CC BY-SA 4.0**.
+- Dakar: audited Dacia Sandrider identity fallback. Author: **Alexander-93**. License: **CC BY-SA 4.0**; Dakar action fallbacks include **CC BY 2.0** assets.
+
+These records describe the audited fallback/runtime baseline. They do not replace the current `hero-live` manifest for dynamically published imagery.
 
 ## Modification notice
 
