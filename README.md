@@ -4,12 +4,13 @@ iPhone home-screen motorsport widget for Scriptable.
 
 ## Current status
 - Production baseline: **12 categories + QA diagnostics** on `main`.
+- Current stable channel: **v9.5.24 / sequence 5**.
 - Direct Router architecture: one selected category → one category module.
-- Small / Medium production layouts across all categories.
-- F1 / WEC Large-family v1 is merged and covered by deterministic gates.
-- Active Hero: CI-gated live channel with pool rotation and local LKG.
+- Small / Medium / Large production layouts across all 12 categories.
+- Large typography v1 and adaptive vertical layout v1 are accepted on the current visual path.
+- Active Hero: CI-gated live channel with pool rotation, fail-closed policy and local LKG.
 - Immutable release packaging: **implemented**.
-- Stable installed Loader v7 with approved-release auto-update: **implemented on the current release-candidate branch**.
+- Stable installed Loader v7 with approved-release auto-update: **implemented and in production use**.
 
 `main` remains the canonical production code baseline. A release is not considered approved merely because code is merged or CI is green; stable-channel publication remains an explicit release action.
 
@@ -82,7 +83,7 @@ exactly one selected category module
         ↓
 data/cache + approved Active Hero
         ↓
-Small / Medium / supported Large Widget
+Small / Medium / Large Widget
 ```
 
 The Loader channel pointer is mutable; executable release code is not. A channel update is accepted only after sequence, ancestry, GitHub commit verification, Release Candidate CI evidence, and integrity checks pass.
@@ -102,17 +103,19 @@ All 12 category data caches use schema version 1.
 ## Widget information model
 Circuit-racing categories generally use:
 - Small: next event / countdown / venue;
-- Medium: next event / countdown / top three / points.
+- Medium: next event / countdown / top three / points;
+- Large: next event / countdown / top five / previous-next context / season or round context.
 
-F1 / WEC Large v1 extends the Hero-first layout with:
-- top three;
-- positions 4–5;
-- previous / next event context;
-- season / round context where available.
+Large uses the shared visual contract across all 12 categories:
+- 1.12× Large typography scale;
+- positions 4–5 under `MORE STANDINGS`;
+- adaptive flex spacing before the lower information block;
+- bottom-weighted lower context panel so sparse data does not leave accidental dead space.
 
 Dakar deliberately uses a rally-raid hierarchy:
 - Small: next stage / countdown / stage / SS distance / route;
-- Medium: stage information + overall CAR top three / GAP.
+- Medium: stage information + overall CAR top three / GAP;
+- Large: overall CAR top five / GAP + previous-next stage context.
 
 ---
 
@@ -126,9 +129,10 @@ The production line includes build/CI tools for:
 - subject detection;
 - `IDENTITY`, `ACTION`, `ENVIRONMENT` roles;
 - Small / Medium subject-aware crop generation;
+- Large 1600×1600 contained derivatives when a source passes Large-specific composition gates;
 - text-safe / veil-aware checks;
 - Hero Pool Rotation and recent-display cooldown;
-- scoped fallback handling;
+- scoped fallback and fail-closed handling;
 - LKG/rejection behavior;
 - visual-regression artifacts.
 
@@ -137,19 +141,22 @@ Image ML runs at build/CI time, **not inside Scriptable runtime**.
 ---
 
 ## QA and release gates
-Primary references:
-- `RC_QA.md`
-- `RELEASE_AUDIT.md`
-- `CODEX_HANDOFF.md`
-- `DEVICE_QA_POLICY.md`
-- `ATTRIBUTION.md`
-- `.github/workflows/hardening-ci.yml`
-- `.github/workflows/release-readiness.yml`
-- `.github/workflows/release-candidate-ci.yml`
+Primary current references:
+- `COMPLETION_AUDIT.md` — **current completion / public-RC decision**;
+- `DEVICE_QA_POLICY.md` — risk-based physical-device QA policy;
+- `CODEX_HANDOFF.md`;
+- `ATTRIBUTION.md`;
+- `.github/workflows/hardening-ci.yml`;
+- `.github/workflows/release-readiness.yml`;
+- `.github/workflows/release-candidate-ci.yml`.
 
-Automated coverage includes syntax, Router/Registry consistency, caches, lifecycle, Hero provenance/selection, immutable integrity, Loader v7 stable-channel policy, release-package generation, diagnostics, category-specific invariants and render smoke.
+Historical references:
+- `RC_QA.md` — 2026-08-28 hardening snapshot; its release-status conclusion is superseded by `COMPLETION_AUDIT.md`.
+- `RELEASE_AUDIT.md` — 2026-08-28 hardening snapshot; its release-status conclusion is superseded by `COMPLETION_AUDIT.md`.
 
-Physical-device QA remains risk-based. Large layout changes require an actual Large-family screenshot check before being treated as visually complete.
+Automated coverage includes syntax, Router/Registry consistency, caches, lifecycle, Hero provenance/selection, immutable integrity, Loader v7 stable-channel policy, release-package generation, diagnostics, category-specific invariants and **36-case Small/Medium/Large render smoke**.
+
+Physical-device QA remains risk-based. Renderer/layout/font/Hero/Loader changes require representative real-iPhone verification before being treated as visually complete.
 
 ---
 
