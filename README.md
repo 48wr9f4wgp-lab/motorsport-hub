@@ -96,15 +96,20 @@ All 12 categories are covered by deterministic Small / Medium / Large render smo
 
 ## Hero imagery and attribution
 
-Hero assets are CI-gated for provenance, licensing, image validity and category relevance. The active `hero-live` channel carries per-asset source page, author and license metadata. See **[ATTRIBUTION.md](ATTRIBUTION.md)** for the distribution attribution baseline.
+Hero assets are CI-gated for provenance, licensing, image validity and category relevance. The active `hero-live` channel carries per-asset source page, author and license metadata.
 
-Do not strip attribution/license metadata from redistributed Hero assets.
+- Baseline/fallback attribution policy: **[ATTRIBUTION.md](ATTRIBUTION.md)**
+- Current dynamic Hero pool attribution after the attribution publisher is active: `hero-live/hero-channel/ATTRIBUTION.md`
+
+The dynamic attribution file is generated from the current `hero-live/hero-channel/channel.json`, so Hero rotation does not depend on a stale hand-maintained credit table. Do not strip attribution/license metadata from redistributed Hero assets.
 
 ## Privacy and support
 
 - Privacy behavior: **[PRIVACY.md](PRIVACY.md)**
 - Troubleshooting / bug reports: **[SUPPORT.md](SUPPORT.md)**
 - Broad-public-release gate: **[GA_READINESS.md](GA_READINESS.md)**
+- Final launch checklist: **[GA_LAUNCH_CHECKLIST.md](GA_LAUNCH_CHECKLIST.md)**
+- Software-license decision record: **[LICENSE_DECISION.md](LICENSE_DECISION.md)**
 
 Motorsport Hub has no user account/backend and no automatic external analytics. Loader v7 stores bounded local observability for troubleshooting.
 
@@ -128,5 +133,7 @@ Merging code to `main` is **not** the same as publishing Stable. Stable publicat
 ## Distribution license status
 
 The repository is publicly visible, but an explicit software distribution license has **not yet been selected**. Broad GA/redistribution remains gated on an owner-approved software-license decision; public repository visibility should not be interpreted as a blanket redistribution grant.
+
+`MPL-2.0` is the current recommended software-license direction for Motorsport Hub, but this repository also contains Club Pulse code. Do not add a root software license until product scope is explicitly resolved so Club Pulse is not unintentionally relicensed. See `LICENSE_DECISION.md`.
 
 No Store submission, paid distribution, broad public launch, external analytics contract, or Stable publication is authorized merely because CI is green.
