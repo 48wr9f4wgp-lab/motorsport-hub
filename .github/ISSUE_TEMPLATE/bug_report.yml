@@ -1,0 +1,70 @@
+name: Motorsport Hub bug report
+description: Report a reproducible widget, data, parser, release, or device issue.
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a problem. Please keep Loader v7 installed and gather QA evidence before reinstalling so we can identify the failing layer.
+  - type: input
+    id: category
+    attributes:
+      label: Category
+      description: Example: F1, WEC, SUPERGT, DAKAR, QA
+      placeholder: WEC
+    validations:
+      required: true
+  - type: dropdown
+    id: family
+    attributes:
+      label: Widget size
+      options:
+        - Small
+        - Medium
+        - Large
+        - Not widget-specific
+    validations:
+      required: true
+  - type: dropdown
+    id: symptom
+    attributes:
+      label: Primary symptom
+      options:
+        - Startup / blank / unusable widget
+        - Wrong or stale data
+        - 更新待ち / fallback state
+        - Layout / visual regression
+        - Loader / release update problem
+        - Hero image problem
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: stable
+    attributes:
+      label: Stable version / source suffix
+      description: If available, copy the version/source identity shown by QA.
+      placeholder: v9.5.29 / 7f3fc1eb6fa9
+  - type: input
+    id: qa
+    attributes:
+      label: QA result
+      description: Include LIVE / PARSE / NET and affected category, if available.
+      placeholder: WEC LIVE; footer source 7f3fc1eb6fa9
+  - type: textarea
+    id: actual
+    attributes:
+      label: What happened?
+      description: Include what you expected, what appeared instead, and whether the issue is repeatable.
+    validations:
+      required: true
+  - type: input
+    id: time
+    attributes:
+      label: Approximate local time
+      placeholder: 2026-09-14 20:30 JST
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: Screenshot / additional evidence
+      description: Drag in screenshots when the issue is visual or device-specific. Do not include private information or credentials.
