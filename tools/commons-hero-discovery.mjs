@@ -1,13 +1,13 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {matchesAnyPolicyTerm} from './hero-policy-text.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const htmlText=v=>String(v||'').replace(/<[^>]*>/g,' ').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/&#39;/g,"'").replace(/&quot;/g,'"').replace(/\s+/g,' ').trim();
 const meta=(ii,key)=>htmlText(ii?.extmetadata?.[key]?.value);
 const wikiFilePage=title=>`https://commons.wikimedia.org/wiki/${encodeURIComponent(String(title).replace(/ /g,'_')).replace(/%3A/i,':')}`;
 const norm=v=>String(v||'').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[_-]+/g,' ').replace(/\s+/g,' ').trim();
-const hasAny=(text,terms)=>(terms||[]).some(t=>text.includes(norm(t)));
 const canonicalLicense=v=>{const s=htmlText(v);if(/^CC0(?:\s+1\.0)?$/i.test(s))return 'CC0 1.0';return s};
 
 export function normalizePage(page,query,config,seed=null){
@@ -60,9 +60,9 @@ export function evaluateCandidate(c,config){
   }
   const required=config.relevance?.requiredAny||[],forbidden=config.relevance?.forbiddenAny||[];
   if(required.length||forbidden.length){
-   const text=norm([c.title,c.description,c.credit].filter(Boolean).join(' '));
-   if(required.length&&!c.verifiedSeed&&!hasAny(text,required))reasons.push('CATEGORY_RELEVANCE_MISMATCH');
-   if(forbidden.length&&hasAny(text,forbidden))reasons.push('CATEGORY_FORBIDDEN_CONTEXT');
+   const text=[c.title,c.description,c.credit].filter(Boolean).join(' ');
+   if(required.length&&!c.verifiedSeed&&!matchesAnyPolicyTerm(text,required))reasons.push('CATEGORY_RELEVANCE_MISMATCH');
+   if(forbidden.length&&matchesAnyPolicyTerm(text,forbidden))reasons.push('CATEGORY_FORBIDDEN_CONTEXT');
   }
  }
  return{eligibleForReview:reasons.length===0,reasons};
