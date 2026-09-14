@@ -1,7 +1,7 @@
 # Motorsport Hub — Hero Image Attribution
 
 Last audited: 2026-08-28 JST
-Scope: current v10.0.3 hardening build / 12 category hero assets used by the Scriptable widget.
+Scope: current hardening builds / 12 category hero assets used by the Scriptable widget.
 
 All hero images are cropped/resized and darkened for widget presentation. Where the source license requires attribution or ShareAlike, redistribution must preserve those obligations. The machine-readable runtime inventory is `hero-assets.json` and is enforced by `tests/hero-manifest-gate.mjs`.
 
