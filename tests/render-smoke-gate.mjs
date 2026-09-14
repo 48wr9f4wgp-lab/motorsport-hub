@@ -24,7 +24,7 @@ const expected={
 };
 
 class Text {constructor(v,s){this.value=String(v);s.push(this.value)} rightAlignText(){}}
-class Stack {constructor(s){this.s=s} addText(v){return new Text(v,this.s)} addSpacer(){} addStack(){return new Stack(this.s)} setPadding(){} layoutHorizontally(){} centerAlignContent(){}}
+class Stack {constructor(s){this.s=s} addText(v){return new Text(v,this.s)} addSpacer(){} addStack(){return new Stack(this.s)} setPadding(){} layoutHorizontally(){} layoutVertically(){} centerAlignContent(){}}
 class ListWidget extends Stack {constructor(s){super(s);this.refreshAfterDate=null}}
 class Color {constructor(){} static white(){return new Color()}}
 class LinearGradient {constructor(){this.colors=[];this.locations=[]}}
@@ -45,9 +45,13 @@ async function render(category,family){
   ctx.globalThis=ctx;vm.createContext(ctx);await vm.runInContext(router,ctx,{timeout:5000});
   assert.equal(repoRequests,1,`${category}/${family}: must fetch exactly one category module`);assert.equal(setWidget,1,`${category}/${family}: setWidget count`);assert.equal(complete,1,`${category}/${family}: Script.complete count`);
   const text=sink.join(' | ');assert(!/データ取得失敗|安全に実行できません|Widget Parameterが不正/.test(text),`${category}/${family}: rendered error state: ${text}`);assert(expected[category]?.test(text),`${category}/${family}: expected event identity missing: ${text}`);
-  if(family==='medium')assert(category==='DAKAR'?/GAP|総合 CAR/.test(text):/PTS|ポイント/.test(text),`${category}/medium: standings surface missing`);
+  if(family!=='small')assert(category==='DAKAR'?/GAP|総合 CAR/.test(text):/PTS|ポイント/.test(text),`${category}/${family}: standings surface missing`);
+  if(family==='large'){
+    assert(/MORE STANDINGS/.test(text),`${category}/large: extended standings block missing`);
+    assert(category==='DAKAR'?/STAGE/.test(text):/SEASON/.test(text),`${category}/large: lower context panel missing`);
+  }
   return text;
 }
 
-for(const c of registry.categories){for(const family of ['small','medium'])await render(c.id,family)}
-console.log('Motorsport Hub 24-case render smoke gate: PASS');
+for(const c of registry.categories){for(const family of ['small','medium','large'])await render(c.id,family)}
+console.log('Motorsport Hub 36-case render smoke gate: PASS');
