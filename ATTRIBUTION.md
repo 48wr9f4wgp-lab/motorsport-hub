@@ -1,6 +1,7 @@
 # Motorsport Hub — Hero Image Attribution
 
 Updated: 2026-09-14 JST
+Scope: current hardening builds
 
 Motorsport Hub uses licensed motorsport imagery as widget Hero backgrounds. Images may be cropped, resized, recomposed into contained derivatives, and darkened/veiled for text readability. Where a source license requires attribution, ShareAlike, or modification notice, those obligations remain applicable to the redistributed derivative.
 
@@ -41,8 +42,8 @@ The following audit identities are intentionally retained because release gates 
 - WEC: Toyota GR010 Hybrid fallback set. Author: **MarcelX42**. License: **CC BY-SA 4.0**.
 - MotoGP: audited 2025 Malaysia fallback assets. Author: **Liauzh**. License: **CC BY-SA 4.0**.
 - Formula Drift Japan: audited drift fallback. License: **CC0 1.0 Universal**.
-- D1GP: audited D1 Grand Prix action fallback. Author: **Rick Flores**. License: **CC BY 2.0**.
-- SUPER GT: MOTUL AUTECH Z race-action fallback. Author: **Abarabone1206**. License: **CC BY 4.0**.
+- D1GP: `D1GP (5679098995).jpg`. Author: **Rick Flores (Flickr: Ricky Flores)**. License: **CC BY 2.0 Generic**. Runtime derivative uses the accepted subject-aware Small/Medium crop.
+- SUPER GT: `MOTUL AUTECH Z 2024 rd.2 FUJI.jpg`. Author: **Abarabone1206**. License: **CC BY 4.0**. Runtime derivative uses the accepted subject-aware Small/Medium crop.
 - SUPER FORMULA: audited Suzuka fallback. Author: **BWard 1997**. License: **CC BY 4.0**.
 - INDYCAR: audited Alex Palou fallback. Author: **Ben Goyette**. License: **CC BY-SA 4.0**.
 - NASCAR Cup: audited Denny Hamlin fallback. Author: **TaurusEmerald**. License: **CC BY-SA 4.0**.
