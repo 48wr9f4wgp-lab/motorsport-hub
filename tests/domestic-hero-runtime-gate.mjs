@@ -8,9 +8,10 @@ const read=p=>fs.readFileSync(path.join(root,p),'utf8');
 const parse=(name,src)=>{try{new Function(src)}catch(e){throw new Error(`${name}: syntax error: ${e.message}`)}};
 
 const modules={SUPERGT:read('supergt-widget-flat-v1000.js'),FDJ:read('fdj-widget-flat-v1000.js'),D1GP:read('d1gp-widget-flat-v1000.js')};
+const expectedVersions={SUPERGT:"const V='10.0.4-hardening'",FDJ:"const V='10.0.3-hardening'",D1GP:"const V='10.0.3-hardening'"};
 for(const [id,src] of Object.entries(modules)){
   parse(id,src);
-  assert(src.includes("const V='10.0.3-hardening'"),`${id}: runtime version drift`);
+  assert(src.includes(expectedVersions[id]),`${id}: runtime version drift`);
   assert(src.includes('function heroCropRect('),`${id}: fixed normalized crop renderer missing`);
 }
 const sgt=modules.SUPERGT,fdj=modules.FDJ,d1=modules.D1GP;
@@ -30,6 +31,6 @@ assert.equal(byCat('SUPERGT').length,1);assert.equal(byCat('FDJ').length,1);asse
 const sgtAsset=byCat('SUPERGT')[0];assert.equal(sgtAsset.assetId,'supergt-motul-autech-z-fuji-2024');assert.equal(sgtAsset.author,'Abarabone1206');assert.equal(sgtAsset.license,'CC BY 4.0');assert.equal(sgtAsset.modificationNoticeRequired,true);assert.deepEqual(sgtAsset.runtimeUrls,['https://commons.wikimedia.org/wiki/Special:Redirect/file/MOTUL%20AUTECH%20Z%202024%20rd.2%20FUJI.jpg?width=2048','https://commons.wikimedia.org/wiki/Special:Redirect/file/MOTUL%20AUTECH%20Z%202024%20rd.2%20FUJI.jpg?width=1280']);
 const fdjAsset=byCat('FDJ')[0];assert.equal(fdjAsset.assetId,'fdj-drift-cc0');assert.equal(fdjAsset.license,'CC0 1.0');
 const d1Asset=byCat('D1GP')[0];assert.equal(d1Asset.assetId,'d1gp-rick-flores-2011');assert.equal(d1Asset.author,'Rick Flores (Flickr: Ricky Flores)');assert.equal(d1Asset.license,'CC BY 2.0');assert.equal(d1Asset.modificationNoticeRequired,true);assert.deepEqual(d1Asset.runtimeUrls,['https://commons.wikimedia.org/wiki/Special:Redirect/file/D1GP%20%285679098995%29.jpg?width=2048','https://commons.wikimedia.org/wiki/Special:Redirect/file/D1GP%20%285679098995%29.jpg?width=1280']);
-const attr=read('ATTRIBUTION.md');for(const token of ['Scope: current v10.0.3 hardening build','Abarabone1206','MOTUL AUTECH Z 2024 rd.2 FUJI.jpg','Rick Flores','D1GP (5679098995).jpg','CC BY 2.0 Generic','accepted subject-aware Small/Medium crop'])assert(attr.includes(token),`Attribution contract missing: ${token}`);
+const attr=read('ATTRIBUTION.md');for(const token of ['Scope: current hardening builds','Abarabone1206','MOTUL AUTECH Z 2024 rd.2 FUJI.jpg','Rick Flores','D1GP (5679098995).jpg','CC BY 2.0 Generic','accepted subject-aware Small/Medium crop'])assert(attr.includes(token),`Attribution contract missing: ${token}`);
 assert(!attr.includes('Rowan Harrison'),'superseded D1GP attribution still presented as runtime');assert(!attr.includes('Tokumeigakarinoaoshima'),'superseded SUPER GT attribution still presented as runtime');
 console.log('Motorsport Hub domestic Hero runtime gate: PASS');
