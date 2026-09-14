@@ -1,3 +1,4 @@
+# branch-only repair helper; remove after patching
 name: Apply Parser Repair Branch Patch
 
 on:
