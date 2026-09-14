@@ -24,3 +24,4 @@ jobs:
           git diff --cached --check
           git commit -m "fix: harden Dakar 2027 standings rollover"
           git push origin HEAD:hardening/dakar-2027-rollover
+# rerun-after-patcher-quoting-fix
