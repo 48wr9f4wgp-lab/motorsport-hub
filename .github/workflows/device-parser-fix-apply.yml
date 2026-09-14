@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: 22
       - name: Apply parser fallback patch
-        run: node tools/apply-device-parser-fallback.mjs
+        run: node tools/apply-device-parser-fallback-v2.mjs
       - name: Verify focused regression gates
         run: |
           set -euo pipefail
