@@ -10,6 +10,7 @@ Motorsport Hub is an iPhone home-screen motorsport widget system for [Scriptable
 - WEC / SUPER GT Stable v9.5.29 parser repair: **physical iPhone PASS**.
 - Production surface: **12 categories + QA diagnostics**.
 - Installed production loader: **`scriptable-loader-v7.js`**.
+- Software license: **Mozilla Public License 2.0 (MPL-2.0)**.
 - Centralized analytics: **none**; bounded local observability only.
 
 Repository `main` can be newer than Stable. Loader v7 does not execute mutable `main` directly.
@@ -99,9 +100,9 @@ All 12 categories are covered by deterministic Small / Medium / Large render smo
 Hero assets are CI-gated for provenance, licensing, image validity and category relevance. The active `hero-live` channel carries per-asset source page, author and license metadata.
 
 - Baseline/fallback attribution policy: **[ATTRIBUTION.md](ATTRIBUTION.md)**
-- Current dynamic Hero pool attribution after the attribution publisher is active: `hero-live/hero-channel/ATTRIBUTION.md`
+- Current dynamic Hero pool attribution after publication: `hero-live/hero-channel/ATTRIBUTION.md`
 
-The dynamic attribution file is generated from the current `hero-live/hero-channel/channel.json`, so Hero rotation does not depend on a stale hand-maintained credit table. Do not strip attribution/license metadata from redistributed Hero assets.
+Third-party Hero photographs are **not** relicensed under MPL-2.0. Their Creative Commons terms remain applicable. See **[LICENSE_SCOPE.md](LICENSE_SCOPE.md)**.
 
 ## Privacy and support
 
@@ -109,7 +110,7 @@ The dynamic attribution file is generated from the current `hero-live/hero-chann
 - Troubleshooting / bug reports: **[SUPPORT.md](SUPPORT.md)**
 - Broad-public-release gate: **[GA_READINESS.md](GA_READINESS.md)**
 - Final launch checklist: **[GA_LAUNCH_CHECKLIST.md](GA_LAUNCH_CHECKLIST.md)**
-- Software-license decision record: **[LICENSE_DECISION.md](LICENSE_DECISION.md)**
+- Software-license decision: **[LICENSE_DECISION.md](LICENSE_DECISION.md)**
 
 Motorsport Hub has no user account/backend and no automatic external analytics. Loader v7 stores bounded local observability for troubleshooting.
 
@@ -130,10 +131,10 @@ Visual v1 is locked unless a concrete regression or materially better compliant 
 
 Merging code to `main` is **not** the same as publishing Stable. Stable publication is a separate approved operation: runtime source is fixed, validated on a `release/*` ref, packaged with immutable integrity evidence, and only then referenced by a monotonically increasing `release-channel.json` descriptor.
 
-## Distribution license status
+## Software license
 
-The repository is publicly visible, but an explicit software distribution license has **not yet been selected**. Broad GA/redistribution remains gated on an owner-approved software-license decision; public repository visibility should not be interpreted as a blanket redistribution grant.
+Motorsport Hub software source code is distributed under **Mozilla Public License 2.0 (MPL-2.0)**. See `LICENSE` and `LICENSE_SCOPE.md`.
 
-`MPL-2.0` is the current recommended software-license direction for Motorsport Hub, but this repository also contains Club Pulse code. Do not add a root software license until product scope is explicitly resolved so Club Pulse is not unintentionally relicensed. See `LICENSE_DECISION.md`.
+Club Pulse is a separate product and is being split into its own repository; the Motorsport Hub cutover must not be merged until that destination copy and its CI are verified. See `CLUB_PULSE_MIGRATION.md`.
 
 No Store submission, paid distribution, broad public launch, external analytics contract, or Stable publication is authorized merely because CI is green.
