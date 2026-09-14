@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-14T00:46:50.926Z",
+  "generatedAt": "2026-09-14T02:23:06.396Z",
   "publicationPolicy": "CI_GATED_LIVE_HERO_CHANNEL",
   "categories": {
     "WEC": {
@@ -511,6 +511,66 @@
         "auto-707eb5c3387a-Super-Formula-Round-5-Suzuka-Post-Race-2026---1.jpg"
       ],
       "rotationMode": "POOL_ROTATION"
+    },
+    "NASCAR": {
+      "category": "NASCAR",
+      "assetId": "auto-7350b8a2052e-Denny-Hamlin-11-Las-Vegas-2025.jpg",
+      "version": "c20b2a74e2bd1de9",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Denny_Hamlin_11_Las_Vegas_2025.jpg",
+      "sourceTitle": "File:Denny Hamlin 11 Las Vegas 2025.jpg",
+      "author": "TaurusEmerald",
+      "license": "CC BY-SA 4.0",
+      "sourceYear": 2025,
+      "sourceDate": "2025-03-15 17:06:20",
+      "role": "IDENTITY",
+      "qualityScore": 0.912,
+      "addedAt": "2026-09-14T02:23:06.396Z",
+      "lastShownAt": null,
+      "images": {
+        "small": {
+          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/NASCAR/auto-7350b8a2052e-Denny-Hamlin-11-Las-Vegas-2025.jpg-small.jpg",
+          "width": 720,
+          "height": 720
+        },
+        "medium": {
+          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/NASCAR/auto-7350b8a2052e-Denny-Hamlin-11-Las-Vegas-2025.jpg-medium.jpg",
+          "width": 1380,
+          "height": 640
+        }
+      },
+      "promotedAt": "2026-09-14T02:23:06.396Z",
+      "lastRotatedAt": "2026-09-14T02:23:06.396Z",
+      "pool": [
+        {
+          "category": "NASCAR",
+          "assetId": "auto-7350b8a2052e-Denny-Hamlin-11-Las-Vegas-2025.jpg",
+          "version": "c20b2a74e2bd1de9",
+          "sourcePage": "https://commons.wikimedia.org/wiki/File:Denny_Hamlin_11_Las_Vegas_2025.jpg",
+          "sourceTitle": "File:Denny Hamlin 11 Las Vegas 2025.jpg",
+          "author": "TaurusEmerald",
+          "license": "CC BY-SA 4.0",
+          "sourceYear": 2025,
+          "sourceDate": "2025-03-15 17:06:20",
+          "role": "IDENTITY",
+          "qualityScore": 0.912,
+          "addedAt": "2026-09-14T02:23:06.396Z",
+          "lastShownAt": "2026-09-14T02:23:06.396Z",
+          "images": {
+            "small": {
+              "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/NASCAR/auto-7350b8a2052e-Denny-Hamlin-11-Las-Vegas-2025.jpg-small.jpg",
+              "width": 720,
+              "height": 720
+            },
+            "medium": {
+              "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/NASCAR/auto-7350b8a2052e-Denny-Hamlin-11-Las-Vegas-2025.jpg-medium.jpg",
+              "width": 1380,
+              "height": 640
+            }
+          }
+        }
+      ],
+      "recentAssetIds": [],
+      "rotationMode": "INITIAL"
     }
   }
 }

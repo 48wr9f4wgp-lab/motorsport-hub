@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-14T00:46:50.926Z",
+  "generatedAt": "2026-09-14T02:23:06.396Z",
   "thresholds": {
     "minScore": 0.72,
     "minDetection": 0.55,
@@ -16,18 +16,16 @@
     "rotationMinAgeHours": 48,
     "rotationReuseCooldownHours": 48
   },
-  "promoted": [],
-  "promotionModes": {},
-  "poolUpdated": [
-    "SUPERFORMULA",
-    "WEC",
-    "WRC"
+  "promoted": [
+    "NASCAR"
   ],
+  "promotionModes": {
+    "NASCAR": "INITIAL"
+  },
+  "poolUpdated": [],
   "suppressed": [],
   "updatedCategories": [
-    "SUPERFORMULA",
-    "WEC",
-    "WRC"
+    "NASCAR"
   ],
   "categories": {
     "WEC": {
@@ -57,6 +55,13 @@
       "poolSize": 2,
       "sourceTitle": "File:Igor Fraga Super Formula Round 5 Suzuka Post-Race 2026.jpg",
       "rotationMode": "POOL_ROTATION"
+    },
+    "NASCAR": {
+      "assetId": "auto-7350b8a2052e-Denny-Hamlin-11-Las-Vegas-2025.jpg",
+      "qualityScore": 0.912,
+      "poolSize": 1,
+      "sourceTitle": "File:Denny Hamlin 11 Las Vegas 2025.jpg",
+      "rotationMode": "INITIAL"
     }
   }
 }
