@@ -39,7 +39,7 @@
     "SUPERGT": {"requiredAny":["super gt","gt500","gt300"],"forbiddenAny":["auto salon","auto messe","motor show"]},
     "MOTOGP": {"requiredAny":["motogp","moto gp"],"forbiddenAny":["moto2","moto3","world superbike","wsbk"]},
     "FDJ": {"requiredAny":["formula drift japan","fd japan","fdj"],"forbiddenAny":[]},
-    "D1GP": {"requiredAny":["d1 grand prix","d1gp"],"forbiddenAny":["king of europe"]},
+    "D1GP": {"requiredAny":["d1 grand prix","d1gp"],"forbiddenAny":["king of europe","auto messe","auto salon","show car","static display"]},
     "SUPERFORMULA": {"requiredAny":["super formula","superformula"],"forbiddenAny":["formula 1","formula one"]},
     "INDYCAR": {"requiredAny":["indycar","indy car","ntt indycar"],"forbiddenAny":["indy nxt","indy lights"]},
     "NASCAR": {"requiredAny":["nascar cup","nascar cup series"],"forbiddenAny":["xfinity","craftsman truck","american speedfest","brands hatch"]},

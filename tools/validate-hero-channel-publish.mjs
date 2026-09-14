@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import {fileURLToPath} from 'node:url';
+import {matchesAnyPolicyTerm} from './hero-policy-text.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const arg=(name,fallback='')=>{const p=process.argv.find(x=>x.startsWith(`--${name}=`));return p?p.slice(name.length+3):fallback};
@@ -14,9 +15,8 @@ const base='https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero
 const safe=v=>/^[A-Za-z0-9._-]{1,100}$/.test(String(v||''));
 const readJSON=p=>JSON.parse(fs.readFileSync(p,'utf8'));
 const sourceRules=readJSON(path.join(root,'hero-refresh-sources.json'));
-const fold=v=>String(v||'').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[_-]+/g,' ').replace(/\s+/g,' ').trim();
-const forbiddenTerms=category=>[...(Array.isArray(sourceRules.globalForbiddenContext)?sourceRules.globalForbiddenContext:[]),...(Array.isArray(sourceRules.relevance?.[category]?.forbiddenAny)?sourceRules.relevance[category].forbiddenAny:[])].map(fold).filter(Boolean);
-const assetForbidden=(asset,category)=>{const text=fold(asset?.sourceTitle||'');return !!text&&forbiddenTerms(category).some(t=>text.includes(t));};
+const forbiddenTerms=category=>[...(Array.isArray(sourceRules.globalForbiddenContext)?sourceRules.globalForbiddenContext:[]),...(Array.isArray(sourceRules.relevance?.[category]?.forbiddenAny)?sourceRules.relevance[category].forbiddenAny:[])].filter(Boolean);
+const assetForbidden=(asset,category)=>matchesAnyPolicyTerm(asset?.sourceTitle||'',forbiddenTerms(category));
 const parseDate=v=>{const t=Date.parse(String(v||''));return Number.isFinite(t)?t:0};
 const liveIdentity=e=>e?{category:e.category,assetId:e.assetId,sourcePage:e.sourcePage,sourceTitle:e.sourceTitle,author:e.author,license:e.license,sourceYear:e.sourceYear,sourceDate:e.sourceDate,role:e.role,qualityScore:e.qualityScore,promotedAt:e.promotedAt??null,lastShownAt:e.lastShownAt??null,lastRotatedAt:e.lastRotatedAt??null,rotationMode:e.rotationMode??null,recentAssetIds:e.recentAssetIds??[]}:null;
 const sameJSON=(a,b)=>JSON.stringify(a??null)===JSON.stringify(b??null);
