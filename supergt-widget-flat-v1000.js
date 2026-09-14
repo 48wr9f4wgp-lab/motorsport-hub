@@ -1,7 +1,7 @@
-// Motorsport Hub v10.0.4-hardening — flattened SUPER GT module
+// Motorsport Hub v10.0.5-hardening — flattened SUPER GT module
 // Completed GT500 runtime: official driver ranking + 2026 domestic tail + verified 2024 race-action Hero + validated cache.
 (async()=>{
-const V='10.0.4-hardening',K='supergt',SEASON=2026,CACHE_SCHEMA=1,CACHE_MAX_AGE=7*86400000;
+const V='10.0.5-hardening',K='supergt',SEASON=2026,CACHE_SCHEMA=1,CACHE_MAX_AGE=7*86400000;
 const DATA_SOURCE='https://supergt.net/driver_ranking?gt_class=gt500&series=2026';
 const S={label:'SUPER GT',accent:'#F5B942',rank:'GT500',url:'https://supergt.net/'};
 const C={bg:'#06080B',text:'#F7F9FB',muted:'#B9C2CC',dim:'#8D98A4',good:'#58DA8A',warn:'#FFB84D'};
@@ -37,16 +37,17 @@ function removeCache(){try{if(fm.fileExists(CACHE))fm.remove(CACHE)}catch(_){} }
 function save(d){try{if(!validData(d))return;fm.writeString(CACHE,JSON.stringify({schemaVersion:CACHE_SCHEMA,category:K,season:SEASON,fetchedAt:Date.now(),source:DATA_SOURCE,ranking:d.ranking,event:{race:d.race,date:d.date,circuit:d.circuit,timeTbd:!!d.timeTbd,seasonEnded:!!d.seasonEnded,lifecycle:d.lifecycle},data:d}))}catch(_){} }
 function cache(){try{if(!fm.fileExists(CACHE))return null;const p=JSON.parse(fm.readString(CACHE)),age=Date.now()-Number(p?.fetchedAt);if(p?.schemaVersion!==CACHE_SCHEMA||p?.category!==K||Number(p?.season)!==SEASON||p?.source!==DATA_SOURCE||!Number.isFinite(age)||age<0||age>CACHE_MAX_AGE||!validRanking(p?.ranking)||!p?.event||!validData(p?.data)){removeCache();return null}return p.data}catch(_){removeCache();return null}}
 function fallbackName(raw){const s=String(raw||'').replace(/　/g,' ').replace(/\s+/g,' ').trim();return s||'GT500 DRIVER'}
+const GT500_NOS=new Set(['8','12','14','16','17','19','23','24','36','37','38','39','64','100']);
+function supergtPlainRows(plain){
+ let section=String(plain||''),start=section.search(/(?:順位|Ranking)\s+No\.?\s+(?:ドライバー|Driver)/i);if(start<0)return[];section=section.slice(start);const end=section.search(/(?:決勝順位|Final Standings)/i);section=end>0?section.slice(0,end):section.slice(0,12000);const hasSW=/\bSW\b/i.test(section.slice(0,500));
+ const marks=[],re=/(?:^|\s)(?=(\d{1,2})\s+(\d{1,3})(?:\s|$))/g;let m,last=0;while((m=re.exec(section))){const pos=Number(m[1]),no=String(m[2]);if(!GT500_NOS.has(no))continue;if(!marks.length){if(pos!==1)continue}else if(pos!==last+1)continue;const end=m.index+m[0].length+m[1].length+1+m[2].length;marks.push({pos,no,start:m.index,end});last=pos;if(marks.length>=20)break}
+ const out=[];for(let i=0;i<marks.length;i++){const q=marks[i],chunk=section.slice(q.end,i+1<marks.length?marks[i+1].start:section.length),scoreAt=chunk.search(/(?:^|\s)(?:－|—|-?\d+(?:\.\d+)?)\s/),nameRaw=fallbackName(scoreAt>0?chunk.slice(0,scoreAt):chunk),scorePart=scoreAt>=0?chunk.slice(scoreAt):'',nums=(scorePart.match(/-?\d+(?:\.\d+)?/g)||[]).map(Number).filter(Number.isFinite);let pts=NaN;if(hasSW){if(q.pos===1&&nums.length>=2)pts=nums[nums.length-2];else if(nums.length>=3&&nums[nums.length-2]<0)pts=nums[nums.length-3];else if(nums.length>=2)pts=nums[nums.length-2]}else{if(q.pos===1&&nums.length>=1)pts=nums[nums.length-1];else if(nums.length>=2&&nums[nums.length-1]<0)pts=nums[nums.length-2];else if(nums.length>=1)pts=nums[nums.length-1]}if(!isFinite(pts))continue;const meta=META[q.no]||{name:nameRaw,maker:'',machine:'GT500',team:'No.'+q.no};out.push({pos:q.pos,no:q.no,name:meta.name||nameRaw,points:String(pts)+' pts',maker:meta.maker||'',machine:meta.machine||'GT500',team:meta.team||('No.'+q.no)})}return out
+}
 async function update(d){
  const h=await txt(DATA_SOURCE),plain=clean(h),tableRows=rows(h);if(!/GT\s*500/i.test(plain)||!/(?:ドライバーランキング|Driver Ranking)/i.test(plain))throw Error('SUPER GT table identity');let totalIndex=-1;
  for(const c of tableRows){const i=c.findIndex(v=>/^(?:合計|Total(?:\s*points?)?)$/i.test(String(v||'').trim()));if(i>=0&&c.some(v=>/(?:ドライバー|Driver)/i.test(String(v||'')))){totalIndex=i;break}}
- if(totalIndex<3)throw Error('SUPER GT total column');const a=[];
- for(const c of tableRows){
-  if(c.length<=totalIndex)continue;const p=num(c[0]),no=String(c[1]||'').match(/\d+/)?.[0]||'',pts=num(c[totalIndex]);if(!(p>=1&&p<=30)||!no||!isFinite(pts))continue;
-  const meta=META[no]||{name:fallbackName(c[2]),maker:'',machine:'GT500',team:`No.${no}`};
-  a.push({pos:p,no,name:meta.name||fallbackName(c[2]),points:`${pts} pts`,maker:meta.maker||'',machine:meta.machine||'GT500',team:meta.team||`No.${no}`});
- }
- a.sort((x,y)=>x.pos-y.pos);const seen=new Set(),u=[];for(const r of a){if(seen.has(r.pos))continue;seen.add(r.pos);u.push(r);if(u.length>=5)break}if(u.length<3||u[0].pos!==1)throw Error('SUPER GT standings');d.ranking=u;return nextEvent(d)
+ let a=[];if(totalIndex>=3){for(const c of tableRows){if(c.length<=totalIndex)continue;const p=num(c[0]),no=String(c[1]||'').match(/\d+/)?.[0]||'',pts=num(c[totalIndex]);if(!(p>=1&&p<=30)||!GT500_NOS.has(no)||!isFinite(pts))continue;const meta=META[no]||{name:fallbackName(c[2]),maker:'',machine:'GT500',team:'No.'+no};a.push({pos:p,no,name:meta.name||fallbackName(c[2]),points:String(pts)+' pts',maker:meta.maker||'',machine:meta.machine||'GT500',team:meta.team||('No.'+no)})}}
+ if(a.length<3)a=supergtPlainRows(plain);a.sort((x,y)=>x.pos-y.pos);const seen=new Set(),u=[];for(const r of a){if(seen.has(r.pos))continue;seen.add(r.pos);u.push(r);if(u.length>=5)break}if(u.length<3||u[0].pos!==1)throw Error('SUPER GT standings');d.ranking=u;return nextEvent(d)
 }
 async function load(){const base=nextEvent(clone(SNAP));try{const d=await update(base);save(d);return{d,cached:false}}catch(_){const c=cache();return{d:nextEvent(c||base),cached:true}}}
 function smooth(t){return t*t*(3-2*t)}
