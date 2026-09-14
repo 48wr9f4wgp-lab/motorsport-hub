@@ -58,6 +58,8 @@ function reportCacheWrites(files,startedAt){
   return found;
 }
 
+function isHeroChannelUrl(url){return /raw\.githubusercontent\.com\/48wr9f4wgp-lab\/motorsport-hub\/hero-live\/hero-channel\//i.test(String(url||''))}
+
 function createFetchRequest({record,moduleSource,requestLog,fetchImpl}){
   return class Request{
     constructor(url){this.url=String(url);this.headers={};this.timeoutInterval=10}
@@ -68,7 +70,10 @@ function createFetchRequest({record,moduleSource,requestLog,fetchImpl}){
       }
       return await this.#remote('text');
     }
-    async loadJSON(){return await this.#remote('json')}
+    async loadJSON(){
+      if(isHeroChannelUrl(this.url))throw Object.assign(new Error('HERO_CHANNEL_SKIPPED'),{code:'HERO_CHANNEL_SKIPPED'});
+      return await this.#remote('json');
+    }
     async loadImage(){throw Object.assign(new Error('LIVE_MONITOR_HERO_REQUEST_BLOCKED'),{code:'HERO_REQUEST_BLOCKED'})}
     async #remote(kind){
       const started=Date.now();
@@ -130,7 +135,6 @@ async function runAttempt({record,router,moduleSource,fetchImpl,nowMs}){
   const ctx={
     args:{widgetParameter:record.id},
     config:{runsInWidget:true,widgetFamily:'medium'},
-    __MH_REMOTE_OFFLINE:true,
     FileManager:{local:()=>fm},Request,ListWidget:CtxListWidget,Color,LinearGradient,Size,DateFormatter,Font,
     Date:DateClass,Math,Map,Set,JSON,Number,String,Array,Object,RegExp,Error,Promise,decodeURIComponent,isFinite,
     Script:{setWidget(){setWidget++},complete(){complete++}},
