@@ -70,6 +70,7 @@ jobs:
             tests/hero-runtime-crop-gate.mjs
             tests/f1-wec-hero-runtime-gate.mjs
             tests/domestic-hero-runtime-gate.mjs
+            tests/hero-public-attribution-gate.mjs
             tests/lifecycle-hardening-gate.mjs
             tests/integrity-gate.mjs
             tests/release-package-generator-gate.mjs
