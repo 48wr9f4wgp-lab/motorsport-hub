@@ -12,10 +12,12 @@ assert(!hardening.includes("hardening/v9.3-codex-handoff"),'Hardening CI must no
 assert(!hardening.includes('git push origin HEAD:hardening-live'),'Hardening CI must not mutate hardening-live');
 assert(!hardening.includes('Apply accepted Hero runtime crops once'),'legacy one-shot Hero applicator must not run from current Hardening CI');
 assert(!hardening.includes('tests/hardening-live-source-gate.mjs'),'historical hardening-live source gate must not be part of current validation');
+assert(!hardening.includes('scriptable/club-pulse.js'),'Motorsport Hub CI must not retain Club Pulse syntax exceptions');
 
 const rc=read('.github/workflows/release-candidate-ci.yml');
 assert(/permissions:\s*\n\s*contents:\s*read/.test(rc),'Release Candidate CI must remain read-only');
 assert(!rc.includes('git push origin'),'Release Candidate CI must not push repository refs');
+assert(!rc.includes('scriptable/club-pulse.js'),'Motorsport Hub RC must not retain Club Pulse syntax exceptions');
 
 const heroAttr=read('.github/workflows/hero-public-attribution.yml');
 assert(/permissions:\s*\n\s*contents:\s*read/.test(heroAttr),'Hero attribution workflow default permission must be read-only');
@@ -26,5 +28,7 @@ assert(!heroAttr.includes('git add -A'),'Hero attribution publisher must not sta
 assert(!heroAttr.includes('release-channel.json'),'Hero attribution publisher must not touch Stable descriptor state');
 
 assert(!fs.existsSync(path.join(root,'.github/workflows/wrc-ogier-source-fix.yml')),'obsolete WRC one-shot write workflow must stay removed');
+assert(!fs.existsSync(path.join(root,'.github/workflows/club-pulse-contract.yml')),'Club Pulse workflow must not remain in Motorsport Hub after repository split');
+assert(!fs.existsSync(path.join(root,'scriptable')),'Club Pulse scriptable tree must not remain in Motorsport Hub after repository split');
 
 console.log('Motorsport Hub workflow hygiene gate: PASS');

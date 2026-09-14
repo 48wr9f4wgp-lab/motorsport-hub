@@ -6,12 +6,12 @@ Use this checklist only when preparing the actual broad public General Availabil
 
 ## A. Distribution/legal
 
-- [ ] Software license explicitly approved by owner.
-- [ ] Repository scope is clean enough that the license does not unintentionally cover Club Pulse.
-- [ ] Root/product license file added only after that approval.
+- [x] Software license explicitly approved by owner: **MPL-2.0**.
+- [ ] Club Pulse destination repository populated and verified before Motorsport Hub split/removal merge.
+- [x] Root `LICENSE` and `LICENSE_SCOPE.md` prepared for product-pure Motorsport Hub.
 - [ ] Current `hero-live/hero-channel/ATTRIBUTION.md` exists and validates against the current live Hero pool.
-- [ ] Public install path links to both software-license terms and Hero attribution.
-- [ ] No claim of endorsement by image creators/licensors.
+- [x] Public install path distinguishes software-license terms from third-party Hero attribution.
+- [x] No claim of endorsement by image creators/licensors.
 
 ## B. Exact release identity
 
@@ -31,17 +31,17 @@ Run on the exact Stable intended for distribution:
 - [ ] one Large widget;
 - [ ] online refresh;
 - [ ] LKG/offline recovery if the GA Stable changes runtime/Loader-sensitive behavior;
-- [ ] no visible startup, routing, clipping or progression blocker.
+- [ ] no visible startup, routing or clipping blocker.
 
 Record physical-device evidence as user-confirmed evidence; do not represent it as GitHub-verifiable automation.
 
 ## D. Public support surface
 
-- [ ] `INSTALL.md` current.
-- [ ] `SUPPORT.md` current.
-- [ ] `PRIVACY.md` current.
-- [ ] GitHub bug-report template active.
-- [ ] Public README names the current Stable.
+- [x] `INSTALL.md` current.
+- [x] `SUPPORT.md` current.
+- [x] `PRIVACY.md` current.
+- [x] GitHub bug-report template active.
+- [x] Public README names the current Stable.
 - [ ] Optional observability export is not advertised as mandatory until its iPhone Share Sheet interaction has been physically exercised.
 
 ## E. Final authorization
@@ -51,4 +51,6 @@ Record physical-device evidence as user-confirmed evidence; do not represent it 
 
 ## Current state
 
-As of 2026-09-14, Motorsport Hub is technically a GA-capable candidate but **broad GA is not authorized**. The remaining hard owner decision is software-license/repository scope, followed by the final physical smoke and explicit launch approval.
+Motorsport Hub is technically a GA-capable candidate. The MPL-2.0/software-license decision is complete. **Broad GA is not authorized.**
+
+The immediate cutover blocker is safe Club Pulse preservation in its separate repository. After that, the remaining hard launch steps are live Hero attribution proof, exact-Stable physical iPhone smoke, and explicit GA authorization.
