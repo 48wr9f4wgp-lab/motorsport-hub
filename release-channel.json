@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "channel": "stable",
-  "sequence": 4,
-  "version": "9.5.23",
-  "releasedAt": "2026-09-14T04:07:12Z",
-  "sourceRef": "e9f4291cebde110da1780afb984274d01c5455c3",
-  "releaseId": "mh-e9f4291cebde",
+  "sequence": 5,
+  "version": "9.5.24",
+  "releasedAt": "2026-09-14T04:56:24Z",
+  "sourceRef": "bd677ba4ae20a95501cbc043b34a6ca1a1ca8c39",
+  "releaseId": "mh-bd677ba4ae20",
   "routerSchema": 5,
   "categoryManifest": "F1,WEC,WRC,SUPERGT,MOTOGP,FDJ,D1GP,SUPERFORMULA,INDYCAR,NASCAR,GTWCEU,DAKAR,QA",
   "router": {
@@ -14,23 +14,23 @@
     "bytes": 14252
   },
   "files": {
-    "f1-widget-flat-v1000.js": {"sha256": "587ec68732dff0b6ba740c84ac4348278b0012f29ef0ca86d7ec3cd83bf1d2e6", "bytes": 17368},
-    "wec-widget-flat-v1000.js": {"sha256": "df56d7f0117c62b023e9b79a35717643c0771ef7d4b873c3e59ff6b88a721f98", "bytes": 16592},
-    "wrc-widget-flat-v1000.js": {"sha256": "b2a6d06853d413099360f271b3ba4339b5b6ceb45e30e40c14a12d367629c886", "bytes": 18182},
-    "supergt-widget-flat-v1000.js": {"sha256": "41ca2c911a7ee6e591e07c003f883f83d6e67e4a119987b8cefbca1c33cf350f", "bytes": 16926},
-    "motogp-widget-flat-v1000.js": {"sha256": "433e7c9c546392ff8cbfb068ca93eb20ffb41cf64e9730ef0259595ad24bab0b", "bytes": 18313},
-    "fdj-widget-flat-v1000.js": {"sha256": "bd559b2491d022617b1a3b6ebd2ef4cbc8739d0836aaa60aaea845abacfebf98", "bytes": 15840},
-    "d1gp-widget-flat-v1000.js": {"sha256": "5cd38e4bb8e2e1695220fbfd285c4f90491327f453304173fe761696b128fa42", "bytes": 16125},
-    "superformula-widget.js": {"sha256": "52feeb24dd1ae594fcbc51811ca55a2c12b645855f4753ced1b4acb6c76e0c53", "bytes": 16358},
-    "indycar-widget.js": {"sha256": "3d58f68bcd115277d646df49958766a4d5b9eb29b7f62949a2a7c0c849ad0dea", "bytes": 16650},
-    "nascar-widget.js": {"sha256": "2c2039cb582a8bc3278e0079e2e0978ff6982497ec7a2695b60ee494ad35df0f", "bytes": 16764},
-    "gtwc-europe-widget.js": {"sha256": "9b0cf7137257b9d448d04d70123279494ecf1303421bc9a1fb62ba739276244b", "bytes": 16924},
-    "dakar-widget.js": {"sha256": "6afc6dff15e745c6c778f21918323978a120949b584a1d9ad286dbdd36ead5b0", "bytes": 22867},
+    "f1-widget-flat-v1000.js": {"sha256": "5099bcbaa8e798235481db9b5a4dbd5b4434565d25e009e7caa8d1f86deff63f", "bytes": 17401},
+    "wec-widget-flat-v1000.js": {"sha256": "9f5b4e4b7457dd6a98665fa28fef82e346a2e197cda45c59f0006e797e62e4bb", "bytes": 16625},
+    "wrc-widget-flat-v1000.js": {"sha256": "1165f2a74f6af4dcb16e050cc12ab809b8b77317624e9988141ae3ec9e849ea7", "bytes": 18215},
+    "supergt-widget-flat-v1000.js": {"sha256": "bf75a3a1a7cc9a57f76432aee45b6c410f2c3020c51444b503afacfaf56b2475", "bytes": 16959},
+    "motogp-widget-flat-v1000.js": {"sha256": "ac8a01158bad3f3efe922d0ac79b5f5b408b8ca758f5ba82e3976c48346479d7", "bytes": 18346},
+    "fdj-widget-flat-v1000.js": {"sha256": "7a6e60a6e7493f1d21901f18cf7ed433b209e1223b23972f470c09b9f58b9539", "bytes": 15873},
+    "d1gp-widget-flat-v1000.js": {"sha256": "d70e93ecb8da7ebb1365aca55d40154cf99db5b5cdd6d87ec2fe72afd2ff8c5e", "bytes": 16158},
+    "superformula-widget.js": {"sha256": "bfd01b5e0b25acce0cb3151add157658d424f8af5350d1aeb3eecd28f0964fce", "bytes": 16391},
+    "indycar-widget.js": {"sha256": "968eb4781685df7dbf8c7eb269dd77044544f02ce1411038d1aa6ad4dfb4949b", "bytes": 16683},
+    "nascar-widget.js": {"sha256": "b413e8ac06cfcd4df79167d527914037c0426323244a6de12ab6979982a44937", "bytes": 16797},
+    "gtwc-europe-widget.js": {"sha256": "ed311144caed0542794e41959a280f4e99c74cb82543ca42a0b75fbf824544ea", "bytes": 16957},
+    "dakar-widget.js": {"sha256": "d2ffba884d931600af2b31aea13d19e98882259f6432dc7e2aa1272a9fc5279c", "bytes": 22900},
     "motorsport-diagnostics-v890.js": {"sha256": "9554fe4e2824b59c15200da185202b7b0e706d8a198fd3512a8a285a09a88e16", "bytes": 5451}
   },
   "validatedBy": {
-    "releaseRef": "fd5d518508249cd313370da0f18d909206fbcc8d",
+    "releaseRef": "3e4b2b64cd51a91c0a85e81a728f3be291b3de3c",
     "workflow": "Motorsport Hub Release Candidate CI",
-    "runId": 34804757852
+    "runId": 34807835159
   }
 }
