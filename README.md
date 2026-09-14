@@ -30,6 +30,14 @@ The short version:
 
 Future approved Stable releases are discovered by Loader v7 automatically; the installed loader normally does not need to be replaced for each release.
 
+### Loader file roles
+
+- `scriptable-loader-v7.js` — **canonical installed production loader**; Stable-channel discovery, immutable verification, promotion and local LKG.
+- `scriptable-loader-v6.js` remains the per-release immutable CI artifact generated from an exact validated release source.
+- `scriptable-loader.js` — **legacy v4 compatibility loader**.
+- `scriptable-loader-v5.js` — **legacy transactional compatibility loader**.
+- `scriptable-loader-v6-qa.js` — **retired historical QA snapshot**.
+
 ## Widget Parameters
 
 | Championship | Parameter | Alias examples |
