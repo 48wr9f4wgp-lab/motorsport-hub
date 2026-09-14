@@ -58,6 +58,14 @@ Do **not** replace the installed loader for every release. Loader v7 reads the a
 
 The current Stable version is recorded in `release-channel.json`; repository `main` can be newer than Stable and is not executed directly by Loader v7.
 
+## Hero credits and redistribution
+
+Motorsport Hub uses licensed third-party Hero imagery. The fallback attribution policy is documented in `ATTRIBUTION.md`, and the current dynamic Hero pool is designed to publish a generated human-readable credit file at `hero-live/hero-channel/ATTRIBUTION.md` alongside its machine-readable `channel.json`.
+
+Do not remove source/author/license information when redistributing Hero derivatives.
+
+The repository is public, but the Motorsport Hub software license has **not yet been finally approved**. Public visibility is not itself permission to redistribute or commercially package the software. See `LICENSE_DECISION.md` and `GA_READINESS.md` before redistribution.
+
 ## Troubleshooting
 
 See `SUPPORT.md`. If a widget shows `更新待ち`, do not immediately reinstall: the local fallback may be protecting you from an upstream/parser failure. Run `QA` first so the failing layer can be identified.
