@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-14T00:40:24.798Z",
+  "generatedAt": "2026-09-14T00:46:50.926Z",
   "thresholds": {
     "minScore": 0.72,
     "minDetection": 0.55,
@@ -16,17 +16,13 @@
     "rotationMinAgeHours": 48,
     "rotationReuseCooldownHours": 48
   },
-  "promoted": [
+  "promoted": [],
+  "promotionModes": {},
+  "poolUpdated": [
     "SUPERFORMULA",
     "WEC",
     "WRC"
   ],
-  "promotionModes": {
-    "SUPERFORMULA": "POOL_ROTATION",
-    "WEC": "POOL_ROTATION",
-    "WRC": "POOL_ROTATION"
-  },
-  "poolUpdated": [],
   "suppressed": [],
   "updatedCategories": [
     "SUPERFORMULA",
