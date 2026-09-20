@@ -107,7 +107,9 @@ const LARGE_TYPO_SCALE=1.12;
 function T(st,s,z,c,w='regular',n=1){const __mhZ=(config.widgetFamily||'medium')==='large'?z*LARGE_TYPO_SCALE:z;const t=st.addText(String(s??''));t.font=w==='heavy'?Font.heavySystemFont(__mhZ):w==='bold'?Font.boldSystemFont(__mhZ):w==='semibold'?Font.semiboldSystemFont(__mhZ):Font.systemFont(__mhZ);t.textColor=c;t.lineLimit=n;t.minimumScaleFactor=.64;return t}
 function base(bg){const w=new ListWidget();if(bg)w.backgroundImage=bg;else{const g=new LinearGradient();g.colors=[col(S.accent,.18),col(C.bg)];g.locations=[0,1];w.backgroundGradient=g}w.url=tapURL();return w}
 function pill(st,label,accent=false){const p=st.addStack();p.backgroundColor=accent?col(S.accent,.22):col('#000000',.50);p.cornerRadius=8;p.setPadding(3,7,3,7);T(p,label,accent?9.1:9.4,accent?col(S.accent):col(C.text),'heavy');return p}
-function countdown(d){if(d.lifecycle==='SEASON_ENDED'||d.seasonEnded)return{label:'FINISH',live:false};const now=Date.now(),s=Date.parse(d.start),e=Date.parse(d.end);if(now>=s&&now<e)return{label:'開催中',live:true};const q=s-now;if(q<=0)return{label:'終了',live:false};const h=q/3600000;if(h<24)return{label:`あと${Math.ceil(h)}時間`,live:false};return{label:`あと${Math.ceil(h/24)}日`,live:false}}
+function tokyoDay(ts){return Math.floor((Number(ts)+9*3600000)/86400000)}
+function dayLabel(ts){const days=tokyoDay(ts)-tokyoDay(Date.now());return days<=0?'今日':`あと${days}日`}
+function countdown(d){if(d.lifecycle==='SEASON_ENDED'||d.seasonEnded)return{label:'FINISH',live:false};const now=Date.now(),s=Date.parse(d.start),e=Date.parse(d.end);if(now>=s&&now<e)return{label:'開催中',live:true};const q=s-now;if(q<=0)return{label:'終了',live:false};const h=q/3600000;if(h<24)return{label:`あと${Math.ceil(h)}時間`,live:false};return{label:dayLabel(s),live:false}}
 function stageLabel(d){return d.seasonEnded?'2027 FINISH':d.stage}
 function routeLabel(d){return d.routeShort||d.route}
 function sub(r){return [`#${r.no||'?'}`,r.machine||'ULTIMATE'].join(' · ')+`  ｜  ${r.team||'DAKAR'}`}
