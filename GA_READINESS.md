@@ -1,17 +1,18 @@
 # Motorsport Hub — GA Readiness
 
-Updated: 2026-09-14 JST
+Updated: 2026-09-20 JST
 
 This file tracks what is still required before **broad public General Availability (GA)**. It does not itself authorize public distribution, Store submission, paid distribution, Stable publication, or an external service contract.
 
 ## Current product state
 
 - Public RC: **APPROVED**.
-- Current Stable: **v9.5.29 / sequence 7**.
-- Stable sourceRef: `7f3fc1eb6fa93c619c1def732b18d091c9e949ce`.
-- Stable WEC / SUPER GT device parser repair: **physical iPhone PASS**.
+- Current Stable: **v9.5.30 / sequence 8**.
+- Stable sourceRef: `8347c0377235752744ed34e62f829cc25004db38`.
+- Stable v9.5.29 WEC / SUPER GT device parser repair: **physical iPhone PASS**.
+- Stable v9.5.30 temporal/Dakar hardening: **RC validated; focused physical iPhone confirmation pending**.
 - No known reproducible P0 startup/routing/current-data blocker.
-- `main` contains later, not-yet-published Dakar 2027 rollover hardening and GA/release-engineering hardening.
+- Stable v9.5.30 includes Dakar 2027 rollover hardening plus the 2026-09-20 temporal-accuracy/Dakar presentation repairs.
 - Centralized production telemetry: **not enabled**.
 
 ## Resolved GA preparation items
@@ -34,11 +35,11 @@ Third-party Hero imagery is not relicensed under MPL-2.0; its Creative Commons o
 
 ### 1. Club Pulse migration cutover
 
-**BLOCKER UNTIL DESTINATION COPY IS VERIFIED.**
+**RESOLVED.**
 
-The prepared Motorsport Hub split removes the Club Pulse `scriptable/` tree and `.github/workflows/club-pulse-contract.yml`, but that removal must not be merged until Club Pulse has been preserved and tested in its own repository.
+Club Pulse is preserved in its dedicated repository, its migration PR was merged, destination CI passed before and after merge, and Motorsport Hub's product-pure/MPL cutover is merged.
 
-Canonical export source and verification requirements are recorded in `CLUB_PULSE_MIGRATION.md`.
+Canonical export source and migration evidence remain recorded in `CLUB_PULSE_MIGRATION.md`.
 
 ### 2. Public Hero attribution publication
 
@@ -75,9 +76,9 @@ A green repository/CI state is not authorization to begin broad public distribut
 
 `support-observability-export.js` has deterministic CI coverage but its Share Sheet interaction has not yet been physically exercised on iPhone. QA screenshot + issue evidence remains sufficient as the primary public support path until that optional flow is verified.
 
-### Dakar 2027 Stable timing
+### Dakar 2027 live verification
 
-`main` contains season-aware Dakar cache rollover hardening that is not in Stable v9.5.29. There is no need to rush a September Stable solely for this future-season protection, but a tested Stable containing it should be published before 2027 live standings are expected to take over.
+Stable v9.5.30 now contains the season-aware Dakar cache/LKG rollover hardening.
 
 Actual Dakar 2027 live endpoint/parser behavior cannot be empirically proven until the live 2027 standings surface exists.
 
@@ -100,9 +101,8 @@ Actual Dakar 2027 live endpoint/parser behavior cannot be empirically proven unt
 
 Remaining hard path:
 
-1. preserve/verify Club Pulse in its destination repository, then merge the product-pure Motorsport Hub/MPL cutover;
-2. confirm generated live Hero attribution publication;
-3. select the exact GA Stable and perform final physical iPhone smoke;
-4. obtain explicit owner authorization for broad GA.
+1. confirm generated live Hero attribution publication;
+2. perform focused v9.5.30 physical iPhone confirmation, then final representative GA smoke on the exact Stable;
+3. obtain explicit owner authorization for broad GA.
 
 No Store submission, paid distribution, broad public launch, external analytics contract or new Stable publication is authorized by this document.
