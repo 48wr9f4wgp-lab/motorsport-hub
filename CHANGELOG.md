@@ -2,11 +2,21 @@
 
 ## Unreleased — main only
 
-These changes are merged to `main` but are **not** part of Stable v9.5.29 unless/until a later Stable descriptor is explicitly published:
+At publication time, there are no runtime changes on `main` beyond Stable v9.5.30. Publication metadata and documentation may be newer than the immutable Stable sourceRef.
 
-- Dakar 2027 rollover hardening: season-aware cache/LKG behavior prevents a cached 2026 final ranking from being treated as the 2027 live-ranking LKG after 2027 standings are expected; deterministic tests cover pre-start, Stage 1 rollover, stale-2026 rejection and valid-2027 LKG recovery.
-- GA workflow hygiene: Hardening CI is read-only; obsolete v9.3 branch mutation paths and the consumed WRC one-shot write workflow were removed; a workflow-hygiene regression gate protects the new permission boundary.
-- Public GA documentation/onboarding work is being prepared separately and does not change Stable runtime behavior.
+## v9.5.30 — Stable temporal accuracy + Dakar hardening
+
+- Current Stable: **sequence 8**.
+- Stable sourceRef: `8347c0377235752744ed34e62f829cc25004db38`.
+- WEC Fuji 2026 start anchor corrected from 12:00 to **11:00 JST**.
+- All category day-count labels use Tokyo calendar-day semantics instead of rolling 24-hour ceiling; exact-time events retain minute/hour countdowns inside 24 hours.
+- Same-day time-TBD events render **今日**.
+- NASCAR uses **レース中** in the top state during its exact live window.
+- Dakar rejects a bare `+` as a valid GAP, reconstructs missing gaps from total time when possible, and hides the internal H1/3-style fallback Hero index while preserving tap-to-cycle behavior.
+- Includes Dakar 2027 ranking-season cache/LKG rollover hardening.
+- Carries the product-pure repository/MPL-2.0 and GA-release-engineering work merged since v9.5.29; those repository changes do not alter the immutable widget runtime package outside the listed runtime fixes.
+- Release Candidate validation: run **#274 / 35507716156 SUCCESS**.
+- Focused physical iPhone confirmation of the corrected v9.5.30 fields remains pending immediately after Stable promotion.
 
 ## v9.5.29 — Stable device parser repair
 
