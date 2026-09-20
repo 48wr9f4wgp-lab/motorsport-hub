@@ -43,7 +43,8 @@ for(const c of cases){
  assert(src.includes('MH_LIFECYCLE_BAKED=1'),`${c.parameter}: baked lifecycle marker missing`);
  assert(src.includes("lifecycle:'SEASON_ENDED'"),`${c.parameter}: season-ended contract missing`);
  assert(src.includes('now>=s&&now<e'),`${c.parameter}: half-open lifecycle boundary missing`);
- assert(src.includes("?'シーズン終了':'次戦'"),`${c.parameter}: lifecycle-aware header missing`);
+ if(c.parameter==='NASCAR')assert(src.includes("?'シーズン終了':ci.live?'レース中':'次戦'"),'NASCAR: live-aware lifecycle header missing');
+ else assert(src.includes("?'シーズン終了':'次戦'"),`${c.parameter}: lifecycle-aware header missing`);
  const atEnd=await render({...c,now:c.exactEnd});assert(atEnd.includes(c.nextTitle),`${c.parameter}: exact end must advance under [start,end)`);assert(!atEnd.includes('開催中'),`${c.parameter}: exact end must not remain ACTIVE`);
  const ended=await render({...c,now:c.afterFinal});assert(ended.includes('シーズン終了'),`${c.parameter}: finale header missing`);assert(ended.includes('SEASON END'),`${c.parameter}: finale countdown missing`);assert(!ended.includes('次戦'),`${c.parameter}: finale must not claim a next event`);
 }

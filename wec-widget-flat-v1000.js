@@ -13,7 +13,7 @@ const SNAP={race:'Lone Star Le Mans',date:'2026-09-06T13:00:00-05:00',timeTbd:fa
 ]};
 const CAL=[
  ['Lone Star Le Mans','2026-09-06T13:00:00-05:00','Circuit of the Americas',false],
- ['6 Hours of Fuji','2026-09-27T12:00:00+09:00','Fuji Speedway',false],
+ ['6 Hours of Fuji','2026-09-27T11:00:00+09:00','Fuji Speedway',false],
  ['6 Hours of Barcelona','2026-10-18T12:00:00+02:00','Circuit de Barcelona-Catalunya',true],
  ['6 Hours of Monza','2026-11-08T12:00:00+01:00','Autodromo Nazionale Monza',true]
 ];
@@ -61,7 +61,9 @@ function T(st,s,z,c,w='regular',n=1){const __mhZ=(config.widgetFamily||'medium')
 function rn(s){if(/Lone Star Le Mans/i.test(s))return'ローンスター・ル・マン';if(/6 Hours of Fuji/i.test(s))return'富士6時間';if(/6 Hours of Barcelona/i.test(s))return'バルセロナ6時間';if(/6 Hours of Monza/i.test(s))return'モンツァ6時間';return s}
 function cn(s){if(/Circuit of the Americas/i.test(s))return'COTA';if(/Fuji Speedway/i.test(s))return'富士スピードウェイ';if(/Barcelona/i.test(s))return'バルセロナ';if(/Monza/i.test(s))return'モンツァ';return s||''}
 function dateText(d){const x=new Date(d.date),f=new DateFormatter();f.locale='ja_JP';f.timeZone='Asia/Tokyo';f.dateFormat=d.timeTbd?'M/d(E)':'M/d(E) HH:mm';return f.string(x)+(d.timeTbd?'・時刻未定':'')}
-function countdown(d){if(d.lifecycle==='SEASON_ENDED'||d.seasonEnded)return{label:'SEASON END',live:false};const q=new Date(d.date)-Date.now(),hold=10*3600000;if(q<=0&&q>-hold)return{label:'開催中',live:true};if(q<=0)return{label:'終了',live:false};const h=q/3600000;if(d.timeTbd)return{label:`あと${Math.max(1,Math.ceil(h/24))}日`,live:false};if(h<24)return{label:`あと${Math.ceil(h)}時間`,live:false};return{label:`あと${Math.ceil(h/24)}日`,live:false}}
+function tokyoDay(ts){return Math.floor((Number(ts)+9*3600000)/86400000)}
+function dayLabel(ts){const days=tokyoDay(ts)-tokyoDay(Date.now());return days<=0?'今日':`あと${days}日`}
+function countdown(d){if(d.lifecycle==='SEASON_ENDED'||d.seasonEnded)return{label:'SEASON END',live:false};const t=Date.parse(d.date),q=t-Date.now(),hold=10*3600000;if(q<=0&&q>-hold)return{label:'開催中',live:true};if(q<=0)return{label:'終了',live:false};const h=q/3600000;if(d.timeTbd)return{label:dayLabel(t),live:false};if(h<24)return{label:`あと${Math.ceil(h)}時間`,live:false};return{label:dayLabel(t),live:false}}
 function sub(r){return[r.machine||'',r.team||''].filter(Boolean).join('  ｜  ')}
 function base(bg){const w=new ListWidget();if(bg)w.backgroundImage=bg;else{const g=new LinearGradient();g.colors=[col(S.accent,.16),col(C.bg)];g.locations=[0,1];w.backgroundGradient=g}w.url=S.url;return w}
 function pill(st,label,accent=false){const p=st.addStack();p.backgroundColor=accent?col(S.accent,.18):col('#000000',.30);p.cornerRadius=8;p.setPadding(3,7,3,7);T(p,label,accent?9.6:9.1,accent?col(S.accent):col(C.muted),'heavy');return p}

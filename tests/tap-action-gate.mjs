@@ -21,8 +21,8 @@ const Font={heavySystemFont(){},boldSystemFont(){},semiboldSystemFont(){},system
 function FixedDateFactory(ms){return class FixedDate extends Date{constructor(...a){super(...a)}static now(){return ms}static parse(s){return Date.parse(s)}}}
 const FIXTURE=`<table><tr><th>P.</th><th>N°</th><th>Exp.</th><th>Pilote/Véhicule</th><th>Équipe</th><th>Temps</th><th>Écart</th></tr>
 <tr><td>1</td><td>299</td><td></td><td>The Dacia Sandriders (qat) NASSER AL-ATTIYAH (bel) FABIAN LURQUIN</td><td>The Dacia Sandriders</td><td>48h 56' 53''</td><td></td></tr>
-<tr><td>2</td><td>227</td><td></td><td>FORD RACING (esp) NANI ROMA (esp) ALEX HARO</td><td>FORD RACING</td><td>49h 06' 35''</td><td>+ 00h 09' 42''</td></tr>
-<tr><td>3</td><td>226</td><td></td><td>FORD RACING (swe) MATTIAS EKSTRÖM (swe) EMIL BERGKVIST</td><td>FORD RACING</td><td>49h 11' 26''</td><td>+ 00h 14' 33''</td></tr></table>`;
+<tr><td>2</td><td>227</td><td></td><td>FORD RACING (esp) NANI ROMA (esp) ALEX HARO</td><td>FORD RACING</td><td>49h 06' 35''</td><td></td></tr>
+<tr><td>3</td><td>226</td><td></td><td>FORD RACING (swe) MATTIAS EKSTRÖM (swe) EMIL BERGKVIST</td><td>FORD RACING</td><td>49h 11' 26''</td><td></td></tr></table>`;
 
 // Router query parameter must bypass the picker, go directly to Dakar, and still consult the shared Hero channel.
 {
@@ -73,17 +73,19 @@ const files=new Map();
  const r=await runTap(files),state=JSON.parse(files.get('/docs/motorsport-ui-v1-dakar.json'));
  assert.equal(state.heroVariant,1,'first tap must advance hero 0→1');
  assert(r.widget.url.includes('mhCategory=DAKAR&mhAction=cycleHero'),'widget tap URL missing action query');
- assert(r.sink.includes('H2/3'),'first tap preview should expose Hero 2/3');
+ assert(!r.sink.some(v=>/^H\d\/3$/.test(v)),'internal Hero index must stay hidden from public UI');
+ assert(r.sink.includes('+9:42'),'Dakar parser must reconstruct P2 gap from total time');
+ assert(r.sink.includes('+14:33'),'Dakar parser must reconstruct P3 gap from total time');
 }
 {
  const r=await runTap(files),state=JSON.parse(files.get('/docs/motorsport-ui-v1-dakar.json'));
  assert.equal(state.heroVariant,2,'second tap must advance hero 1→2');
- assert(r.sink.includes('H3/3'),'second tap preview should expose Hero 3/3');
+ assert(!r.sink.some(v=>/^H\d\/3$/.test(v)),'internal Hero index must remain hidden after second tap');
 }
 {
  const r=await runTap(files),state=JSON.parse(files.get('/docs/motorsport-ui-v1-dakar.json'));
  assert.equal(state.heroVariant,0,'third tap must wrap hero 2→0');
- assert(r.sink.includes('H1/3'),'third tap preview should wrap to Hero 1/3');
+ assert(!r.sink.some(v=>/^H\d\/3$/.test(v)),'internal Hero index must remain hidden after wrap');
 }
 
 console.log('Motorsport Hub tap action gate: PASS');
