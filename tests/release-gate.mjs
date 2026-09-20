@@ -35,7 +35,7 @@ for(const id of ['F1','WEC','WRC','SUPERGT','MOTOGP','FDJ','D1GP']){
  const src=sourceById[id];assert(/flattened .* module|flattened F1 pilot module/.test(src),`${id}: flattened module marker missing`);assert(!src.includes('raw.githubusercontent.com'));assert(!/\beval\s*\(/.test(src));assert(src.includes("lifecycle:'SEASON_ENDED'")||src.includes("lifecycle:'UPCOMING'"));assert(src.includes('SEASON=2026'));
 }
 for(const id of ['SUPERFORMULA','INDYCAR','NASCAR','GTWCEU']){
- const src=sourceById[id];assert(src.includes('MH_LIFECYCLE_BAKED=1'));assert(src.includes("lifecycle:'SEASON_ENDED'"));assert(src.includes('now>=s&&now<e'));assert(src.includes("?'シーズン終了':'次戦'"));assert(!src.includes('raw.githubusercontent.com'));assert(!/\beval\s*\(/.test(src));assert(src.includes('SEASON=2026'));
+ const src=sourceById[id];assert(src.includes('MH_LIFECYCLE_BAKED=1'));assert(src.includes("lifecycle:'SEASON_ENDED'"));assert(src.includes('now>=s&&now<e'));if(id==='NASCAR')assert(src.includes("?'シーズン終了':ci.live?'レース中':'次戦'"),'NASCAR live-aware header missing');else assert(src.includes("?'シーズン終了':'次戦'"),`${id}: lifecycle-aware header missing`);assert(!src.includes('raw.githubusercontent.com'));assert(!/\beval\s*\(/.test(src));assert(src.includes('SEASON=2026'));
 }
 
 assert(sourceById.F1.includes('api.jolpi.ca/ergast/f1/2026.json')&&sourceById.F1.includes('driverstandings.json'));assert(sourceById.F1.includes('Promise.all([json(SCHEDULE_SOURCE),json(STANDINGS_SOURCE)])'));assert(sourceById.F1.includes("race:'Abu Dhabi Grand Prix'")&&sourceById.F1.includes('2026-12-06T13:00:00Z'));
