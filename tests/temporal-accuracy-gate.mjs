@@ -57,16 +57,14 @@ for(const file of modules){
 
 const now=Date.parse('2026-09-20T08:48:00+09:00');
 
-assert.deepEqual(
- countdownAt('supergt-widget-flat-v1000.js',now,{date:'2026-09-20T12:00:00+09:00',timeTbd:true,lifecycle:'UPCOMING',seasonEnded:false}),
- {label:'今日',live:false},
- 'SUPER GT same-day TBD event must say 今日'
-);
-assert.deepEqual(
- countdownAt('motogp-widget-flat-v1000.js',now,{date:'2026-09-20T12:00:00+02:00',timeTbd:true,lifecycle:'UPCOMING',seasonEnded:false}),
- {label:'今日',live:false},
- 'MotoGP same Tokyo-calendar day TBD event must say 今日'
-);
+{
+ const r=countdownAt('supergt-widget-flat-v1000.js',now,{date:'2026-09-20T12:00:00+09:00',timeTbd:true,lifecycle:'UPCOMING',seasonEnded:false});
+ assert.equal(r.label,'今日','SUPER GT same-day TBD event must say 今日');assert.equal(r.live,false);
+}
+{
+ const r=countdownAt('motogp-widget-flat-v1000.js',now,{date:'2026-09-20T12:00:00+02:00',timeTbd:true,lifecycle:'UPCOMING',seasonEnded:false});
+ assert.equal(r.label,'今日','MotoGP same Tokyo-calendar day TBD event must say 今日');assert.equal(r.live,false);
+}
 assert.equal(
  countdownAt('f1-widget-flat-v1000.js',now,{start:'2026-09-26T20:00:00+09:00',end:'2026-09-26T23:00:00+09:00',lifecycle:'UPCOMING',seasonEnded:false}).label,
  'あと6日',
@@ -78,7 +76,7 @@ assert.equal(
  'WEC long countdown must use Tokyo calendar-day difference'
 );
 const nascarLive=countdownAt('nascar-widget.js',now,{start:'2026-09-19T19:30:00-04:00',end:'2026-09-20T01:30:00-04:00',lifecycle:'ACTIVE',seasonEnded:false});
-assert.deepEqual(nascarLive,{label:'開催中',live:true},'NASCAR exact live window must remain live');
+assert.equal(nascarLive.label,'開催中','NASCAR exact live window must remain live');assert.equal(nascarLive.live,true);
 
 const wec=source('wec-widget-flat-v1000.js');
 assert(wec.includes("['6 Hours of Fuji','2026-09-27T11:00:00+09:00','Fuji Speedway',false]"),'WEC Fuji 2026 race must be pinned to official 11:00 JST start');
