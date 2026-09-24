@@ -15,6 +15,8 @@ assert.match(wrc,/Special:Redirect\/file\/2025%20Toyota%20GR%20Yaris%20Rally%201
 assert.doesNotMatch(wrc,/Ogier_%28cropped%29|645px-2025_Toyota_GR_Yaris_Rally_1_Ogier/,'broken low-resolution Ogier fallback must not return');
 assert.doesNotMatch(wrc,/eval\s*\(/,'flat WRC must not eval remote source');
 assert.doesNotMatch(wrc,/raw\.githubusercontent\.com/,'flat WRC must not fetch nested repo modules');
+assert.doesNotMatch(wrc,/Rally Saudi Arabia|2026-11-11T09:00:00\+03:00/,'Saudi Arabia must not remain in the 2026 WRC calendar');
+assert.match(wrc,/WRC Rally Italia Sardegna.*2026-10-01T09:00:00\+02:00/,'Sardegna must remain the 2026 WRC finale');
 
 class Text {constructor(v,s){this.value=String(v);s.push(this.value)} rightAlignText(){}}
 class Stack {constructor(s){this.s=s} addText(v){return new Text(v,this.s)} addSpacer(){} addStack(){return new Stack(this.s)} setPadding(){} layoutHorizontally(){} centerAlignContent(){}}
@@ -54,11 +56,11 @@ async function run({now,seedCache=null,html=null}){
  assert(atEnd.sink.includes('ラリー・チリ'),'exact 96h boundary must advance to Chile');assert(!atEnd.sink.includes('開催中'));
 }
 {
- const finale=await run({now:'2026-11-15T09:00:00+03:00'});
- assert(finale.sink.includes('ラリー・サウジアラビア'));assert(finale.sink.includes('シーズン終了'));assert(finale.sink.includes('SEASON END'));assert(!finale.sink.includes('次戦'));
+ const finale=await run({now:'2026-10-05T09:00:00+02:00'});
+ assert(finale.sink.includes('ラリー・サルディニア'));assert(finale.sink.includes('シーズン終了'));assert(finale.sink.includes('SEASON END'));assert(!finale.sink.includes('次戦'));assert(!finale.sink.includes('サウジ'));
 }
 {
- const r=await run({now:'2026-11-15T09:00:00+03:00',seedCache:JSON.stringify({ranking:{}})});
+ const r=await run({now:'2026-10-05T09:00:00+02:00',seedCache:JSON.stringify({ranking:{}})});
  assert.equal(r.files.has(r.cachePath),false,'malformed WRC cache must be removed');assert.equal(r.setWidget,1);assert.equal(r.complete,1);
 }
 

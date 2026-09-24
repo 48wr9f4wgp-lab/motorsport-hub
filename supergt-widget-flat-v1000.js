@@ -17,9 +17,20 @@ const CAL=[
  ['第8戦 MOTEGI','2026-11-08T12:00:00+09:00','モビリティリゾートもてぎ',true]
 ];
 const META={
- '36':{name:'坪井 翔 / 山下 健太',maker:'TOYOTA',machine:'GR Supra',team:"au TOM'S"},
- '16':{name:'野尻 智紀 / 佐藤 蓮',maker:'HONDA',machine:'PRELUDE-GT',team:'ARTA'},
- '14':{name:'福住 仁嶺 / 大嶋 和也',maker:'TOYOTA',machine:'GR Supra',team:'ROOKIE'}
+ '8':{name:'太田 格之進 / 大津 弘樹',maker:'HONDA',machine:'PRELUDE-GT',team:'Team HRC ARTA MUGEN'},
+ '12':{name:'平峰 一貴 / ベルトラン・バゲット',maker:'NISSAN',machine:'Z NISMO GT500',team:'TEAM IMPUL'},
+ '14':{name:'福住 仁嶺 / 大嶋 和也',maker:'TOYOTA',machine:'GR Supra',team:'TGR TEAM ENEOS ROOKIE'},
+ '16':{name:'野尻 智紀 / 佐藤 蓮',maker:'HONDA',machine:'PRELUDE-GT',team:'ARTA MUGEN'},
+ '17':{name:'塚越 広大 / 野村 勇斗',maker:'HONDA',machine:'PRELUDE-GT',team:'Astemo REAL RACING'},
+ '19':{name:'国本 雄資 / 阪口 晴南',maker:'TOYOTA',machine:'GR Supra',team:'TGR TEAM WedsSport BANDOH'},
+ '23':{name:'千代 勝正 / 高星 明誠',maker:'NISSAN',machine:'Z NISMO GT500',team:'NISMO'},
+ '24':{name:'名取 鉄平 / 三宅 淳詞',maker:'NISSAN',machine:'Z NISMO GT500',team:'KONDO RACING'},
+ '36':{name:'坪井 翔 / 山下 健太',maker:'TOYOTA',machine:'GR Supra',team:"TGR TEAM au TOM'S"},
+ '37':{name:'笹原 右京 / ジュリアーノ・アレジ',maker:'TOYOTA',machine:'GR Supra',team:"TGR TEAM Deloitte TOM'S"},
+ '38':{name:'大湯 都史樹 / 小林 利徠斗',maker:'TOYOTA',machine:'GR Supra',team:'TGR TEAM KeePer CERUMO'},
+ '39':{name:'関口 雄飛 / サッシャ・フェネストラズ',maker:'TOYOTA',machine:'GR Supra',team:'TGR TEAM SARD'},
+ '64':{name:'大草 りき / イゴール・オオムラ・フラガ',maker:'HONDA',machine:'PRELUDE-GT',team:'Modulo Nakajima Racing'},
+ '100':{name:'山本 尚貴 / 牧野 任祐',maker:'HONDA',machine:'PRELUDE-GT',team:'STANLEY TEAM KUNIMITSU'}
 };
 // Exact Commons page verified: Abarabone1206 / CC BY 4.0. 2024 SUPER GT Rd.2 Fuji action Hero.
 const HERO={sources:[

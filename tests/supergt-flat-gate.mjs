@@ -11,6 +11,34 @@ assert.match(sgt,/flattened SUPER GT module/);assert.match(sgt,/CACHE_SCHEMA=1/)
 assert.doesNotMatch(sgt,/eval\s*\(/,'flat SUPER GT must not eval remote source');assert.doesNotMatch(sgt,/raw\.githubusercontent\.com/,'flat SUPER GT must not fetch nested repo modules');
 assert.match(sgt,/MOTUL%20AUTECH%20Z%202024%20rd\.2%20FUJI/,'verified SUPER GT action hero missing');assert.doesNotMatch(sgt,/Osaka%20Auto%20Messe%202025|Fujimaki|front%20three-quarter/,'superseded or unverified SUPER GT hero must not return');
 
+const metaMatch=sgt.match(/const META=(\{[\s\S]*?\n\});/);
+assert(metaMatch,'SUPER GT META object missing');
+const META=vm.runInNewContext('('+metaMatch[1]+')');
+const expectedMeta={
+ '8':['太田 格之進 / 大津 弘樹','HONDA','PRELUDE-GT','Team HRC ARTA MUGEN'],
+ '12':['平峰 一貴 / ベルトラン・バゲット','NISSAN','Z NISMO GT500','TEAM IMPUL'],
+ '14':['福住 仁嶺 / 大嶋 和也','TOYOTA','GR Supra','TGR TEAM ENEOS ROOKIE'],
+ '16':['野尻 智紀 / 佐藤 蓮','HONDA','PRELUDE-GT','ARTA MUGEN'],
+ '17':['塚越 広大 / 野村 勇斗','HONDA','PRELUDE-GT','Astemo REAL RACING'],
+ '19':['国本 雄資 / 阪口 晴南','TOYOTA','GR Supra','TGR TEAM WedsSport BANDOH'],
+ '23':['千代 勝正 / 高星 明誠','NISSAN','Z NISMO GT500','NISMO'],
+ '24':['名取 鉄平 / 三宅 淳詞','NISSAN','Z NISMO GT500','KONDO RACING'],
+ '36':['坪井 翔 / 山下 健太','TOYOTA','GR Supra',"TGR TEAM au TOM'S"],
+ '37':['笹原 右京 / ジュリアーノ・アレジ','TOYOTA','GR Supra',"TGR TEAM Deloitte TOM'S"],
+ '38':['大湯 都史樹 / 小林 利徠斗','TOYOTA','GR Supra','TGR TEAM KeePer CERUMO'],
+ '39':['関口 雄飛 / サッシャ・フェネストラズ','TOYOTA','GR Supra','TGR TEAM SARD'],
+ '64':['大草 りき / イゴール・オオムラ・フラガ','HONDA','PRELUDE-GT','Modulo Nakajima Racing'],
+ '100':['山本 尚貴 / 牧野 任祐','HONDA','PRELUDE-GT','STANLEY TEAM KUNIMITSU']
+};
+assert.deepEqual(Object.keys(META).sort((a,b)=>Number(a)-Number(b)),Object.keys(expectedMeta).sort((a,b)=>Number(a)-Number(b)),'META must cover all 14 GT500 entries');
+for(const [no,[name,maker,machine,team]] of Object.entries(expectedMeta)){
+ assert.equal(META[no]?.name,name,`No.${no} driver metadata drift`);
+ assert.equal(META[no]?.maker,maker,`No.${no} maker metadata drift`);
+ assert.equal(META[no]?.machine,machine,`No.${no} machine metadata drift`);
+ assert.equal(META[no]?.team,team,`No.${no} team metadata drift`);
+}
+
+
 class Text{constructor(v,s){this.value=String(v);s.push(this.value)}rightAlignText(){}}
 class Stack{constructor(s){this.s=s}addText(v){return new Text(v,this.s)}addSpacer(){}addStack(){return new Stack(this.s)}setPadding(){}layoutHorizontally(){}centerAlignContent(){}}
 class ListWidget extends Stack{constructor(s){super(s);this.refreshAfterDate=null}}
@@ -44,8 +72,18 @@ async function run({now,seedCache=null,html=null}){
 const row=(p,no,name,total,behind='',sw='')=>`<tr><td>${p}</td><td>${no}</td><td>${name}</td><td>1</td><td>1</td><td>－</td><td>1</td><td>1</td><td></td><td></td><td></td><td>${total}</td><td>${behind}</td><td>${sw}</td></tr>`;
 const validHtml=`<html><body><nav>GT500 GT300</nav><h1>GT500 ドライバーランキング</h1><table><tr><th>順位</th><th>No.</th><th>ドライバー</th><th>Rd1</th><th>Rd2</th><th>Rd3</th><th>Rd4</th><th>Rd5</th><th>Rd6</th><th>Rd7</th><th>Rd8</th><th>合計</th><th>差</th><th>SW</th></tr>${row(1,36,'坪井　翔 山下　健太',50,'',100)}${row(2,16,'野尻　智紀 佐藤　蓮',33,-17,66)}${row(3,14,'福住　仁嶺 大嶋　和也',31,-19,62)}</table><h1>GT300 ドライバーランキング</h1></body></html>`;
 {
- const r=await run({now:'2026-08-26T12:00:00+09:00',html:validHtml}),p=JSON.parse(r.files.get(r.cachePath));assert.equal(p.schemaVersion,1);assert.equal(p.category,'supergt');assert.equal(p.season,2026);assert.equal(p.ranking[0].name,'坪井 翔 / 山下 健太');assert.equal(p.ranking[1].machine,'PRELUDE-GT');assert.equal(p.ranking[2].team,'ROOKIE');assert(r.sink.some(x=>x.includes("TOYOTA · GR Supra")&&x.includes("au TOM'S")));assert(r.sink.some(x=>x.includes('HONDA · PRELUDE-GT')&&x.includes('ARTA')));
+ const r=await run({now:'2026-08-26T12:00:00+09:00',html:validHtml}),p=JSON.parse(r.files.get(r.cachePath));assert.equal(p.schemaVersion,1);assert.equal(p.category,'supergt');assert.equal(p.season,2026);assert.equal(p.ranking[0].name,'坪井 翔 / 山下 健太');assert.equal(p.ranking[1].machine,'PRELUDE-GT');assert.equal(p.ranking[2].team,'TGR TEAM ENEOS ROOKIE');assert(r.sink.some(x=>x.includes("TOYOTA · GR Supra")&&x.includes("au TOM'S")));assert(r.sink.some(x=>x.includes('HONDA · PRELUDE-GT')&&x.includes('ARTA')));
 }
+
+{
+ const metaHtml=`<html><body><nav>GT500 GT300</nav><h1>GT500 ドライバーランキング</h1><table><tr><th>順位</th><th>No.</th><th>ドライバー</th><th>Rd1</th><th>Rd2</th><th>Rd3</th><th>Rd4</th><th>Rd5</th><th>Rd6</th><th>Rd7</th><th>Rd8</th><th>合計</th><th>差</th><th>SW</th></tr>${row(1,36,'坪井　翔 山下　健太',58,'',100)}${row(2,17,'塚越　広大 野村　勇斗',45,-13,90)}${row(3,100,'山本　尚貴 牧野　任祐',38,-20,76)}</table><h1>GT300 ドライバーランキング</h1></body></html>`;
+ const r=await run({now:'2026-09-24T21:01:00+09:00',html:metaHtml}),p=JSON.parse(r.files.get(r.cachePath));
+ assert.equal(p.ranking[1].name,'塚越 広大 / 野村 勇斗');assert.equal(p.ranking[1].machine,'PRELUDE-GT');assert.equal(p.ranking[1].team,'Astemo REAL RACING');
+ assert.equal(p.ranking[2].name,'山本 尚貴 / 牧野 任祐');assert.equal(p.ranking[2].machine,'PRELUDE-GT');assert.equal(p.ranking[2].team,'STANLEY TEAM KUNIMITSU');
+ assert(r.sink.some(x=>x.includes('HONDA · PRELUDE-GT')&&x.includes('Astemo REAL RACING')),'No.17 secondary metadata must render');
+ assert(r.sink.some(x=>x.includes('HONDA · PRELUDE-GT')&&x.includes('STANLEY TEAM KUNIMITSU')),'No.100 secondary metadata must render');
+}
+
 {
  const wrong=`<html><body><h1>GT300 ドライバーランキング</h1><table>${row(1,56,'Fake',999)}${row(2,777,'Fake2',998)}${row(3,7,'Fake3',997)}</table></body></html>`;const r=await run({now:'2026-08-26T12:00:00+09:00',html:wrong});assert.equal(r.files.has(r.cachePath),false,'GT300 table must never be promoted as GT500');assert(r.sink.includes('• 更新待ち'));
 }
