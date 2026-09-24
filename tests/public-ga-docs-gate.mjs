@@ -20,7 +20,7 @@ assert(scope.includes('not relicensed under MPL-2.0'),'license scope must exclud
 assert(scope.includes('ATTRIBUTION.md'),'license scope must point to third-party attribution');
 
 const readme=read('README.md');
-assert(readme.includes('v9.5.30'),'README must state current Stable v9.5.30');
+assert(readme.includes('v9.5.31'),'README must state current Stable v9.5.31');
 for(const p of ['INSTALL.md','SUPPORT.md','PRIVACY.md','GA_READINESS.md','GA_LAUNCH_CHECKLIST.md','LICENSE_DECISION.md','LICENSE_SCOPE.md','ATTRIBUTION.md'])assert(readme.includes(p),`README must link ${p}`);
 assert(readme.includes('Mozilla Public License 2.0 (MPL-2.0)'),'README must state approved software license');
 assert(readme.includes('hero-live/hero-channel/ATTRIBUTION.md'),'README must identify dynamic Hero attribution surface');
@@ -58,14 +58,14 @@ const ga=read('GA_READINESS.md');
 assert(ga.includes('Software-license decision: APPROVED — MPL-2.0'),'GA readiness must record approved software license');
 assert(ga.includes('Club Pulse migration cutover'),'GA readiness must retain destination migration blocker');
 assert(ga.includes('Broad GA authorization: NOT YET'),'GA readiness must not imply public launch approval');
-assert(ga.includes('Stable v9.5.30'),'GA readiness must anchor current Stable');
+assert(ga.includes('Stable v9.5.31'),'GA readiness must anchor current Stable');
 assert(ga.includes('Public Hero attribution publication'),'GA readiness must retain Hero attribution publication gate');
 
 const launch=read('GA_LAUNCH_CHECKLIST.md');
 for(const token of ['Software license explicitly approved by owner','Club Pulse destination repository populated','ATTRIBUTION.md','Physical iPhone smoke','Owner explicitly authorizes broad GA'])assert(launch.includes(token),`GA launch checklist missing ${token}`);
 
 const changelog=read('CHANGELOG.md');
-assert(changelog.includes('v9.5.30'),'changelog must include current Stable');
+assert(changelog.includes('v9.5.31'),'changelog must include current Stable');
 
 assert(!fs.existsSync(path.join(root,'scriptable')),'Club Pulse product tree must be absent from product-pure Motorsport Hub candidate');
 assert(!fs.existsSync(path.join(root,'.github/workflows/club-pulse-contract.yml')),'Club Pulse workflow must be absent from product-pure Motorsport Hub candidate');
