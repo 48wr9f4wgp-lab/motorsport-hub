@@ -11,8 +11,8 @@ assert.match(sgt,/flattened SUPER GT module/);assert.match(sgt,/CACHE_SCHEMA=1/)
 assert.doesNotMatch(sgt,/eval\s*\(/,'flat SUPER GT must not eval remote source');assert.doesNotMatch(sgt,/raw\.githubusercontent\.com/,'flat SUPER GT must not fetch nested repo modules');
 assert.match(sgt,/MOTUL%20AUTECH%20Z%202024%20rd\.2%20FUJI/,'verified SUPER GT action hero missing');assert.doesNotMatch(sgt,/Osaka%20Auto%20Messe%202025|Fujimaki|front%20three-quarter/,'superseded or unverified SUPER GT hero must not return');
 
-const smallStart=sgt.indexOf('function small('),smallEnd=sgt.indexOf('\n\nlet w;',smallStart),smallSrc=sgt.slice(smallStart,smallEnd);
-assert(smallStart>=0&&smallEnd>smallStart,'SUPER GT small renderer missing');
+function extractFunction(src,name){const i=src.indexOf(`function ${name}(`);assert(i>=0,`${name} renderer missing`);const b=src.indexOf('{',i);let depth=0;for(let j=b;j<src.length;j++){if(src[j]==='{')depth++;else if(src[j]==='}'){depth--;if(depth===0)return src.slice(i,j+1)}}assert.fail(`${name} renderer unterminated`)}
+const smallSrc=extractFunction(sgt,'small');
 assert(!smallSrc.includes("d.lifecycle==='SEASON_ENDED'?'終了':'次戦'"),'SUPER GT Small must not pack the extra 次戦 label into its top row');
 assert(smallSrc.includes("pill(top,'SUPER GT',true);top.addSpacer();const cp=top.addStack()"),'SUPER GT Small top row must reserve flexible space between brand and countdown');
 assert(smallSrc.includes("cp.setPadding(2,5,2,5)"),'SUPER GT Small countdown pill must keep compact horizontal padding');
