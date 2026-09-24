@@ -11,6 +11,14 @@ assert.match(sgt,/flattened SUPER GT module/);assert.match(sgt,/CACHE_SCHEMA=1/)
 assert.doesNotMatch(sgt,/eval\s*\(/,'flat SUPER GT must not eval remote source');assert.doesNotMatch(sgt,/raw\.githubusercontent\.com/,'flat SUPER GT must not fetch nested repo modules');
 assert.match(sgt,/MOTUL%20AUTECH%20Z%202024%20rd\.2%20FUJI/,'verified SUPER GT action hero missing');assert.doesNotMatch(sgt,/Osaka%20Auto%20Messe%202025|Fujimaki|front%20three-quarter/,'superseded or unverified SUPER GT hero must not return');
 
+function extractFunction(src,name){const i=src.indexOf(`function ${name}(`);assert(i>=0,`${name} renderer missing`);const b=src.indexOf('{',i);let depth=0;for(let j=b;j<src.length;j++){if(src[j]==='{')depth++;else if(src[j]==='}'){depth--;if(depth===0)return src.slice(i,j+1)}}assert.fail(`${name} renderer unterminated`)}
+const smallSrc=extractFunction(sgt,'small');
+assert(!smallSrc.includes("d.lifecycle==='SEASON_ENDED'?'終了':'次戦'"),'SUPER GT Small must not pack the extra 次戦 label into its top row');
+assert(smallSrc.includes("pill(top,'SUPER GT',true);top.addSpacer();const cp=top.addStack()"),'SUPER GT Small top row must reserve flexible space between brand and countdown');
+assert(smallSrc.includes("cp.setPadding(2,5,2,5)"),'SUPER GT Small countdown pill must keep compact horizontal padding');
+assert(smallSrc.includes("T(cp,ci.label,10.8"),'SUPER GT Small countdown font must stay within the compact width budget');
+
+
 const metaMatch=sgt.match(/const META=(\{[\s\S]*?\n\});/);
 assert(metaMatch,'SUPER GT META object missing');
 const META=vm.runInNewContext('('+metaMatch[1]+')');
@@ -49,11 +57,11 @@ class DateFormatter{constructor(){this.locale='';this.timeZone='';this.dateForma
 const Font={heavySystemFont(){},boldSystemFont(){},semiboldSystemFont(){},systemFont(){}};
 function FixedDateFactory(ms){return class FixedDate extends Date{constructor(...a){super(...a)}static now(){return ms}static parse(s){return Date.parse(s)}}}
 
-async function run({now,seedCache=null,html=null}){
+async function run({now,seedCache=null,html=null,family='medium'}){
  const sink=[],files=new Map(),cachePath='/docs/motorsport-data-v1000-supergt.json';if(seedCache!==null)files.set(cachePath,seedCache);const DateClass=FixedDateFactory(Date.parse(now));let repoRequests=0,dataCalls=0,setWidget=0,complete=0;
  const fm={documentsDirectory:()=>'/docs',joinPath:(a,b)=>`${a}/${b}`,fileExists:p=>p.includes('motorsport-hero-v1000-')||files.has(p),readImage:()=>({size:{width:1600,height:900}}),writeImage(){},readString:p=>{if(!files.has(p))throw Error('missing');return files.get(p)},writeString:(p,s)=>files.set(p,String(s)),remove:p=>files.delete(p)};
  class Request{constructor(url){this.url=url;this.headers={}}async loadString(){if(this.url.includes('supergt-widget-flat-v1000.js')){repoRequests++;return sgt}if(this.url.includes('supergt.net/driver_ranking')){dataCalls++;if(html instanceof Error)throw html;if(typeof html==='string')return html;throw Error('offline ranking')}throw Error('unexpected string request')}async loadImage(){throw Error('hero should use seeded cache')}}
- const CtxListWidget=class extends ListWidget{constructor(){super(sink)}};const ctx={args:{widgetParameter:'SUPERGT'},config:{runsInWidget:true,widgetFamily:'medium'},FileManager:{local:()=>fm},Request,ListWidget:CtxListWidget,Color,LinearGradient,Size,DateFormatter,Font,Date:DateClass,Math,Map,Set,JSON,Number,String,Array,Object,RegExp,Error,isFinite,Script:{setWidget(){setWidget++},complete(){complete++}}};ctx.globalThis=ctx;vm.createContext(ctx);await vm.runInContext(router,ctx,{timeout:5000});return{sink,files,cachePath,repoRequests,dataCalls,setWidget,complete};
+ const CtxListWidget=class extends ListWidget{constructor(){super(sink)}};const ctx={args:{widgetParameter:'SUPERGT'},config:{runsInWidget:true,widgetFamily:family},FileManager:{local:()=>fm},Request,ListWidget:CtxListWidget,Color,LinearGradient,Size,DateFormatter,Font,Date:DateClass,Math,Map,Set,JSON,Number,String,Array,Object,RegExp,Error,isFinite,Script:{setWidget(){setWidget++},complete(){complete++}}};ctx.globalThis=ctx;vm.createContext(ctx);await vm.runInContext(router,ctx,{timeout:5000});return{sink,files,cachePath,repoRequests,dataCalls,setWidget,complete};
 }
 
 {
@@ -61,6 +69,13 @@ async function run({now,seedCache=null,html=null}){
 }
 {
  const atEnd=await run({now:'2026-09-20T20:00:00+09:00'});assert(atEnd.sink.includes('第7戦 AUTOPOLIS'),'exact 8h boundary must advance to AUTOPOLIS');assert(!atEnd.sink.includes('開催中'));
+}
+{
+ const small=await run({now:'2026-09-24T21:58:00+09:00',family:'small'});
+ assert(small.sink.includes('SUPER GT'),'Small brand missing');
+ assert(small.sink.includes('第7戦 AUTOPOLIS'),'Small must render the current AUTOPOLIS event');
+ assert(small.sink.includes('あと24日'),'Small must render the current Tokyo-calendar countdown');
+ assert(!small.sink.includes('データ取得失敗'),'Small must not fall into the error widget');
 }
 {
  const finale=await run({now:'2026-11-08T20:00:00+09:00'});assert(finale.sink.includes('第8戦 MOTEGI'));assert(finale.sink.includes('シーズン終了'));assert(finale.sink.includes('SEASON END'));assert(!finale.sink.includes('次戦'));
