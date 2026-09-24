@@ -15,8 +15,7 @@ const SNAP={race:'WRC ueno Rally del Paraguay',date:'2026-08-27T09:00:00-03:00',
 const CAL=[
  ['WRC ueno Rally del Paraguay','2026-08-27T09:00:00-03:00','Paraguay',true],
  ['WRC Rally Chile Bio Bío','2026-09-10T09:00:00-03:00','Chile',true],
- ['WRC Rally Italia Sardegna','2026-10-01T09:00:00+02:00','Sardegna',true],
- ['WRC Rally Saudi Arabia','2026-11-11T09:00:00+03:00','Saudi Arabia',true]
+ ['WRC Rally Italia Sardegna','2026-10-01T09:00:00+02:00','Sardegna',true]
 ];
 const META={
  'Elfyn Evans':['TOYOTA','GR Yaris Rally1','TOYOTA GAZOO Racing WRT'],
