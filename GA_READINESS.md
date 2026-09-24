@@ -1,16 +1,17 @@
 # Motorsport Hub — GA Readiness
 
-Updated: 2026-09-20 JST
+Updated: 2026-09-24 JST
 
 This file tracks what is still required before **broad public General Availability (GA)**. It does not itself authorize public distribution, Store submission, paid distribution, Stable publication, or an external service contract.
 
 ## Current product state
 
 - Public RC: **APPROVED**.
-- Current Stable: **v9.5.30 / sequence 8**.
-- Stable sourceRef: `8347c0377235752744ed34e62f829cc25004db38`.
+- Current Stable: **v9.5.31 / sequence 9**.
+- Stable sourceRef: `02e9c199611fd32153f4a5f220e9d1165c31ad2f`.
 - Stable v9.5.29 WEC / SUPER GT device parser repair: **physical iPhone PASS**.
-- Stable v9.5.30 temporal/Dakar hardening: **RC validated; focused physical iPhone confirmation pending**.
+- Stable v9.5.30 temporal/Dakar hardening: **physical iPhone PASS for WEC 11:00 and Dakar GAP/index fixes**.
+- Stable v9.5.31 WRC/SUPER GT hardening: **RC validated; SUPER GT Small physical iPhone confirmation pending**.
 - No known reproducible P0 startup/routing/current-data blocker.
 - Stable v9.5.30 includes Dakar 2027 rollover hardening plus the 2026-09-20 temporal-accuracy/Dakar presentation repairs.
 - Centralized production telemetry: **not enabled**.
@@ -101,8 +102,9 @@ Actual Dakar 2027 live endpoint/parser behavior cannot be empirically proven unt
 
 Remaining hard path:
 
-1. confirm generated live Hero attribution publication;
-2. perform focused v9.5.30 physical iPhone confirmation, then final representative GA smoke on the exact Stable;
-3. obtain explicit owner authorization for broad GA.
+1. confirm SUPER GT Small renders correctly on physical iPhone under v9.5.31;
+2. confirm generated live Hero attribution publication;
+3. perform final representative GA smoke on the exact Stable;
+4. obtain explicit owner authorization for broad GA.
 
 No Store submission, paid distribution, broad public launch, external analytics contract or new Stable publication is authorized by this document.

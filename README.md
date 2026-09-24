@@ -5,9 +5,9 @@ Motorsport Hub is an iPhone home-screen motorsport widget system for [Scriptable
 ## Current status
 
 - Public Release Candidate: **approved**.
-- Current Stable: **v9.5.30 / sequence 8**.
-- Stable source: immutable sourceRef `8347c0377235752744ed34e62f829cc25004db38`.
-- Stable v9.5.30 temporal/Dakar hardening: **RC validated; focused physical iPhone confirmation pending**.
+- Current Stable: **v9.5.31 / sequence 9**.
+- Stable source: immutable sourceRef `02e9c199611fd32153f4a5f220e9d1165c31ad2f`.
+- Stable v9.5.31 WRC/SUPER GT hardening: **RC validated; SUPER GT Small physical iPhone confirmation pending**.
 - Production surface: **12 categories + QA diagnostics**.
 - Installed production loader: **`scriptable-loader-v7.js`**.
 - Software license: **Mozilla Public License 2.0 (MPL-2.0)**.
