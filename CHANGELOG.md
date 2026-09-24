@@ -2,7 +2,18 @@
 
 ## Unreleased — main only
 
-At publication time, there are no runtime changes on `main` beyond Stable v9.5.30. Publication metadata and documentation may be newer than the immutable Stable sourceRef.
+At publication time, there are no runtime changes on `main` beyond Stable v9.5.31. Publication metadata/documentation may be newer than the immutable Stable sourceRef.
+
+## v9.5.31 — Stable WRC finale + SUPER GT Small hardening
+
+- Current Stable: **sequence 9**.
+- Stable sourceRef: `02e9c199611fd32153f4a5f220e9d1165c31ad2f`.
+- Removes the cancelled 2026 WRC Saudi Arabia round and makes Rally Italia Sardegna the 2026 WRC finale.
+- Completes metadata for all 14 official 2026 GT500 entries so changing Top 5 standings retain driver/maker/machine/team context.
+- Simplifies SUPER GT Small top-row width usage after repeated physical-iPhone blank/black-widget reproduction while the same widget slot rendered F1 normally.
+- Adds deterministic regression coverage for Sardegna finale behavior, all-14 GT500 metadata, current No.17/No.100 metadata rendering, and the AUTOPOLIS / あと24日 Small state.
+- Release Candidate validation: run **#281 / 36012972754 SUCCESS**.
+- SUPER GT Small physical-iPhone confirmation remains pending immediately after Stable promotion.
 
 ## v9.5.30 — Stable temporal accuracy + Dakar hardening
 
