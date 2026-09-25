@@ -104,7 +104,7 @@ Actual Dakar 2027 live endpoint/parser behavior cannot be empirically proven unt
 
 Remaining hard path:
 
-1. resolve/reverify operational failures recorded in `COMPLETION_AUDIT.md` (Hero refresh and Dakar upstream monitor);
+1. merge approved audit repairs, confirm production Hero refresh, and prepare/verify any new Stable runtime release separately (Dakar repair branch live monitor is 12/12 PASS; see `COMPLETION_AUDIT.md`);
 2. perform final representative GA smoke on the exact Stable and revalidate live credits;
 3. obtain explicit owner authorization for broad GA.
 

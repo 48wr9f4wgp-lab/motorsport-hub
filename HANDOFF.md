@@ -12,7 +12,7 @@ Re-fetch GitHub main, release-channel.json, hero-live and open PRs before protec
 - Stable sourceRef: `02e9c199611fd32153f4a5f220e9d1165c31ad2f`.
 - Validation releaseRef: `f746a2730c6f05b21ce35d296ac8bfd1bf8811a2`; RC run `36012972754` SUCCESS (re-fetched in this audit).
 - Hero head: `57e0c7019b681239deba81627eddba6b6c622acf`; 12 pool credits validate against the channel.
-- Recovery: original main and hero-live remain unchanged by this audit; repair branch contains proposed tools/tests/docs changes. No Stable publication performed.
+- Recovery: original main and hero-live remain unchanged by this audit; repair branch contains proposed Dakar parser + tools/tests/docs changes. No Stable publication performed.
 - Legacy draft PR #2 (Loader v6 observability) remains separate; do not merge it as part of this repair.
 
 ## Product / locked decisions
@@ -40,13 +40,13 @@ Visual baseline: IMG_2843.jpeg; CURRENT, REATTACH required before layout work, v
 
 See `COMPLETION_AUDIT.md` for evidence and verification scope.
 - Hero refresh run 36192726244 failed: publish validator rejected inherited ATTRIBUTION.md. Repair regenerates candidate credits and requires exact agreement before publication; regression tests cover stale credits and unexpected files.
-- Parser monitor run 36192066389: 11/12 PASS, DAKAR NO_FRESH_DATA_CACHE. A deterministic Dakar fixture passes; actual upstream cause remains unresolved. Monitor repair exposes normalized transport/JSON errors and safe request status/byte counts without response bodies.
+- Parser monitor run 36192066389: 11/12 PASS, DAKAR NO_FRESH_DATA_CACHE. HTTP 200 markup diagnostics isolated time-unit parsing. Repair normalizes HTML entities/typographic primes and explicit hour GAP. Live monitor run 36197949547 at repair commit 34a6f37479f4abde94219c91e235ce2d923c23d8: 12/12 PASS. Hardening and RC CI PASS. This runtime repair is not yet in Stable.
 - Current live credit publication proof is satisfied; refresh health is a separate issue.
 - README, GA readiness/checklist, completion audit, handoff, migration status and DEV_STATUS had drifted; repair reconciles them.
 
 ## Remaining validation / release limits
 
-- After approved merge: confirm Hero workflow recovery and investigate Dakar using the improved monitor output. Do not suppress its failure.
+- After approved merge: confirm Hero workflow recovery. Dakar live fetch passes on the repair branch; publishing its runtime fix requires separate Stable approval and relevant physical validation. Do not suppress future monitor failures.
 - Final representative exact-Stable physical smoke (fresh Loader path, QA, Small/Medium/Large, online refresh, relevant offline/LKG) remains pending.
 - Optional support export Share Sheet remains physically unverified.
 - Actual Dakar 2027 live endpoint behavior is not verified before real upstream standings exist.
@@ -54,4 +54,4 @@ See `COMPLETION_AUDIT.md` for evidence and verification scope.
 
 ## NEXT
 
-Review and approve the audit repair PR for main merge, then reverify operational failures. Afterward, resume the Japan viewing-platform specification: region + season/event + platforms + verifiedAt + official source + expiry; hide unverified/stale rights. Medium/Large viewing row and omission on Small are hypotheses, not locked/implemented features. Do not add monitoring automations.
+Review and approve audit repair PR #55 for main merge, then confirm the production Hero workflow and prepare the Dakar runtime fix for a separately approved Stable publication. Afterward, resume the Japan viewing-platform specification: region + season/event + platforms + verifiedAt + official source + expiry; hide unverified/stale rights. Medium/Large viewing row and omission on Small are hypotheses, not locked/implemented features. Do not add monitoring automations.

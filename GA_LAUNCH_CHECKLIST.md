@@ -19,7 +19,7 @@ Use this checklist only when preparing the actual broad public General Availabil
 - [ ] Release Candidate CI for that source is green.
 - [ ] Stable descriptor hashes/byte lengths validated.
 - [x] Dakar season-aware rollover hardening is already included in Stable v9.5.31 (shipped in v9.5.30). Actual 2027 live parser behavior remains unverified.
-- [ ] Resolve/reverify Hero refresh and Dakar upstream failures recorded in `COMPLETION_AUDIT.md`.
+- [ ] Confirm production Hero refresh after approved merge; Dakar parser repair is live-tested on the branch and requires separate Stable publication/validation. See `COMPLETION_AUDIT.md`.
 
 ## C. Physical iPhone smoke
 
@@ -54,4 +54,4 @@ Record physical-device evidence as user-confirmed evidence; do not represent it 
 
 Motorsport Hub is technically a GA-capable candidate. The MPL-2.0/software-license decision is complete. **Broad GA is not authorized.**
 
-Club Pulse cutover and live attribution proof are complete. Remaining work: operational failure resolution/reverification, exact-Stable physical iPhone smoke, and explicit GA authorization. The historical SUPER GT Small PASS does not complete the representative GA session.
+Club Pulse cutover and live attribution proof are complete. Remaining work: approved repair integration and production revalidation, exact-Stable physical iPhone smoke, and explicit GA authorization. The historical SUPER GT Small PASS does not complete the representative GA session.

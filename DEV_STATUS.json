@@ -10,8 +10,8 @@
     "performance": "warn",
     "release": "warn"
   },
-  "next": "監査修正PRの承認・マージ後、Hero更新とDakar実ソース監視を再確認",
-  "note": "Stable v9.5.31。既存実機PASSと最終GA実機確認は別管理。Hero更新停止を修正準備済み。Dakar実ソース失敗の原因は未確定。",
+  "next": "監査修正PR #55を承認・マージ後、Hero実運用確認とDakar修正版Stableの公開準備",
+  "note": "修正ブランチで12カテゴリ実ソースPASS。Stable v9.5.31は未変更。Dakar修正のStable公開と実機確認、最終GA承認は別工程。",
   "updated_at": "2026-09-26",
   "stable": {
     "version": "9.5.31",

@@ -1,8 +1,13 @@
 # Changelog
 
-## Unreleased — main only
+## Unreleased — audit repair candidate
 
-At publication time, there are no runtime changes on `main` beyond Stable v9.5.31. Publication metadata/documentation may be newer than the immutable Stable sourceRef.
+Prepared in PR #55; not yet published to Stable.
+
+- Repair Dakar parsing of encoded/typographic time units and preserve explicit hour GAP with zero padding.
+- Repair Hero candidate attribution integration; generate and validate exact credits before atomic publication.
+- Improve sanitized live-monitor error diagnostics and reconcile current readiness/handoff evidence.
+- Repair branch live monitor: 12/12 PASS; production Stable remains v9.5.31 / sequence 9.
 
 ## v9.5.31 — Stable WRC finale + SUPER GT Small hardening
 
@@ -13,7 +18,7 @@ At publication time, there are no runtime changes on `main` beyond Stable v9.5.3
 - Simplifies SUPER GT Small top-row width usage after repeated physical-iPhone blank/black-widget reproduction while the same widget slot rendered F1 normally.
 - Adds deterministic regression coverage for Sardegna finale behavior, all-14 GT500 metadata, current No.17/No.100 metadata rendering, and the AUTOPOLIS / あと24日 Small state.
 - Release Candidate validation: run **#281 / 36012972754 SUCCESS**.
-- SUPER GT Small physical-iPhone confirmation remains pending immediately after Stable promotion.
+- SUPER GT Small: user-confirmed physical iPhone PASS on 2026-09-25 07:46 JST, recorded in the owner handoff; no new screenshot inspection in this audit.
 
 ## v9.5.30 — Stable temporal accuracy + Dakar hardening
 
