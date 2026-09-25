@@ -109,4 +109,18 @@ function rolloverCache(rankingSeason,label,prefix,fetchedAt){
  assert(r.text.includes('2027 AFTER S1'));
 }
 
+// Official time-unit punctuation may be encoded or typographic, not ASCII apostrophes.
+for(const fixture of [
+ FIXTURE.replaceAll("'",'&#039;'),
+ FIXTURE.replaceAll("'",'&#x27;'),
+ FIXTURE.replaceAll("''",'&Prime;').replaceAll("'",'&prime;'),
+ FIXTURE.replaceAll("''",'″').replaceAll("'",'′'),
+]){
+ const r=await render('2026-09-26T00:00:00+09:00','medium',0,{fixture});
+ assert(r.files.has('/docs/motorsport-data-v950-dakar.json'),'encoded times must produce a fresh accepted cache');
+ assert(r.text.includes('+9:42')&&r.text.includes('+14:33'));
+ assert(!r.text.includes('更新待ち'));
+}
+const hourGap=await render('2026-09-26T00:00:00+09:00','medium',0,{fixture:FIXTURE.replace("+ 00h 09' 42''","+ 01h 02' 03''")});
+assert(hourGap.text.includes('+1:02:03'),'explicit hour gaps must retain the source value and zero padding');
 console.log('Motorsport Hub Dakar gate: PASS');

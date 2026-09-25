@@ -95,7 +95,7 @@ function createFetchRequest({record,moduleSource,requestLog,fetchImpl}){
         if(record.id==='DAKAR'&&kind==='text'){
           const rows=text.match(/<tr\b[\s\S]*?<\/tr>/gi)||[];
           const clean=s=>s.replace(/<[^>]+>/g,' ').replace(/&nbsp;|&#160;/gi,' ').replace(/\s+/g,' ').trim();
-          entry.structure={rows:rows.length,rankedRows:rows.map(row=>(row.match(/<t[dh]\b[^>]*>[\s\S]*?<\/t[dh]>/gi)||[]).map(clean)).filter(c=>/^\d+$/.test(c[0]||'')&&/^\d+$/.test(c[1]||'')).slice(0,5).map(c=>({cells:c.length,nationalities:c.map(v=>(v.match(/\([a-z]{3}\)/ig)||[]).length),times:c.map(v=>({hours:/\d+h/.test(v),minutes:/\d+'/.test(v),seconds:/\d+''/.test(v),colon:/\d+:\d+/.test(v),plus:/^\+/.test(v)}))}))};
+          entry.structure={rows:rows.length,rankedRows:rows.map(row=>(row.match(/<t[dh]\b[^>]*>[\s\S]*?<\/t[dh]>/gi)||[]).map(clean)).filter(c=>/^\d+$/.test(c[0]||'')&&/^\d+$/.test(c[1]||'')).slice(0,5).map(c=>({cells:c.length,nationalities:c.map(v=>(v.match(/\([a-z]{3}\)/ig)||[]).length),times:c.map(v=>({entities:[...new Set(v.match(/&(?:#[0-9]+|#x[0-9a-f]+|[a-z]+);/gi)||[])].slice(0,8),punctuation:[...new Set([...v].filter(x=>!/[a-z0-9\s]/i.test(x)).map(x=>x.codePointAt(0)))].slice(0,12),hours:/\d+h/.test(v),minutes:/\d+'/.test(v),seconds:/\d+''/.test(v),colon:/\d+:\d+/.test(v),plus:/^\+/.test(v)}))}))};
         }
         requestLog.push(entry);
         if(!response.ok){
