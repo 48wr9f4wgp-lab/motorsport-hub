@@ -1,174 +1,45 @@
-# Motorsport Hub — Current Completion Audit
+# Motorsport Hub — Completion Audit
 
-Updated: 2026-09-14 JST
-Status: **PUBLIC RC APPROVED / STABLE v9.5.29 PHYSICAL IPHONE PASS / GA NOT YET AUTHORIZED**
+Updated: 2026-09-26 JST
+Status: **AUDIT REPAIR PREPARED / STABLE v9.5.31 / GA NOT AUTHORIZED**
 
-This is the current completion/release snapshot. `GA_READINESS.md` contains the remaining broad-public-release gates.
+## Baselines and method
 
-## Current baseline
+Repository main `5a5dd46722556ca71d20beb50f752be8a12e3f0a`, Stable source `02e9c199611fd32153f4a5f220e9d1165c31ad2f`, sequence 9, releaseId `mh-02e9c199611f`. RC validation run [36012972754](https://github.com/48wr9f4wgp-lab/motorsport-hub/actions/runs/36012972754) was re-fetched: SUCCESS at releaseRef `f746a2730c6f05b21ce35d296ac8bfd1bf8811a2`.
 
-- Repository: `48wr9f4wgp-lab/motorsport-hub`.
-- Current Stable: **v9.5.29**.
-- Stable sequence: **7**.
-- Stable sourceRef: `7f3fc1eb6fa93c619c1def732b18d091c9e949ce`.
-- Stable releaseId: `mh-7f3fc1eb6fa9`.
-- Validation releaseRef: `b8df2430607161f8bb2a560174ac3c36dcd7b4a3`.
-- Validation run: RC CI #256 / `34837876868` — SUCCESS.
-- Product surface: **12 categories + QA**.
-- Installed production loader: **Loader v7 with local observability**.
-- Active Hero head at this audit: `b81553a164c76620d69b94477f823bb777ff4af6`.
+The audit retrieved the repository text snapshot through the GitHub connector, inspected release/CI/runtime/docs, ran deterministic gates locally, and checked recent operational job logs. Local Node is v24.19.0; repository CI uses Node 22 for release gates. The local snapshot is not a full historical clone; the pinned-history Loader gate requires GitHub CI. Never substitute a fabricated source commit for it.
 
-Main contains later work that is not yet in Stable:
+## Findings and repairs
 
-- PR #45: Dakar 2027 season-aware rollover/cache hardening.
-- PR #46: GA workflow hygiene/read-only Hardening CI.
+| Priority | Finding | Repair / disposition |
+| --- | --- | --- |
+| P1 | Hero scheduled refresh cannot publish because inherited ATTRIBUTION.md is rejected as an unexpected file | Builder regenerates exact candidate credits, allowlist admits that one file, validator compares full generated content; negative regression tests retain rejection of wrong credits and unrelated files |
+| P1 | Dakar live monitor has no fresh accepted cache | Unresolved upstream cause; deterministic fixture passes. Improve monitor classification for HTTP/transport/invalid JSON and log status/byte counts, without logging response bodies. Keep monitor failure active |
+| P2 | Current docs incorrectly say SUPER GT Small physical confirmation / Hero credit proof are pending | Import scoped user-confirmed physical evidence; independently validate pinned live credits |
+| P2 | Handoff/audit/checklist/migration/status describe old releases or incomplete completed work | Reconcile current state, retain pending GA/device gates, mark legacy Codex handoff historical |
 
-Before the current GA-docs branch, `main` HEAD was `f8fc6398b76a0cea250da113734c12cd3ebfaadd`. Its tree is identical to the PR #46 merge tree; a temporary documentation placeholder had been accidentally added and immediately removed, with no net repository-tree/runtime/Stable change.
+Hero evidence: [run 36192726244](https://github.com/48wr9f4wgp-lab/motorsport-hub/actions/runs/36192726244), job 108261614760: `AssertionError: unexpected publish file: ATTRIBUTION.md`. Build and existing fixture gates succeeded; candidate publication validation failed. This is a pipeline integration gap, not an image quality exception. The repair does not change Hero selection/quality thresholds or publish any assets.
 
-## P0 — startup/routing/current-data blockers
+Dakar evidence: [run 36192066389](https://github.com/48wr9f4wgp-lab/motorsport-hub/actions/runs/36192066389), job 108259324941: 11 categories PASS, DAKAR `NO_FRESH_DATA_CACHE`. The current environment could not retrieve the official page (proxy timeout / search fetch unavailable). Thus no live parser repair or live recovery is claimed. Next scheduled monitor after merge must supply the now-visible failure classification.
 
-**No currently known reproducible P0 blocker.**
+## Attribution / migration evidence
 
-Evidence includes:
+Hero head `57e0c7019b681239deba81627eddba6b6c622acf`: channel and human-readable credits share `2026-09-14T02:23:06.396Z`; local official repository validator PASS for 12 pool assets. Credit existence and refresh pipeline health are separate claims.
 
-- direct Router → exactly one selected category module;
-- explicit invalid-parameter handling;
-- verified immutable Stable source + SHA-256/byte-length checks;
-- successful RC evidence required before Loader v7 promotion;
-- monotonic Stable sequence and rollback/fork rejection;
-- release-namespaced Loader LKG;
-- schema-1 category caches across all 12 categories;
-- Hero channel cache/LKG/fail-closed behavior;
-- category/lifecycle/cache/integrity gates;
-- 12-category scheduled live parser monitoring;
-- WEC / SUPER GT device-shaped parser regression coverage.
+Club Pulse destination PR [#1](https://github.com/48wr9f4wgp-lab/club-pulse/pull/1) merged at `cf27ee7a81301a195072fd85164504628317ff00`; current Motorsport Hub contains MPL-2.0 and no Club Pulse product tree. Historical migration procedure remains in `CLUB_PULSE_MIGRATION.md`.
 
-This does not claim upstream sources can never fail; it means no reproducible core blocker is known now.
+## Validation boundaries
 
-## Visual / rendering
+- Stable Router + 13 module hash/byte checks: 14/14 PASS against the fetched main snapshot and Stable descriptor.
+- Local deterministic baseline: 41/42 workflow-listed gates PASS; stable-loader-v7 gate cannot run without pinned historical Git objects. This is an environment limit, not evidence of a Loader defect.
+- Render smoke: 36 cases PASS; this is mocked Scriptable, not an iPhone display inspection.
+- Repair verification: Hero promotion/large/public-attribution and live-monitor positive/negative regressions PASS. Full post-repair results and exact repair commit CI are recorded in the PR.
+- No runtime module/loader, Stable descriptor, selection policy, visual layout or schedule was changed.
 
-**Visual v1 remains locked.**
+## Device evidence and remaining gates
 
-Accepted production contract:
+SUPER GT Small v9.5.31: owner-confirmed PASS on 2026-09-25 07:46 JST according to attached handoff, screenshot IMG_2843.jpeg. Screenshot was not re-inspected here; exact device/OS remains unrecorded. Prior v9.5.30 WEC/Dakar PASS is historical and scoped.
 
-- Small / Medium / Large across all 12 categories;
-- 36 deterministic render smoke cases;
-- Large typography 1.12×;
-- Large Top 3 + positions 4–5 under `MORE STANDINGS`;
-- adaptive bottom-weighted lower context panel;
-- Dakar stage/route/SS/GAP semantics;
-- CI-gated Hero provenance/license/quality pipeline.
+Required before broad GA: resolve/reverify current operational failures; one representative exact-Stable physical smoke; current Hero credit revalidation; explicit owner GA authorization. Optional Share Sheet export and actual 2027 Dakar live behavior remain unverified.
 
-Do not reopen broad UI/Hero retuning without a concrete regression or materially better compliant source.
-
-## Loader / release resilience
-
-**PASS.**
-
-Loader v7:
-
-- discovers approved Stable through `release-channel.json`;
-- verifies source commit, RC evidence, integrity and release ancestry contract;
-- promotes only after Router boot;
-- keeps a local last-known-good release;
-- writes bounded local observability.
-
-Physical iPhone online/offline Loader recovery is USER-CONFIRMED PASS.
-
-## WEC / SUPER GT v9.5.29
-
-**PASS — USER-CONFIRMED.**
-
-The v9.5.28 server/CI repair did not fully match the real iPhone response shape. QA on-device still showed 12/12 LIVE, isolating the issue to production parsing rather than network/release propagation.
-
-PR #42 added device-safe normalized-text fallbacks for WEC and SUPER GT plus no-table/device-shaped regression fixtures. Stable v9.5.29 then shipped that source.
-
-The user supplied physical-iPhone Large screenshots confirming:
-
-- WEC: no `更新待ち`, Top 5 visible;
-- SUPER GT: no `更新待ち`, positions 4–5 visible;
-- no visible layout/typography regression in the supplied screenshots.
-
-Treat **Stable v9.5.29 WEC / SUPER GT Physical iPhone Validation = PASS**.
-
-## Dakar 2027 readiness
-
-PR #45 is merged to `main` and deterministically covers:
-
-- pre-start 2026 FINAL fallback;
-- 2027 Stage 1 ranking-source rollover after Stage 1;
-- rejection of cached 2026 rankings once 2027 standings are expected;
-- continued use of matching 2027 LKG during temporary live-source failure.
-
-This hardening is not yet in Stable v9.5.29. Actual 2027 live-page/parser behavior remains empirically untestable until the 2027 standings surface exists.
-
-## Monitoring / observability
-
-**PASS for Public RC.**
-
-- Live Parser Monitor checks all 12 categories on scheduled/manual paths and requires fresh schema-1 cache generation.
-- PR monitor runs deterministic contract checks; live upstream execution is separated from ordinary PR checks.
-- Loader local observability retains at most 200 sanitized events.
-- No automatic external analytics/crash transport is currently enabled.
-- `support-observability-export.js` has deterministic CI coverage, but its physical iPhone share-sheet interaction is not yet independently verified.
-
-Centralized telemetry is not considered a GA blocker by itself for the current architecture; adding it would be a separate privacy/service decision.
-
-## GA workflow hygiene
-
-**PASS on main.**
-
-PR #46 removed the obsolete v9.3 write/mutation path from current Hardening CI, removed the consumed one-shot WRC source-fix workflow, made Hardening CI read-only, and added a workflow-hygiene regression gate to Hardening + Release Candidate CI.
-
-This changed CI/repository safety only; it did not publish a new Stable or modify runtime UI/data behavior.
-
-## Public self-service readiness
-
-Current GA-docs work adds or updates:
-
-- `INSTALL.md` — Loader v7 installation and widget Parameter setup;
-- `SUPPORT.md` — evidence-first GitHub Issues workflow;
-- `PRIVACY.md` — current local data/network/observability disclosure;
-- `GA_READINESS.md` — GA decision matrix;
-- public bug-report template;
-- README/CHANGELOG current Stable state;
-- deterministic `public-ga-docs` CI gate.
-
-These docs are not considered merged until their PR is explicitly approved and merged.
-
-## Remaining broad-GA gates
-
-### Required
-
-1. **Software license decision.** Repository metadata currently reports `license: null`; broad redistribution should not proceed without an explicit owner-selected license/terms.
-2. **Final Hero distribution-attribution review.** Runtime and `hero-live` carry source/author/license metadata, but broad distribution should confirm the attribution surface satisfies the current pool's applicable licenses.
-3. **Explicit broad-public/GA approval.** Green CI/merged code is not release authorization.
-
-### Recommended
-
-- physically verify the support observability-export Share Sheet before advertising it as the standard support collection path;
-- publish the Dakar 2027 hardening in a tested Stable before 2027 live standings are expected;
-- run a final representative physical-device smoke session against the exact Stable selected for GA.
-
-### Not blockers by themselves
-
-- centralized telemetry;
-- new categories;
-- broad Visual v1 retuning;
-- richer tap/deep links;
-- Hero replacement without a concrete quality/compliance improvement;
-- performance-budget work without real-device evidence.
-
-## Decision
-
-**Internal/personal Stable operation: ACCEPTED at v9.5.29.**
-
-**Public Release Candidate: APPROVED.**
-
-**Stable v9.5.29 WEC / SUPER GT parser repair: PHYSICAL IPHONE PASS.**
-
-**Runtime maturity: GA-capable candidate.**
-
-**Broad GA/public distribution: NOT YET AUTHORIZED.**
-
-The remaining hard work is now mostly self-service distribution/compliance/approval rather than a known core-runtime defect.
+Main merge, Stable publication and broad GA are separate actions. This audit prepares repairs; it authorizes none of those actions.

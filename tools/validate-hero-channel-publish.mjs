@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import {fileURLToPath} from 'node:url';
+import {renderHeroAttribution} from './build-hero-public-attribution.mjs';
 import {matchesAnyPolicyTerm} from './hero-policy-text.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
@@ -78,10 +79,11 @@ function walk(dir,rel=''){
  for(const ent of fs.readdirSync(dir,{withFileTypes:true})){
   const r=path.join(rel,ent.name),p=path.join(dir,ent.name);assert(!ent.isSymbolicLink?.(),`symlink not allowed: ${r}`);
   if(ent.isDirectory()){assert(r==='assets'||r.startsWith(`assets${path.sep}`),`unexpected directory: ${r}`);walk(p,r);continue;}
-  const unix=r.split(path.sep).join('/'),ok=unix==='channel.json'||unix==='promotion-report.json'||/^assets\/[A-Z0-9]+\/[A-Za-z0-9._-]+\.jpg$/.test(unix);assert(ok,`unexpected publish file: ${unix}`);
+  const unix=r.split(path.sep).join('/'),ok=unix==='ATTRIBUTION.md'||unix==='channel.json'||unix==='promotion-report.json'||/^assets\/[A-Z0-9]+\/[A-Za-z0-9._-]+\.jpg$/.test(unix);assert(ok,`unexpected publish file: ${unix}`);
  }
 }
 walk(candidate);
+assert.equal(fs.readFileSync(path.join(candidate,'ATTRIBUTION.md'),'utf8'),renderHeroAttribution(channel),'public attribution must match the exact candidate pool');
 
 if(fs.existsSync(path.join(previous,'channel.json'))){
  const prev=readJSON(path.join(previous,'channel.json')),promoted=new Set(report.promoted),updated=new Set(report.updatedCategories),poolUpdated=new Set(report.poolUpdated),suppressed=new Set(suppressedList);

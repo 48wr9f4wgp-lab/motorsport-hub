@@ -36,6 +36,11 @@ assert.equal(drift.attempts.at(-1).cacheWrites.length,0,'rejected live payload m
 
 const network=await runCategory('F1',{fetchImpl:async()=>{throw Object.assign(new Error('sensitive upstream body must never be logged'),{code:'ECONNRESET'})},attempts:1,nowMs:Date.parse('2026-09-14T08:00:00Z'),rootDir:root});
 assert.equal(network.ok,false);
+assert.equal(network.errorCode,'ECONNRESET','transport failure must not masquerade as parser drift');
+const forbidden=await runCategory('F1',{fetchImpl:async()=>jsonResponse({},403),attempts:1,rootDir:root});
+assert.equal(forbidden.errorCode,'HTTP_403');
+const invalidJson=await runCategory('F1',{fetchImpl:async()=>new Response('<html>not JSON</html>'),attempts:1,rootDir:root});
+assert.equal(invalidJson.errorCode,'INVALID_JSON');
 const serialized=JSON.stringify(network);
 assert(!serialized.includes('sensitive upstream body'),'monitor report must not retain raw exception messages or response bodies');
 assert(serialized.includes('ECONNRESET'),'normalized transport code should remain diagnosable');

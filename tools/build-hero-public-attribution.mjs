@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import {fileURLToPath} from 'node:url';
 
 const arg=(name,fallback='')=>{const p=process.argv.find(x=>x.startsWith(`--${name}=`));return p?p.slice(name.length+3):fallback};
 const channelPath=path.resolve(arg('channel','hero-channel/channel.json'));
@@ -14,7 +15,7 @@ const licenseUrls={
   'CC0 1.0':'https://creativecommons.org/publicdomain/zero/1.0/'
 };
 const clean=v=>String(v??'').replace(/[\r\n\t]+/g,' ').replace(/\s+/g,' ').trim();
-const channel=JSON.parse(fs.readFileSync(channelPath,'utf8'));
+export function renderHeroAttribution(channel){
 if(channel?.schemaVersion!==1||!channel.categories||typeof channel.categories!=='object')throw Error('invalid Hero channel');
 
 const lines=[
@@ -51,6 +52,12 @@ for(const [category,entry] of Object.entries(channel.categories).sort(([a],[b])=
   }
 }
 lines.push('---','',`Total credited Hero pool assets: **${total}**.`,'');
-fs.mkdirSync(path.dirname(outputPath),{recursive:true});
-fs.writeFileSync(outputPath,lines.join('\n'),'utf8');
-console.log(`Motorsport Hub live Hero attribution generated: ${total} assets -> ${outputPath}`);
+return lines.join('\n');
+}
+
+if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
+ const text=renderHeroAttribution(JSON.parse(fs.readFileSync(channelPath,'utf8')));
+ fs.mkdirSync(path.dirname(outputPath),{recursive:true});
+ fs.writeFileSync(outputPath,text,'utf8');
+ console.log(`Motorsport Hub live Hero attribution generated: ${outputPath}`);
+}

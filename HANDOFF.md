@@ -1,207 +1,57 @@
 # Motorsport Hub — Development Handoff
 
-Updated: 2026-09-14 JST
+Updated: 2026-09-26 JST
+Scope: title-local / iPhone Scriptable non-game product.
+Re-fetch GitHub main, release-channel.json, hero-live and open PRs before protected actions.
 
-This is the current operational handoff for Motorsport Hub. Re-fetch GitHub before protected actions and prefer current repository state over older chat/history. `COMPLETION_AUDIT.md` is the completion snapshot; `GA_READINESS.md` and `GA_LAUNCH_CHECKLIST.md` control broad-public readiness.
+## WORKING_HEAD / VERIFIED_BASELINE / RECOVERY_STATE
 
-## 1. Product state
+- Audit base main: `5a5dd46722556ca71d20beb50f752be8a12e3f0a` (PR #54).
+- Audit repair branch: `monitor/audit-2026-09-26-ops-readiness`; resolve its current SHA from GitHub. Branch changes are not deployed until approved and merged.
+- Stable: **v9.5.31 / sequence 9**, releaseId `mh-02e9c199611f`.
+- Stable sourceRef: `02e9c199611fd32153f4a5f220e9d1165c31ad2f`.
+- Validation releaseRef: `f746a2730c6f05b21ce35d296ac8bfd1bf8811a2`; RC run `36012972754` SUCCESS (re-fetched in this audit).
+- Hero head: `57e0c7019b681239deba81627eddba6b6c622acf`; 12 pool credits validate against the channel.
+- Recovery: original main and hero-live remain unchanged by this audit; repair branch contains proposed tools/tests/docs changes. No Stable publication performed.
+- Legacy draft PR #2 (Loader v6 observability) remains separate; do not merge it as part of this repair.
 
-Motorsport Hub is an iPhone home-screen motorsport widget system for Scriptable. One installed `scriptable-loader-v7.js` serves:
+## Product / locked decisions
 
-`F1, WEC, WRC, SUPERGT, MOTOGP, FDJ, D1GP, SUPERFORMULA, INDYCAR, NASCAR, GTWCEU, DAKAR` + `QA`.
+- Canonical installed loader: `scriptable-loader-v7.js`; immutable Stable + hash/byte verification + RC evidence + release-namespaced local LKG.
+- Router schema 5, category cache schema 1; 12 categories + QA; Small / Medium / Large.
+- Categories: F1,WEC,WRC,SUPERGT,MOTOGP,FDJ,D1GP,SUPERFORMULA,INDYCAR,NASCAR,GTWCEU,DAKAR,QA.
+- Visual v1 remains locked; no broad retuning without a concrete regression/material improvement.
+- Software MPL-2.0; third-party Hero images retain their own Creative Commons terms.
+- Club Pulse is a separate product/repository; migration is complete.
+- Local observability only, latest 200 events; no automatic external analytics.
+- Do not add user-facing scheduled automations. Existing repository parser/Hero workflows are retained.
+- Branch/test/doc/PR preparation is authorized development work. Main merge, Stable update, manual Hero publication, broad GA, Store/paid distribution, contracts/costs and external analytics need explicit action-specific approval.
+- Public RC was approved; broad GA is NOT AUTHORIZED. Previous Stable publication approval was consumed.
 
-Current state:
+## Accepted Stable repairs and physical evidence
 
-- Public RC: **APPROVED**.
-- Stable: **v9.5.29 / sequence 7**.
-- Stable sourceRef: `7f3fc1eb6fa93c619c1def732b18d091c9e949ce`.
-- WEC / SUPER GT v9.5.29 repair: **USER-CONFIRMED physical iPhone PASS**.
-- No known reproducible P0 startup/routing/current-data blocker.
-- Runtime maturity: **GA-capable candidate**.
-- Broad GA/public distribution: **NOT AUTHORIZED**.
+v9.5.31 includes WEC Fuji 11:00 JST, Tokyo calendar-day countdown, Dakar GAP/index and 2027 rollover hardening, WRC Sardegna finale, full-14 SUPER GT META and width-hardened SUPER GT Small.
 
-## 2. Current GitHub baselines
+Owner-supplied `MOTORSPORT_HUB_HANDOFF_2026-09-25.md` records SUPER GT Small physical PASS at 2026-09-25 07:46 JST (IMG_2843.jpeg: AUTOPOLIS, 10/18, no black/clipped widget). This audit imported that user-confirmed result; it did not re-inspect the screenshot or run an iPhone. Earlier WEC/Dakar v9.5.30 PASS remains scoped historical evidence. Exact hardware/OS is not recorded.
 
-### main
+Visual baseline: IMG_2843.jpeg; CURRENT, REATTACH required before layout work, verified_access=NO in this audit. No visual/layout edits were made.
 
-Before the current GA-compliance branch:
+## Audit findings / current operations
 
-`79e7771ccc867655418f1e7e3c87840c88842d2f`
+See `COMPLETION_AUDIT.md` for evidence and verification scope.
+- Hero refresh run 36192726244 failed: publish validator rejected inherited ATTRIBUTION.md. Repair regenerates candidate credits and requires exact agreement before publication; regression tests cover stale credits and unexpected files.
+- Parser monitor run 36192066389: 11/12 PASS, DAKAR NO_FRESH_DATA_CACHE. A deterministic Dakar fixture passes; actual upstream cause remains unresolved. Monitor repair exposes normalized transport/JSON errors and safe request status/byte counts without response bodies.
+- Current live credit publication proof is satisfied; refresh health is a separate issue.
+- README, GA readiness/checklist, completion audit, handoff, migration status and DEV_STATUS had drifted; repair reconciles them.
 
-This is PR #47, which merged self-service GA onboarding/support documentation and public GA documentation gates.
+## Remaining validation / release limits
 
-Relevant merged post-Stable work on `main`:
+- After approved merge: confirm Hero workflow recovery and investigate Dakar using the improved monitor output. Do not suppress its failure.
+- Final representative exact-Stable physical smoke (fresh Loader path, QA, Small/Medium/Large, online refresh, relevant offline/LKG) remains pending.
+- Optional support export Share Sheet remains physically unverified.
+- Actual Dakar 2027 live endpoint behavior is not verified before real upstream standings exist.
+- Broad GA requires explicit owner approval for destination/action.
 
-- PR #45 → `51e6b75c52a191869035ef74dc3083355ba2a276`: Dakar 2027 season-aware cache rollover hardening.
-- PR #46 → `2f297407c2a0ed57b9e6cc88b04af52e2867110f`: workflow hygiene / read-only Hardening CI cleanup.
-- PR #47 → `79e7771ccc867655418f1e7e3c87840c88842d2f`: self-service install/support/privacy/GA docs and related CI contract.
+## NEXT
 
-A temporary GA placeholder was accidentally added directly to `main` before PR #47 work and immediately removed. The correction left no runtime/Stable/Hero content change; do not repeat direct-to-main writes.
-
-### Stable
-
-`release-channel.json` remains:
-
-- version: **9.5.29**
-- sequence: **7**
-- sourceRef: `7f3fc1eb6fa93c619c1def732b18d091c9e949ce`
-- releaseId: `mh-7f3fc1eb6fa9`
-- routerSchema: `5`
-- validation releaseRef: `b8df2430607161f8bb2a560174ac3c36dcd7b4a3`
-- RC validation: run `34837876868` / RC CI #256 — SUCCESS
-
-Post-v9.5.29 `main` work is not automatically Stable.
-
-### hero-live
-
-At the GA compliance audit, `hero-live` HEAD was:
-
-`b81553a164c76620d69b94477f823bb777ff4af6`
-
-The current channel contains five dynamically published categories: WEC, WRC, F1, SUPER FORMULA and NASCAR. Re-fetch `hero-live` before making current asset claims because Hero publication is independent from runtime Stable.
-
-## 3. Architecture contract
-
-```text
-Scriptable Loader v7
-        ↓
-release-channel.json
-        ↓
-verified immutable source + RC evidence + hashes
-        ↓
-Router schema 5
-        ↓
-exactly one category module
-        ↓
-data/cache + hero-live/fallback Hero
-        ↓
-Small / Medium / Large widget
-```
-
-Invariants:
-
-- Loader v7 does not execute mutable `main` as Stable runtime.
-- Stable sequence is monotonic; rollback/fork updates are rejected.
-- Loader retains release-namespaced local LKG.
-- Category caches are schema-1 and validate before use.
-- Visual v1 is locked unless a concrete regression or materially better compliant source justifies reopening it.
-
-## 4. QA / reliability evidence
-
-Implemented and currently accepted:
-
-- 36 deterministic render smoke cases (12 categories × Small/Medium/Large).
-- Hardening CI + Release Candidate CI.
-- scheduled/manual 12-category live parser monitor.
-- Loader v7 online/offline physical-iPhone evidence.
-- local Loader observability capped at latest 200 events.
-- no automatic external analytics transport.
-- support observability export has deterministic CI coverage but its Share Sheet interaction has not been physically exercised.
-
-Device-sensitive Loader/parser/renderer/Hero changes still require representative physical-iPhone evidence.
-
-## 5. Resolved device parser incident
-
-Stable v9.5.28 still showed `更新待ち` for WEC and SUPER GT on the physical iPhone despite server-side parser checks. Device QA showed 12/12 LIVE, isolating the issue to production extraction rather than network/channel propagation.
-
-PR #42 added device-safe normalized-text fallbacks. Stable v9.5.29 was published and user-supplied screenshots confirmed WEC and SUPER GT fresh Top 5 data without `更新待ち`, including SUPER GT positions 4–5, with no visible Large-layout regression.
-
-Treat **Stable v9.5.29 Physical iPhone Validation = PASS** for that repair scope.
-
-## 6. Dakar 2027
-
-Stable v9.5.29 still uses 2026 FINAL as the pre-start ranking fallback for the embedded 2027 Dakar schedule.
-
-PR #45 on `main` adds season-aware rollover safety:
-
-- pre-start 2026 FINAL remains allowed;
-- once 2027 standings are expected, stale 2026 cache is rejected;
-- matching 2027 LKG remains usable during temporary source failure;
-- deterministic fixed-time tests protect the transition.
-
-Do not claim live 2027 parser proof before the 2027 standings surface exists. Publish a tested Stable containing this hardening before 2027 live standings are expected to take over.
-
-## 7. GA self-service surfaces
-
-Merged in PR #47:
-
-- `README.md`
-- `INSTALL.md`
-- `SUPPORT.md`
-- `PRIVACY.md`
-- `GA_READINESS.md`
-- structured GitHub bug-report template
-- current changelog / attribution guidance
-- public GA documentation CI gate
-
-The product is no longer blocked on basic onboarding/support documentation.
-
-## 8. Current GA compliance branch
-
-Branch:
-
-`ga/final-distribution-compliance`
-
-Purpose: close the remaining distribution/compliance design gaps without publishing GA or changing Stable runtime.
-
-Work on this branch includes:
-
-- `LICENSE_DECISION.md`: narrows the preferred software license to **MPL-2.0**, but grants no license.
-- repository-scope audit: Club Pulse code (`scriptable/club-pulse*`) shares this repository, so a root license must not be added until scope is explicitly resolved.
-- preferred architecture: move Club Pulse to its own repository before applying a root Motorsport Hub license; this move requires separate explicit approval and migration planning.
-- `GA_LAUNCH_CHECKLIST.md`: exact final launch checklist.
-- `tools/build-hero-public-attribution.mjs` + validator: generate a human-readable attribution surface from current `hero-live` pool metadata.
-- `Motorsport Hub Hero Public Attribution` workflow: after successful scheduled/manual Hero refresh, update **only** `hero-live/hero-channel/ATTRIBUTION.md` with scoped write permissions.
-- deterministic attribution + workflow-hygiene CI coverage.
-
-No software license has been granted, no broad GA has been authorized, and no Stable publication is included in this branch.
-
-## 9. Hero attribution compliance state
-
-The current live-pool audit found:
-
-- WEC: CC BY-SA 4.0 pool;
-- WRC: CC BY 4.0 pool;
-- F1: CC BY-SA 4.0 pool;
-- SUPER FORMULA: CC BY 4.0 pool;
-- NASCAR: CC BY-SA 4.0 pool.
-
-Current inspected live/pool entries include exact Commons source pages, authors and license identifiers. The new public attribution generator is intended to turn that machine-readable metadata into a human-readable credit file including license links and modification notice.
-
-Before broad GA, require one successful publication of `hero-live/hero-channel/ATTRIBUTION.md` and validate it against the then-current `channel.json`.
-
-## 10. Remaining GA hard path
-
-1. Merge/validate the current GA-compliance PR only after explicit approval.
-2. Resolve software-license **and repository scope**. Recommended license: MPL-2.0; do not add it until owner approval.
-3. Confirm the generated live Hero attribution file has published successfully.
-4. Run the final physical iPhone smoke on the exact Stable chosen for GA.
-5. Obtain explicit owner approval for broad GA and its distribution channel.
-
-Centralized telemetry is not a GA blocker by itself. Do not add external telemetry, paid services, Store submission or public launch without the corresponding explicit approval.
-
-## 11. Protected-action boundary
-
-Creating branches/tests/docs/PRs is reversible development work. The following require fresh explicit approval:
-
-- merge to `main`;
-- Stable publication/update;
-- `hero-live` manual publication outside an already-approved automated workflow change;
-- software-license grant;
-- moving/deleting Club Pulse files or creating a migration with destructive effects;
-- broad public GA/distribution;
-- Store submission, paid distribution, external service contract/cost, external analytics.
-
-## 12. Next task
-
-If the current GA-compliance PR is still open:
-
-- verify final changed-file scope;
-- require Hardening CI and Release Candidate CI PASS;
-- stop before merge and request explicit approval.
-
-After it is merged, do **not** immediately launch. Next owner decision is license + repository scope. Once that is approved and implemented, validate live Hero attribution publication, run the exact-Stable iPhone smoke, then request explicit GA authorization.
-
-## Next-chat start prompt
-
-> Motorsport Hubを引き継いでください。Repositoryは `48wr9f4wgp-lab/motorsport-hub`。最初にGitHubの現在の `main`、`release-channel.json`、`hero-live`、open PRを再取得し、`HANDOFF.md`、`COMPLETION_AUDIT.md`、`GA_READINESS.md`、`LICENSE_DECISION.md`、`GA_LAUNCH_CHECKLIST.md` を読んでください。Stable v9.5.29 / sequence 7 のWEC・SUPER GT parser repairはユーザー提供スクリーンショットでPhysical iPhone PASS済み。`main`にはStable未配布のDakar 2027 rollover hardeningがある。GA前の主要論点はsoftware license/repository scope、generated Hero attribution publication、exact-Stable physical smoke、explicit GA approvalです。未確認を完成済みと言わず、main merge、Stable更新、software license grant、Club Pulse移動、公開配布、Store/有料配布、外部サービス契約は明示承認なしに実行しないでください。
+Review and approve the audit repair PR for main merge, then reverify operational failures. Afterward, resume the Japan viewing-platform specification: region + season/event + platforms + verifiedAt + official source + expiry; hide unverified/stale rights. Medium/Large viewing row and omission on Small are hypotheses, not locked/implemented features. Do not add monitoring automations.

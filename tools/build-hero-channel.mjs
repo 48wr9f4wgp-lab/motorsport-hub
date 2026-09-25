@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import {fileURLToPath} from 'node:url';
+import {renderHeroAttribution} from './build-hero-public-attribution.mjs';
 import {matchesAnyPolicyTerm} from './hero-policy-text.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
@@ -96,4 +97,6 @@ const uniqUpdated=[...new Set(updatedCategories)];if(uniqUpdated.length)next.gen
 const uniqPoolUpdated=[...new Set(poolUpdated)],uniqSuppressed=[...new Set(suppressed)];
 fs.writeFileSync(path.join(outputDir,'channel.json'),JSON.stringify(next,null,2)+'\n');
 fs.writeFileSync(path.join(outputDir,'promotion-report.json'),JSON.stringify({schemaVersion:1,generatedAt:nowIso,thresholds:{minScore,minDetection,minSmallSubject,minMediumSubject,minTextSafeFamily,minAverageTextSafe,minLkgQualityGain,poolInitialMinScore,poolMaxQualityDrop,poolMaxSize,recentHistorySize,rotationMinAgeHours:rotationMinAgeMs/3600000,rotationReuseCooldownHours:rotationReuseCooldownMs/3600000},promoted,promotionModes,poolUpdated:uniqPoolUpdated,suppressed:uniqSuppressed,updatedCategories:uniqUpdated,categories:Object.fromEntries(Object.entries(next.categories).map(([k,v])=>[k,{assetId:v.assetId,qualityScore:v.qualityScore,poolSize:Array.isArray(v.pool)?v.pool.length:0,sourceTitle:v.sourceTitle,rotationMode:v.rotationMode||null}]))},null,2)+'\n');
+// Publish credits atomically with the exact candidate pool, never inherited stale credits.
+fs.writeFileSync(path.join(outputDir,'ATTRIBUTION.md'),renderHeroAttribution(next));
 console.log(JSON.stringify({promoted,promotionModes,poolUpdated:uniqPoolUpdated,suppressed:uniqSuppressed,updatedCategories:uniqUpdated,totalLive:Object.keys(next.categories).length}));

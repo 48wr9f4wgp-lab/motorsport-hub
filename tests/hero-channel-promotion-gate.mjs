@@ -57,6 +57,8 @@ writeArtifact('SUPERGT');
 writeArtifact('MOTOGP',{detection:.40,subjectSmall:.20,subjectMedium:.20,title:'File:MotoGP weak.jpg',page:'https://commons.wikimedia.org/wiki/File:MotoGP_Weak.jpg'});
 writeArtifact('FDJ',{detection:.40,subjectSmall:.20,subjectMedium:.20,title:'File:FDJ weak repair.jpg',page:'https://commons.wikimedia.org/wiki/File:FDJ_Weak_Repair.jpg'});
 
+// Reproduce production hero-live, which already contains a generated credit file.
+fs.writeFileSync(path.join(prev,'ATTRIBUTION.md'),'STALE CREDIT FILE');
 execFileSync(process.execPath,[path.join(root,'tools/build-hero-channel.mjs'),`--artifacts=${arts}`,`--previous-dir=${prev}`,`--output-dir=${out}`],{cwd:root,stdio:'pipe'});
 execFileSync(process.execPath,[path.join(root,'tools/validate-hero-channel-publish.mjs'),`--candidate=${out}`,`--previous=${prev}`],{cwd:root,stdio:'pipe'});
 const channel=JSON.parse(fs.readFileSync(path.join(out,'channel.json'),'utf8')),report=JSON.parse(fs.readFileSync(path.join(out,'promotion-report.json'),'utf8'));
@@ -97,5 +99,15 @@ assert(channel.categories.WRC.recentAssetIds.includes(oldWrc.assetId),'previous 
 for(const [cat,e] of Object.entries(channel.categories)){assert(e.pool.length>=1&&e.pool.length<=5,`${cat}: pool size out of bounds`);assert(e.pool.some(x=>x.assetId===e.assetId),`${cat}: live asset missing from pool`)}
 for(const cat of report.promoted)for(const family of ['small','medium'])assert(fs.existsSync(path.join(out,'assets',cat,path.basename(channel.categories[cat].images[family].url))),`${cat}/${family} promoted asset missing`);
 
+const credits=fs.readFileSync(path.join(out,'ATTRIBUTION.md'),'utf8');
+assert(!credits.includes('STALE CREDIT FILE'),'inherited credits must be regenerated');
+const validate=()=>execFileSync(process.execPath,[path.join(root,'tools/validate-hero-channel-publish.mjs'),`--candidate=${out}`,`--previous=${prev}`],{cwd:root,stdio:'pipe'});
+fs.writeFileSync(path.join(out,'ATTRIBUTION.md'),credits.replace('Tester','Wrong author'));
+assert.throws(validate,undefined,'incorrect attribution must block publication');
+fs.writeFileSync(path.join(out,'ATTRIBUTION.md'),credits);
+fs.writeFileSync(path.join(out,'unexpected.txt'),'unexpected');
+assert.throws(validate,undefined,'unrelated files must still block publication');
+fs.unlinkSync(path.join(out,'unexpected.txt'));
+validate();
 console.log('Motorsport Hub Hero pool rotation gate: PASS');
 fs.rmSync(tmp,{recursive:true,force:true});

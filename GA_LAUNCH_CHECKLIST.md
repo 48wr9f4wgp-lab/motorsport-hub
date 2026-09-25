@@ -1,15 +1,15 @@
 # Motorsport Hub — Final GA Launch Checklist
 
-Updated: 2026-09-14 JST
+Updated: 2026-09-26 JST
 
 Use this checklist only when preparing the actual broad public General Availability release. Completing repository work does not itself authorize public launch.
 
 ## A. Distribution/legal
 
 - [x] Software license explicitly approved by owner: **MPL-2.0**.
-- [ ] Club Pulse destination repository populated and verified before Motorsport Hub split/removal merge.
+- [x] Club Pulse destination repository populated and verified before Motorsport Hub split/removal merge; see `CLUB_PULSE_MIGRATION.md`.
 - [x] Root `LICENSE` and `LICENSE_SCOPE.md` prepared for product-pure Motorsport Hub.
-- [ ] Current `hero-live/hero-channel/ATTRIBUTION.md` exists and validates against the current live Hero pool.
+- [x] Current `hero-live/hero-channel/ATTRIBUTION.md` exists and validates against the current live Hero pool at `57e0c7019b681239deba81627eddba6b6c622acf` (12 assets). Recheck if the pool changes.
 - [x] Public install path distinguishes software-license terms from third-party Hero attribution.
 - [x] No claim of endorsement by image creators/licensors.
 
@@ -18,7 +18,8 @@ Use this checklist only when preparing the actual broad public General Availabil
 - [ ] Exact Stable version, sequence and sourceRef chosen for GA.
 - [ ] Release Candidate CI for that source is green.
 - [ ] Stable descriptor hashes/byte lengths validated.
-- [ ] If GA occurs before Dakar 2027 live takeover, v9.5.29 remains acceptable for current operation; publish the season-aware Dakar hardening before 2027 live standings are expected to take over.
+- [x] Dakar season-aware rollover hardening is already included in Stable v9.5.31 (shipped in v9.5.30). Actual 2027 live parser behavior remains unverified.
+- [ ] Resolve/reverify Hero refresh and Dakar upstream failures recorded in `COMPLETION_AUDIT.md`.
 
 ## C. Physical iPhone smoke
 
@@ -53,4 +54,4 @@ Record physical-device evidence as user-confirmed evidence; do not represent it 
 
 Motorsport Hub is technically a GA-capable candidate. The MPL-2.0/software-license decision is complete. **Broad GA is not authorized.**
 
-The immediate cutover blocker is safe Club Pulse preservation in its separate repository. After that, the remaining hard launch steps are live Hero attribution proof, exact-Stable physical iPhone smoke, and explicit GA authorization.
+Club Pulse cutover and live attribution proof are complete. Remaining work: operational failure resolution/reverification, exact-Stable physical iPhone smoke, and explicit GA authorization. The historical SUPER GT Small PASS does not complete the representative GA session.

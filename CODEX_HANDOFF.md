@@ -2,7 +2,9 @@
 
 Updated: 2026-08-28 JST
 
-## Start here
+> HISTORICAL SNAPSHOT — superseded by `HANDOFF.md` for current state. Do not resume the old branch from this file.
+
+## Historical starting point
 - Repository: `48wr9f4wgp-lab/motorsport-hub`
 - Working branch: `hardening/v9.3-codex-handoff`
 - Main baseline: `a09d16e11aa0f65104ba895b74e09124d30b487b`
