@@ -105,7 +105,7 @@ function createFetchRequest({record,moduleSource,requestLog,fetchImpl}){
           requestLog.push({kind,url:this.url.slice(0,500),ok:false,status:null,bytes:0,elapsedMs:Date.now()-started,errorCode:normalizeErrorCode(error)});
         }else{
           const last=[...requestLog].reverse().find(x=>x.url===this.url&&x.kind===kind);
-          if(last&&!last.ok&&!last.errorCode)last.errorCode=normalizeErrorCode(error);
+          if(last&&!last.errorCode)last.errorCode=normalizeErrorCode(error);
         }
         throw error;
       }finally{clearTimeout(timer)}
@@ -155,7 +155,10 @@ async function runAttempt({record,router,moduleSource,fetchImpl,nowMs}){
   if(runtimeError)errorCode=normalizeErrorCode(runtimeError);
   else if(moduleRequests.length!==1)errorCode='MODULE_ROUTE_COUNT';
   else if(setWidget!==1||complete!==1)errorCode='SCRIPT_LIFECYCLE';
-  else if(cacheWrites.length===0)errorCode='NO_FRESH_DATA_CACHE';
+  else if(cacheWrites.length===0){
+    const failedSource=[...externalRequests].reverse().find(x=>!x.ok||x.errorCode);
+    errorCode=failedSource?(failedSource.errorCode||`HTTP_${failedSource.status}`):'NO_FRESH_DATA_CACHE';
+  }
   else if(/更新待ち|データ取得失敗|安全に実行できません|Widget Parameterが不正/.test(text))errorCode='FALLBACK_UI';
   else if(externalRequests.length===0)errorCode='NO_EXTERNAL_SOURCE_REQUEST';
 
@@ -195,6 +198,10 @@ export async function runMonitor({categories=null,fetchImpl=globalThis.fetch,att
     const result=await runCategory(category,{fetchImpl,attempts,retryDelayMs,nowMs,rootDir});
     results.push(result);
     const last=result.attempts.at(-1);
+    if(!result.ok)for(const request of last?.requests||[]){
+      if(request.kind==='module')continue;
+      console.log(`[parser-monitor] ${category} source: status=${request.status??'none'} bytes=${request.bytes} code=${request.errorCode||'none'}`);
+    }
     console.log(`[parser-monitor] ${category}: ${result.ok?'PASS':'FAIL'}${result.ok?'':` (${result.errorCode})`} — ${last?.elapsedMs??0}ms`);
   }
   return{

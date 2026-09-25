@@ -1,16 +1,22 @@
 {
   "schema": 1,
-  "phase": "公開可能",
+  "phase": "RC / GA未承認",
   "checks": {
     "boot": "ok",
-    "test": "warn",
+    "test": "ok",
     "device": "ok",
     "save": "na",
     "analytics": "na",
     "performance": "warn",
-    "release": "ok"
+    "release": "warn"
   },
-  "next": "運用中のデータ取得と表示を継続確認する",
-  "note": "完了扱いのウィジェット。保存・分析計測は対象外。自動テストと性能確認は一部のみ。",
-  "updated_at": "2026-09-15"
+  "next": "監査修正PR #55を承認・マージ後、Hero実運用確認とDakar修正版Stableの公開準備",
+  "note": "修正ブランチで12カテゴリ実ソースPASS。Stable v9.5.31は未変更。Dakar修正のStable公開と実機確認、最終GA承認は別工程。",
+  "updated_at": "2026-09-26",
+  "stable": {
+    "version": "9.5.31",
+    "sequence": 9,
+    "sourceRef": "02e9c199611fd32153f4a5f220e9d1165c31ad2f"
+  },
+  "ga_authorized": false
 }

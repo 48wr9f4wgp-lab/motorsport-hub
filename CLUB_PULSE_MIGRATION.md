@@ -1,6 +1,10 @@
 # Club Pulse repository migration
 
-Status: **PREPARED — DO NOT MERGE REMOVAL UNTIL DESTINATION REPOSITORY IS VERIFIED**
+Status: **COMPLETED — historical migration procedure retained below.**
+
+Verified 2026-09-26: destination PR [#1](https://github.com/48wr9f4wgp-lab/club-pulse/pull/1) merged at `cf27ee7a81301a195072fd85164504628317ff00` on 2026-09-14. Current Motorsport Hub main has no `scriptable/` tree or Club Pulse workflow.
+
+Historical pre-cutover gate: **DO NOT MERGE REMOVAL UNTIL DESTINATION REPOSITORY IS VERIFIED**
 
 Approved direction: split Club Pulse out of `48wr9f4wgp-lab/motorsport-hub`, then keep Motorsport Hub product-pure under MPL-2.0.
 
@@ -15,13 +19,13 @@ Canonical export source before removal:
 
 Git history remains available in the source repository even after the split PR is eventually merged.
 
-## Intended destination
+## Destination (cutover completed)
 
 Preferred repository: `48wr9f4wgp-lab/club-pulse`.
 
 The destination must be created and populated from the exact source snapshot above before the removal PR is merged.
 
-## Verification required before cutover
+## Historical verification required before cutover
 
 1. Destination repository exists and is writable.
 2. Every file from source `scriptable/` is present in the destination without content drift.

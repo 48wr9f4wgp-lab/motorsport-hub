@@ -1,6 +1,6 @@
 # Motorsport Hub — GA Readiness
 
-Updated: 2026-09-24 JST
+Updated: 2026-09-26 JST
 
 This file tracks what is still required before **broad public General Availability (GA)**. It does not itself authorize public distribution, Store submission, paid distribution, Stable publication, or an external service contract.
 
@@ -11,7 +11,7 @@ This file tracks what is still required before **broad public General Availabili
 - Stable sourceRef: `02e9c199611fd32153f4a5f220e9d1165c31ad2f`.
 - Stable v9.5.29 WEC / SUPER GT device parser repair: **physical iPhone PASS**.
 - Stable v9.5.30 temporal/Dakar hardening: **physical iPhone PASS for WEC 11:00 and Dakar GAP/index fixes**.
-- Stable v9.5.31 WRC/SUPER GT hardening: **RC validated; SUPER GT Small physical iPhone confirmation pending**.
+- Stable v9.5.31 WRC/SUPER GT hardening: **RC validated; SUPER GT Small user-confirmed physical iPhone PASS on 2026-09-25 07:46 JST** (reported in the owner-supplied 2026-09-25 handoff; screenshot IMG_2843.jpeg was not re-inspected in this audit).
 - No known reproducible P0 startup/routing/current-data blocker.
 - Stable v9.5.30 includes Dakar 2027 rollover hardening plus the 2026-09-20 temporal-accuracy/Dakar presentation repairs.
 - Centralized production telemetry: **not enabled**.
@@ -28,7 +28,7 @@ Public install, support, privacy, README/changelog and bug-report surfaces are p
 
 **APPROVED: MPL-2.0.**
 
-The owner approved Mozilla Public License 2.0 for Motorsport Hub and approved separating Club Pulse into its own repository. The prepared split branch includes root `LICENSE` and `LICENSE_SCOPE.md`.
+The owner approved Mozilla Public License 2.0 for Motorsport Hub and approved separating Club Pulse into its own repository. The merged product-pure repository includes root `LICENSE` and `LICENSE_SCOPE.md`.
 
 Third-party Hero imagery is not relicensed under MPL-2.0; its Creative Commons obligations remain separate in `ATTRIBUTION.md` and the live Hero attribution surface.
 
@@ -44,11 +44,13 @@ Canonical export source and migration evidence remain recorded in `CLUB_PULSE_MI
 
 ### 2. Public Hero attribution publication
 
-**TECHNICALLY PREPARED; one live publication proof remains before GA.**
+**PUBLICATION PROOF VERIFIED at hero-live `57e0c7019b681239deba81627eddba6b6c622acf`.**
 
 The current Hero pipeline carries source page, author and license metadata. Motorsport Hub now has a generated human-readable attribution builder, validator, deterministic CI coverage and an attribution-only `hero-live` publisher.
 
-Before broad GA, confirm one successful generated attribution publication exists at `hero-live/hero-channel/ATTRIBUTION.md` and validate it against the then-current `channel.json`.
+The pinned `hero-live/hero-channel/ATTRIBUTION.md` validates against `channel.json`: 12 credited pool assets, matching generation timestamp `2026-09-14T02:23:06.396Z`. Revalidate against the then-current pool before GA. This proves current credits exist; it does not prove refresh health.
+
+The 2026-09-26 audit found Hero refresh run `36192726244` failing because the publish allowlist rejects inherited `ATTRIBUTION.md`. The audit repair regenerates credits with the candidate and validates their exact content before atomic publication. Deployment and a successful scheduled run remain pending.
 
 ### 3. Final physical-device GA smoke
 
@@ -102,9 +104,8 @@ Actual Dakar 2027 live endpoint/parser behavior cannot be empirically proven unt
 
 Remaining hard path:
 
-1. confirm SUPER GT Small renders correctly on physical iPhone under v9.5.31;
-2. confirm generated live Hero attribution publication;
-3. perform final representative GA smoke on the exact Stable;
-4. obtain explicit owner authorization for broad GA.
+1. merge approved audit repairs, confirm production Hero refresh, and prepare/verify any new Stable runtime release separately (Dakar repair branch live monitor is 12/12 PASS; see `COMPLETION_AUDIT.md`);
+2. perform final representative GA smoke on the exact Stable and revalidate live credits;
+3. obtain explicit owner authorization for broad GA.
 
 No Store submission, paid distribution, broad public launch, external analytics contract or new Stable publication is authorized by this document.

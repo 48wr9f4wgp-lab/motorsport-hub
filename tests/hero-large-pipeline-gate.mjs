@@ -70,6 +70,7 @@ assert.equal(fs.readFileSync(path.join(candidate,'channel.json'),'utf8'),channel
 assert.equal(fs.readFileSync(path.join(candidate,'promotion-report.json'),'utf8'),reportAfterFirst,'repeat refresh mutated promotion evidence');
 for(const a of [current,alternate])assert.deepEqual(fs.readFileSync(path.join(candidate,'assets','F1',`${a.assetId}-large.jpg`)),publishedLarge.get(a.assetId),`${a.assetId}: repeat refresh overwrote immutable Large bytes`);
 
+execFileSync(process.execPath,[path.join(root,'tools/build-hero-public-attribution.mjs'),`--channel=${path.join(candidate,'channel.json')}`,`--output=${path.join(candidate,'ATTRIBUTION.md')}`],{cwd:root,stdio:'pipe'});
 execFileSync(process.execPath,[path.join(root,'tools/validate-hero-channel-publish.mjs'),`--candidate=${candidate}`,`--previous=${previous}`],{cwd:root,stdio:'pipe'});
 fs.rmSync(tmp,{recursive:true,force:true});
 

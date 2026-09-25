@@ -72,7 +72,7 @@ const META={
 // Hero photo set: current Dacia Sandrider design reference + two licensed Dakar action frames. Exact source pages are tracked in hero-assets.json.
 
 const col=(h,a=1)=>new Color(h,a),clone=o=>JSON.parse(JSON.stringify(o)),num=v=>{const m=String(v||'').replace(/,/g,'').match(/-?\d+(?:\.\d+)?/);return m?Number(m[0]):NaN};
-const clean=s=>String(s||'').replace(/<script[\s\S]*?<\/script>/gi,' ').replace(/<style[\s\S]*?<\/style>/gi,' ').replace(/<[^>]+>/g,' ').replace(/&nbsp;|&#160;/gi,' ').replace(/&amp;/gi,'&').replace(/&#39;|&apos;/gi,"'").replace(/\s+/g,' ').trim();
+const clean=s=>String(s||'').replace(/<script[\s\S]*?<\/script>/gi,' ').replace(/<style[\s\S]*?<\/style>/gi,' ').replace(/<[^>]+>/g,' ').replace(/&nbsp;|&#160;/gi,' ').replace(/&amp;/gi,'&').replace(/&#(x[0-9a-f]+|[0-9]+);/gi,(entity,code)=>{const n=code[0].toLowerCase()==='x'?parseInt(code.slice(1),16):Number(code);return n>0&&n<=0x10ffff?String.fromCodePoint(n):entity}).replace(/&(?:apos|rsquo|lsquo|prime);/g,"'").replace(/&(?:quot|rdquo|ldquo|Prime);/g,"''").replace(/[‘’′ʼ]/g,"'").replace(/[“”″"]/g,"''").replace(/\s+/g,' ').trim();
 function rows(h){const out=[];for(const tr of String(h||'').match(/<tr\b[\s\S]*?<\/tr>/gi)||[]){const a=[];let m,re=/<t[dh]\b[^>]*>([\s\S]*?)<\/t[dh]>/gi;while((m=re.exec(tr)))a.push(clean(m[1]));if(a.length)out.push(a)}return out}
 async function txt(url){const r=new Request(url);r.timeoutInterval=10;r.headers={'User-Agent':'Mozilla/5.0 MotorsportHub/9.5.5','Cache-Control':'no-cache'};return await r.loadString()}
 function nextStage(d){const now=Date.now();for(const e of CAL){const s=Date.parse(e.start),end=Date.parse(e.end);if(now<end)return{...d,...e,seasonEnded:false,lifecycle:now>=s?'ACTIVE':'UPCOMING'}}const last=CAL[CAL.length-1];return{...d,...last,seasonEnded:true,lifecycle:'SEASON_ENDED'}}
@@ -95,7 +95,8 @@ function parseRanking(h){
   const team=String(c[di+1]||META[no]?.team||'ULTIMATE').trim();
   const time=c.find(x=>/^\d+h\s*\d+'\s*\d+''/.test(String(x)))||'';
   const gapCell=c.find(x=>/^\+\s*\d+h\s*\d+'\s*\d+''/.test(String(x)))||'';
-  const shortGap=p===1?'—':gapCell?gapCell.replace(/^\+\s*/,'+').replace(/00h\s*/,'').replace(/0?(\d+)'\s*0?(\d+)''/,'$1:$2').replace(/\s+/g,''):'';
+  const parsedGap=timeSeconds(gapCell);
+  const shortGap=p===1?'—':Number.isFinite(parsedGap)?gapText(parsedGap):'';
   const m=META[no]||{};out.push({pos:p,no,name,gap:shortGap,time:time.replace(/h\s*/,'h ').trim(),team:m.team||team,machine:m.machine||'ULTIMATE'});
  }
  out.sort((a,b)=>a.pos-b.pos);const seen=new Set(),u=[];for(const r of out){if(seen.has(r.pos))continue;seen.add(r.pos);u.push(r);if(u.length>=5)break}
