@@ -21,14 +21,18 @@ CONNOR RYUMA KAZUMI standings
 太田 格之進 岩佐 歩夢 イゴール フラガ Driver Standings
 Alex Palou Kyle Kirkwood Christian Lundgaard Championship Standings
 Lucas Auer Maro Engel Ricardo Feller GT World Challenge Europe Powered by AWS Drivers
-2027 Stage 13 King Abdullah Economic City
-NASSER AL-ATTIYAH NANI ROMA MATTIAS EKSTRÖM`;
+2027 Stage 13 King Abdullah Economic City`;
+const DAKAR_HTML=`<table>
+<tr><td>1</td><td>299</td><td>Co-driver (bel) NASSER AL-ATTIYAH (qat)</td><td>The Dacia Sandriders</td><td>48h 56&#39; 53&#39;&#39;</td></tr>
+<tr><td>2</td><td>227</td><td>Co-driver (esp) NANI ROMA (esp)</td><td>FORD RACING</td><td>49h 06&#39; 35&#39;&#39;</td><td>+0h 9&#39; 42&#39;&#39;</td></tr>
+<tr><td>3</td><td>226</td><td>Co-driver (swe) MATTIAS EKSTRÖM (swe)</td><td>FORD RACING</td><td>49h 11&#39; 26&#39;&#39;</td><td>+0h 14&#39; 33&#39;&#39;</td></tr>
+</table>`;
 
 async function render({release=null,offline=false}={}){
  const sink=[];let setWidget=0,complete=0;
  class Request{
   constructor(url){this.url=url;this.headers={}}
-  async loadString(){return TEXT}
+  async loadString(){return this.url.includes('stage-13/auto?year=2026')?DAKAR_HTML:TEXT}
   async loadJSON(){
    if(this.url.includes('points-feed.json'))return[{driver_name:'A',points:1},{driver_name:'B',points:2},{driver_name:'C',points:3}];
    if(this.url.includes('driverstandings.json'))return{MRData:{StandingsTable:{StandingsLists:[{DriverStandings:[{},{},{}]}]}}};
@@ -43,6 +47,7 @@ async function render({release=null,offline=false}={}){
  vm.createContext(ctx);
  await vm.runInContext(src,ctx,{timeout:5000});
  assert.equal(setWidget,1);assert.equal(complete,1);assert(sink.includes('12/12 LIVE — データ経路OK'));
+ assert(sink.includes('LIVE · R3 C3 P3 T3 G3 V1'),'Dakar production-equivalent parser diagnostic must PASS on encoded-time fixture');
  return sink;
 }
 
@@ -52,4 +57,7 @@ const sourceRef='abcdef0123456789abcdef0123456789abcdef01';
 {const sink=await render();assert(sink.includes('DEV ROUTER · integrity OFF'))}
 {const sink=await render({release:{sourceRef:'not-a-commit'}});assert(sink.includes('INTEGRITY INVALID'))}
 assert(src.includes('__MH_RELEASE_INTEGRITY'));assert(src.includes('__MH_REMOTE_OFFLINE'));
+assert(src.includes("capture:'dakar-ranking'"));
+assert(src.includes('dakarProductionDiag'));
+assert(src.includes('LIVE · R'));
 console.log('Motorsport Hub diagnostics loader-path gate: PASS');
