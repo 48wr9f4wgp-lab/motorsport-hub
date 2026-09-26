@@ -1,7 +1,7 @@
 # Motorsport Hub — Completion Audit
 
 Updated: 2026-09-27 JST
-Status: **v9.5.32 CANDIDATE RC PASS / HERO RECOVERED / GA NOT AUTHORIZED**
+Status: **v9.5.33 DIAGNOSTICS RC PASS / DAKAR DEVICE ROOT-CAUSE PENDING / GA NOT AUTHORIZED**
 
 ## Baselines
 
@@ -44,3 +44,7 @@ This closes the Hero refresh-health blocker. Current credits still require reval
 No known reproducible P0 startup/routing/layout blocker.
 v9.5.32 is technically validated as a Stable candidate, but publication remains a separate protected action.
 Broad GA/public distribution remains NOT AUTHORIZED.
+
+## v9.5.33 diagnostics evidence
+
+Source `95d85043045bd7942f9e72b960249649e637aee3` adds QA-only Dakar production-equivalent counters. Metadata-only validation ref `953f214de44b9dc986f553071f9c9339cc1298e2` passed RC #292 / run `36280879979`. Immutable package confirms diagnostics hash `2f8765df34a66d808f8a985900d91aeefe7ffeda16097dc88fd4c501a55820dd`, 8884 bytes. `dakar-widget.js` is unchanged from v9.5.32. Physical device evidence is pending and this release must not be described as a Dakar parser fix.
