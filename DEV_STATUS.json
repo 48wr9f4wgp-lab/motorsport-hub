@@ -4,19 +4,19 @@
   "checks": {
     "boot": "ok",
     "test": "ok",
-    "device": "ok",
+    "device": "warn",
     "save": "na",
     "analytics": "na",
     "performance": "warn",
     "release": "warn"
   },
-  "next": "監査修正PR #55を承認・マージ後、Hero実運用確認とDakar修正版Stableの公開準備",
-  "note": "修正ブランチで12カテゴリ実ソースPASS。Stable v9.5.31は未変更。Dakar修正のStable公開と実機確認、最終GA承認は別工程。",
-  "updated_at": "2026-09-26",
+  "next": "v9.5.32 Stable公開承認後、Dakar fresh pathをiPhone実機確認。その後、日本向け配信プラットフォーム仕様へ戻る",
+  "note": "Hero refresh/attribution本番復旧済み。Dakar修正はlive 12/12 PASS・RC #288 PASS。Stable公開と実機確認、最終GA承認は別工程。",
+  "updated_at": "2026-09-27",
   "stable": {
-    "version": "9.5.31",
-    "sequence": 9,
-    "sourceRef": "02e9c199611fd32153f4a5f220e9d1165c31ad2f"
+    "version": "9.5.32",
+    "sequence": 10,
+    "sourceRef": "273c582da42b02d1bcb5aa805bf7e2c77626a4a8"
   },
   "ga_authorized": false
 }
