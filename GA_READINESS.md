@@ -7,14 +7,15 @@ This file tracks what is still required before **broad public General Availabili
 ## Current product state
 
 - Public RC: **APPROVED**.
-- Current Stable: **v9.5.32 / sequence 10**.
-- Stable sourceRef: `273c582da42b02d1bcb5aa805bf7e2c77626a4a8`.
+- Current Stable: **v9.5.33 / sequence 11**.
+- Stable sourceRef: `95d85043045bd7942f9e72b960249649e637aee3`.
 - Stable v9.5.29 WEC / SUPER GT device parser repair: **physical iPhone PASS**.
 - Stable v9.5.30 temporal/Dakar hardening: **physical iPhone PASS for WEC 11:00 and Dakar GAP/index fixes**.
 - Stable v9.5.31 WRC/SUPER GT hardening: **SUPER GT Small user-confirmed physical iPhone PASS on 2026-09-25 07:46 JST**.
 - Stable v9.5.32 Dakar live-parser repair: **RC validated; live parser monitor 12/12 PASS; focused Dakar physical iPhone fresh-data confirmation pending**.
 - No known reproducible P0 startup/routing/current-data blocker.
 - Stable v9.5.30 includes Dakar 2027 rollover hardening plus the 2026-09-20 temporal-accuracy/Dakar presentation repairs.
+- Stable v9.5.33 Dakar device diagnostics: **RC validated; production Dakar parser behavior is still under physical-iPhone investigation and is not claimed fixed by this diagnostics-only release**.
 - Centralized production telemetry: **not enabled**.
 
 ## Resolved GA preparation items
@@ -105,8 +106,8 @@ Actual Dakar 2027 live endpoint/parser behavior cannot be empirically proven unt
 
 Remaining hard path:
 
-1. confirm focused Dakar fresh-data behavior on physical iPhone under Stable v9.5.32;
-2. perform the final representative exact-Stable GA smoke and revalidate current live credits;
+1. run the v9.5.33 QA diagnostic on physical iPhone and isolate the Dakar production-parser failure using R/C/P/T/G/V counters;
+2. implement and physically verify any resulting Dakar runtime repair, then perform the final representative exact-Stable GA smoke and revalidate live credits;
 3. obtain explicit owner authorization for broad GA.
 
 No Store submission, paid distribution, broad public launch, external analytics contract or new Stable publication is authorized by this document.
