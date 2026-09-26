@@ -1,57 +1,49 @@
 # Motorsport Hub — Development Handoff
 
-Updated: 2026-09-26 JST
+Updated: 2026-09-27 JST
 Scope: title-local / iPhone Scriptable non-game product.
-Re-fetch GitHub main, release-channel.json, hero-live and open PRs before protected actions.
 
 ## WORKING_HEAD / VERIFIED_BASELINE / RECOVERY_STATE
 
-- Audit base main: `5a5dd46722556ca71d20beb50f752be8a12e3f0a` (PR #54).
-- Audit repair branch: `monitor/audit-2026-09-26-ops-readiness`; resolve its current SHA from GitHub. Branch changes are not deployed until approved and merged.
-- Stable: **v9.5.31 / sequence 9**, releaseId `mh-02e9c199611f`.
-- Stable sourceRef: `02e9c199611fd32153f4a5f220e9d1165c31ad2f`.
-- Validation releaseRef: `f746a2730c6f05b21ce35d296ac8bfd1bf8811a2`; RC run `36012972754` SUCCESS (re-fetched in this audit).
-- Hero head: `57e0c7019b681239deba81627eddba6b6c622acf`; 12 pool credits validate against the channel.
-- Recovery: original main and hero-live remain unchanged by this audit; repair branch contains proposed Dakar parser + tools/tests/docs changes. No Stable publication performed.
-- Legacy draft PR #2 (Loader v6 observability) remains separate; do not merge it as part of this repair.
+- Main before v9.5.32 publication: `273c582da42b02d1bcb5aa805bf7e2c77626a4a8` (PR #55 merged).
+- Stable target: **v9.5.32 / sequence 10**, sourceRef `273c582da42b02d1bcb5aa805bf7e2c77626a4a8`.
+- Validation releaseRef: `18d823d1c740a554d1d75fa95f811006f99ec965`; RC #288 / run `36253970101` SUCCESS.
+- Current hero-live observed before publication prep: `7bd8e3e4fcf616b90fbded4911ac0ec8000ad225`.
+- Hero production recovery: Active Refresh #124 SUCCESS; Public Attribution #47 SUCCESS.
+- Live Parser Monitor #94 first attempt hit transient SUPER GT/D1GP TIMEOUTs; failed-job rerun returned **12/12 PASS**, including Dakar.
+- Legacy draft PR #2 remains obsolete/separate; do not merge it into current release work.
 
-## Product / locked decisions
+## LOCKED PRODUCT CONTRACT
 
-- Canonical installed loader: `scriptable-loader-v7.js`; immutable Stable + hash/byte verification + RC evidence + release-namespaced local LKG.
-- Router schema 5, category cache schema 1; 12 categories + QA; Small / Medium / Large.
-- Categories: F1,WEC,WRC,SUPERGT,MOTOGP,FDJ,D1GP,SUPERFORMULA,INDYCAR,NASCAR,GTWCEU,DAKAR,QA.
-- Visual v1 remains locked; no broad retuning without a concrete regression/material improvement.
-- Software MPL-2.0; third-party Hero images retain their own Creative Commons terms.
-- Club Pulse is a separate product/repository; migration is complete.
-- Local observability only, latest 200 events; no automatic external analytics.
-- Do not add user-facing scheduled automations. Existing repository parser/Hero workflows are retained.
-- Branch/test/doc/PR preparation is authorized development work. Main merge, Stable update, manual Hero publication, broad GA, Store/paid distribution, contracts/costs and external analytics need explicit action-specific approval.
-- Public RC was approved; broad GA is NOT AUTHORIZED. Previous Stable publication approval was consumed.
+- Canonical installed loader: `scriptable-loader-v7.js`.
+- Stable source is immutable and separately approved; main merge is not Stable publication.
+- Router schema 5; category cache schema 1; 12 categories + QA; Small/Medium/Large.
+- Visual v1 locked except concrete regression/material improvement.
+- MPL-2.0 software license; third-party Hero licenses remain separate.
+- Club Pulse is separate repo/product.
+- Local observability only; no automatic external analytics.
+- No new user-facing schedule/monitor automations unless explicitly requested.
+- Broad GA/public distribution is NOT AUTHORIZED.
 
-## Accepted Stable repairs and physical evidence
+## VERIFIED PRODUCT EVIDENCE
 
-v9.5.31 includes WEC Fuji 11:00 JST, Tokyo calendar-day countdown, Dakar GAP/index and 2027 rollover hardening, WRC Sardegna finale, full-14 SUPER GT META and width-hardened SUPER GT Small.
+- v9.5.31 SUPER GT Small black-widget repair: user-confirmed physical iPhone PASS.
+- v9.5.30 WEC Fuji 11:00 + Dakar GAP/index fixes: scoped historical physical PASS.
+- PR #55 Dakar live parser repair: deterministic CI PASS and live 12/12 PASS.
+- v9.5.32 candidate RC #288: SUCCESS.
+- Hero refresh and attribution workflows: production SUCCESS after PR #55.
 
-Owner-supplied `MOTORSPORT_HUB_HANDOFF_2026-09-25.md` records SUPER GT Small physical PASS at 2026-09-25 07:46 JST (IMG_2843.jpeg: AUTOPOLIS, 10/18, no black/clipped widget). This audit imported that user-confirmed result; it did not re-inspect the screenshot or run an iPhone. Earlier WEC/Dakar v9.5.30 PASS remains scoped historical evidence. Exact hardware/OS is not recorded.
+## REMAINING
 
-Visual baseline: IMG_2843.jpeg; CURRENT, REATTACH required before layout work, verified_access=NO in this audit. No visual/layout edits were made.
-
-## Audit findings / current operations
-
-See `COMPLETION_AUDIT.md` for evidence and verification scope.
-- Hero refresh run 36192726244 failed: publish validator rejected inherited ATTRIBUTION.md. Repair regenerates candidate credits and requires exact agreement before publication; regression tests cover stale credits and unexpected files.
-- Parser monitor run 36192066389: 11/12 PASS, DAKAR NO_FRESH_DATA_CACHE. HTTP 200 markup diagnostics isolated time-unit parsing. Repair normalizes HTML entities/typographic primes and explicit hour GAP. Live monitor run 36197949547 at repair commit 34a6f37479f4abde94219c91e235ce2d923c23d8: 12/12 PASS. Hardening and RC CI PASS. This runtime repair is not yet in Stable.
-- Current live credit publication proof is satisfied; refresh health is a separate issue.
-- README, GA readiness/checklist, completion audit, handoff, migration status and DEV_STATUS had drifted; repair reconciles them.
-
-## Remaining validation / release limits
-
-- After approved merge: confirm Hero workflow recovery. Dakar live fetch passes on the repair branch; publishing its runtime fix requires separate Stable approval and relevant physical validation. Do not suppress future monitor failures.
-- Final representative exact-Stable physical smoke (fresh Loader path, QA, Small/Medium/Large, online refresh, relevant offline/LKG) remains pending.
-- Optional support export Share Sheet remains physically unverified.
-- Actual Dakar 2027 live endpoint behavior is not verified before real upstream standings exist.
-- Broad GA requires explicit owner approval for destination/action.
+1. Publish v9.5.32 only after explicit Stable approval.
+2. Confirm Dakar fresh-data path on physical iPhone after promotion; `更新待ち` should not be treated as fresh PASS.
+3. Run final representative exact-Stable GA smoke: Loader v7 path, QA, Small/Medium/Large, online refresh and relevant recovery.
+4. Revalidate current live Hero credits at GA time.
+5. Broad GA requires explicit owner approval and named distribution action/channel.
+6. Support observability export Share Sheet remains optional/unverified.
+7. Actual Dakar 2027 live standings/parser remains unverified until that upstream exists.
 
 ## NEXT
 
-Review and approve audit repair PR #55 for main merge, then confirm the production Hero workflow and prepare the Dakar runtime fix for a separately approved Stable publication. Afterward, resume the Japan viewing-platform specification: region + season/event + platforms + verifiedAt + official source + expiry; hide unverified/stale rights. Medium/Large viewing row and omission on Small are hypotheses, not locked/implemented features. Do not add monitoring automations.
+After v9.5.32 device confirmation, resume Japan viewing-platform specification:
+`region + season/event + platforms + verifiedAt + official source + expiry`, fail closed when unverified/stale. Avoid adding viewing data to Small until width safety is demonstrated.
