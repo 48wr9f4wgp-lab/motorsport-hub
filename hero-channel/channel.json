@@ -1,42 +1,42 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-14T02:23:06.396Z",
+  "generatedAt": "2026-09-26T05:08:29.963Z",
   "publicationPolicy": "CI_GATED_LIVE_HERO_CHANNEL",
   "categories": {
     "WEC": {
       "category": "WEC",
-      "assetId": "auto-28736576071f-24-Heures-du-Mans-2026-Hypercar-No.-51-Ferrari-499P-",
-      "version": "858a2270a2587ac7",
-      "sourcePage": "https://commons.wikimedia.org/wiki/File:24_Heures_du_Mans_2026_Hypercar_No._51_Ferrari_499P_(back).jpg",
-      "sourceTitle": "File:24 Heures du Mans 2026 Hypercar No. 51 Ferrari 499P (back).jpg",
+      "assetId": "auto-a177615d7def-24-Heures-du-Mans-2026-Hypercar-No.-94-Peugeot-9X8-l",
+      "version": "4cd0c7d43aa38a54",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:24_Heures_du_Mans_2026_Hypercar_No._94_Peugeot_9X8_(left_side).jpg",
+      "sourceTitle": "File:24 Heures du Mans 2026 Hypercar No. 94 Peugeot 9X8 (left side).jpg",
       "author": "T GOUREAU",
       "license": "CC BY-SA 4.0",
       "sourceYear": 2026,
-      "sourceDate": "2026-06-07 11:00:41",
+      "sourceDate": "2026-06-07 17:27:35",
       "role": "IDENTITY",
-      "qualityScore": 0.9319,
+      "qualityScore": 0.9242,
       "images": {
         "small": {
-          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WEC/auto-28736576071f-24-Heures-du-Mans-2026-Hypercar-No.-51-Ferrari-499P--small.jpg",
+          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WEC/auto-a177615d7def-24-Heures-du-Mans-2026-Hypercar-No.-94-Peugeot-9X8-l-small.jpg",
           "width": 720,
           "height": 720
         },
         "medium": {
-          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WEC/auto-28736576071f-24-Heures-du-Mans-2026-Hypercar-No.-51-Ferrari-499P--medium.jpg",
+          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WEC/auto-a177615d7def-24-Heures-du-Mans-2026-Hypercar-No.-94-Peugeot-9X8-l-medium.jpg",
           "width": 1380,
           "height": 640
         },
         "large": {
-          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WEC/auto-28736576071f-24-Heures-du-Mans-2026-Hypercar-No.-51-Ferrari-499P--large.jpg",
+          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WEC/auto-a177615d7def-24-Heures-du-Mans-2026-Hypercar-No.-94-Peugeot-9X8-l-large.jpg",
           "width": 1600,
           "height": 1600,
           "layoutMode": "CONTAINED_SOURCE"
         }
       },
-      "addedAt": "2026-08-29T12:52:36.697Z",
-      "lastShownAt": "2026-08-29T12:52:36.697Z",
-      "promotedAt": "2026-09-14T00:40:24.798Z",
-      "lastRotatedAt": "2026-09-14T00:40:24.798Z",
+      "addedAt": "2026-09-12T00:37:33.027Z",
+      "lastShownAt": "2026-09-12T00:37:33.027Z",
+      "promotedAt": "2026-09-26T05:08:29.963Z",
+      "lastRotatedAt": "2026-09-26T05:08:29.963Z",
       "pool": [
         {
           "category": "WEC",
@@ -102,7 +102,7 @@
             }
           },
           "addedAt": "2026-09-12T00:37:33.027Z",
-          "lastShownAt": "2026-09-12T00:37:33.027Z"
+          "lastShownAt": "2026-09-26T05:08:29.963Z"
         },
         {
           "category": "WEC",
@@ -166,44 +166,44 @@
         }
       ],
       "recentAssetIds": [
-        "auto-a177615d7def-24-Heures-du-Mans-2026-Hypercar-No.-94-Peugeot-9X8-l"
+        "auto-28736576071f-24-Heures-du-Mans-2026-Hypercar-No.-51-Ferrari-499P-"
       ],
       "rotationMode": "POOL_ROTATION"
     },
     "WRC": {
       "category": "WRC",
-      "assetId": "auto-eab23333e862-Ford-Puma-WRC.jpg",
-      "version": "00cbec6119adde41",
-      "sourcePage": "https://commons.wikimedia.org/wiki/File:Ford_Puma_WRC.jpg",
-      "sourceTitle": "File:Ford Puma WRC.jpg",
-      "author": "Geonich",
+      "assetId": "auto-42ed14b4d3ab-FordWRC.jpg",
+      "version": "3ff258b08d94a112",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:FordWRC.jpg",
+      "sourceTitle": "File:FordWRC.jpg",
+      "author": "AnDr0 Gr0zNy",
       "license": "CC BY 4.0",
       "sourceYear": 2026,
-      "sourceDate": "2026-06-27 13:35:45",
+      "sourceDate": "2026-04-11 17:37:11",
       "role": "IDENTITY",
-      "qualityScore": 0.9574,
+      "qualityScore": 0.951,
       "images": {
         "small": {
-          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WRC/auto-eab23333e862-Ford-Puma-WRC.jpg-small.jpg",
+          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WRC/auto-42ed14b4d3ab-FordWRC.jpg-small.jpg",
           "width": 720,
           "height": 720
         },
         "medium": {
-          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WRC/auto-eab23333e862-Ford-Puma-WRC.jpg-medium.jpg",
+          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WRC/auto-42ed14b4d3ab-FordWRC.jpg-medium.jpg",
           "width": 1380,
           "height": 640
         },
         "large": {
-          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WRC/auto-eab23333e862-Ford-Puma-WRC.jpg-large.jpg",
+          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/WRC/auto-42ed14b4d3ab-FordWRC.jpg-large.jpg",
           "width": 1600,
           "height": 1600,
           "layoutMode": "CONTAINED_SOURCE"
         }
       },
-      "addedAt": "2026-08-29T12:52:36.699Z",
-      "lastShownAt": "2026-08-29T12:52:36.699Z",
-      "promotedAt": "2026-09-14T00:40:24.798Z",
-      "lastRotatedAt": "2026-09-14T00:40:24.798Z",
+      "addedAt": "2026-09-12T00:37:33.027Z",
+      "lastShownAt": "2026-09-12T00:37:33.027Z",
+      "promotedAt": "2026-09-26T05:08:29.963Z",
+      "lastRotatedAt": "2026-09-26T05:08:29.963Z",
       "pool": [
         {
           "category": "WRC",
@@ -269,42 +269,48 @@
             }
           },
           "addedAt": "2026-09-12T00:37:33.027Z",
-          "lastShownAt": "2026-09-12T00:37:33.027Z"
+          "lastShownAt": "2026-09-26T05:08:29.963Z"
         }
       ],
       "recentAssetIds": [
-        "auto-42ed14b4d3ab-FordWRC.jpg"
+        "auto-eab23333e862-Ford-Puma-WRC.jpg"
       ],
       "rotationMode": "POOL_ROTATION"
     },
     "F1": {
       "category": "F1",
-      "assetId": "auto-5c0f62518898-2025-Japan-GP---Ferrari---Lewis-Hamilton---FP1.jpg",
-      "version": "dc0c435952a1021f",
-      "sourcePage": "https://commons.wikimedia.org/wiki/File:2025_Japan_GP_-_Ferrari_-_Lewis_Hamilton_-_FP1.jpg",
-      "sourceTitle": "File:2025 Japan GP - Ferrari - Lewis Hamilton - FP1.jpg",
+      "assetId": "auto-7a14e267162f-2025-Japan-GP---McLaren---Oscar-Piastri---FP1.jpg",
+      "version": "c5620b0679837b2e",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:2025_Japan_GP_-_McLaren_-_Oscar_Piastri_-_FP1.jpg",
+      "sourceTitle": "File:2025 Japan GP - McLaren - Oscar Piastri - FP1.jpg",
       "author": "Liauzh",
       "license": "CC BY-SA 4.0",
       "sourceYear": 2025,
-      "sourceDate": "2025-04-04 11:28:32",
+      "sourceDate": "2025-04-04 10:46:31",
       "role": "IDENTITY",
-      "qualityScore": 0.8914,
-      "addedAt": "2026-09-13T22:57:52.924Z",
-      "lastShownAt": null,
+      "qualityScore": 0.8884,
       "images": {
         "small": {
-          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/F1/auto-5c0f62518898-2025-Japan-GP---Ferrari---Lewis-Hamilton---FP1.jpg-small.jpg",
+          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/F1/auto-7a14e267162f-2025-Japan-GP---McLaren---Oscar-Piastri---FP1.jpg-small.jpg",
           "width": 720,
           "height": 720
         },
         "medium": {
-          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/F1/auto-5c0f62518898-2025-Japan-GP---Ferrari---Lewis-Hamilton---FP1.jpg-medium.jpg",
+          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/F1/auto-7a14e267162f-2025-Japan-GP---McLaren---Oscar-Piastri---FP1.jpg-medium.jpg",
           "width": 1380,
           "height": 640
+        },
+        "large": {
+          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/F1/auto-7a14e267162f-2025-Japan-GP---McLaren---Oscar-Piastri---FP1.jpg-large.jpg",
+          "width": 1600,
+          "height": 1600,
+          "layoutMode": "CONTAINED_SOURCE"
         }
       },
-      "promotedAt": "2026-09-13T22:57:52.924Z",
-      "lastRotatedAt": "2026-09-13T22:57:52.924Z",
+      "addedAt": "2026-09-13T22:57:52.924Z",
+      "lastShownAt": null,
+      "promotedAt": "2026-09-26T05:08:29.963Z",
+      "lastRotatedAt": "2026-09-26T05:08:29.963Z",
       "pool": [
         {
           "category": "F1",
@@ -364,7 +370,7 @@
             }
           },
           "addedAt": "2026-09-13T22:57:52.924Z",
-          "lastShownAt": null
+          "lastShownAt": "2026-09-26T05:08:29.963Z"
         },
         {
           "category": "F1",
@@ -401,44 +407,45 @@
         }
       ],
       "recentAssetIds": [
+        "auto-5c0f62518898-2025-Japan-GP---Ferrari---Lewis-Hamilton---FP1.jpg",
         "auto-3cf45aff0bde-Lando-Norris-Mclaren-F1-55383927449-.jpg"
       ],
-      "rotationMode": "QUALITY_UPGRADE"
+      "rotationMode": "POOL_ROTATION"
     },
     "SUPERFORMULA": {
       "category": "SUPERFORMULA",
-      "assetId": "auto-cf12e6198f65-Igor-Fraga-Super-Formula-Round-5-Suzuka-Post-Race-20",
-      "version": "65ffbc884b6f5e2b",
-      "sourcePage": "https://commons.wikimedia.org/wiki/File:Igor_Fraga_Super_Formula_Round_5_Suzuka_Post-Race_2026.jpg",
-      "sourceTitle": "File:Igor Fraga Super Formula Round 5 Suzuka Post-Race 2026.jpg",
+      "assetId": "auto-707eb5c3387a-Super-Formula-Round-5-Suzuka-Post-Race-2026---1.jpg",
+      "version": "3c3baf7277d29ba7",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Super_Formula_Round_5_Suzuka_Post-Race_2026_-_1.jpg",
+      "sourceTitle": "File:Super Formula Round 5 Suzuka Post-Race 2026 - 1.jpg",
       "author": "BWard 1997",
       "license": "CC BY 4.0",
       "sourceYear": 2026,
-      "sourceDate": "2026-05-24 16:00:24",
+      "sourceDate": "2026-05-24 16:01:40",
       "role": "IDENTITY",
-      "qualityScore": 0.8882,
+      "qualityScore": 0.887,
       "images": {
         "small": {
-          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/SUPERFORMULA/auto-cf12e6198f65-Igor-Fraga-Super-Formula-Round-5-Suzuka-Post-Race-20-small.jpg",
+          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/SUPERFORMULA/auto-707eb5c3387a-Super-Formula-Round-5-Suzuka-Post-Race-2026---1.jpg-small.jpg",
           "width": 720,
           "height": 720
         },
         "medium": {
-          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/SUPERFORMULA/auto-cf12e6198f65-Igor-Fraga-Super-Formula-Round-5-Suzuka-Post-Race-20-medium.jpg",
+          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/SUPERFORMULA/auto-707eb5c3387a-Super-Formula-Round-5-Suzuka-Post-Race-2026---1.jpg-medium.jpg",
           "width": 1380,
           "height": 640
         },
         "large": {
-          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/SUPERFORMULA/auto-cf12e6198f65-Igor-Fraga-Super-Formula-Round-5-Suzuka-Post-Race-20-large.jpg",
+          "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/SUPERFORMULA/auto-707eb5c3387a-Super-Formula-Round-5-Suzuka-Post-Race-2026---1.jpg-large.jpg",
           "width": 1600,
           "height": 1600,
           "layoutMode": "CONTAINED_SOURCE"
         }
       },
-      "addedAt": "2026-09-13T22:57:52.924Z",
-      "lastShownAt": null,
-      "promotedAt": "2026-09-14T00:40:24.798Z",
-      "lastRotatedAt": "2026-09-14T00:40:24.798Z",
+      "addedAt": "2026-09-12T00:37:33.027Z",
+      "lastShownAt": "2026-09-12T00:37:33.027Z",
+      "promotedAt": "2026-09-26T05:08:29.963Z",
+      "lastRotatedAt": "2026-09-26T05:08:29.963Z",
       "pool": [
         {
           "category": "SUPERFORMULA",
@@ -504,11 +511,11 @@
             }
           },
           "addedAt": "2026-09-12T00:37:33.027Z",
-          "lastShownAt": "2026-09-12T00:37:33.027Z"
+          "lastShownAt": "2026-09-26T05:08:29.963Z"
         }
       ],
       "recentAssetIds": [
-        "auto-707eb5c3387a-Super-Formula-Round-5-Suzuka-Post-Race-2026---1.jpg"
+        "auto-cf12e6198f65-Igor-Fraga-Super-Formula-Round-5-Suzuka-Post-Race-20"
       ],
       "rotationMode": "POOL_ROTATION"
     },
@@ -553,8 +560,6 @@
           "sourceDate": "2025-03-15 17:06:20",
           "role": "IDENTITY",
           "qualityScore": 0.912,
-          "addedAt": "2026-09-14T02:23:06.396Z",
-          "lastShownAt": "2026-09-14T02:23:06.396Z",
           "images": {
             "small": {
               "url": "https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/hero-live/hero-channel/assets/NASCAR/auto-7350b8a2052e-Denny-Hamlin-11-Las-Vegas-2025.jpg-small.jpg",
@@ -566,7 +571,9 @@
               "width": 1380,
               "height": 640
             }
-          }
+          },
+          "addedAt": "2026-09-14T02:23:06.396Z",
+          "lastShownAt": "2026-09-14T02:23:06.396Z"
         }
       ],
       "recentAssetIds": [],
