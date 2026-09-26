@@ -5,9 +5,8 @@ Scope: title-local / iPhone Scriptable non-game product.
 
 ## WORKING_HEAD / VERIFIED_BASELINE / RECOVERY_STATE
 
-- Main before v9.5.32 publication: `273c582da42b02d1bcb5aa805bf7e2c77626a4a8` (PR #55 merged).
-- Stable target: **v9.5.32 / sequence 10**, sourceRef `273c582da42b02d1bcb5aa805bf7e2c77626a4a8`.
-- Validation releaseRef: `18d823d1c740a554d1d75fa95f811006f99ec965`; RC #288 / run `36253970101` SUCCESS.
+- Stable diagnostics target: **v9.5.33 / sequence 11**, sourceRef `95d85043045bd7942f9e72b960249649e637aee3`.
+- Validation releaseRef: `953f214de44b9dc986f553071f9c9339cc1298e2`; RC #292 / run `36280879979` SUCCESS.
 - Current hero-live observed before publication prep: `7bd8e3e4fcf616b90fbded4911ac0ec8000ad225`.
 - Hero production recovery: Active Refresh #124 SUCCESS; Public Attribution #47 SUCCESS.
 - Live Parser Monitor #94 first attempt hit transient SUPER GT/D1GP TIMEOUTs; failed-job rerun returned **12/12 PASS**, including Dakar.
@@ -47,3 +46,7 @@ Scope: title-local / iPhone Scriptable non-game product.
 
 After v9.5.32 device confirmation, resume Japan viewing-platform specification:
 `region + season/event + platforms + verifiedAt + official source + expiry`, fail closed when unverified/stale. Avoid adding viewing data to Small until width safety is demonstrated.
+
+## v9.5.33 DIAGNOSTIC PURPOSE
+
+QA DAKAR reports production-equivalent parser counters `R/C/P/T/G/V`. The production Dakar widget itself is unchanged. After Stable promotion, capture one physical-iPhone QA screenshot and use the counters to locate the failing parser stage before any additional runtime fix.
