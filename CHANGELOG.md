@@ -1,8 +1,18 @@
 # Changelog
 
-## Unreleased — audit repair candidate
+## v9.5.32 — Stable Dakar live parser repair
 
-Prepared in PR #55; not yet published to Stable.
+- Stable sequence: **10**.
+- Stable sourceRef: `273c582da42b02d1bcb5aa805bf7e2c77626a4a8`.
+- Normalize Dakar encoded/typographic time units and preserve explicit hour GAP with zero padding.
+- Live Parser Monitor confirms **12/12 PASS** after repair; scheduled #94 transient SUPER GT/D1GP timeouts disappeared on failed-job rerun, with Dakar also PASS.
+- Hero refresh/attribution pipeline recovery confirmed in production: Hero Active Refresh #124 SUCCESS and Public Attribution #47 SUCCESS.
+- Release Candidate validation: **#288 / 36253970101 SUCCESS**.
+- Focused Dakar physical iPhone fresh-data confirmation remains pending after Stable promotion.
+
+## Unreleased — main only
+
+No runtime changes beyond Stable v9.5.32 at publication preparation time.
 
 - Repair Dakar parsing of encoded/typographic time units and preserve explicit hour GAP with zero padding.
 - Repair Hero candidate attribution integration; generate and validate exact credits before atomic publication.
