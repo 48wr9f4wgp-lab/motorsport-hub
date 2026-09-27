@@ -67,6 +67,8 @@ Normalized fields:
 
 The cockpit itself makes **no external network requests**.
 
+Layouts: Small / Medium / Large.
+
 If a category has no cache yet, run that ordinary category once. The cockpit intentionally fails quiet instead of introducing another standings/calendar parser.
 
 ## Device validation
