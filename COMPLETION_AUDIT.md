@@ -1,49 +1,55 @@
 # Motorsport Hub — Completion Audit
 
 Updated: 2026-09-27 JST
-Status: **v9.5.34 VERIFIED FOR OWNER USE / PUBLIC GA WITHDRAWN / PRIVATE MIGRATION PENDING**
+Status: **v9.5.35 PRIVATE FOUNDATION RC PASS / STABLE PUBLICATION APPROVAL PENDING / OWNER-ONLY**
 
-## Technical baseline
+## Current controlling decision
 
-- Stable: **v9.5.34 / sequence 12**
-- sourceRef: `edff3d301033ada18134429fb6f4c9016c6653f6`
-- validation ref: `45eb720a53438e2dbcd6e01be7529a90f4bea275`
-- RC #299 / `36285958234`: SUCCESS
-- representative physical iPhone smoke: PASS
-- QA: `12/12 LIVE — データ経路OK`
-- online refresh: PASS
-- offline/LKG recovery: PASS
-- Loader v7 copy path: PASS
-- JP viewing-platform v1: physical PASS
-- no known reproducible P0 startup/routing/layout/current-data blocker on the verified owner-use baseline
+- PRODUCT_INTENT: PERSONAL-ONLY / OWNER-ONLY
+- PUBLIC_DISTRIBUTION_DECISION: NO
+- previous GitHub Broad GA: WITHDRAWN / historical only
+- repository visibility: public only during safe private-runtime migration
 
-## Distribution decision
+## Verified owner-use baseline
 
-The owner's latest decision is:
+Stable v9.5.34 remains the physically proven baseline:
+- QA 12/12 LIVE;
+- Small/Medium/Large representative UI PASS;
+- JP viewing-platform v1 PASS;
+- offline/LKG recovery PASS;
+- Loader v7 copy-path PASS.
 
-**PERSONAL-ONLY / NOT FOR PUBLIC DISTRIBUTION**
+## v9.5.35 private foundation candidate
 
-The previous GitHub Broad GA state is superseded and **WITHDRAWN**. It remains in history for auditability only.
+- sourceRef: `7bfd260947ca091376b4e7c033661ecfcb94ffed`
+- sequence target: **13**
+- validation ref: `b259908a986be695bc9a382249a6ccac85ab02c5`
+- RC #311 / `36299105721`: SUCCESS
+- immutable artifact digest: `sha256:d23a0d84d74835825351684fb0cd0d3e940fba431fc1faa5c66fa1f7e227da85`
+- Router: private-capable repository transport
+- Loader v8: Keychain-backed GitHub authentication
+- setup: secure token entry + connection test
+- category module hashes: unchanged from v9.5.34
+- visible racing UI/data behavior: unchanged
 
-## Private migration blocker
+## Security model
 
-Immediate repository privatization is not yet safe because the active Loader v7/runtime fetch model relies on public GitHub/raw access.
+The iPhone runtime token is not committed to source.
+Intended fine-grained permissions:
+- Contents: read
+- Actions: read
+- repository-scoped only
+- no write/admin permission
 
-Changing visibility before migration can break:
-- release-channel retrieval;
-- immutable Router/module retrieval;
-- Hero channel retrieval;
-- viewing-rights retrieval.
+## Remaining hard gates
 
-## Required next engineering work
-
-1. design private-compatible authenticated or owner-local distribution;
-2. keep secrets out of committed source;
-3. retain immutable integrity verification;
-4. retain local LKG/offline recovery;
-5. validate on physical iPhone;
-6. change repository visibility only after that PASS.
+1. explicit approval to publish Stable v9.5.35;
+2. store read-only token in Scriptable Keychain;
+3. physical authenticated online QA;
+4. physical offline/LKG recovery on Loader v8;
+5. only then change repository visibility to private;
+6. repeat online QA after privatization.
 
 ## Decision
 
-v9.5.34 is technically complete for the owner's current use. Public-release work is no longer part of the success criteria.
+Private-runtime engineering is automation-verified and ready for staged device validation. Repository privatization is not yet safe and is not executed by this candidate.
