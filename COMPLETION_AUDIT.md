@@ -1,50 +1,62 @@
 # Motorsport Hub — Completion Audit
 
 Updated: 2026-09-27 JST
-Status: **v9.5.33 DIAGNOSTICS RC PASS / DAKAR DEVICE ROOT-CAUSE PENDING / GA NOT AUTHORIZED**
+Status: **v9.5.34 RC PASS / STABLE PUBLICATION APPROVED / VIEWING UI DEVICE PASS PENDING / GA NOT AUTHORIZED**
 
 ## Baselines
 
-- Main source selected for candidate: `273c582da42b02d1bcb5aa805bf7e2c77626a4a8`.
-- Stable target: **v9.5.32 / sequence 10**.
-- Validation ref: `18d823d1c740a554d1d75fa95f811006f99ec965`.
-- RC validation: **#288 / 36253970101 SUCCESS**.
-- Immutable artifact: `motorsport-hub-release-18d823d1c740a554d1d75fa95f811006f99ec965`.
-- Artifact digest: `sha256:484dc243792236fa598433a2b078e18433b0a7ef0ccea8eaa26ede9a3be0585e`.
+- Stable sourceRef: `edff3d301033ada18134429fb6f4c9016c6653f6`.
+- Stable target: **v9.5.34 / sequence 12**.
+- Validation ref: `45eb720a53438e2dbcd6e01be7529a90f4bea275`.
+- RC validation: **#299 / 36285958234 SUCCESS**.
+- Immutable artifact: `motorsport-hub-release-45eb720a53438e2dbcd6e01be7529a90f4bea275`.
+- Artifact digest: `sha256:765563cf124673f55f888faec97cd11c1c1d6e49571435e4f307083af59c6def`.
+- Validation ref differs from Stable source only by `.release/v9.5.34.md`.
 
-## Runtime finding closed in candidate
+## Previously closed device issue
 
-Dakar official standings markup used encoded/typographic time units that the prior Stable parser did not accept consistently. PR #55 normalizes those units and preserves explicit hour GAP formatting.
+Dakar fresh-data behavior is no longer an open v9.5.33 blocker.
 
-Evidence:
-- repair branch live monitor: **12/12 PASS**;
-- scheduled main parser monitor #93: SUCCESS;
-- scheduled #94 first attempt: SUPER GT and D1GP transport TIMEOUT only, Dakar PASS;
-- rerun of failed #94 jobs: **12/12 PASS**, showing the two TIMEOUTs were transient and not parser drift;
-- v9.5.32 RC #288: SUCCESS.
+Evidence recorded from the physical iPhone validation on 2026-09-27:
+- QA DAKAR production-equivalent counters: **`R155 C80 P5 T80 G5 V1`**;
+- Dakar Medium fresh-data render: **PASS**;
+- `更新待ち`: absent.
+
+## v9.5.34 viewing-platform implementation
+
+Runtime contract:
+- JP-only immutable rights dataset;
+- official-source verification snapshot;
+- exact Stable sourceRef fetch;
+- Router-pinned SHA-256 + UTF-8 byte length;
+- fail closed on invalid/stale/unverified/wrong-region/season mismatch;
+- Small omitted;
+- Medium/Large compact `視聴 <platform>` inside the existing standings header;
+- Dakar 2027 hidden while Japan rights are `UNVERIFIED`.
+
+Automated evidence:
+- PR #59 Hardening CI #539: SUCCESS;
+- PR #59 Release Candidate CI #297: SUCCESS;
+- PR #59 Live Parser Monitor #100 deterministic contract: SUCCESS;
+- 36-case render smoke: PASS;
+- v9.5.34 immutable RC #299 / 36285958234: SUCCESS.
 
 ## Hero operations
 
-The prior inherited-ATTRIBUTION publish failure is repaired and production recovery is now demonstrated:
-- Hero Active Refresh #123 / #124: SUCCESS;
-- Public Attribution #46 / #47: SUCCESS;
-- hero-live advanced to `7bd8e3e4fcf616b90fbded4911ac0ec8000ad225`.
-
-This closes the Hero refresh-health blocker. Current credits still require revalidation against the then-current pool immediately before broad GA.
+Hero Active Refresh #124 and Public Attribution #47 are successful. Current live credits still require revalidation immediately before broad GA.
 
 ## Device evidence
 
-- Stable v9.5.31 SUPER GT Small: user-confirmed physical iPhone PASS.
-- Prior v9.5.30 WEC/Dakar display fixes: scoped historical physical PASS.
-- v9.5.32 Dakar fresh-data physical confirmation: **PENDING after Stable promotion**.
+- Stable v9.5.31 SUPER GT Small: physical iPhone PASS.
+- Stable v9.5.30 WEC/Dakar display fixes: scoped physical PASS.
+- Stable v9.5.33 Dakar fresh-data/diagnostic path: physical iPhone PASS.
+- Stable v9.5.34 Medium/Large viewing-label render: **PENDING**.
+- Stable v9.5.34 Small omission and Dakar viewing-label omission: **PENDING physical confirmation**.
 - Final representative exact-Stable GA smoke: **PENDING**.
 
 ## Current decision
 
-No known reproducible P0 startup/routing/layout blocker.
-v9.5.32 is technically validated as a Stable candidate, but publication remains a separate protected action.
-Broad GA/public distribution remains NOT AUTHORIZED.
-
-## v9.5.33 diagnostics evidence
-
-Source `95d85043045bd7942f9e72b960249649e637aee3` adds QA-only Dakar production-equivalent counters. Metadata-only validation ref `953f214de44b9dc986f553071f9c9339cc1298e2` passed RC #292 / run `36280879979`. Immutable package confirms diagnostics hash `2f8765df34a66d808f8a985900d91aeefe7ffeda16097dc88fd4c501a55820dd`, 8884 bytes. `dakar-widget.js` is unchanged from v9.5.32. Physical device evidence is pending and this release must not be described as a Dakar parser fix.
+No known reproducible P0 startup/routing/current-data blocker on the verified Stable baseline.
+v9.5.34 is automation-validated for Stable publication and the owner explicitly approved the current release path.
+The new visible viewing-label UI remains incomplete until physical iPhone validation passes.
+Broad GA/public distribution remains a separate protected action and is **NOT AUTHORIZED** for an exact distribution scope by this audit.
