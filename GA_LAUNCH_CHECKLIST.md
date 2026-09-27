@@ -36,7 +36,7 @@ Run on the exact Stable intended for distribution:
 - [x] Dakar viewing-label omission confirmed while UNVERIFIED;
 - [x] no header crowding/truncation/alignment/overflow regression;
 - [x] online refresh — all 12 category routes reported `LIVE` in physical QA;
-- [ ] LKG/offline recovery if the GA Stable changes runtime-sensitive behavior;
+- [x] LKG/offline recovery — physical iPhone airplane-mode test rendered SUPER GT Medium from cached/LKG data with explicit `更新待ち`, verified viewing label preserved, standings/Hero/layout intact;
 - [x] no visible startup, routing or clipping blocker in the validated QA + Small/Medium/Large representative surfaces.
 
 Record physical-device evidence as user-confirmed evidence; do not represent it as GitHub-verifiable automation.
