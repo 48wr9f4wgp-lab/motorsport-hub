@@ -1,7 +1,7 @@
 # Motorsport Hub — Completion Audit
 
 Updated: 2026-09-27 JST
-Status: **v9.5.37 PERSONAL COCKPIT FIX RC PASS / STABLE PUBLICATION PENDING / OWNER-ONLY**
+Status: **v9.5.37 STABLE PUBLISHED / PERSONAL COCKPIT REVALIDATION PENDING / OWNER-ONLY**
 
 ## Controlling decision
 
@@ -46,10 +46,9 @@ Physical evidence exposed two logic issues:
 
 ## Remaining hard gates
 
-1. publish Stable v9.5.37 after owner approval;
-2. physical MY Large revalidation;
-3. offline MY widget validation.
+1. physical MY Large revalidation;
+2. offline MY widget validation.
 
 ## Decision
 
-Automation evidence is green for v9.5.37. Personal Cockpit must not be called fully verified until Large revalidation and offline MY pass.
+Stable v9.5.37 is published via PR #78. Personal Cockpit must not be called fully verified until Large revalidation and offline MY pass.
