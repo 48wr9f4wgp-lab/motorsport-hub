@@ -10,8 +10,8 @@
     "performance": "warn",
     "release": "ok"
   },
-  "next": "exact Stable v9.5.34で最終GA smoke: Loader v7経路、QA diagnostics、online refresh、必要ならLKG/offline recovery、Hero credits再検証",
-  "note": "JP視聴プラットフォームv1はiPhone実機PASS。SUPER GT Medium/Largeで視聴 J SPORTS表示、Small非表示、Dakar Medium非表示、レイアウト回帰なし。Broad GAは別Gate。",
+  "next": "exact Stable v9.5.34で最終GA smoke: Loader v7経路、QA diagnostics、online refresh、必要ならLKG/offline recovery",
+  "note": "JP視聴プラットフォームv1はiPhone実機PASS。SUPER GT Medium/Largeで視聴 J SPORTS表示、Small非表示、Dakar Medium非表示、レイアウト回帰なし。Broad GAは別Gate。 Hero creditsはhero-live 7bd8e3e4fcfで2026-09-27再検証済み。",
   "updated_at": "2026-09-27",
   "stable": {
     "version": "9.5.34",
