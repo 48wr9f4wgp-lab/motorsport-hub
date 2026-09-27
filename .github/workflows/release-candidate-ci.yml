@@ -65,6 +65,7 @@ jobs:
             tests/integrity-gate.mjs
             tests/release-package-generator-gate.mjs
             tests/stable-loader-v7-gate.mjs
+            tests/private-transport-gate.mjs
             tests/observability-support-export-gate.mjs
             tests/diagnostics-loader-path-gate.mjs
             tests/workflow-hygiene-gate.mjs
