@@ -37,7 +37,7 @@ Future approved Stable releases are discovered by Loader v7 automatically; the i
 
 ### Loader file roles
 
-- `scriptable-loader-v7.js` — current installed loader during migration.
+- `scriptable-loader-v7.js` — **canonical installed production loader** during private migration; remains active until Loader v8 authenticated physical validation passes.
 - `scriptable-loader-v8-private.js` — **private-migration loader candidate**; Keychain-backed authenticated GitHub transport, pending physical token-path validation.
 - `scriptable-loader-v6.js` remains the per-release immutable CI artifact generated from an exact validated release source.
 - `scriptable-loader.js` — **legacy v4 compatibility loader**.
