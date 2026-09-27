@@ -28,16 +28,16 @@ Use this checklist only when preparing the actual broad public General Availabil
 Run on the exact Stable intended for distribution:
 
 - [ ] canonical Loader v7 fresh-install/copy path;
-- [ ] QA diagnostics healthy;
+- [x] QA diagnostics healthy — physical iPhone `12/12 LIVE — データ経路OK`, exact Stable source prefix `edff3d301033`;
 - [x] one Small widget;
 - [x] one Medium widget with expected verified viewing label;
 - [x] one Large widget with expected verified viewing label;
 - [x] Small viewing-label omission confirmed;
 - [x] Dakar viewing-label omission confirmed while UNVERIFIED;
 - [x] no header crowding/truncation/alignment/overflow regression;
-- [ ] online refresh;
+- [x] online refresh — all 12 category routes reported `LIVE` in physical QA;
 - [ ] LKG/offline recovery if the GA Stable changes runtime-sensitive behavior;
-- [ ] no visible startup, routing or clipping blocker.
+- [x] no visible startup, routing or clipping blocker in the validated QA + Small/Medium/Large representative surfaces.
 
 Record physical-device evidence as user-confirmed evidence; do not represent it as GitHub-verifiable automation.
 
