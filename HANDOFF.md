@@ -56,12 +56,12 @@ Do not use that historical action as authorization for future public distributio
 
 ## NEXT
 
-Publish v9.5.35 only after explicit Stable approval. Then configure a repository-scoped read-only token through `motorsport-private-setup.js`, validate Loader v8 online + offline/LKG on iPhone, and only after that change repository visibility to private.
+Stable v9.5.35 is published. Private repo migration remains paused by choice while the current v7 path is stable. The active product-development next step is Personal Cockpit v1 physical validation; private Loader v8 auth can resume later.
 
 
 ## v9.5.35 PRIVATE FOUNDATION EVIDENCE
 
-- sourceRef target: `7bfd260947ca091376b4e7c033661ecfcb94ffed`
+- Stable sourceRef: `7bfd260947ca091376b4e7c033661ecfcb94ffed`
 - validation ref: `b259908a986be695bc9a382249a6ccac85ab02c5`
 - RC #311 / `36299105721`: SUCCESS
 - Hardening #549 on implementation PR: SUCCESS
@@ -71,3 +71,17 @@ Publish v9.5.35 only after explicit Stable approval. Then configure a repository
 - Loader v8 token storage: Scriptable Keychain only
 - repository visibility: still public
 - physical authenticated validation: PENDING
+
+
+## PERSONAL COCKPIT v1
+
+- implementation: sidecar only; Stable Router unchanged.
+- config file: `motorsport-personal-config-v1.json` in Scriptable local documents.
+- config script: `motorsport-personal-config.js`.
+- cockpit script: `motorsport-personal-cockpit.js`.
+- data source: existing 12 category local caches.
+- viewing source: existing local verified JP viewing-rights cache.
+- network behavior: no new external requests.
+- layouts: Small / Medium / Large.
+- physical state: **PENDING**.
+- first device target: Medium visual/density/content validation.
