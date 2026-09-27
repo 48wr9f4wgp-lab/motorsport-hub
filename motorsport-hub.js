@@ -119,7 +119,7 @@ function sha256Hex(text){
 const syntaxOK=s=>{try{new Function(String(s||''));return true}catch(_){return false}};
 function validViewingManifest(m){
  if(!m||m.schemaVersion!==1||m.region!=='JP'||m.policy!=='OFFICIAL_SOURCE_FAIL_CLOSED'||!m.categories||typeof m.categories!=='object')return false;
- const v=Date.parse(m.verifiedAt||'');if(!Number.isFinite(v)||v>Date.now()+86400000)return false;
+ const v=Date.parse(m.verifiedAt||'');if(!Number.isFinite(v))return false;
  return true;
 }
 function selectViewing(m,cat){
