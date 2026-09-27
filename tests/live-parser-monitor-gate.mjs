@@ -25,7 +25,10 @@ const good=await runCategory('F1',{fetchImpl:goodFetch,attempts:1,nowMs:Date.par
 assert.equal(good.ok,true,'valid live-shaped F1 payloads should produce a fresh accepted cache');
 const goodLast=good.attempts.at(-1);
 assert.equal(goodLast.cacheWrites.length,1,'successful parser path must write exactly one fresh data cache');
-assert.equal(goodLast.requests.filter(x=>x.kind!=='module').length,2,'F1 monitor must exercise both live schedule and standings sources');
+const viewingRequests=goodLast.requests.filter(x=>String(x.url||'').includes('viewing-rights-jp.json'));
+const categorySourceRequests=goodLast.requests.filter(x=>x.kind!=='module'&&!String(x.url||'').includes('viewing-rights-jp.json'));
+assert.equal(viewingRequests.length,1,'Router must attempt the immutable JP viewing-rights dataset once');
+assert.equal(categorySourceRequests.length,2,'F1 monitor must exercise both live schedule and standings sources');
 assert(!/更新待ち/.test(goodLast.widget.textPreview),'successful monitor run must not render fallback/update-wait UI');
 
 const driftFetch=async url=>String(url).includes('driverstandings')?jsonResponse({MRData:{StandingsTable:{StandingsLists:[]}}}):jsonResponse(schedule);

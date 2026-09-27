@@ -1,0 +1,158 @@
+{
+  "schemaVersion": 1,
+  "region": "JP",
+  "verifiedAt": "2026-09-27T01:15:00Z",
+  "policy": "OFFICIAL_SOURCE_FAIL_CLOSED",
+  "categories": {
+    "F1": {
+      "category": "F1",
+      "season": 2026,
+      "status": "VERIFIED",
+      "label": "フジNEXT",
+      "platforms": [
+        "フジテレビNEXT"
+      ],
+      "coverage": "2026全戦全セッション",
+      "source": "https://otn.fujitv.co.jp/2026f1_fujinext/",
+      "validUntil": "2026-12-31T14:59:59Z"
+    },
+    "WEC": {
+      "category": "WEC",
+      "season": 2026,
+      "status": "VERIFIED",
+      "label": "J SPORTS",
+      "platforms": [
+        "J SPORTS",
+        "J SPORTSオンデマンド"
+      ],
+      "coverage": "2026全8戦",
+      "source": "https://www.jsports.co.jp/motor/wec/",
+      "validUntil": "2026-12-31T14:59:59Z"
+    },
+    "WRC": {
+      "category": "WRC",
+      "season": 2026,
+      "status": "VERIFIED",
+      "label": "J SPORTS",
+      "platforms": [
+        "J SPORTS",
+        "J SPORTSオンデマンド"
+      ],
+      "coverage": "2026全戦",
+      "source": "https://www.jsports.co.jp/motor/wrc/",
+      "validUntil": "2026-12-31T14:59:59Z"
+    },
+    "SUPERGT": {
+      "category": "SUPERGT",
+      "season": 2026,
+      "status": "VERIFIED",
+      "label": "J SPORTS",
+      "platforms": [
+        "J SPORTS",
+        "J SPORTSオンデマンド"
+      ],
+      "coverage": "2026全戦",
+      "source": "https://supergt.net/about-super-gt/media",
+      "validUntil": "2026-12-31T14:59:59Z"
+    },
+    "MOTOGP": {
+      "category": "MOTOGP",
+      "season": 2026,
+      "status": "VERIFIED",
+      "label": "Hulu",
+      "platforms": [
+        "Hulu"
+      ],
+      "coverage": "2026全22戦ライブ・見逃し",
+      "source": "https://news.hulu.jp/motogp2026/",
+      "validUntil": "2026-12-31T14:59:59Z"
+    },
+    "FDJ": {
+      "category": "FDJ",
+      "season": 2026,
+      "status": "VERIFIED",
+      "label": "YouTube",
+      "platforms": [
+        "FORMULA DRIFT JAPAN公式YouTube"
+      ],
+      "coverage": "公式ライブ配信",
+      "source": "https://formulad.jp/live/",
+      "validUntil": "2026-12-31T14:59:59Z"
+    },
+    "D1GP": {
+      "category": "D1GP",
+      "season": 2026,
+      "status": "VERIFIED",
+      "label": "YouTube",
+      "platforms": [
+        "D1GP MOVIE CHANNEL"
+      ],
+      "coverage": "2026 D1GP一般ライブ配信",
+      "source": "https://d1gp.co.jp/25100/",
+      "validUntil": "2026-12-31T14:59:59Z"
+    },
+    "SUPERFORMULA": {
+      "category": "SUPERFORMULA",
+      "season": 2026,
+      "status": "VERIFIED",
+      "label": "SFgo",
+      "platforms": [
+        "SFgo",
+        "J SPORTS",
+        "DAZN",
+        "FOD",
+        "ABEMA"
+      ],
+      "coverage": "SFgo/J SPORTS/DAZN/FODは全セッション、ABEMAは決勝中心",
+      "source": "https://superformula.net/sf3/race_/19958/",
+      "validUntil": "2026-12-31T14:59:59Z"
+    },
+    "INDYCAR": {
+      "category": "INDYCAR",
+      "season": 2026,
+      "status": "VERIFIED",
+      "label": "GAORA",
+      "platforms": [
+        "GAORA SPORTS",
+        "GAORAオンデマンド"
+      ],
+      "coverage": "決勝全18戦放送、オンデマンドは予選から全戦ライブ",
+      "source": "https://www.gaora.co.jp/info/news/3124",
+      "validUntil": "2026-12-31T14:59:59Z"
+    },
+    "NASCAR": {
+      "category": "NASCAR",
+      "season": 2026,
+      "status": "VERIFIED",
+      "label": "ABEMA",
+      "platforms": [
+        "ABEMA"
+      ],
+      "coverage": "2026日本放送パートナー",
+      "source": "https://www.nascar.com/news-media/2026/02/13/daytona-500-to-air-in-more-than-185-countries-and-territories-in-23-languages/",
+      "validUntil": "2026-12-31T14:59:59Z"
+    },
+    "GTWCEU": {
+      "category": "GTWCEU",
+      "season": 2026,
+      "status": "VERIFIED",
+      "label": "GT World",
+      "platforms": [
+        "GT World公式LIVE"
+      ],
+      "coverage": "公式ライブストリーミング",
+      "source": "https://www.gt-world-challenge-europe.com/watch-live",
+      "validUntil": "2026-12-31T14:59:59Z"
+    },
+    "DAKAR": {
+      "category": "DAKAR",
+      "season": 2027,
+      "status": "UNVERIFIED",
+      "label": "",
+      "platforms": [],
+      "coverage": "2027日本向け放送・配信権は未確認",
+      "source": "https://www.dakar.com/en/broadcasters",
+      "validUntil": "2026-12-31T14:59:59Z"
+    }
+  }
+}
