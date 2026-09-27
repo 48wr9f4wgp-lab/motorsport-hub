@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "phase": "Stable v9.5.34 / PERSONAL-ONLY / private migration pending",
+  "phase": "Stable v9.5.35 prepared / PERSONAL-ONLY / private auth device validation pending",
   "checks": {
     "boot": "ok",
     "test": "ok",
@@ -10,13 +10,13 @@
     "performance": "warn",
     "release": "ok"
   },
-  "next": "private-compatible runtime/update pathを実装・実機検証してからrepositoryをprivate化",
-  "note": "JP視聴プラットフォームv1はiPhone実機PASS。SUPER GT Medium/Largeで視聴 J SPORTS表示、Small非表示、Dakar Medium非表示、レイアウト回帰なし。Broad GAは別Gate。 Hero creditsはhero-live 7bd8e3e4fcfで2026-09-27再検証済み。 QA 12/12 LIVE、online refresh、exact Stable edff3d301033、代表UIの重大表示blockerなしを実機確認済み。 機内モードでSUPER GT Mediumが更新待ち付きで正常描画し、offline/LKG recovery PASS。 Loader v7 copy-pathも複製Scriptableから12/12 LIVE・edff3d301033を実機確認し、代表GA smoke完走。 2026-09-27 exact Stable v9.5.34をpublic GitHub repository経由でBroad GA承認・実行。Store/有料配布/外部analytics/契約は対象外。 Current controlling decision: public distribution withdrawn; owner-only personal use. Earlier GitHub Broad GA is historical only.",
+  "next": "v9.5.35 Stable公開後、Loader v8 + Keychain tokenでauthenticated online QA → offline/LKG → repo private化",
+  "note": "JP視聴プラットフォームv1はiPhone実機PASS。SUPER GT Medium/Largeで視聴 J SPORTS表示、Small非表示、Dakar Medium非表示、レイアウト回帰なし。Broad GAは別Gate。 Hero creditsはhero-live 7bd8e3e4fcfで2026-09-27再検証済み。 QA 12/12 LIVE、online refresh、exact Stable edff3d301033、代表UIの重大表示blockerなしを実機確認済み。 機内モードでSUPER GT Mediumが更新待ち付きで正常描画し、offline/LKG recovery PASS。 Loader v7 copy-pathも複製Scriptableから12/12 LIVE・edff3d301033を実機確認し、代表GA smoke完走。 2026-09-27 exact Stable v9.5.34をpublic GitHub repository経由でBroad GA承認・実行。Store/有料配布/外部analytics/契約は対象外。 Current controlling decision: public distribution withdrawn; owner-only personal use. Earlier GitHub Broad GA is historical only. v9.5.35 RC #311 PASS; private transport foundation ready. Publication approval is separate.",
   "updated_at": "2026-09-27",
   "stable": {
-    "version": "9.5.34",
-    "sequence": 12,
-    "sourceRef": "edff3d301033ada18134429fb6f4c9016c6653f6"
+    "version": "9.5.35",
+    "sequence": 13,
+    "sourceRef": "7bfd260947ca091376b4e7c033661ecfcb94ffed"
   },
   "ga_authorized": false,
   "ga": {
@@ -29,8 +29,15 @@
     "sourceRef": "edff3d301033ada18134429fb6f4c9016c6653f6"
   },
   "private_migration": {
-    "status": "PENDING",
-    "reason": "Loader v7 currently depends on public GitHub raw access",
-    "visibility_change_ready": false
+    "status": "PUBLICATION_PREPARED",
+    "loader": "scriptable-loader-v8-private.js",
+    "setup": "motorsport-private-setup.js",
+    "token_key": "motorsport-hub-github-token-v1",
+    "required_permissions": [
+      "Contents: read",
+      "Actions: read"
+    ],
+    "visibility_change_ready": false,
+    "next_gate": "physical authenticated online + offline/LKG validation"
   }
 }

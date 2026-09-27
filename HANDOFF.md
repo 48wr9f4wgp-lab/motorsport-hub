@@ -9,14 +9,15 @@ Scope: title-local / iPhone Scriptable non-game product.
 - PUBLIC_DISTRIBUTION_DECISION: **NO**
 - BROAD_GA_STATUS: **WITHDRAWN**
 - REPOSITORY_PRIVATE_MIGRATION: **PENDING**
-- Current Stable: **v9.5.34 / sequence 12**
-- Stable sourceRef: `edff3d301033ada18134429fb6f4c9016c6653f6`
+- Stable publication target: **v9.5.35 / sequence 13**
+- Stable sourceRef target: `7bfd260947ca091376b4e7c033661ecfcb94ffed`
+- Validation ref: `b259908a986be695bc9a382249a6ccac85ab02c5`; RC #311 / `36299105721` SUCCESS
 
 The owner's latest instruction supersedes the earlier GitHub Broad GA approval. The product is not to be publicly distributed.
 
 ## WHY REPOSITORY IS NOT YET PRIVATE
 
-Loader v7 and the current runtime fetch release/channel/runtime assets through public GitHub/raw URLs. Making the repository private immediately can break the owner's current iPhone installation.
+v9.5.35 adds a private-capable Router transport plus `scriptable-loader-v8-private.js`, but the owner iPhone has not yet physically validated authenticated private transport. Making the repository private before that device PASS is still unsafe.
 
 Therefore repository visibility must change only after a private-compatible runtime/update path is implemented and physically validated.
 
@@ -55,4 +56,18 @@ Do not use that historical action as authorization for future public distributio
 
 ## NEXT
 
-Design the private-compatible runtime/update path first. After it passes online + offline/LKG physical validation, change the repository to private without interrupting the owner's iPhone widgets.
+Publish v9.5.35 only after explicit Stable approval. Then configure a repository-scoped read-only token through `motorsport-private-setup.js`, validate Loader v8 online + offline/LKG on iPhone, and only after that change repository visibility to private.
+
+
+## v9.5.35 PRIVATE FOUNDATION EVIDENCE
+
+- sourceRef target: `7bfd260947ca091376b4e7c033661ecfcb94ffed`
+- validation ref: `b259908a986be695bc9a382249a6ccac85ab02c5`
+- RC #311 / `36299105721`: SUCCESS
+- Hardening #549 on implementation PR: SUCCESS
+- private transport gate: PASS
+- category module bytes/hashes: unchanged from v9.5.34
+- Router hash: `30216a94684439e059c187c9215848fb4866ad1d774e8199c4e4b53f5686e10e`
+- Loader v8 token storage: Scriptable Keychain only
+- repository visibility: still public
+- physical authenticated validation: PENDING

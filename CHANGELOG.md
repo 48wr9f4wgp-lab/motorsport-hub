@@ -1,5 +1,17 @@
 # Changelog
 
+## v9.5.35 — Personal / private runtime foundation
+
+- Stable sequence: **13**.
+- Stable sourceRef: `7bfd260947ca091376b4e7c033661ecfcb94ffed`.
+- Adds private-capable repository transport to the Router while retaining public fallback during migration.
+- Adds `scriptable-loader-v8-private.js` and Keychain setup via `motorsport-private-setup.js`.
+- No GitHub token is committed to source; intended iPhone token permissions are repository-scoped **Contents: read + Actions: read**.
+- Category modules are byte-identical to v9.5.34; visible racing data/layout behavior is unchanged.
+- Immutable integrity, JP viewing-rights fail-closed behavior and LKG/offline recovery remain required.
+- Release Candidate validation: **#311 / 36299105721 SUCCESS**.
+- Repository remains public until authenticated online + offline physical validation passes.
+
 ## Unreleased — main only
 
 No runtime changes beyond Stable v9.5.34 at publication preparation time.

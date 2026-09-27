@@ -5,18 +5,19 @@ Motorsport Hub is an iPhone home-screen motorsport widget system for [Scriptable
 ## Current status
 
 - Distribution intent: **PERSONAL-ONLY / NOT FOR PUBLIC DISTRIBUTION**. A brief GitHub Broad GA state on 2026-09-27 was later withdrawn by the owner.
-- Current Stable: **v9.5.34 / sequence 12**.
-- Stable source: immutable sourceRef `edff3d301033ada18134429fb6f4c9016c6653f6`.
+- Current Stable: **v9.5.35 / sequence 13**.
+- Stable source: immutable sourceRef `7bfd260947ca091376b4e7c033661ecfcb94ffed`.
 - Stable v9.5.31 WRC/SUPER GT hardening: **SUPER GT Small user-confirmed physical iPhone PASS on 2026-09-25 07:46 JST**.
 - Stable v9.5.33 Dakar verification: **physical iPhone PASS on 2026-09-27**; QA production-equivalent diagnostic reported `R155 C80 P5 T80 G5 V1`, and Dakar Medium rendered fresh data without `更新待ち`.
-- Stable v9.5.34 JP viewing-platform labels: **RC #299 / 36285958234 SUCCESS + physical iPhone PASS**; representative exact-Stable GA smoke also PASS.
+- Stable v9.5.34 JP viewing-platform labels: **physical iPhone PASS**.
+- Stable v9.5.35 private-runtime foundation: **RC #311 / 36299105721 SUCCESS**; user-facing category modules are byte-identical to v9.5.34 and the Router adds private-capable repository transport.
 - Hero refresh recovery: scheduled Hero Active Refresh #124 and downstream Public Attribution #47 both **SUCCESS** on 2026-09-26.
 - Production surface: **12 categories + QA diagnostics**.
 - Installed production loader: **`scriptable-loader-v7.js`**.
 - Software license: **Mozilla Public License 2.0 (MPL-2.0)**.
 - Centralized analytics: **none**; bounded local observability only.
 
-Repository `main` can be newer than Stable. Loader v7 does not execute mutable `main` directly.
+Repository `main` can be newer than Stable. Stable runtime remains immutable. Private migration is staged: v9.5.35 first makes the Router private-capable, then Loader v8 is physically validated before repository visibility changes.
 
 ## Owner install / maintenance
 
@@ -36,7 +37,8 @@ Future approved Stable releases are discovered by Loader v7 automatically; the i
 
 ### Loader file roles
 
-- `scriptable-loader-v7.js` — **canonical installed production loader**; Stable-channel discovery, immutable verification, promotion and local LKG.
+- `scriptable-loader-v7.js` — **canonical installed production loader** during private migration; remains active until Loader v8 authenticated physical validation passes.
+- `scriptable-loader-v8-private.js` — **private-migration loader candidate**; Keychain-backed authenticated GitHub transport, pending physical token-path validation.
 - `scriptable-loader-v6.js` remains the per-release immutable CI artifact generated from an exact validated release source.
 - `scriptable-loader.js` — **legacy v4 compatibility loader**.
 - `scriptable-loader-v5.js` — **legacy transactional compatibility loader**.
