@@ -9,8 +9,8 @@ Scope: title-local / iPhone Scriptable non-game product.
 - PUBLIC_DISTRIBUTION_DECISION: **NO**
 - BROAD_GA_STATUS: **WITHDRAWN**
 - REPOSITORY_PRIVATE_MIGRATION: **PENDING**
-- Stable publication target: **v9.5.37 / sequence 15**
-- Stable sourceRef target: `1d331a79bebf55579242be40969061f788bd5182`
+- Current Stable: **v9.5.37 / sequence 15**
+- Stable sourceRef: `1d331a79bebf55579242be40969061f788bd5182`
 - Validation ref: `99afe7a4311eb3c9d3480728d685cd4151860bba`; RC #319 / `36304630990` SUCCESS
 
 The owner's latest instruction supersedes the earlier GitHub Broad GA approval. The product is not to be publicly distributed.
@@ -150,3 +150,12 @@ Stable v9.5.36 is published. Private repo migration remains paused by choice whi
   - ended events are filtered from MY.
 - 12-category module hashes: unchanged.
 - physical revalidation after promotion: Large → offline MY.
+
+
+## v9.5.37 PUBLICATION STATE
+
+- publication PR: #78
+- status: **MERGED / STABLE LIVE**
+- current Stable: v9.5.37 / sequence 15
+- current sourceRef: `1d331a79bebf55579242be40969061f788bd5182`
+- remaining physical gate: MY Large revalidation → offline MY.
