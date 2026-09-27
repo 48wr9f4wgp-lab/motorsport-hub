@@ -159,3 +159,20 @@ Stable v9.5.36 is published. Private repo migration remains paused by choice whi
 - current Stable: v9.5.37 / sequence 15
 - current sourceRef: `1d331a79bebf55579242be40969061f788bd5182`
 - remaining physical gate: MY Large revalidation → offline MY.
+
+
+## PERSONAL COCKPIT FINAL PHYSICAL EVIDENCE — 2026-09-27
+
+- Stable: v9.5.37 / sequence 15
+- MY Large revalidation: **PASS**
+  - header showed `6 / 7 EVENTS`;
+  - six visible rows matched visible-count semantics;
+  - prior WEC Fuji stale-active row was absent;
+  - no obvious clipping / overflow.
+- Offline MY widget: **PASS**
+  - airplane mode visibly active;
+  - MY Large still rendered cached event rows, viewing labels, leaders and cache ages.
+- Personal Cockpit v1 physical gate: **PASS** for Medium / CONFIG / Small / Large / offline MY.
+- New non-cockpit audit item:
+  - F1 row displayed `Bahrain Grand Prix in Malaysia` with `Sepang International Circuit`;
+  - event identity/source consistency requires focused F1 audit before treating that row as verified data.
