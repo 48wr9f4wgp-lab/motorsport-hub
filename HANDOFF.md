@@ -159,3 +159,27 @@ Stable v9.5.36 is published. Private repo migration remains paused by choice whi
 - current Stable: v9.5.37 / sequence 15
 - current sourceRef: `1d331a79bebf55579242be40969061f788bd5182`
 - remaining physical gate: MY Large revalidation → offline MY.
+
+
+## PERSONAL COCKPIT v1 FINAL STATE
+
+Status: **COMPLETE / PHYSICAL PASS**
+
+Stable: **v9.5.37 / sequence 15**
+
+Physical evidence:
+- MY Medium: PASS
+- Personal Config: PASS
+- MY Small: PASS
+- MY Large: PASS
+- offline CONFIG: PASS
+- offline MY: PASS
+- Large visible/total counter: PASS (`6 / 7 EVENTS` observed)
+- stale WEC ACTIVE removal: PASS
+
+F1 identity review:
+- `Bahrain Grand Prix in Malaysia` at Sepang was initially flagged for review.
+- Current official Formula 1/FIA sources confirm the 2026 Bahrain Grand Prix is being staged at Sepang, Malaysia.
+- Result: **VERIFIED / NOT A BUG**.
+
+No remaining Personal Cockpit v1 Gate is open.
