@@ -11,7 +11,7 @@ Scope: title-local / iPhone Scriptable non-game product.
 - Immutable RC artifact: `motorsport-hub-release-45eb720a53438e2dbcd6e01be7529a90f4bea275`.
 - Artifact digest: `sha256:765563cf124673f55f888faec97cd11c1c1d6e49571435e4f307083af59c6def`.
 - Validation ref differs from sourceRef only by `.release/v9.5.34.md`.
-- Current hero-live known head: `7bd8e3e4fcf616b90fbded4911ac0ec8000ad225`.
+- Current hero-live verified head: `7bd8e3e4fcf616b90fbded4911ac0ec8000ad225`; `channel.json` / `ATTRIBUTION.md` revalidated 2026-09-27 JST with matching generation timestamp `2026-09-26T11:34:17.941Z` and 12 credited pool assets.
 - Legacy draft PR #2 remains obsolete/separate; do not merge it into current release work.
 - No known uncommitted/unpushed/local recovery artifact is required for PR #59 work.
 
@@ -62,7 +62,7 @@ Physical evidence (chat-side, not published to the public repo):
 ## REMAINING
 
 1. Run final representative exact-Stable v9.5.34 GA smoke: canonical Loader v7 path, QA diagnostics, online refresh and relevant recovery.
-2. Revalidate current live Hero credits at GA time.
+2. Revalidate Hero credits again only if `hero-live` changes before GA.
 3. Broad GA requires separate exact Stable + destination/action approval.
 4. Actual Dakar 2027 live standings/parser and Japan rights remain unverified until current upstream evidence exists.
 
