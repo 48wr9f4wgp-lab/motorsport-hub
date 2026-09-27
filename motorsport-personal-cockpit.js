@@ -86,17 +86,33 @@ function readEvent(k,priority){
   }catch(_){return null}
 }
 function tokyoDay(ts){return Math.floor((Number(ts)+9*3600000)/86400000)}
+function expectedEnd(e){
+  if(Number.isFinite(e.end))return e.end;
+  if(!Number.isFinite(e.start))return null;
+  let hours=null;
+  if(e.key==='WEC'){
+    const m=String(e.name||'').match(/(\d+(?:\.\d+)?)\s*Hours?/i);
+    hours=m?Number(m[1]):6;
+  }else{
+    const fallback={WRC:96,SUPERGT:8,MOTOGP:4,FDJ:40,D1GP:40};
+    if(Number.isFinite(fallback[e.key]))hours=fallback[e.key];
+  }
+  return Number.isFinite(hours)?e.start+hours*3600000+15*60000:null;
+}
 function status(e){
-  if(e.lifecycle==='ACTIVE')return{label:'開催中',live:true};
-  if(e.start==null)return{label:'日程未取得',live:false};
-  const now=Date.now(),q=e.start-now;
-  if(e.end&&now>=e.start&&now<e.end)return{label:'開催中',live:true};
-  if(q<=0)return{label:'更新待ち',live:false};
+  if(e.start==null)return{label:'日程未取得',live:false,ended:false};
+  const now=Date.now(),q=e.start-now,end=expectedEnd(e);
+  if(Number.isFinite(end)){
+    if(now>=e.start&&now<end)return{label:'開催中',live:true,ended:false};
+    if(now>=end)return{label:'終了',live:false,ended:true};
+  }
+  if(e.lifecycle==='ACTIVE')return{label:'開催中',live:true,ended:false};
+  if(q<=0)return{label:'更新待ち',live:false,ended:true};
   const d=tokyoDay(e.start)-tokyoDay(now);
-  if(d===0)return{label:'今日',live:false};
-  if(d===1)return{label:'明日',live:false};
-  if(q<24*3600000)return{label:`あと${Math.ceil(q/3600000)}時間`,live:false};
-  return{label:`あと${d}日`,live:false};
+  if(d===0)return{label:'今日',live:false,ended:false};
+  if(d===1)return{label:'明日',live:false,ended:false};
+  if(q<24*3600000)return{label:`あと${Math.ceil(q/3600000)}時間`,live:false,ended:false};
+  return{label:`あと${d}日`,live:false,ended:false};
 }
 function dateLabel(e){
   if(e.start==null)return'日程未取得';
@@ -126,8 +142,8 @@ function rows(cfg){
     return a.priority-b.priority;
   });
   const limit=Date.now()+cfg.horizonDays*86400000;
-  const scoped=events.filter(e=>status(e).live||e.start==null||e.start<=limit);
-  return scoped.length?scoped:events;
+  const scoped=events.filter(e=>{const st=status(e);return !st.ended&&(st.live||e.start==null||e.start<=limit)});
+  return scoped;
 }
 function T(st,s,z,c,w='regular',n=1){
   const t=st.addText(String(s??''));
@@ -176,7 +192,7 @@ function renderMedium(events,cfg){
 }
 function renderLarge(events,cfg){
   if(!events.length)return emptyWidget('large');
-  const w=base();w.setPadding(12,12,11,12);const h=w.addStack();h.layoutHorizontally();T(h,'MY RACE DAY',14,col(C.text),'heavy');h.addSpacer(7);T(h,`NEXT ${cfg.horizonDays} DAYS`,7.8,col(C.dim),'bold');h.addSpacer();T(h,`${events.length} EVENTS`,7.8,col(C.muted),'bold');w.addSpacer(6);
+  const w=base(),shown=Math.min(events.length,6),countLabel=shown<events.length?`${shown} / ${events.length} EVENTS`:`${events.length} EVENTS`;w.setPadding(12,12,11,12);const h=w.addStack();h.layoutHorizontally();T(h,'MY RACE DAY',14,col(C.text),'heavy');h.addSpacer(7);T(h,`NEXT ${cfg.horizonDays} DAYS`,7.8,col(C.dim),'bold');h.addSpacer();T(h,countLabel,7.8,col(C.muted),'bold');w.addSpacer(6);
   events.slice(0,6).forEach((e,i)=>{addEventRow(w,e,cfg,'large');if(i<Math.min(events.length,6)-1)w.addSpacer(4)});
   return w;
 }
