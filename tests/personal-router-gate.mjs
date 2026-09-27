@@ -29,11 +29,11 @@ class DateFormatter{constructor(){this.locale='';this.timeZone='';this.dateForma
 const Font={heavySystemFont(){},boldSystemFont(){},semiboldSystemFont(){},systemFont(){}};
 
 function makeFM(){
-  const files=new Map(),now=Date.now(),futureStart=new Date(now+2*86400000).toISOString(),futureEnd=new Date(now+2*86400000+4*3600000).toISOString(),wecStart=new Date(now-7*3600000).toISOString();
+  const files=new Map(),now=Date.now(),futureStart=new Date(now-3600000).toISOString(),futureEnd=new Date(now+3*3600000).toISOString(),wecStart=new Date(now-7*3600000).toISOString();
   files.set('/docs/motorsport-data-v1000-f1.json',JSON.stringify({
     schemaVersion:1,category:'f1',season:2026,fetchedAt:now,
-    event:{race:'Test GP',start:futureStart,end:futureEnd,circuit:'Test Circuit',lifecycle:'UPCOMING'},
-    data:{race:'Test GP',start:futureStart,end:futureEnd,circuit:'Test Circuit',lifecycle:'UPCOMING',ranking:[{pos:1,name:'Test Driver',points:'100 pts'}]}
+    event:{race:'Test GP',start:futureStart,end:futureEnd,circuit:'Test Circuit',lifecycle:'ACTIVE'},
+    data:{race:'Test GP',start:futureStart,end:futureEnd,circuit:'Test Circuit',lifecycle:'ACTIVE',ranking:[{pos:1,name:'Test Driver',points:'100 pts'}]}
   }));
   files.set('/docs/motorsport-data-v1000-wec.json',JSON.stringify({
     schemaVersion:1,category:'wec',season:2026,fetchedAt:now,
