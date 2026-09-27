@@ -75,6 +75,17 @@ Circuit-racing categories generally provide:
 
 Dakar uses rally-raid-specific stage, route, SS distance and GAP semantics rather than forcing circuit-racing labels.
 
+## Personal Cockpit
+
+Owner-only sidecars are available without changing the existing 12-category Stable Router:
+
+- `motorsport-personal-config.js` stores local category order, Race Day horizon and detail toggles.
+- `motorsport-personal-cockpit.js` aggregates the existing local category caches into a cross-series **MY RACE DAY** widget.
+- The cockpit is local-cache-only and adds no new upstream API dependency.
+- Setup and device-test steps are in **[PERSONAL_COCKPIT.md](PERSONAL_COCKPIT.md)**.
+
+The first physical target is Medium. Small and Large use the same normalized cache model after Medium passes.
+
 ## Reliability and updates
 
 The production path is:
