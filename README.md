@@ -5,12 +5,13 @@ Motorsport Hub is an iPhone home-screen motorsport widget system for [Scriptable
 ## Current status
 
 - Distribution intent: **PERSONAL-ONLY / NOT FOR PUBLIC DISTRIBUTION**. A brief GitHub Broad GA state on 2026-09-27 was later withdrawn by the owner.
-- Current Stable: **v9.5.35 / sequence 13**.
-- Stable source: immutable sourceRef `7bfd260947ca091376b4e7c033661ecfcb94ffed`.
+- Current Stable: **v9.5.36 / sequence 14**.
+- Stable source: immutable sourceRef `e6f92c73630da329c581d169b76f9d94e33378c8`.
 - Stable v9.5.31 WRC/SUPER GT hardening: **SUPER GT Small user-confirmed physical iPhone PASS on 2026-09-25 07:46 JST**.
 - Stable v9.5.33 Dakar verification: **physical iPhone PASS on 2026-09-27**; QA production-equivalent diagnostic reported `R155 C80 P5 T80 G5 V1`, and Dakar Medium rendered fresh data without `更新待ち`.
 - Stable v9.5.34 JP viewing-platform labels: **physical iPhone PASS**.
-- Stable v9.5.35 private-runtime foundation: **RC #311 / 36299105721 SUCCESS**; user-facing category modules are byte-identical to v9.5.34 and the Router adds private-capable repository transport.
+- Stable v9.5.35 private-runtime foundation: **RC #311 / 36299105721 SUCCESS**.
+- Stable v9.5.36 integrated Personal Cockpit: **RC #319 / 36304630990 SUCCESS**; `MY` / `CONFIG` are integrated into the same Motorsport Hub Router. Physical MY layout/config validation remains pending.
 - Hero refresh recovery: scheduled Hero Active Refresh #124 and downstream Public Attribution #47 both **SUCCESS** on 2026-09-26.
 - Production surface: **12 categories + QA diagnostics**.
 - Installed production loader: **`scriptable-loader-v7.js`**.
