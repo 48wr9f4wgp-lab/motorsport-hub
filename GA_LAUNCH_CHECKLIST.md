@@ -9,7 +9,7 @@ Use this checklist only when preparing the actual broad public General Availabil
 - [x] Software license explicitly approved by owner: **MPL-2.0**.
 - [x] Club Pulse destination repository populated and verified before Motorsport Hub split/removal; see `CLUB_PULSE_MIGRATION.md`.
 - [x] Root `LICENSE` and `LICENSE_SCOPE.md` prepared for product-pure Motorsport Hub.
-- [x] Current `hero-live/hero-channel/ATTRIBUTION.md` exists; recheck the live pool immediately before GA.
+- [x] Current `hero-live/hero-channel/ATTRIBUTION.md` revalidated at head `7bd8e3e4fcf616b90fbded4911ac0ec8000ad225` on 2026-09-27 JST; `channel.json` / attribution generation timestamp matches and the live attribution surface reports 12 credited pool assets. Recheck only if `hero-live` changes before GA.
 - [x] Public install path distinguishes software-license terms from third-party Hero attribution.
 - [x] No claim of endorsement by image creators/licensors.
 
