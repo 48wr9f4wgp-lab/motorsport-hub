@@ -13,7 +13,7 @@ This file tracks what is still required before **broad public General Availabili
 - Stable v9.5.30 temporal/Dakar hardening: **physical iPhone PASS for WEC 11:00 and Dakar GAP/index fixes**.
 - Stable v9.5.31 WRC/SUPER GT hardening: **SUPER GT Small physical iPhone PASS**.
 - Stable v9.5.33 Dakar production-equivalent diagnostic + fresh-data path: **physical iPhone PASS on 2026-09-27**; QA `R155 C80 P5 T80 G5 V1`, Medium fresh render, no `更新待ち`.
-- Stable v9.5.34 JP viewing-platform labels: **RC #299 / 36285958234 SUCCESS**; physical viewing-label layout validation is still pending.
+- Stable v9.5.34 JP viewing-platform labels: **RC #299 / 36285958234 SUCCESS + physical iPhone PASS** (Medium/Large verified label, Small omission, Dakar omission, no visible layout regression).
 - No known reproducible P0 startup/routing/current-data blocker on the previously verified Stable path.
 - Centralized production telemetry: **not enabled**.
 
@@ -49,15 +49,14 @@ The current Hero pipeline publishes machine-readable source/license metadata and
 
 **REQUIRED on the exact Stable intended for GA.**
 
-For v9.5.34, first close the visible viewing-label device gate:
+The v9.5.34 viewing-label device gate is **CLOSED / PASS**:
+- Medium verified label: PASS;
+- Large verified label: PASS;
+- Small omission: PASS;
+- Dakar omission while `UNVERIFIED`: PASS;
+- no visible header crowding, truncation, alignment break or new vertical overflow.
 
-- one Medium widget with a verified `視聴 <platform>` label;
-- one Large widget with a verified label;
-- Small remains unchanged/no viewing label;
-- Dakar remains hidden while rights are `UNVERIFIED`;
-- no header crowding, truncation, alignment break or new vertical overflow.
-
-Then run the representative GA smoke:
+Run the remaining representative GA smoke:
 
 - canonical Loader v7 fresh-install/copy path;
 - QA diagnostics;
@@ -107,8 +106,7 @@ v9.5.34 carries the JP viewing-rights snapshot verified on 2026-09-27. Rights ch
 
 Remaining hard path:
 
-1. physically validate v9.5.34 viewing labels/omissions and layout on iPhone;
-2. perform the final representative exact-Stable GA smoke and revalidate current live Hero credits;
-3. obtain exact scoped owner authorization for the broad-GA distribution action/channel.
+1. perform the final representative exact-Stable GA smoke and revalidate current live Hero credits;
+2. obtain exact scoped owner authorization for the broad-GA distribution action/channel.
 
 No Store submission, paid distribution, broad public launch, external analytics contract or later Stable publication is authorized by this document.
