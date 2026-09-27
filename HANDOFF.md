@@ -3,74 +3,56 @@
 Updated: 2026-09-27 JST
 Scope: title-local / iPhone Scriptable non-game product.
 
-## WORKING_HEAD / VERIFIED_BASELINE / RECOVERY_STATE
+## CURRENT CONTROLLING DECISION
 
-- Integrated feature source / Stable sourceRef: `edff3d301033ada18134429fb6f4c9016c6653f6` (PR #59 merged).
-- Stable target/publication: **v9.5.34 / sequence 12**.
-- Validation releaseRef: `45eb720a53438e2dbcd6e01be7529a90f4bea275`; RC **#299 / 36285958234 SUCCESS**.
-- Immutable RC artifact: `motorsport-hub-release-45eb720a53438e2dbcd6e01be7529a90f4bea275`.
-- Artifact digest: `sha256:765563cf124673f55f888faec97cd11c1c1d6e49571435e4f307083af59c6def`.
-- Validation ref differs from sourceRef only by `.release/v9.5.34.md`.
-- Current hero-live verified head: `7bd8e3e4fcf616b90fbded4911ac0ec8000ad225`; `channel.json` / `ATTRIBUTION.md` revalidated 2026-09-27 JST with matching generation timestamp `2026-09-26T11:34:17.941Z` and 12 credited pool assets.
-- Legacy draft PR #2 remains obsolete/separate; do not merge it into current release work.
-- No known uncommitted/unpushed/local recovery artifact is required for PR #59 work.
+- PRODUCT_INTENT: **PERSONAL-ONLY / OWNER-ONLY**
+- PUBLIC_DISTRIBUTION_DECISION: **NO**
+- BROAD_GA_STATUS: **WITHDRAWN**
+- REPOSITORY_PRIVATE_MIGRATION: **PENDING**
+- Current Stable: **v9.5.34 / sequence 12**
+- Stable sourceRef: `edff3d301033ada18134429fb6f4c9016c6653f6`
+
+The owner's latest instruction supersedes the earlier GitHub Broad GA approval. The product is not to be publicly distributed.
+
+## WHY REPOSITORY IS NOT YET PRIVATE
+
+Loader v7 and the current runtime fetch release/channel/runtime assets through public GitHub/raw URLs. Making the repository private immediately can break the owner's current iPhone installation.
+
+Therefore repository visibility must change only after a private-compatible runtime/update path is implemented and physically validated.
+
+## VERIFIED BASELINE
+
+- immutable RC #299 / `36285958234`: SUCCESS
+- physical QA: `12/12 LIVE — データ経路OK`
+- exact Stable prefix: `edff3d301033`
+- Small / Medium / Large representative UI: PASS
+- JP viewing-platform v1: PASS
+- Dakar viewing omission while UNVERIFIED: PASS
+- offline/LKG recovery: PASS
+- Loader v7 copy path: PASS
+- current Hero attribution revalidated at `7bd8e3e4fcf616b90fbded4911ac0ec8000ad225`
 
 ## LOCKED PRODUCT CONTRACT
 
-- Canonical installed loader: `scriptable-loader-v7.js`.
-- Stable source is immutable and separately approved; main merge is not Stable publication.
-- Router schema 5; category cache schema 1; 12 categories + QA; Small/Medium/Large.
-- Visual v1 locked except concrete regression/material improvement.
-- MPL-2.0 software license; third-party Hero licenses remain separate.
-- Club Pulse is a separate repo/product.
-- Local observability only; no automatic external analytics.
-- Viewing-platform region v1 = JP.
-- Viewing rights fail closed when invalid/stale/unverified/wrong-region/season-mismatched.
-- Small never shows viewing labels in v1.
-- Medium/Large use compact standings-header `視聴 <platform>`; no new vertical row.
-- Dakar 2027 viewing label remains hidden while Japan rights are `UNVERIFIED`.
-- Broad GA/public distribution for exact Stable v9.5.34 is **LIVE via the public GitHub repository** after explicit owner approval on 2026-09-27. Future release/store/paid/analytics/contract actions remain separately protected.
+- canonical installed loader = `scriptable-loader-v7.js`
+- 12 categories + QA
+- Small / Medium / Large
+- local observability only
+- no automatic external analytics
+- JP viewing rights fail closed
+- Small does not show viewing labels
+- Medium/Large use compact viewing label
+- public distribution is not a product goal
+- future public release requires a new explicit direction change
 
-## VERIFIED PRODUCT EVIDENCE
+## HISTORICAL PUBLIC GA
 
-- Stable v9.5.31 SUPER GT Small black-widget repair: physical iPhone PASS.
-- Stable v9.5.30 WEC Fuji 11:00 + Dakar GAP/index fixes: scoped physical PASS.
-- Stable v9.5.33 Dakar production-equivalent QA: physical iPhone PASS, `R155 C80 P5 T80 G5 V1`.
-- Stable v9.5.33 Dakar Medium fresh-data render: PASS, `更新待ち` absent.
-- PR #59 automated evidence: Hardening #539 SUCCESS; RC #297 SUCCESS; Live Parser Monitor #100 deterministic SUCCESS; 36-case render smoke PASS.
-- v9.5.34 immutable RC: **#299 / 36285958234 SUCCESS**.
-- v9.5.34 physical QA: **12/12 LIVE — データ経路OK**, all category rows green, exact immutable Stable source prefix `edff3d301033`, Dakar production-equivalent diagnostic `R155 C80 P5 T80 G5 V1`.
-- v9.5.34 representative online refresh: **PASS** across all 12 QA routes.
-- v9.5.34 offline/LKG recovery: **PASS** on physical iPhone with airplane mode active; SUPER GT Medium rendered cached data with expected `更新待ち`, viewing label/standings/Hero/layout intact.
-- canonical Loader v7 copy path: **PASS** on physical iPhone; duplicated Scriptable script executed online and reached `12/12 LIVE — データ経路OK` on exact Stable prefix `edff3d301033`.
-- representative exact-Stable v9.5.34 physical GA smoke: **COMPLETE / PASS**.
+A GitHub Broad GA action for v9.5.34 occurred earlier on 2026-09-27. It was later superseded by the owner's personal-only decision.
 
-## CURRENT FEATURE STATE
+Status: **WITHDRAWN / HISTORICAL ONLY**
 
-JP viewing-platform runtime is implemented and Stable-packaged:
-
-- exact immutable `viewing-rights-jp.json`;
-- Router pins rights SHA-256 + UTF-8 byte length;
-- Medium/Large compact verified label;
-- Small omitted;
-- Dakar 2027 omitted while UNVERIFIED;
-- offline/no-cache rights path safely omits the label.
-
-The visible v9.5.34 label change is **physically validated and complete** on the user iPhone.
-
-Physical evidence (chat-side, not published to the public repo):
-- SUPER GT Medium: `視聴 J SPORTS` visible; no truncation/crowding/overflow.
-- SUPER GT Large: `視聴 J SPORTS` visible after Stable refresh; no standings/lower-card regression.
-- SUPER GT Small: no viewing label, as specified.
-- Dakar Medium: no viewing label while 2027 JP rights remain `UNVERIFIED`; fresh-data render remains healthy.
-
-## REMAINING
-
-1. Keep Hero attribution synchronized if `hero-live` changes.
-2. Treat parser/viewing-rights/source drift as post-GA maintenance and issue a new Stable when runtime data/contracts change.
-3. Actual Dakar 2027 live standings/parser and Japan rights remain unverified until current upstream evidence exists.
-4. Store/paid distribution/external analytics/contracts/future Stable publication remain separate approval scopes.
+Do not use that historical action as authorization for future public distribution.
 
 ## NEXT
 
-Broad GA is live through the public GitHub repository. Next is normal post-GA maintenance; no additional launch action is pending.
+Design the private-compatible runtime/update path first. After it passes online + offline/LKG physical validation, change the repository to private without interrupting the owner's iPhone widgets.
