@@ -9,8 +9,8 @@ Scope: title-local / iPhone Scriptable non-game product.
 - PUBLIC_DISTRIBUTION_DECISION: **NO**
 - BROAD_GA_STATUS: **WITHDRAWN**
 - REPOSITORY_PRIVATE_MIGRATION: **PENDING**
-- Stable publication target: **v9.5.36 / sequence 14**
-- Stable sourceRef target: `e6f92c73630da329c581d169b76f9d94e33378c8`
+- Current Stable: **v9.5.36 / sequence 14**
+- Stable sourceRef: `e6f92c73630da329c581d169b76f9d94e33378c8`
 - Validation ref: `99afe7a4311eb3c9d3480728d685cd4151860bba`; RC #319 / `36304630990` SUCCESS
 
 The owner's latest instruction supersedes the earlier GitHub Broad GA approval. The product is not to be publicly distributed.
@@ -56,7 +56,7 @@ Do not use that historical action as authorization for future public distributio
 
 ## NEXT
 
-Stable v9.5.35 is published. Private repo migration remains paused by choice while the current v7 path is stable. The active product-development next step is Personal Cockpit v1 physical validation; private Loader v8 auth can resume later.
+Stable v9.5.36 is published. Private repo migration remains paused by choice while the current v7 path is stable. The active product-development next step is Personal Cockpit v1 physical validation; private Loader v8 auth can resume later.
 
 
 ## v9.5.35 PRIVATE FOUNDATION EVIDENCE
@@ -86,6 +86,6 @@ Stable v9.5.35 is published. Private repo migration remains paused by choice whi
 - viewing source: existing local verified JP viewing-rights cache.
 - cockpit network behavior: no new external requests.
 - layouts: Small / Medium / Large.
-- v9.5.36 publication target exposes `MY` / `CONFIG` through the existing Motorsport Hub Router; Stable merge is still pending explicit approval.
+- Stable v9.5.36 exposes `MY` / `CONFIG` through the existing Motorsport Hub Router; publication PR #72 is merged.
 - physical state: **PENDING**.
-- first device target after v9.5.36 promotion: Medium visual/density/content validation, then Small / Large and CONFIG flow.
+- next device gate: MY Medium visual/density/content validation → CONFIG flow → MY Small → MY Large → offline MY.
