@@ -57,12 +57,12 @@ assert(migration.includes('9e869fdae85e9ee352234b925c733065eb7c24fd'),'migration
 const ga=read('GA_READINESS.md');
 assert(ga.includes('Software-license decision: APPROVED — MPL-2.0'),'GA readiness must record approved software license');
 assert(ga.includes('Club Pulse migration cutover'),'GA readiness must retain destination migration blocker');
-assert(ga.includes('Broad GA authorization: APPROVED — GITHUB PUBLIC REPOSITORY'),'GA readiness must record the exact approved GitHub Broad GA scope');
+assert(ga.includes('PUBLIC_DISTRIBUTION_DECISION: NO'),'distribution docs must record personal-only / no-public-distribution decision');
 assert(ga.includes('Stable v9.5.34'),'GA readiness must anchor current Stable');
 assert(ga.includes('Public Hero attribution publication'),'GA readiness must retain Hero attribution publication gate');
 
 const launch=read('GA_LAUNCH_CHECKLIST.md');
-for(const token of ['Software license explicitly approved by owner','Club Pulse destination repository populated','ATTRIBUTION.md','Physical iPhone smoke','Owner explicitly authorizes broad GA'])assert(launch.includes(token),`GA launch checklist missing ${token}`);
+for(const token of ['Owner-only / personal-use direction selected','Public Broad GA intent withdrawn','Private transition gate'])assert(launch.includes(token),`distribution checklist missing ${token}`);
 
 const changelog=read('CHANGELOG.md');
 assert(changelog.includes('v9.5.34'),'changelog must include current Stable');
