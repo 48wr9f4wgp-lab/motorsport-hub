@@ -1,7 +1,7 @@
 # Motorsport Hub — Completion Audit
 
 Updated: 2026-09-27 JST
-Status: **v9.5.36 PERSONAL COCKPIT RC PASS / STABLE PUBLICATION APPROVAL PENDING / OWNER-ONLY**
+Status: **v9.5.36 STABLE PUBLISHED / PERSONAL COCKPIT DEVICE VALIDATION PENDING / OWNER-ONLY**
 
 ## Controlling decision
 
@@ -12,7 +12,7 @@ Status: **v9.5.36 PERSONAL COCKPIT RC PASS / STABLE PUBLICATION APPROVAL PENDING
 
 ## Verified owner-use baseline
 
-Stable v9.5.35 remains the current device baseline:
+Stable v9.5.36 is the current Stable; the physically verified owner-use baseline remains the pre-Personal-Cockpit surfaces until new MY/CONFIG evidence is captured:
 - 12-category runtime verified;
 - QA 12/12 LIVE on prior exact-Stable smoke;
 - JP viewing-platform v1 physical PASS;
@@ -50,13 +50,12 @@ The Router pins their exact SHA-256 + UTF-8 byte length and only loads them from
 
 ## Remaining hard gates
 
-1. explicit owner approval to publish Stable v9.5.36;
-2. physical MY Medium validation;
-3. physical CONFIG flow validation;
-4. physical MY Small validation;
-5. physical MY Large validation;
-6. offline MY validation after at least one successful online load.
+1. physical MY Medium validation;
+2. physical CONFIG flow validation;
+3. physical MY Small validation;
+4. physical MY Large validation;
+5. offline MY validation after at least one successful online load.
 
 ## Decision
 
-Automation evidence is green and v9.5.36 is ready for Stable publication review. Personal Cockpit must not be called physically complete until the device gates pass.
+Automation evidence is green and Stable v9.5.36 is published via PR #72. Personal Cockpit must not be called physically complete until the remaining device gates pass.
