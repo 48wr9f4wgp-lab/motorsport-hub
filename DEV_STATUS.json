@@ -1,17 +1,17 @@
 {
   "schema": 1,
-  "phase": "Stable v9.5.34 / device validation pending / GA未承認",
+  "phase": "Stable v9.5.34 / viewing feature device PASS / GA未承認",
   "checks": {
     "boot": "ok",
     "test": "ok",
-    "device": "warn",
+    "device": "ok",
     "save": "na",
     "analytics": "na",
     "performance": "warn",
     "release": "ok"
   },
-  "next": "v9.5.34をiPhone実機でMedium/Largeの視聴表示、Small非表示、Dakar非表示、ヘッダー圧迫なしまで確認",
-  "note": "PR #59 merge済み。RC #299 PASS。v9.5.33 Dakar fresh-data physical PASS済み。v9.5.34の視認UIだけ未検証のため機能完成扱いしない。",
+  "next": "exact Stable v9.5.34で最終GA smoke: Loader v7経路、QA diagnostics、online refresh、必要ならLKG/offline recovery、Hero credits再検証",
+  "note": "JP視聴プラットフォームv1はiPhone実機PASS。SUPER GT Medium/Largeで視聴 J SPORTS表示、Small非表示、Dakar Medium非表示、レイアウト回帰なし。Broad GAは別Gate。",
   "updated_at": "2026-09-27",
   "stable": {
     "version": "9.5.34",

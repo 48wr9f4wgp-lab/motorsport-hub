@@ -51,19 +51,21 @@ JP viewing-platform runtime is implemented and Stable-packaged:
 - Dakar 2027 omitted while UNVERIFIED;
 - offline/no-cache rights path safely omits the label.
 
-The visible v9.5.34 label change is **not yet physically validated**, so the feature is not called complete.
+The visible v9.5.34 label change is **physically validated and complete** on the user iPhone.
+
+Physical evidence (chat-side, not published to the public repo):
+- SUPER GT Medium: `視聴 J SPORTS` visible; no truncation/crowding/overflow.
+- SUPER GT Large: `視聴 J SPORTS` visible after Stable refresh; no standings/lower-card regression.
+- SUPER GT Small: no viewing label, as specified.
+- Dakar Medium: no viewing label while 2027 JP rights remain `UNVERIFIED`; fresh-data render remains healthy.
 
 ## REMAINING
 
-1. On physical iPhone, confirm at least one Medium verified label.
-2. Confirm at least one Large verified label.
-3. Confirm Small is unchanged / no viewing label.
-4. Confirm Dakar remains hidden while `UNVERIFIED`.
-5. Confirm no header crowding, truncation, standings misalignment or new vertical overflow.
-6. Run final representative exact-Stable GA smoke and revalidate current Hero credits.
-7. Broad GA requires separate exact Stable + destination/action approval.
-8. Actual Dakar 2027 live standings/parser and Japan rights remain unverified until current upstream evidence exists.
+1. Run final representative exact-Stable v9.5.34 GA smoke: canonical Loader v7 path, QA diagnostics, online refresh and relevant recovery.
+2. Revalidate current live Hero credits at GA time.
+3. Broad GA requires separate exact Stable + destination/action approval.
+4. Actual Dakar 2027 live standings/parser and Japan rights remain unverified until current upstream evidence exists.
 
 ## NEXT
 
-Physical iPhone validation of Stable v9.5.34 viewing-platform UI. Do not call the feature complete until that evidence passes.
+Run the final representative exact-Stable v9.5.34 GA smoke. The JP viewing-platform v1 feature itself is complete.

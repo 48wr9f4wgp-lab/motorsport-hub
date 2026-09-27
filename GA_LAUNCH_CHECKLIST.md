@@ -15,7 +15,7 @@ Use this checklist only when preparing the actual broad public General Availabil
 
 ## B. Exact release identity
 
-- [ ] Exact final GA Stable remains provisional until **v9.5.34** physical viewing-label + representative smoke passes.
+- [ ] Exact final GA Stable remains provisional until the **v9.5.34 representative GA smoke** passes.
 - [x] Stable v9.5.34 source selected: `edff3d301033ada18134429fb6f4c9016c6653f6`.
 - [x] v9.5.34 Release Candidate CI: **#299 / 36285958234 SUCCESS**.
 - [x] Descriptor hashes/byte lengths taken from immutable RC artifact `motorsport-hub-release-45eb720a53438e2dbcd6e01be7529a90f4bea275`.
@@ -29,12 +29,12 @@ Run on the exact Stable intended for distribution:
 
 - [ ] canonical Loader v7 fresh-install/copy path;
 - [ ] QA diagnostics healthy;
-- [ ] one Small widget;
-- [ ] one Medium widget with expected verified viewing label;
-- [ ] one Large widget with expected verified viewing label;
-- [ ] Small viewing-label omission confirmed;
-- [ ] Dakar viewing-label omission confirmed while UNVERIFIED;
-- [ ] no header crowding/truncation/alignment/overflow regression;
+- [x] one Small widget;
+- [x] one Medium widget with expected verified viewing label;
+- [x] one Large widget with expected verified viewing label;
+- [x] Small viewing-label omission confirmed;
+- [x] Dakar viewing-label omission confirmed while UNVERIFIED;
+- [x] no header crowding/truncation/alignment/overflow regression;
 - [ ] online refresh;
 - [ ] LKG/offline recovery if the GA Stable changes runtime-sensitive behavior;
 - [ ] no visible startup, routing or clipping blocker.
@@ -57,4 +57,4 @@ Record physical-device evidence as user-confirmed evidence; do not represent it 
 
 ## Current state
 
-Motorsport Hub is technically a GA-capable candidate. Stable v9.5.34 is validated for publication, but its new visible viewing-label UI still requires physical iPhone evidence. Broad GA remains blocked until that exact-Stable smoke, current Hero-credit revalidation and scoped GA authorization are complete.
+Motorsport Hub is technically a GA-capable candidate. Stable v9.5.34 is validated and its JP viewing-label UI has physical iPhone PASS. Broad GA remains blocked until that exact-Stable smoke, current Hero-credit revalidation and scoped GA authorization are complete.
