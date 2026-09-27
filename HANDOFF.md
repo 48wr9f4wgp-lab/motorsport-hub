@@ -41,6 +41,7 @@ Scope: title-local / iPhone Scriptable non-game product.
 - v9.5.34 immutable RC: **#299 / 36285958234 SUCCESS**.
 - v9.5.34 physical QA: **12/12 LIVE — データ経路OK**, all category rows green, exact immutable Stable source prefix `edff3d301033`, Dakar production-equivalent diagnostic `R155 C80 P5 T80 G5 V1`.
 - v9.5.34 representative online refresh: **PASS** across all 12 QA routes.
+- v9.5.34 offline/LKG recovery: **PASS** on physical iPhone with airplane mode active; SUPER GT Medium rendered cached data with expected `更新待ち`, viewing label/standings/Hero/layout intact.
 
 ## CURRENT FEATURE STATE
 
@@ -64,11 +65,10 @@ Physical evidence (chat-side, not published to the public repo):
 ## REMAINING
 
 1. Confirm canonical Loader v7 fresh-install/copy path on physical iPhone.
-2. Confirm v9.5.34 LKG/offline recovery on physical iPhone.
-3. Revalidate Hero credits again only if `hero-live` changes before GA.
-4. Broad GA requires separate exact Stable + destination/action approval.
-5. Actual Dakar 2027 live standings/parser and Japan rights remain unverified until current upstream evidence exists.
+2. Revalidate Hero credits again only if `hero-live` changes before GA.
+3. Broad GA requires separate exact Stable + destination/action approval.
+4. Actual Dakar 2027 live standings/parser and Japan rights remain unverified until current upstream evidence exists.
 
 ## NEXT
 
-Close the two remaining physical GA checks: Loader v7 fresh-install/copy, then offline/LKG recovery. The JP viewing-platform v1 feature itself is complete.
+Close the final physical GA check: canonical Loader v7 fresh-install/copy. Offline/LKG recovery is PASS and the JP viewing-platform v1 feature itself is complete.
