@@ -34,6 +34,6 @@ assert(router.includes("mhRepoJSON(HERO_CHANNEL_BRANCH,'hero-channel/channel.jso
 assert(router.includes('mhRepoImage(HERO_CHANNEL_BRANCH,hp'),'Hero images must use private-capable transport');
 
 for(const token of ['addSecureTextField','Keychain.set(TOKEN_KEY,token)','Keychain.remove(TOKEN_KEY)','Contents: read + Actions: read'])assert(setup.includes(token),`private setup missing: ${token}`);
-for(const token of ['owner-only','Contents: read','Actions: read','private-compatible'])assert(doc.toLowerCase().includes(token.toLowerCase()),`private runtime doc missing: ${token}`);
+for(const token of ['owner-only','Contents: read','Actions: read','private-capable'])assert(doc.toLowerCase().includes(token.toLowerCase()),`private runtime doc missing: ${token}`);
 
 console.log('Motorsport Hub private transport gate: PASS');
