@@ -1,5 +1,20 @@
 # Changelog
 
+## Unreleased — main only
+
+No runtime changes beyond Stable v9.5.34 at publication preparation time.
+
+## v9.5.34 — JP viewing-platform labels
+
+- Stable sequence: **12**.
+- Stable sourceRef: `edff3d301033ada18134429fb6f4c9016c6653f6`.
+- Adds verified Japan viewing-platform labels to **Medium/Large** standings headers without introducing a new vertical row.
+- **Small remains unchanged** and never shows the viewing label in v1.
+- Viewing rights are loaded from the exact immutable Stable sourceRef, verified by pinned SHA-256 + UTF-8 byte length, and fail closed when invalid, stale, wrong-region, unverified or season-mismatched.
+- Dakar 2027 remains hidden because current Japan viewing rights are `UNVERIFIED`.
+- Release Candidate validation: **#299 / 36285958234 SUCCESS**.
+- Physical iPhone validation of Medium/Large label layout, Small omission and Dakar omission remains required before the visible feature is called complete.
+
 ## v9.5.33 — Dakar physical-device diagnostics
 
 - Stable sequence: **11**.
@@ -7,7 +22,7 @@
 - QA DAKAR row now runs a production-equivalent parser over the exact rankings response and reports `R/C/P/T/G/V` counters.
 - Purpose is root-cause isolation only; `dakar-widget.js` is byte-identical to v9.5.32.
 - Release Candidate validation: **#292 / 36280879979 SUCCESS**.
-- Physical iPhone diagnostic capture is required immediately after promotion.
+- Physical iPhone verification: **PASS on 2026-09-27**; QA reported `R155 C80 P5 T80 G5 V1`, and Dakar Medium rendered fresh data without `更新待ち`.
 
 ## v9.5.32 — Stable Dakar live parser repair
 
@@ -18,15 +33,6 @@
 - Hero refresh/attribution pipeline recovery confirmed in production: Hero Active Refresh #124 SUCCESS and Public Attribution #47 SUCCESS.
 - Release Candidate validation: **#288 / 36253970101 SUCCESS**.
 - Focused Dakar physical iPhone fresh-data confirmation remains pending after Stable promotion.
-
-## Unreleased — main only
-
-No runtime changes beyond Stable v9.5.32 at publication preparation time.
-
-- Repair Dakar parsing of encoded/typographic time units and preserve explicit hour GAP with zero padding.
-- Repair Hero candidate attribution integration; generate and validate exact credits before atomic publication.
-- Improve sanitized live-monitor error diagnostics and reconcile current readiness/handoff evidence.
-- Repair branch live monitor: 12/12 PASS; production Stable remains v9.5.31 / sequence 9.
 
 ## v9.5.31 — Stable WRC finale + SUPER GT Small hardening
 

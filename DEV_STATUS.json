@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "phase": "RC / GA未承認",
+  "phase": "Stable v9.5.34 / device validation pending / GA未承認",
   "checks": {
     "boot": "ok",
     "test": "ok",
@@ -8,15 +8,15 @@
     "save": "na",
     "analytics": "na",
     "performance": "warn",
-    "release": "warn"
+    "release": "ok"
   },
-  "next": "v9.5.33 Stable公開承認後、QAのDAKAR R/C/P/T/G/VをiPhone実機で取得してproduction parserの失敗段を特定",
-  "note": "診断専用。Dakar widget本体はv9.5.32と同一。RC #292 PASS。実機診断前に修正完了扱いしない。",
+  "next": "v9.5.34をiPhone実機でMedium/Largeの視聴表示、Small非表示、Dakar非表示、ヘッダー圧迫なしまで確認",
+  "note": "PR #59 merge済み。RC #299 PASS。v9.5.33 Dakar fresh-data physical PASS済み。v9.5.34の視認UIだけ未検証のため機能完成扱いしない。",
   "updated_at": "2026-09-27",
   "stable": {
-    "version": "9.5.33",
-    "sequence": 11,
-    "sourceRef": "95d85043045bd7942f9e72b960249649e637aee3"
+    "version": "9.5.34",
+    "sequence": 12,
+    "sourceRef": "edff3d301033ada18134429fb6f4c9016c6653f6"
   },
   "ga_authorized": false
 }

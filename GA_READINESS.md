@@ -1,21 +1,20 @@
 # Motorsport Hub — GA Readiness
 
-Updated: 2026-09-26 JST
+Updated: 2026-09-27 JST
 
-This file tracks what is still required before **broad public General Availability (GA)**. It does not itself authorize public distribution, Store submission, paid distribution, Stable publication, or an external service contract.
+This file tracks what is still required before **broad public General Availability (GA)**. Stable publication and broad GA are separate protected actions.
 
 ## Current product state
 
 - Public RC: **APPROVED**.
-- Current Stable: **v9.5.33 / sequence 11**.
-- Stable sourceRef: `95d85043045bd7942f9e72b960249649e637aee3`.
+- Current Stable: **v9.5.34 / sequence 12**.
+- Stable sourceRef: `edff3d301033ada18134429fb6f4c9016c6653f6`.
 - Stable v9.5.29 WEC / SUPER GT device parser repair: **physical iPhone PASS**.
 - Stable v9.5.30 temporal/Dakar hardening: **physical iPhone PASS for WEC 11:00 and Dakar GAP/index fixes**.
-- Stable v9.5.31 WRC/SUPER GT hardening: **SUPER GT Small user-confirmed physical iPhone PASS on 2026-09-25 07:46 JST**.
-- Stable v9.5.32 Dakar live-parser repair: **RC validated; live parser monitor 12/12 PASS; focused Dakar physical iPhone fresh-data confirmation pending**.
-- No known reproducible P0 startup/routing/current-data blocker.
-- Stable v9.5.30 includes Dakar 2027 rollover hardening plus the 2026-09-20 temporal-accuracy/Dakar presentation repairs.
-- Stable v9.5.33 Dakar device diagnostics: **RC validated; production Dakar parser behavior is still under physical-iPhone investigation and is not claimed fixed by this diagnostics-only release**.
+- Stable v9.5.31 WRC/SUPER GT hardening: **SUPER GT Small physical iPhone PASS**.
+- Stable v9.5.33 Dakar production-equivalent diagnostic + fresh-data path: **physical iPhone PASS on 2026-09-27**; QA `R155 C80 P5 T80 G5 V1`, Medium fresh render, no `更新待ち`.
+- Stable v9.5.34 JP viewing-platform labels: **RC #299 / 36285958234 SUCCESS**; physical viewing-label layout validation is still pending.
+- No known reproducible P0 startup/routing/current-data blocker on the previously verified Stable path.
 - Centralized production telemetry: **not enabled**.
 
 ## Resolved GA preparation items
@@ -28,43 +27,43 @@ Public install, support, privacy, README/changelog and bug-report surfaces are p
 
 ### Software-license decision
 
-**APPROVED: MPL-2.0.**
+**Software-license decision: APPROVED — MPL-2.0.**
 
-The owner approved Mozilla Public License 2.0 for Motorsport Hub and approved separating Club Pulse into its own repository. The merged product-pure repository includes root `LICENSE` and `LICENSE_SCOPE.md`.
-
-Third-party Hero imagery is not relicensed under MPL-2.0; its Creative Commons obligations remain separate in `ATTRIBUTION.md` and the live Hero attribution surface.
-
-## Must be resolved before broad GA
+The owner approved Mozilla Public License 2.0 for Motorsport Hub and approved separating Club Pulse into its own repository. Third-party Hero imagery remains governed by its own Creative Commons terms and attribution.
 
 ### 1. Club Pulse migration cutover
 
 **RESOLVED.**
 
-Club Pulse is preserved in its dedicated repository, its migration PR was merged, destination CI passed before and after merge, and Motorsport Hub's product-pure/MPL cutover is merged.
-
-Canonical export source and migration evidence remain recorded in `CLUB_PULSE_MIGRATION.md`.
+Club Pulse is preserved in its dedicated repository, its migration/cutover is complete, and historical migration controls remain documented in `CLUB_PULSE_MIGRATION.md`.
 
 ### 2. Public Hero attribution publication
 
-**PUBLICATION PROOF VERIFIED at hero-live `57e0c7019b681239deba81627eddba6b6c622acf`.**
+**VERIFIED / REVALIDATE AT GA.**
 
-The current Hero pipeline carries source page, author and license metadata. Motorsport Hub now has a generated human-readable attribution builder, validator, deterministic CI coverage and an attribution-only `hero-live` publisher.
+The current Hero pipeline publishes machine-readable source/license metadata and human-readable attribution on `hero-live`. Hero Active Refresh #124 and downstream Public Attribution #47 were successful. Revalidate the then-current live pool immediately before broad GA.
 
-The pinned `hero-live/hero-channel/ATTRIBUTION.md` validates against `channel.json`: 12 credited pool assets, matching generation timestamp `2026-09-14T02:23:06.396Z`. Revalidate against the then-current pool before GA. This proves current credits exist; it does not prove refresh health.
-
-The 2026-09-26 audit repair is now deployed. Scheduled Hero Active Refresh #123 and #124 succeeded on main, and downstream Public Attribution #46 and #47 also succeeded. Current Hero refresh health is therefore **RECOVERED**; revalidate the then-current live pool before GA.
+## Must be resolved before broad GA
 
 ### 3. Final physical-device GA smoke
 
-**REQUIRED immediately before broad GA.**
+**REQUIRED on the exact Stable intended for GA.**
 
-Run a representative session on the exact Stable intended for public distribution:
+For v9.5.34, first close the visible viewing-label device gate:
+
+- one Medium widget with a verified `視聴 <platform>` label;
+- one Large widget with a verified label;
+- Small remains unchanged/no viewing label;
+- Dakar remains hidden while rights are `UNVERIFIED`;
+- no header crowding, truncation, alignment break or new vertical overflow.
+
+Then run the representative GA smoke:
 
 - canonical Loader v7 fresh-install/copy path;
 - QA diagnostics;
 - one Small, one Medium and one Large widget;
 - online refresh;
-- LKG/offline recovery if the GA Stable changes Loader/runtime-sensitive behavior;
+- LKG/offline recovery if runtime-sensitive behavior changed;
 - no visible startup, routing or clipping blocker.
 
 Physical-device evidence must be recorded as user-confirmed evidence.
@@ -73,19 +72,21 @@ Physical-device evidence must be recorded as user-confirmed evidence.
 
 **BLOCKER by project policy.**
 
-A green repository/CI state is not authorization to begin broad public distribution. Obtain explicit owner approval for the actual GA/publication action and its distribution channel.
+The owner approved the current v9.5.34 Stable publication path on 2026-09-27. That does not by itself satisfy the separate scoped broad-GA approval requirement because broad GA must match an exact validated Stable, distribution channel and action after the final physical smoke.
 
 ## Should be completed before or at GA
 
 ### Support export physical verification
 
-`support-observability-export.js` has deterministic CI coverage but its Share Sheet interaction has not yet been physically exercised on iPhone. QA screenshot + issue evidence remains sufficient as the primary public support path until that optional flow is verified.
+`support-observability-export.js` has deterministic CI coverage but its Share Sheet interaction is still optional/unverified on iPhone.
 
 ### Dakar 2027 live verification
 
-Stable v9.5.30 now contains the season-aware Dakar cache/LKG rollover hardening.
+Dakar 2027 cache/LKG rollover hardening is present. Actual 2027 upstream standings/parser behavior cannot be empirically proven until the live 2027 surface exists.
 
-Actual Dakar 2027 live endpoint/parser behavior cannot be empirically proven until the live 2027 standings surface exists.
+### Viewing-rights freshness
+
+v9.5.34 carries the JP viewing-rights snapshot verified on 2026-09-27. Rights changes require fresh official-source verification and a new immutable Stable publication; stale/unverified records fail closed.
 
 ## Not a GA blocker by itself
 
@@ -106,8 +107,8 @@ Actual Dakar 2027 live endpoint/parser behavior cannot be empirically proven unt
 
 Remaining hard path:
 
-1. run the v9.5.33 QA diagnostic on physical iPhone and isolate the Dakar production-parser failure using R/C/P/T/G/V counters;
-2. implement and physically verify any resulting Dakar runtime repair, then perform the final representative exact-Stable GA smoke and revalidate live credits;
-3. obtain explicit owner authorization for broad GA.
+1. physically validate v9.5.34 viewing labels/omissions and layout on iPhone;
+2. perform the final representative exact-Stable GA smoke and revalidate current live Hero credits;
+3. obtain exact scoped owner authorization for the broad-GA distribution action/channel.
 
-No Store submission, paid distribution, broad public launch, external analytics contract or new Stable publication is authorized by this document.
+No Store submission, paid distribution, broad public launch, external analytics contract or later Stable publication is authorized by this document.
