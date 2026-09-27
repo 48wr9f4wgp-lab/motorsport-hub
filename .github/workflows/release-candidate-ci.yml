@@ -67,6 +67,7 @@ jobs:
             tests/stable-loader-v7-gate.mjs
             tests/private-transport-gate.mjs
             tests/personal-cockpit-gate.mjs
+            tests/personal-router-gate.mjs
             tests/observability-support-export-gate.mjs
             tests/diagnostics-loader-path-gate.mjs
             tests/workflow-hygiene-gate.mjs
