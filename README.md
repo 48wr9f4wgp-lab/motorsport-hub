@@ -61,6 +61,8 @@ Future approved Stable releases are discovered by Loader v7 automatically; the i
 | GT World Challenge Europe | `GTWCEU` | `GTWC`, `GTWCEUROPE` |
 | Dakar Rally | `DAKAR` | `DAKARRALLY` |
 | Diagnostics | `QA` | — |
+| **MY RACE DAY** | `MY` | `RACEDAY`, `MYRACEDAY` |
+| **Personal Config** | `CONFIG` | `SETTINGS` |
 
 A blank widget Parameter currently defaults to F1. An invalid non-empty Parameter renders a configuration error instead of silently routing to another category.
 
@@ -77,14 +79,16 @@ Dakar uses rally-raid-specific stage, route, SS distance and GAP semantics rathe
 
 ## Personal Cockpit
 
-Owner-only sidecars are available without changing the existing 12-category Stable Router:
+Personal Cockpit is integrated into the same `Motorsport Hub` Scriptable path. No second user-installed script is required.
 
-- `motorsport-personal-config.js` stores local category order, Race Day horizon and detail toggles.
-- `motorsport-personal-cockpit.js` aggregates the existing local category caches into a cross-series **MY RACE DAY** widget.
-- The cockpit is local-cache-only and adds no new upstream API dependency.
-- Setup and device-test steps are in **[PERSONAL_COCKPIT.md](PERSONAL_COCKPIT.md)**.
+- Widget Parameter `MY` renders the cross-series **MY RACE DAY** cockpit.
+- Run `Motorsport Hub` inside Scriptable and choose **⚙ PERSONAL CONFIG** to change category order, horizon and detail toggles.
+- `CONFIG` is also a recognized utility parameter; as a home-screen widget it shows setup guidance rather than opening interactive controls.
+- The Router fetches the two owner-only personal utility modules from the same immutable Stable sourceRef and verifies their pinned SHA-256 + UTF-8 byte length before execution.
+- The cockpit reads existing category caches and the existing verified JP viewing-rights cache. It adds no live upstream API dependency.
+- Small / Medium / Large share the same normalized cache model.
 
-The first physical target is Medium. Small and Large use the same normalized cache model after Medium passes.
+Implementation and device-test details are in **[PERSONAL_COCKPIT.md](PERSONAL_COCKPIT.md)**.
 
 ## Reliability and updates
 
