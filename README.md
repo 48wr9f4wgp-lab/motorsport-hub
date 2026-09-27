@@ -4,7 +4,7 @@ Motorsport Hub is an iPhone home-screen motorsport widget system for [Scriptable
 
 ## Current status
 
-- Broad GA: **LIVE via the public GitHub repository (2026-09-27 JST)**.
+- Distribution intent: **PERSONAL-ONLY / NOT FOR PUBLIC DISTRIBUTION**. A brief GitHub Broad GA state on 2026-09-27 was later withdrawn by the owner.
 - Current Stable: **v9.5.34 / sequence 12**.
 - Stable source: immutable sourceRef `edff3d301033ada18134429fb6f4c9016c6653f6`.
 - Stable v9.5.31 WRC/SUPER GT hardening: **SUPER GT Small user-confirmed physical iPhone PASS on 2026-09-25 07:46 JST**.
@@ -18,9 +18,9 @@ Motorsport Hub is an iPhone home-screen motorsport widget system for [Scriptable
 
 Repository `main` can be newer than Stable. Loader v7 does not execute mutable `main` directly.
 
-## Install
+## Owner install / maintenance
 
-Start with **[INSTALL.md](INSTALL.md)**.
+This project is maintained for the owner's personal use. Start with **[INSTALL.md](INSTALL.md)**.
 
 Use `scriptable-loader-v7.js` as the installed production loader.
 
@@ -141,4 +141,4 @@ Motorsport Hub software source code is distributed under **Mozilla Public Licens
 
 Club Pulse is a separate product in its own repository; its migration/cutover from Motorsport Hub is complete. Historical migration controls remain documented in `CLUB_PULSE_MIGRATION.md`.
 
-Broad GA for exact Stable v9.5.34 is explicitly authorized and live through this public GitHub repository. Store submission, paid distribution, external analytics contracts, paid services and future Stable publications remain separate protected actions.
+Public distribution is not intended. Motorsport Hub is to remain owner-only. The repository is still technically public during the private-runtime migration because Loader v7 currently depends on public GitHub raw access; making the repository private before that migration would break the current runtime path. Store submission, paid distribution, external analytics contracts, paid services and future public distribution remain out of scope unless explicitly re-authorized.
