@@ -56,14 +56,16 @@ The v9.5.34 viewing-label device gate is **CLOSED / PASS**:
 - Dakar omission while `UNVERIFIED`: PASS;
 - no visible header crowding, truncation, alignment break or new vertical overflow.
 
-Run the remaining representative GA smoke:
+Representative exact-Stable smoke now has physical PASS for:
+- QA diagnostics: `12/12 LIVE — データ経路OK`;
+- exact immutable Stable source prefix: `edff3d301033`;
+- one Small, one Medium and one Large representative widget;
+- online refresh across all 12 category routes;
+- no visible startup, routing or clipping blocker in the validated surfaces.
 
+Remaining physical checks:
 - canonical Loader v7 fresh-install/copy path;
-- QA diagnostics;
-- one Small, one Medium and one Large widget;
-- online refresh;
-- LKG/offline recovery if runtime-sensitive behavior changed;
-- no visible startup, routing or clipping blocker.
+- LKG/offline recovery for the v9.5.34 runtime path.
 
 Physical-device evidence must be recorded as user-confirmed evidence.
 
@@ -106,7 +108,7 @@ v9.5.34 carries the JP viewing-rights snapshot verified on 2026-09-27. Rights ch
 
 Remaining hard path:
 
-1. perform the final representative exact-Stable GA smoke;
+1. close the remaining Loader v7 fresh-install/copy and offline/LKG physical checks;
 2. if `hero-live` changes before GA, revalidate credits again;
 3. obtain exact scoped owner authorization for the broad-GA distribution action/channel.
 

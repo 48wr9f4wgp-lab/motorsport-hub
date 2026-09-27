@@ -55,7 +55,11 @@ Hero Active Refresh #124 and Public Attribution #47 are successful. Current live
 - Stable v9.5.34 SUPER GT Small viewing-label omission: **PASS**.
 - Stable v9.5.34 Dakar Medium viewing-label omission while `UNVERIFIED`: **PASS**.
 - No visible viewing-label header crowding, truncation, standings misalignment or new vertical overflow in the validated cases.
-- Final representative exact-Stable GA smoke: **PENDING**.
+- Stable v9.5.34 QA diagnostics: **PASS — 12/12 LIVE / データ経路OK**.
+- Stable v9.5.34 online refresh: **PASS across all 12 QA routes**.
+- Exact immutable source prefix on device: **`edff3d301033`**.
+- No visible startup/routing/clipping blocker in the representative Small/Medium/Large + QA evidence.
+- Remaining exact-Stable GA smoke: **Loader v7 fresh-install/copy + offline/LKG recovery only**.
 
 ## Current decision
 
