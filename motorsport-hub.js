@@ -12,6 +12,7 @@ const ROUTER_SCHEMA=5;
 const CATEGORY_MANIFEST='F1,WEC,WRC,SUPERGT,MOTOGP,FDJ,D1GP,SUPERFORMULA,INDYCAR,NASCAR,GTWCEU,DAKAR,QA';
 const SOURCE_REF=String(globalThis.__MH_SOURCE_REF||'main');
 const INTEGRITY=globalThis.__MH_RELEASE_INTEGRITY||null;
+const REPO_IO=globalThis.__MH_REPO_IO||null;
 const VIEWING_FILE='viewing-rights-jp.json',VIEWING_SHA256='f6f7e1d353ab1f2db3b3f5a1dd5b8db225910114bce4ebb8bbd9b5c89065e3b9',VIEWING_BYTES=4414;
 const labels=['F1','WEC','WRC','SUPER GT','MotoGP','FDJ','D1GP','SUPER FORMULA','INDYCAR','NASCAR Cup','GTWC Europe','Dakar Rally','QA診断'];
 const params=['F1','WEC','WRC','SUPERGT','MOTOGP','FDJ','D1GP','SUPERFORMULA','INDYCAR','NASCAR','GTWCEU','DAKAR','QA'];
@@ -35,6 +36,11 @@ const ROUTES={
 
 const HERO_CHANNEL_SCHEMA=1,HERO_CHANNEL_BRANCH='hero-live',HERO_CHANNEL_TTL=15*60000,HERO_LARGE_CANVAS=1200,HERO_LARGE_FALLBACK_INSET=.96;
 const HERO_CHANNEL_BASE=`https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/${HERO_CHANNEL_BRANCH}/hero-channel`;
+const heroRoot=`https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/${HERO_CHANNEL_BRANCH}/`;
+const heroRepoPath=u=>{const x=String(u||'').split('?')[0];return x.startsWith(heroRoot)?x.slice(heroRoot.length):''};
+async function mhRepoText(ref,path,url,timeout=8,headers={}){if(REPO_IO&&typeof REPO_IO.text==='function')return await REPO_IO.text(ref,path,timeout);const r=new Request(url);r.timeoutInterval=timeout;r.headers=headers;return await r.loadString()}
+async function mhRepoJSON(ref,path,url,timeout=8,headers={}){if(REPO_IO&&typeof REPO_IO.json==='function')return await REPO_IO.json(ref,path,timeout);const r=new Request(url);r.timeoutInterval=timeout;r.headers=headers;return await r.loadJSON()}
+async function mhRepoImage(ref,path,url,timeout=10,headers={}){if(REPO_IO&&typeof REPO_IO.image==='function')return await REPO_IO.image(ref,path,timeout);const r=new Request(url);r.timeoutInterval=timeout;r.headers=headers;return await r.loadImage()}
 const HERO_CHANNEL_LICENSES=new Set(['CC BY 2.0','CC BY 4.0','CC BY-SA 2.0','CC BY-SA 3.0','CC BY-SA 4.0','CC0 1.0']);
 const heroSafe=v=>String(v||'').replace(/[^A-Za-z0-9._-]/g,'-').slice(0,100);
 const heroUrlOK=(u,cat)=>typeof u==='string'&&u.startsWith(`${HERO_CHANNEL_BASE}/assets/${cat}/`)&&/\.(?:jpg|jpeg|png)(?:\?|$)/i.test(u);
@@ -55,7 +61,7 @@ async function heroChannelManifest(){
  try{if(hfm.fileExists(p)){const q=JSON.parse(hfm.readString(p));if(validHeroChannel(q?.manifest))cached=q}}catch(_){cached=null}
  if(cached&&Date.now()-Number(cached.fetchedAt||0)<HERO_CHANNEL_TTL)return cached.manifest;
  if(globalThis.__MH_REMOTE_OFFLINE!==true){
-  try{const r=new Request(`${HERO_CHANNEL_BASE}/channel.json?t=${Math.floor(Date.now()/HERO_CHANNEL_TTL)}`);r.timeoutInterval=8;r.headers={'Cache-Control':'no-cache','User-Agent':'MotorsportHub-HeroChannel/1'};const m=await r.loadJSON();if(validHeroChannel(m)){try{hfm.writeString(p,JSON.stringify({fetchedAt:Date.now(),manifest:m}))}catch(_){}return m}}catch(_){}
+  try{const m=await mhRepoJSON(HERO_CHANNEL_BRANCH,'hero-channel/channel.json',`${HERO_CHANNEL_BASE}/channel.json?t=${Math.floor(Date.now()/HERO_CHANNEL_TTL)}`,8,{'Cache-Control':'no-cache','User-Agent':'MotorsportHub-HeroChannel/1'});if(validHeroChannel(m)){try{hfm.writeString(p,JSON.stringify({fetchedAt:Date.now(),manifest:m}))}catch(_){}return m}}catch(_){}
  }
  return cached?.manifest||null;
 }
@@ -79,7 +85,7 @@ async function loadHeroChannelImage(cat){
  if(cat==='QA')return null;const m=await heroChannelManifest(),e=m?.categories?.[cat];if(!validHeroEntry(e,cat))return null;
  const requested=config.widgetFamily==='small'?'small':config.widgetFamily==='large'?'large':'medium',fam=requested==='large'&&heroUrlOK(e.images?.large?.url,cat)?'large':requested==='large'?'medium':requested,u=e.images[fam].url,hfm=FileManager.local(),dir=hfm.documentsDirectory(),asset=heroSafe(e.assetId),p=hfm.joinPath(dir,`motorsport-hero-channel-v1-${cat}-${fam}-${asset}.jpg`),lkg=hfm.joinPath(dir,`motorsport-hero-channel-v1-${cat}-${fam}-lkg.jpg`);
  try{if(hfm.fileExists(p))return finishHeroChannelImage(hfm.readImage(p),fam)}catch(_){}
- if(globalThis.__MH_REMOTE_OFFLINE!==true){try{const r=new Request(`${u}?v=${encodeURIComponent(String(e.version))}`);r.timeoutInterval=10;r.headers={'Cache-Control':'no-cache','User-Agent':'MotorsportHub-HeroChannel/1'};const img=await r.loadImage();if(img){try{hfm.writeImage(p,img);hfm.writeImage(lkg,img)}catch(_){}return finishHeroChannelImage(img,fam)}}catch(_){} }
+ if(globalThis.__MH_REMOTE_OFFLINE!==true){try{const hp=heroRepoPath(u);if(REPO_IO&&!hp)throw Error('INVALID_HERO_PATH');const img=await mhRepoImage(HERO_CHANNEL_BRANCH,hp,`${u}?v=${encodeURIComponent(String(e.version))}`,10,{'Cache-Control':'no-cache','User-Agent':'MotorsportHub-HeroChannel/1'});if(img){try{hfm.writeImage(p,img);hfm.writeImage(lkg,img)}catch(_){}return finishHeroChannelImage(img,fam)}}catch(_){} }
  try{if(hfm.fileExists(lkg))return finishHeroChannelImage(hfm.readImage(lkg),fam)}catch(_){}
  return null;
 }
@@ -135,7 +141,7 @@ async function loadViewingRights(cat){
  const parse=raw=>{if(typeof raw!=='string'||utf8Bytes(raw).length!==VIEWING_BYTES||sha256Hex(raw)!==VIEWING_SHA256)return null;try{return selectViewing(JSON.parse(raw),cat)}catch(_){return null}};
  try{if(vfm.fileExists(vp)){const raw=vfm.readString(vp),entry=parse(raw);if(entry||validViewingManifest(JSON.parse(raw)))return entry;vfm.remove(vp)}}catch(_){}
  if(globalThis.__MH_REMOTE_OFFLINE===true)return null;
- try{const r=new Request(`https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/${SOURCE_REF}/${VIEWING_FILE}?v=${VIEWING_SHA256.slice(0,12)}`);r.timeoutInterval=8;r.headers={'Cache-Control':'no-cache','User-Agent':'MotorsportHub-ViewingRights/1'};const raw=await r.loadString();if(utf8Bytes(raw).length!==VIEWING_BYTES||sha256Hex(raw)!==VIEWING_SHA256)return null;const manifest=JSON.parse(raw);if(!validViewingManifest(manifest))return null;try{vfm.writeString(vp,raw)}catch(_){}return selectViewing(manifest,cat)}catch(_){return null}
+ try{const raw=await mhRepoText(SOURCE_REF,VIEWING_FILE,`https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/${SOURCE_REF}/${VIEWING_FILE}?v=${VIEWING_SHA256.slice(0,12)}`,8,{'Cache-Control':'no-cache','User-Agent':'MotorsportHub-ViewingRights/1'});if(utf8Bytes(raw).length!==VIEWING_BYTES||sha256Hex(raw)!==VIEWING_SHA256)return null;const manifest=JSON.parse(raw);if(!validViewingManifest(manifest))return null;try{vfm.writeString(vp,raw)}catch(_){}return selectViewing(manifest,cat)}catch(_){return null}
 }
 
 const rawParameter=String(args.widgetParameter||args.queryParameters?.mhCategory||'').trim();let selected=norm(rawParameter);selected=aliases[selected]||selected;
@@ -166,7 +172,7 @@ async function fail(){await messageWidget('Motorsport Hub','最新版モジュ�
 if(!integrityConfigOK){await fail();return}
 
 let code='';
-if(globalThis.__MH_REMOTE_OFFLINE!==true){try{const r=new Request(`${URL}?v=953&t=${Date.now()}-${Math.random()}`);r.timeoutInterval=15;r.headers={'Cache-Control':'no-cache, no-store, max-age=0, must-revalidate','Pragma':'no-cache','Expires':'0','User-Agent':'MotorsportHubRouter/9.5.3-hardening'};code=await r.loadString();if(!valid(code))throw Error('invalid module');fm.writeString(cache,code)}catch(e){globalThis.__MH_REMOTE_OFFLINE=true}}
+if(globalThis.__MH_REMOTE_OFFLINE!==true){try{code=await mhRepoText(SOURCE_REF,route.file,`${URL}?v=953&t=${Date.now()}-${Math.random()}`,15,{'Cache-Control':'no-cache, no-store, max-age=0, must-revalidate','Pragma':'no-cache','Expires':'0','User-Agent':'MotorsportHubRouter/9.5.3-hardening'});if(!valid(code))throw Error('invalid module');fm.writeString(cache,code)}catch(e){globalThis.__MH_REMOTE_OFFLINE=true}}
 if(!valid(code)){try{if(fm.fileExists(cache)){const c=fm.readString(cache);if(valid(c))code=c;else fm.remove(cache)}}catch(_){} }
 if(!valid(code)){await fail();return}
 try{const vr=await loadViewingRights(selected);if(vr)globalThis.__MH_VIEWING_JP=vr}catch(_){}
