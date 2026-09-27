@@ -50,7 +50,7 @@ The Router pins their exact SHA-256 + UTF-8 byte length and only loads them from
 
 ## Remaining hard gates
 
-1. physical MY Large validation;
+1. resolve MY Large count/status logic found in physical evidence;
 2. offline MY validation after at least one successful online load.
 
 ## Decision
@@ -73,3 +73,13 @@ Automation evidence is green and Stable v9.5.36 is published via PR #72. Persona
 - Single-event glanceable layout works as intended.
 - No obvious clipping/overflow observed.
 - Remaining Personal Cockpit gates: Large + offline.
+
+
+## MY Large / offline CONFIG evidence — 2026-09-27
+
+- MY Large visual/layout: PASS.
+- Six rows fit cleanly with no obvious clipping/overflow.
+- Header count semantics need correction: 8 total events vs 6 visible rows.
+- Cached ACTIVE status can outlive a known race-duration window; WEC Fuji exposed this.
+- Airplane-mode CONFIG: PASS, demonstrating personal utility local fallback.
+- Offline MY widget: not yet verified.
