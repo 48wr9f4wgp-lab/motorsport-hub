@@ -39,9 +39,9 @@ Club Pulse is preserved in its dedicated repository, its migration/cutover is co
 
 ### 2. Public Hero attribution publication
 
-**VERIFIED / REVALIDATE AT GA.**
+**VERIFIED / CURRENT LIVE POOL REVALIDATED 2026-09-27 JST.**
 
-The current Hero pipeline publishes machine-readable source/license metadata and human-readable attribution on `hero-live`. Hero Active Refresh #124 and downstream Public Attribution #47 were successful. Revalidate the then-current live pool immediately before broad GA.
+The current Hero pipeline publishes machine-readable source/license metadata and human-readable attribution on `hero-live`. Hero Active Refresh #124 and downstream Public Attribution #47 were successful. Current `hero-live` head `7bd8e3e4fcf616b90fbded4911ac0ec8000ad225` was revalidated on 2026-09-27 JST: `channel.json` and `ATTRIBUTION.md` share generation timestamp `2026-09-26T11:34:17.941Z`, the current live entries carry source/author/license metadata, and the human-readable attribution reports 12 credited pool assets.
 
 ## Must be resolved before broad GA
 
@@ -106,7 +106,8 @@ v9.5.34 carries the JP viewing-rights snapshot verified on 2026-09-27. Rights ch
 
 Remaining hard path:
 
-1. perform the final representative exact-Stable GA smoke and revalidate current live Hero credits;
-2. obtain exact scoped owner authorization for the broad-GA distribution action/channel.
+1. perform the final representative exact-Stable GA smoke;
+2. if `hero-live` changes before GA, revalidate credits again;
+3. obtain exact scoped owner authorization for the broad-GA distribution action/channel.
 
 No Store submission, paid distribution, broad public launch, external analytics contract or later Stable publication is authorized by this document.
