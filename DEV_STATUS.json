@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "phase": "Stable v9.5.37 / PERSONAL-ONLY / MY Large+offline physical revalidation pending",
+  "phase": "Stable v9.5.37 / PERSONAL-ONLY / Personal Cockpit v1 COMPLETE",
   "checks": {
     "boot": "ok",
     "test": "ok",
@@ -10,8 +10,8 @@
     "performance": "warn",
     "release": "ok"
   },
-  "next": "MY Largeの件数/終了判定を再確認→機内モードMYを実機確認",
-  "note": "JP視聴プラットフォームv1はiPhone実機PASS。SUPER GT Medium/Largeで視聴 J SPORTS表示、Small非表示、Dakar Medium非表示、レイアウト回帰なし。Broad GAは別Gate。 Hero creditsはhero-live 7bd8e3e4fcfで2026-09-27再検証済み。 QA 12/12 LIVE、online refresh、exact Stable edff3d301033、代表UIの重大表示blockerなしを実機確認済み。 機内モードでSUPER GT Mediumが更新待ち付きで正常描画し、offline/LKG recovery PASS。 Loader v7 copy-pathも複製Scriptableから12/12 LIVE・edff3d301033を実機確認し、代表GA smoke完走。 2026-09-27 exact Stable v9.5.34をpublic GitHub repository経由でBroad GA承認・実行。Store/有料配布/外部analytics/契約は対象外。 Current controlling decision: public distribution withdrawn; owner-only personal use. Earlier GitHub Broad GA is historical only. v9.5.35 RC #311 PASS; private transport foundation ready. Publication approval is separate. Personal Config v1 + MY RACE DAY sidecar implemented on main-candidate path; Stable Router/runtime untouched. Sidecar install model superseded: MY and CONFIG are now integrated Router utility routes with pinned personal-module integrity. v9.5.36 RC #319 PASS; integrated single-script MY+CONFIG ready. Stable v9.5.36 publication completed via PR #72. 2026-09-27 physical iPhone: MY Medium rendered cross-series events successfully; CONFIG picker opened from the same Motorsport Hub script with 12カテゴリ/14日 and all expected controls. CONFIG flow PASS. 2026-09-27 physical iPhone: MY Small PASS. Single highest-priority event visible with category, event name, date, venue, live state and viewing platform; no obvious clipping/overflow. 2026-09-27 physical iPhone: MY Large visual/layout PASS. Screenshot showed 8 EVENTS while six rows render, so count labeling needs refinement. WEC remained 開催中 after its expected finish, so MY status logic should prefer explicit/inferred event end over cached lifecycle. Airplane-mode CONFIG reopened successfully, proving personal utility local fallback for CONFIG; offline MY widget itself remains pending. v9.5.37 published via PR #78; MY Large+offline physical revalidation pending.",
+  "next": "Personal Cockpitは完成維持。次の専用機能候補を選定",
+  "note": "JP視聴プラットフォームv1はiPhone実機PASS。SUPER GT Medium/Largeで視聴 J SPORTS表示、Small非表示、Dakar Medium非表示、レイアウト回帰なし。Broad GAは別Gate。 Hero creditsはhero-live 7bd8e3e4fcfで2026-09-27再検証済み。 QA 12/12 LIVE、online refresh、exact Stable edff3d301033、代表UIの重大表示blockerなしを実機確認済み。 機内モードでSUPER GT Mediumが更新待ち付きで正常描画し、offline/LKG recovery PASS。 Loader v7 copy-pathも複製Scriptableから12/12 LIVE・edff3d301033を実機確認し、代表GA smoke完走。 2026-09-27 exact Stable v9.5.34をpublic GitHub repository経由でBroad GA承認・実行。Store/有料配布/外部analytics/契約は対象外。 Current controlling decision: public distribution withdrawn; owner-only personal use. Earlier GitHub Broad GA is historical only. v9.5.35 RC #311 PASS; private transport foundation ready. Publication approval is separate. Personal Config v1 + MY RACE DAY sidecar implemented on main-candidate path; Stable Router/runtime untouched. Sidecar install model superseded: MY and CONFIG are now integrated Router utility routes with pinned personal-module integrity. v9.5.36 RC #319 PASS; integrated single-script MY+CONFIG ready. Stable v9.5.36 publication completed via PR #72. 2026-09-27 physical iPhone: MY Medium rendered cross-series events successfully; CONFIG picker opened from the same Motorsport Hub script with 12カテゴリ/14日 and all expected controls. CONFIG flow PASS. 2026-09-27 physical iPhone: MY Small PASS. Single highest-priority event visible with category, event name, date, venue, live state and viewing platform; no obvious clipping/overflow. 2026-09-27 physical iPhone: MY Large visual/layout PASS. Screenshot showed 8 EVENTS while six rows render, so count labeling needs refinement. WEC remained 開催中 after its expected finish, so MY status logic should prefer explicit/inferred event end over cached lifecycle. Airplane-mode CONFIG reopened successfully, proving personal utility local fallback for CONFIG; offline MY widget itself remains pending. v9.5.37 published via PR #78; MY Large+offline physical revalidation pending. Final v9.5.37 physical evidence: MY Large showed 6 / 7 EVENTS, WEC stale-active row absent, airplane-mode MY rendered successfully. F1 'Bahrain Grand Prix in Malaysia' at Sepang was externally rechecked against official Formula 1/FIA current sources and is valid.",
   "updated_at": "2026-09-27",
   "stable": {
     "version": "9.5.37",
@@ -41,7 +41,7 @@
     "next_gate": "physical authenticated online + offline/LKG validation"
   },
   "personal_cockpit": {
-    "status": "V9.5.37_STABLE_PUBLISHED_REVALIDATION_PENDING",
+    "status": "COMPLETE_PHYSICAL_PASS",
     "user_script": "Motorsport Hub",
     "parameters": {
       "race_day": "MY",
@@ -58,7 +58,7 @@
     },
     "extra_user_installed_scripts": 0,
     "network_requests_from_cockpit": 0,
-    "physical_validation": "PARTIAL_PASS",
+    "physical_validation": "PASS",
     "release_candidate": {
       "run": 330,
       "run_id": 36308093798,
@@ -67,8 +67,9 @@
     "config_flow": "PASS",
     "medium": "PASS",
     "small": "PASS",
-    "large": "REVALIDATION_PENDING",
-    "offline": "PENDING",
-    "offline_config": "PASS"
+    "large": "PASS",
+    "offline": "PASS",
+    "offline_config": "PASS",
+    "f1_event_identity": "VERIFIED_OFFICIAL"
   }
 }
