@@ -46,9 +46,18 @@ Physical evidence exposed two logic issues:
 
 ## Remaining hard gates
 
-1. physical MY Large revalidation;
-2. offline MY widget validation.
+No remaining Personal Cockpit physical gates.
 
 ## Decision
 
-Stable v9.5.37 is published via PR #78. Personal Cockpit must not be called fully verified until Large revalidation and offline MY pass.
+Stable v9.5.37 Personal Cockpit physical validation is complete: Medium / CONFIG / Small / Large / offline MY all PASS. A separate F1 event-identity audit remains open.
+
+
+## Final Personal Cockpit physical evidence — 2026-09-27
+
+- MY Large revalidation: PASS.
+- `6 / 7 EVENTS` correctly matched six visible rows out of seven eligible events.
+- WEC Fuji stale-active row was removed after the v9.5.37 end-window fix.
+- Offline MY widget: PASS while airplane mode was visibly active.
+- Personal Cockpit physical gate: COMPLETE / PASS.
+- Separate data-quality issue candidate: F1 `Bahrain Grand Prix in Malaysia` at Sepang. This is not treated as a cockpit-layout failure; F1 source/cache identity needs focused verification.
