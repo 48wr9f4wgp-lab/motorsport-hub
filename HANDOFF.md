@@ -5,12 +5,15 @@ Scope: title-local / iPhone Scriptable non-game product.
 
 ## WORKING_HEAD / VERIFIED_BASELINE / RECOVERY_STATE
 
-- Stable diagnostics target: **v9.5.33 / sequence 11**, sourceRef `95d85043045bd7942f9e72b960249649e637aee3`.
-- Validation releaseRef: `953f214de44b9dc986f553071f9c9339cc1298e2`; RC #292 / run `36280879979` SUCCESS.
-- Current hero-live observed before publication prep: `7bd8e3e4fcf616b90fbded4911ac0ec8000ad225`.
-- Hero production recovery: Active Refresh #124 SUCCESS; Public Attribution #47 SUCCESS.
-- Live Parser Monitor #94 first attempt hit transient SUPER GT/D1GP TIMEOUTs; failed-job rerun returned **12/12 PASS**, including Dakar.
+- Integrated feature source / Stable sourceRef: `edff3d301033ada18134429fb6f4c9016c6653f6` (PR #59 merged).
+- Stable target/publication: **v9.5.34 / sequence 12**.
+- Validation releaseRef: `45eb720a53438e2dbcd6e01be7529a90f4bea275`; RC **#299 / 36285958234 SUCCESS**.
+- Immutable RC artifact: `motorsport-hub-release-45eb720a53438e2dbcd6e01be7529a90f4bea275`.
+- Artifact digest: `sha256:765563cf124673f55f888faec97cd11c1c1d6e49571435e4f307083af59c6def`.
+- Validation ref differs from sourceRef only by `.release/v9.5.34.md`.
+- Current hero-live known head: `7bd8e3e4fcf616b90fbded4911ac0ec8000ad225`.
 - Legacy draft PR #2 remains obsolete/separate; do not merge it into current release work.
+- No known uncommitted/unpushed/local recovery artifact is required for PR #59 work.
 
 ## LOCKED PRODUCT CONTRACT
 
@@ -19,34 +22,48 @@ Scope: title-local / iPhone Scriptable non-game product.
 - Router schema 5; category cache schema 1; 12 categories + QA; Small/Medium/Large.
 - Visual v1 locked except concrete regression/material improvement.
 - MPL-2.0 software license; third-party Hero licenses remain separate.
-- Club Pulse is separate repo/product.
+- Club Pulse is a separate repo/product.
 - Local observability only; no automatic external analytics.
-- No new user-facing schedule/monitor automations unless explicitly requested.
-- Broad GA/public distribution is NOT AUTHORIZED.
+- Viewing-platform region v1 = JP.
+- Viewing rights fail closed when invalid/stale/unverified/wrong-region/season-mismatched.
+- Small never shows viewing labels in v1.
+- Medium/Large use compact standings-header `視聴 <platform>`; no new vertical row.
+- Dakar 2027 viewing label remains hidden while Japan rights are `UNVERIFIED`.
+- Broad GA/public distribution remains a separate exact-scope protected action.
 
 ## VERIFIED PRODUCT EVIDENCE
 
-- v9.5.31 SUPER GT Small black-widget repair: user-confirmed physical iPhone PASS.
-- v9.5.30 WEC Fuji 11:00 + Dakar GAP/index fixes: scoped historical physical PASS.
-- PR #55 Dakar live parser repair: deterministic CI PASS and live 12/12 PASS.
-- v9.5.32 candidate RC #288: SUCCESS.
-- Hero refresh and attribution workflows: production SUCCESS after PR #55.
+- Stable v9.5.31 SUPER GT Small black-widget repair: physical iPhone PASS.
+- Stable v9.5.30 WEC Fuji 11:00 + Dakar GAP/index fixes: scoped physical PASS.
+- Stable v9.5.33 Dakar production-equivalent QA: physical iPhone PASS, `R155 C80 P5 T80 G5 V1`.
+- Stable v9.5.33 Dakar Medium fresh-data render: PASS, `更新待ち` absent.
+- PR #59 automated evidence: Hardening #539 SUCCESS; RC #297 SUCCESS; Live Parser Monitor #100 deterministic SUCCESS; 36-case render smoke PASS.
+- v9.5.34 immutable RC: **#299 / 36285958234 SUCCESS**.
+
+## CURRENT FEATURE STATE
+
+JP viewing-platform runtime is implemented and Stable-packaged:
+
+- exact immutable `viewing-rights-jp.json`;
+- Router pins rights SHA-256 + UTF-8 byte length;
+- Medium/Large compact verified label;
+- Small omitted;
+- Dakar 2027 omitted while UNVERIFIED;
+- offline/no-cache rights path safely omits the label.
+
+The visible v9.5.34 label change is **not yet physically validated**, so the feature is not called complete.
 
 ## REMAINING
 
-1. Publish v9.5.32 only after explicit Stable approval.
-2. Confirm Dakar fresh-data path on physical iPhone after promotion; `更新待ち` should not be treated as fresh PASS.
-3. Run final representative exact-Stable GA smoke: Loader v7 path, QA, Small/Medium/Large, online refresh and relevant recovery.
-4. Revalidate current live Hero credits at GA time.
-5. Broad GA requires explicit owner approval and named distribution action/channel.
-6. Support observability export Share Sheet remains optional/unverified.
-7. Actual Dakar 2027 live standings/parser remains unverified until that upstream exists.
+1. On physical iPhone, confirm at least one Medium verified label.
+2. Confirm at least one Large verified label.
+3. Confirm Small is unchanged / no viewing label.
+4. Confirm Dakar remains hidden while `UNVERIFIED`.
+5. Confirm no header crowding, truncation, standings misalignment or new vertical overflow.
+6. Run final representative exact-Stable GA smoke and revalidate current Hero credits.
+7. Broad GA requires separate exact Stable + destination/action approval.
+8. Actual Dakar 2027 live standings/parser and Japan rights remain unverified until current upstream evidence exists.
 
 ## NEXT
 
-After v9.5.32 device confirmation, resume Japan viewing-platform specification:
-`region + season/event + platforms + verifiedAt + official source + expiry`, fail closed when unverified/stale. Avoid adding viewing data to Small until width safety is demonstrated.
-
-## v9.5.33 DIAGNOSTIC PURPOSE
-
-QA DAKAR reports production-equivalent parser counters `R/C/P/T/G/V`. The production Dakar widget itself is unchanged. After Stable promotion, capture one physical-iPhone QA screenshot and use the counters to locate the failing parser stage before any additional runtime fix.
+Physical iPhone validation of Stable v9.5.34 viewing-platform UI. Do not call the feature complete until that evidence passes.
