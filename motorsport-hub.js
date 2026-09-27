@@ -12,6 +12,7 @@ const ROUTER_SCHEMA=5;
 const CATEGORY_MANIFEST='F1,WEC,WRC,SUPERGT,MOTOGP,FDJ,D1GP,SUPERFORMULA,INDYCAR,NASCAR,GTWCEU,DAKAR,QA';
 const SOURCE_REF=String(globalThis.__MH_SOURCE_REF||'main');
 const INTEGRITY=globalThis.__MH_RELEASE_INTEGRITY||null;
+const VIEWING_FILE='viewing-rights-jp.json',VIEWING_SHA256='f6f7e1d353ab1f2db3b3f5a1dd5b8db225910114bce4ebb8bbd9b5c89065e3b9',VIEWING_BYTES=4414;
 const labels=['F1','WEC','WRC','SUPER GT','MotoGP','FDJ','D1GP','SUPER FORMULA','INDYCAR','NASCAR Cup','GTWC Europe','Dakar Rally','QA診断'];
 const params=['F1','WEC','WRC','SUPERGT','MOTOGP','FDJ','D1GP','SUPERFORMULA','INDYCAR','NASCAR','GTWCEU','DAKAR','QA'];
 const norm=v=>String(v||'').trim().toUpperCase().replace(/[\s_-]+/g,'');
@@ -116,6 +117,26 @@ function sha256Hex(text){
  return H.map(x=>('00000000'+(x>>>0).toString(16)).slice(-8)).join('');
 }
 const syntaxOK=s=>{try{new Function(String(s||''));return true}catch(_){return false}};
+function validViewingManifest(m){
+ if(!m||m.schemaVersion!==1||m.region!=='JP'||m.policy!=='OFFICIAL_SOURCE_FAIL_CLOSED'||!m.categories||typeof m.categories!=='object')return false;
+ const v=Date.parse(m.verifiedAt||'');if(!Number.isFinite(v)||v>Date.now()+86400000)return false;
+ return true;
+}
+function selectViewing(m,cat){
+ if(!validViewingManifest(m))return null;const e=m.categories?.[cat];
+ if(!e||e.category!==cat||e.status!=='VERIFIED'||!Number.isInteger(e.season))return null;
+ if(!String(e.label||'').trim()||String(e.label).length>20||!Array.isArray(e.platforms)||!e.platforms.length)return null;
+ if(!String(e.source||'').startsWith('https://'))return null;
+ const until=Date.parse(e.validUntil||'');if(!Number.isFinite(until)||Date.now()>until)return null;
+ return{category:cat,season:e.season,label:String(e.label),platforms:e.platforms.slice(0,8).map(String),coverage:String(e.coverage||''),source:String(e.source),verifiedAt:String(m.verifiedAt),validUntil:String(e.validUntil)};
+}
+async function loadViewingRights(cat){
+ if(cat==='QA')return null;const vfm=FileManager.local(),vp=vfm.joinPath(vfm.documentsDirectory(),`motorsport-viewing-jp-${VIEWING_SHA256.slice(0,12)}.json`);
+ const parse=raw=>{if(typeof raw!=='string'||utf8Bytes(raw).length!==VIEWING_BYTES||sha256Hex(raw)!==VIEWING_SHA256)return null;try{return selectViewing(JSON.parse(raw),cat)}catch(_){return null}};
+ try{if(vfm.fileExists(vp)){const raw=vfm.readString(vp),entry=parse(raw);if(entry||validViewingManifest(JSON.parse(raw)))return entry;vfm.remove(vp)}}catch(_){}
+ if(globalThis.__MH_REMOTE_OFFLINE===true)return null;
+ try{const r=new Request(`https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/${SOURCE_REF}/${VIEWING_FILE}?v=${VIEWING_SHA256.slice(0,12)}`);r.timeoutInterval=8;r.headers={'Cache-Control':'no-cache','User-Agent':'MotorsportHub-ViewingRights/1'};const raw=await r.loadString();if(utf8Bytes(raw).length!==VIEWING_BYTES||sha256Hex(raw)!==VIEWING_SHA256)return null;const manifest=JSON.parse(raw);if(!validViewingManifest(manifest))return null;try{vfm.writeString(vp,raw)}catch(_){}return selectViewing(manifest,cat)}catch(_){return null}
+}
 
 const rawParameter=String(args.widgetParameter||args.queryParameters?.mhCategory||'').trim();let selected=norm(rawParameter);selected=aliases[selected]||selected;
 globalThis.__MH_ROUTER_SCHEMA=ROUTER_SCHEMA;globalThis.__MH_ROUTER_MANIFEST=CATEGORY_MANIFEST;
@@ -148,8 +169,9 @@ let code='';
 if(globalThis.__MH_REMOTE_OFFLINE!==true){try{const r=new Request(`${URL}?v=953&t=${Date.now()}-${Math.random()}`);r.timeoutInterval=15;r.headers={'Cache-Control':'no-cache, no-store, max-age=0, must-revalidate','Pragma':'no-cache','Expires':'0','User-Agent':'MotorsportHubRouter/9.5.3-hardening'};code=await r.loadString();if(!valid(code))throw Error('invalid module');fm.writeString(cache,code)}catch(e){globalThis.__MH_REMOTE_OFFLINE=true}}
 if(!valid(code)){try{if(fm.fileExists(cache)){const c=fm.readString(cache);if(valid(c))code=c;else fm.remove(cache)}}catch(_){} }
 if(!valid(code)){await fail();return}
+try{const vr=await loadViewingRights(selected);if(vr)globalThis.__MH_VIEWING_JP=vr}catch(_){}
 try{const hi=await loadHeroChannelImage(selected);if(hi)globalThis.__MH_HERO_OVERRIDE_IMAGE=hi}catch(_){}
 globalThis.__MH_ROUTER_BOOT_OK=true;
 try{await eval(code)}catch(e){await fail()}
-finally{try{delete globalThis.__MH_HERO_OVERRIDE_IMAGE}catch(_){}try{delete globalThis.__MH_REMOTE_OFFLINE}catch(_){} }
+finally{try{delete globalThis.__MH_VIEWING_JP}catch(_){}try{delete globalThis.__MH_HERO_OVERRIDE_IMAGE}catch(_){}try{delete globalThis.__MH_REMOTE_OFFLINE}catch(_){} }
 })();
