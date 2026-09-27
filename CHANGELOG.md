@@ -1,5 +1,17 @@
 # Changelog
 
+## v9.5.37 — Personal Cockpit status/count fix
+
+- Stable sequence: **15**.
+- Stable sourceRef: `1d331a79bebf55579242be40969061f788bd5182`.
+- Large MY header reports visible / total rows when the event list exceeds the six-row Large cap.
+- MY status prefers explicit/inferred event-end windows over stale cached `lifecycle=ACTIVE`.
+- WEC end time is inferred from the race-name duration where available; ended events are removed from MY Race Day.
+- Existing 12-category module hashes and category manifest remain unchanged.
+- Loader v7 remains canonical; repository visibility is unchanged.
+- Release Candidate validation: **#330 / 36308093798 SUCCESS**.
+- Physical revalidation after promotion: MY Large + offline MY.
+
 ## v9.5.36 — Integrated Personal Cockpit
 
 - Stable sequence: **14**.
