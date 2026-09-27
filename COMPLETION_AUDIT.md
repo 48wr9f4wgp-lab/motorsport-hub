@@ -50,12 +50,19 @@ The Router pins their exact SHA-256 + UTF-8 byte length and only loads them from
 
 ## Remaining hard gates
 
-1. physical MY Medium validation;
-2. physical CONFIG flow validation;
-3. physical MY Small validation;
-4. physical MY Large validation;
-5. offline MY validation after at least one successful online load.
+1. physical MY Small validation;
+2. physical MY Large validation;
+3. offline MY validation after at least one successful online load.
 
 ## Decision
 
 Automation evidence is green and Stable v9.5.36 is published via PR #72. Personal Cockpit must not be called physically complete until the remaining device gates pass.
+
+
+## New physical evidence — 2026-09-27
+
+- MY Medium: PASS.
+- CONFIG flow from the same Motorsport Hub Scriptable: PASS.
+- Current config summary: 12カテゴリ / 14日.
+- No obvious Medium clipping/overflow observed.
+- Personal Cockpit remains PARTIAL PASS until Small / Large / offline checks complete.
