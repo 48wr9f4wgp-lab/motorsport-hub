@@ -1,5 +1,19 @@
 # Changelog
 
+## v9.5.36 — Integrated Personal Cockpit
+
+- Stable sequence: **14**.
+- Stable sourceRef: `e6f92c73630da329c581d169b76f9d94e33378c8`.
+- Adds Router utility Parameter `MY` for **MY RACE DAY**.
+- Adds Router utility Parameter `CONFIG` for Personal Config; interactive settings are chosen while running the existing Motorsport Hub script inside Scriptable.
+- Aliases: `RACEDAY`, `MYRACEDAY`, `SETTINGS`.
+- No second user-installed Scriptable is required.
+- Existing 12-category manifest and category module hashes remain unchanged.
+- Internal personal modules are loaded from the exact immutable Stable sourceRef and Router-verified by pinned SHA-256 + UTF-8 byte length.
+- MY RACE DAY itself adds no live upstream request; it consumes existing category caches and verified JP viewing-rights cache.
+- Release Candidate validation: **#319 / 36304630990 SUCCESS**.
+- Physical Medium / Small / Large and config-flow validation: **PENDING**.
+
 ## v9.5.35 — Personal / private runtime foundation
 
 - Stable sequence: **13**.

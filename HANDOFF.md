@@ -9,9 +9,9 @@ Scope: title-local / iPhone Scriptable non-game product.
 - PUBLIC_DISTRIBUTION_DECISION: **NO**
 - BROAD_GA_STATUS: **WITHDRAWN**
 - REPOSITORY_PRIVATE_MIGRATION: **PENDING**
-- Stable publication target: **v9.5.35 / sequence 13**
-- Stable sourceRef target: `7bfd260947ca091376b4e7c033661ecfcb94ffed`
-- Validation ref: `b259908a986be695bc9a382249a6ccac85ab02c5`; RC #311 / `36299105721` SUCCESS
+- Stable publication target: **v9.5.36 / sequence 14**
+- Stable sourceRef target: `e6f92c73630da329c581d169b76f9d94e33378c8`
+- Validation ref: `99afe7a4311eb3c9d3480728d685cd4151860bba`; RC #319 / `36304630990` SUCCESS
 
 The owner's latest instruction supersedes the earlier GitHub Broad GA approval. The product is not to be publicly distributed.
 
@@ -86,6 +86,6 @@ Stable v9.5.35 is published. Private repo migration remains paused by choice whi
 - viewing source: existing local verified JP viewing-rights cache.
 - cockpit network behavior: no new external requests.
 - layouts: Small / Medium / Large.
-- current Stable v9.5.35 does **not yet expose MY/CONFIG**; integration is a main candidate for the next Stable.
+- v9.5.36 publication target exposes `MY` / `CONFIG` through the existing Motorsport Hub Router; Stable merge is still pending explicit approval.
 - physical state: **PENDING**.
-- first device target after next Stable promotion: Medium visual/density/content validation.
+- first device target after v9.5.36 promotion: Medium visual/density/content validation, then Small / Large and CONFIG flow.
