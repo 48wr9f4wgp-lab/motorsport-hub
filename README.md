@@ -4,12 +4,12 @@ Motorsport Hub is an iPhone home-screen motorsport widget system for [Scriptable
 
 ## Current status
 
-- Public Release Candidate: **approved**.
+- Broad GA: **LIVE via the public GitHub repository (2026-09-27 JST)**.
 - Current Stable: **v9.5.34 / sequence 12**.
 - Stable source: immutable sourceRef `edff3d301033ada18134429fb6f4c9016c6653f6`.
 - Stable v9.5.31 WRC/SUPER GT hardening: **SUPER GT Small user-confirmed physical iPhone PASS on 2026-09-25 07:46 JST**.
 - Stable v9.5.33 Dakar verification: **physical iPhone PASS on 2026-09-27**; QA production-equivalent diagnostic reported `R155 C80 P5 T80 G5 V1`, and Dakar Medium rendered fresh data without `更新待ち`.
-- Stable v9.5.34 JP viewing-platform labels: **RC #299 / 36285958234 SUCCESS**; Medium/Large visible-label physical iPhone validation remains pending.
+- Stable v9.5.34 JP viewing-platform labels: **RC #299 / 36285958234 SUCCESS + physical iPhone PASS**; representative exact-Stable GA smoke also PASS.
 - Hero refresh recovery: scheduled Hero Active Refresh #124 and downstream Public Attribution #47 both **SUCCESS** on 2026-09-26.
 - Production surface: **12 categories + QA diagnostics**.
 - Installed production loader: **`scriptable-loader-v7.js`**.
@@ -141,4 +141,4 @@ Motorsport Hub software source code is distributed under **Mozilla Public Licens
 
 Club Pulse is a separate product in its own repository; its migration/cutover from Motorsport Hub is complete. Historical migration controls remain documented in `CLUB_PULSE_MIGRATION.md`.
 
-No Store submission, paid distribution, broad public launch, external analytics contract, or Stable publication is authorized merely because CI is green.
+Broad GA for exact Stable v9.5.34 is explicitly authorized and live through this public GitHub repository. Store submission, paid distribution, external analytics contracts, paid services and future Stable publications remain separate protected actions.

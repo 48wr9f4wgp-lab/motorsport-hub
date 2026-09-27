@@ -81,9 +81,16 @@ Physical-device evidence must be recorded as user-confirmed evidence.
 
 ### 4. Explicit GA/public-distribution approval
 
-**BLOCKER by project policy.**
+**RESOLVED / EXECUTED 2026-09-27 JST.**
 
-The owner approved the current v9.5.34 Stable publication path on 2026-09-27. That does not by itself satisfy the separate scoped broad-GA approval requirement because broad GA must match an exact validated Stable, distribution channel and action after the final physical smoke.
+The owner explicitly authorized Broad GA after the representative exact-Stable smoke completed. Scope is fixed to:
+- product: Motorsport Hub;
+- Stable: **v9.5.34 / sequence 12**;
+- sourceRef: `edff3d301033ada18134429fb6f4c9016c6653f6`;
+- destination: public GitHub repository `48wr9f4wgp-lab/motorsport-hub`;
+- action: make the validated Stable and its existing self-service install/support path the official broad-public GA distribution route.
+
+This approval does **not** include App Store submission, paid distribution, external analytics contracts, paid services or future Stable publications.
 
 ## Should be completed before or at GA
 
@@ -110,15 +117,17 @@ v9.5.34 carries the JP viewing-rights snapshot verified on 2026-09-27. Rights ch
 
 ## Current GA decision
 
-**Runtime maturity: GA-capable candidate.**
+**Runtime maturity: GA / publicly available via GitHub.**
 
 **Software-license decision: APPROVED — MPL-2.0.**
 
-**Broad GA authorization: NOT YET.**
+**Broad GA authorization: APPROVED — GITHUB PUBLIC REPOSITORY.**
 
-Remaining hard path:
+Broad GA hard gates are complete for v9.5.34.
 
-1. if `hero-live` changes before GA, revalidate credits again;
-2. obtain exact scoped owner authorization for the broad-GA distribution action/channel.
+Post-GA rule:
+1. if `hero-live` changes, keep attribution synchronized;
+2. rights/source/parser drift is handled as maintenance evidence, not silently ignored;
+3. future Stable publication, Store submission, paid distribution, external analytics or contracts require their own approval.
 
-No Store submission, paid distribution, broad public launch, external analytics contract or later Stable publication is authorized by this document.
+Broad GA via the public GitHub repository is live.

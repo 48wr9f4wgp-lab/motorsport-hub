@@ -52,9 +52,9 @@ Record physical-device evidence as user-confirmed evidence; do not represent it 
 
 ## E. Final authorization
 
-- [ ] Owner explicitly authorizes broad GA/public distribution for the exact validated Stable and names the intended distribution channel/action.
-- [ ] Any Store submission, paid distribution, external analytics, paid hosting/service contract or marketing launch receives separate approval if applicable.
+- [x] Owner explicitly authorizes broad GA/public distribution for exact Stable **v9.5.34 / sequence 12 / `edff3d301033ada18134429fb6f4c9016c6653f6`** via the public GitHub repository `48wr9f4wgp-lab/motorsport-hub`.
+- [x] GA scope explicitly excludes Store submission, paid distribution, external analytics, paid hosting/service contracts and other separately protected actions; none are executed by this launch.
 
 ## Current state
 
-Motorsport Hub **completed the representative exact-Stable v9.5.34 physical GA smoke**. Current Hero credits are revalidated and the JP viewing-label UI is physically PASS. The only remaining hard gate is exact scoped broad-GA/public-distribution authorization.
+Motorsport Hub **completed the representative exact-Stable v9.5.34 physical GA smoke and is Broad GA LIVE via the public GitHub repository**. Current Hero credits are revalidated and the JP viewing-label UI is physically PASS.

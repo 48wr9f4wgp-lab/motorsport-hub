@@ -29,7 +29,7 @@ Scope: title-local / iPhone Scriptable non-game product.
 - Small never shows viewing labels in v1.
 - Medium/Large use compact standings-header `視聴 <platform>`; no new vertical row.
 - Dakar 2027 viewing label remains hidden while Japan rights are `UNVERIFIED`.
-- Broad GA/public distribution remains a separate exact-scope protected action.
+- Broad GA/public distribution for exact Stable v9.5.34 is **LIVE via the public GitHub repository** after explicit owner approval on 2026-09-27. Future release/store/paid/analytics/contract actions remain separately protected.
 
 ## VERIFIED PRODUCT EVIDENCE
 
@@ -66,10 +66,11 @@ Physical evidence (chat-side, not published to the public repo):
 
 ## REMAINING
 
-1. Revalidate Hero credits again only if `hero-live` changes before GA.
-2. Broad GA requires separate exact Stable + destination/action approval.
+1. Keep Hero attribution synchronized if `hero-live` changes.
+2. Treat parser/viewing-rights/source drift as post-GA maintenance and issue a new Stable when runtime data/contracts change.
 3. Actual Dakar 2027 live standings/parser and Japan rights remain unverified until current upstream evidence exists.
+4. Store/paid distribution/external analytics/contracts/future Stable publication remain separate approval scopes.
 
 ## NEXT
 
-Physical GA smoke is complete. Next is the separate exact-scoped broad GA/public-distribution decision.
+Broad GA is live through the public GitHub repository. Next is normal post-GA maintenance; no additional launch action is pending.

@@ -1,7 +1,7 @@
 # Motorsport Hub — Completion Audit
 
 Updated: 2026-09-27 JST
-Status: **v9.5.34 STABLE / REPRESENTATIVE GA SMOKE PASS / BROAD GA NOT AUTHORIZED**
+Status: **v9.5.34 STABLE / REPRESENTATIVE GA SMOKE PASS / BROAD GA LIVE VIA GITHUB**
 
 ## Baselines
 
@@ -68,4 +68,12 @@ Hero Active Refresh #124 and Public Attribution #47 are successful. Current live
 No known reproducible P0 startup/routing/current-data blocker on the verified Stable baseline.
 v9.5.34 is automation-validated for Stable publication and the owner explicitly approved the current release path.
 The JP viewing-platform v1 feature is complete for its defined v9.5.34 scope after physical iPhone PASS.
-All defined representative physical GA smoke checks for v9.5.34 are PASS. Broad GA/public distribution remains a separate protected action and is **NOT AUTHORIZED** for an exact distribution scope by this audit.
+All defined representative physical GA smoke checks for v9.5.34 are PASS.
+
+Broad GA/public distribution was explicitly approved and executed on 2026-09-27 for:
+- exact Stable v9.5.34 / sequence 12;
+- sourceRef `edff3d301033ada18134429fb6f4c9016c6653f6`;
+- destination: public GitHub repository `48wr9f4wgp-lab/motorsport-hub`;
+- action: official broad-public self-service distribution through the repository README / INSTALL / support surfaces.
+
+Store submission, paid distribution, external analytics/contracts and future Stable publications are outside this approval scope.

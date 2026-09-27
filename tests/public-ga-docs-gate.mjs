@@ -57,7 +57,7 @@ assert(migration.includes('9e869fdae85e9ee352234b925c733065eb7c24fd'),'migration
 const ga=read('GA_READINESS.md');
 assert(ga.includes('Software-license decision: APPROVED — MPL-2.0'),'GA readiness must record approved software license');
 assert(ga.includes('Club Pulse migration cutover'),'GA readiness must retain destination migration blocker');
-assert(ga.includes('Broad GA authorization: NOT YET'),'GA readiness must not imply public launch approval');
+assert(ga.includes('Broad GA authorization: APPROVED — GITHUB PUBLIC REPOSITORY'),'GA readiness must record the exact approved GitHub Broad GA scope');
 assert(ga.includes('Stable v9.5.34'),'GA readiness must anchor current Stable');
 assert(ga.includes('Public Hero attribution publication'),'GA readiness must retain Hero attribution publication gate');
 

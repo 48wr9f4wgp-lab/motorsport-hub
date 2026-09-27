@@ -13,6 +13,7 @@ No runtime changes beyond Stable v9.5.34 at publication preparation time.
 - Viewing rights are loaded from the exact immutable Stable sourceRef, verified by pinned SHA-256 + UTF-8 byte length, and fail closed when invalid, stale, wrong-region, unverified or season-mismatched.
 - Dakar 2027 remains hidden because current Japan viewing rights are `UNVERIFIED`.
 - Release Candidate validation: **#299 / 36285958234 SUCCESS**.
+- Broad GA: **LIVE via the public GitHub repository on 2026-09-27 JST** after representative exact-Stable physical smoke PASS and explicit owner approval.
 - Physical iPhone validation: **PASS on 2026-09-27**.
   - SUPER GT Medium/Large: `視聴 J SPORTS` visible with no observed clipping/crowding/overflow regression.
   - SUPER GT Small: viewing label absent as designed.

@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "phase": "Stable v9.5.34 / representative GA smoke PASS / broad GA未承認",
+  "phase": "Stable v9.5.34 / Broad GA LIVE / GitHub public",
   "checks": {
     "boot": "ok",
     "test": "ok",
@@ -10,13 +10,22 @@
     "performance": "warn",
     "release": "ok"
   },
-  "next": "次Gate: exact Stable v9.5.34のBroad GA/public distributionについてdestination/action scopeを明示承認",
-  "note": "JP視聴プラットフォームv1はiPhone実機PASS。SUPER GT Medium/Largeで視聴 J SPORTS表示、Small非表示、Dakar Medium非表示、レイアウト回帰なし。Broad GAは別Gate。 Hero creditsはhero-live 7bd8e3e4fcfで2026-09-27再検証済み。 QA 12/12 LIVE、online refresh、exact Stable edff3d301033、代表UIの重大表示blockerなしを実機確認済み。 機内モードでSUPER GT Mediumが更新待ち付きで正常描画し、offline/LKG recovery PASS。 Loader v7 copy-pathも複製Scriptableから12/12 LIVE・edff3d301033を実機確認し、代表GA smoke完走。",
+  "next": "Post-GA maintenance only: parser/rights/Hero driftを証拠ベースで監視し、次Stableは別承認",
+  "note": "JP視聴プラットフォームv1はiPhone実機PASS。SUPER GT Medium/Largeで視聴 J SPORTS表示、Small非表示、Dakar Medium非表示、レイアウト回帰なし。Broad GAは別Gate。 Hero creditsはhero-live 7bd8e3e4fcfで2026-09-27再検証済み。 QA 12/12 LIVE、online refresh、exact Stable edff3d301033、代表UIの重大表示blockerなしを実機確認済み。 機内モードでSUPER GT Mediumが更新待ち付きで正常描画し、offline/LKG recovery PASS。 Loader v7 copy-pathも複製Scriptableから12/12 LIVE・edff3d301033を実機確認し、代表GA smoke完走。 2026-09-27 exact Stable v9.5.34をpublic GitHub repository経由でBroad GA承認・実行。Store/有料配布/外部analytics/契約は対象外。",
   "updated_at": "2026-09-27",
   "stable": {
     "version": "9.5.34",
     "sequence": 12,
     "sourceRef": "edff3d301033ada18134429fb6f4c9016c6653f6"
   },
-  "ga_authorized": false
+  "ga_authorized": true,
+  "ga": {
+    "status": "LIVE",
+    "authorized_at": "2026-09-27",
+    "destination": "GitHub public repository",
+    "repository": "48wr9f4wgp-lab/motorsport-hub",
+    "stable": "v9.5.34",
+    "sequence": 12,
+    "sourceRef": "edff3d301033ada18134429fb6f4c9016c6653f6"
+  }
 }
