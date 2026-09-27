@@ -1,85 +1,55 @@
 # Motorsport Hub — Completion Audit
 
 Updated: 2026-09-27 JST
-Status: **v9.5.36 STABLE PUBLISHED / PERSONAL COCKPIT DEVICE VALIDATION PENDING / OWNER-ONLY**
+Status: **v9.5.37 PERSONAL COCKPIT FIX RC PASS / STABLE PUBLICATION PENDING / OWNER-ONLY**
 
 ## Controlling decision
 
 - PRODUCT_INTENT: PERSONAL-ONLY / OWNER-ONLY
 - PUBLIC_DISTRIBUTION_DECISION: NO
 - previous GitHub Broad GA: WITHDRAWN / historical only
-- repository visibility: public during optional private-runtime migration
+- Loader v7 remains canonical
+- repository visibility unchanged
 
-## Verified owner-use baseline
+## Current physical evidence
 
-Stable v9.5.36 is the current Stable; the physically verified owner-use baseline remains the pre-Personal-Cockpit surfaces until new MY/CONFIG evidence is captured:
-- 12-category runtime verified;
-- QA 12/12 LIVE on prior exact-Stable smoke;
-- JP viewing-platform v1 physical PASS;
-- offline/LKG recovery PASS;
-- Loader v7 remains canonical installed loader.
+Stable v9.5.36:
+- MY Medium: PASS
+- Personal Config: PASS
+- MY Small: PASS
+- MY Large visual/layout: PASS
+- airplane-mode CONFIG: PASS
+- offline MY widget: PENDING
 
-## v9.5.36 integrated Personal Cockpit candidate
+Physical evidence exposed two logic issues:
+- Large displayed total event count while only six rows were visible;
+- stale cached ACTIVE could outlive an expected event end, observed with WEC Fuji.
 
-- target Stable: **v9.5.36 / sequence 14**
-- sourceRef: `e6f92c73630da329c581d169b76f9d94e33378c8`
-- validation ref: `99afe7a4311eb3c9d3480728d685cd4151860bba`
-- RC #319 / `36304630990`: SUCCESS
-- artifact digest: `sha256:6eb2e60f34ba8401d21956a06050f5f1dd80d8df6026df8ce83d65f6d44a4fd8`
-- Router SHA-256: `c7668a2e969cae62aed23d57e0e66febbbafa13387508623b83fac4c521e3093`
+## v9.5.37 candidate
+
+- target Stable: **v9.5.37 / sequence 15**
+- sourceRef: `1d331a79bebf55579242be40969061f788bd5182`
+- validation ref: `149b645d07e6e0b10339ce29d214e80992227987`
+- RC #330 / `36308093798`: SUCCESS
+- artifact digest: `sha256:e6093bc4cc7f25e8cd56db8abdc368dea3c3e5864695e127f005b7e43de06c49`
+- Router SHA-256: `dabb3a3abe887611357b63d91fe6060bb976d065c3fd317504bdddb864803e8d`
 - Router bytes: **19833**
-- category module hashes: unchanged from v9.5.35
+- category module hashes: unchanged
 - category manifest: unchanged
-- Loader v7 release contract: unchanged
 
-## Personal Cockpit contract
+## Fix scope
 
-User-facing Scriptable count remains one:
-
-- `MY` → MY RACE DAY
-- aliases: `RACEDAY`, `MYRACEDAY`
-- `CONFIG` → Personal Config utility
-- alias: `SETTINGS`
-- interactive config is selected by running the existing Motorsport Hub script in Scriptable
-
-Internal personal modules:
-- `motorsport-personal-cockpit.js`
-- `motorsport-personal-config.js`
-
-The Router pins their exact SHA-256 + UTF-8 byte length and only loads them from the immutable Stable sourceRef. MY RACE DAY itself reads existing local category/viewing caches and does not introduce a second live upstream implementation.
+- visible / total Large event count semantics;
+- event-end windows override stale ACTIVE state;
+- WEC duration inference from race name;
+- ended events removed from MY Race Day rows.
 
 ## Remaining hard gates
 
-1. resolve MY Large count/status logic found in physical evidence;
-2. offline MY validation after at least one successful online load.
+1. publish Stable v9.5.37 after owner approval;
+2. physical MY Large revalidation;
+3. offline MY widget validation.
 
 ## Decision
 
-Automation evidence is green and Stable v9.5.36 is published via PR #72. Personal Cockpit must not be called physically complete until the remaining device gates pass.
-
-
-## New physical evidence — 2026-09-27
-
-- MY Medium: PASS.
-- CONFIG flow from the same Motorsport Hub Scriptable: PASS.
-- Current config summary: 12カテゴリ / 14日.
-- No obvious Medium clipping/overflow observed.
-- Personal Cockpit remains PARTIAL PASS until Small / Large / offline checks complete.
-
-
-## MY Small physical evidence — 2026-09-27
-
-- PASS on physical iPhone.
-- Single-event glanceable layout works as intended.
-- No obvious clipping/overflow observed.
-- Remaining Personal Cockpit gates: Large + offline.
-
-
-## MY Large / offline CONFIG evidence — 2026-09-27
-
-- MY Large visual/layout: PASS.
-- Six rows fit cleanly with no obvious clipping/overflow.
-- Header count semantics need correction: 8 total events vs 6 visible rows.
-- Cached ACTIVE status can outlive a known race-duration window; WEC Fuji exposed this.
-- Airplane-mode CONFIG: PASS, demonstrating personal utility local fallback.
-- Offline MY widget: not yet verified.
+Automation evidence is green for v9.5.37. Personal Cockpit must not be called fully verified until Large revalidation and offline MY pass.

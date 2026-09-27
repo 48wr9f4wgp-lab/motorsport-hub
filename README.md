@@ -5,13 +5,14 @@ Motorsport Hub is an iPhone home-screen motorsport widget system for [Scriptable
 ## Current status
 
 - Distribution intent: **PERSONAL-ONLY / NOT FOR PUBLIC DISTRIBUTION**. A brief GitHub Broad GA state on 2026-09-27 was later withdrawn by the owner.
-- Current Stable: **v9.5.36 / sequence 14**.
-- Stable source: immutable sourceRef `e6f92c73630da329c581d169b76f9d94e33378c8`.
+- Current Stable: **v9.5.37 / sequence 15**.
+- Stable source: immutable sourceRef `1d331a79bebf55579242be40969061f788bd5182`.
 - Stable v9.5.31 WRC/SUPER GT hardening: **SUPER GT Small user-confirmed physical iPhone PASS on 2026-09-25 07:46 JST**.
 - Stable v9.5.33 Dakar verification: **physical iPhone PASS on 2026-09-27**; QA production-equivalent diagnostic reported `R155 C80 P5 T80 G5 V1`, and Dakar Medium rendered fresh data without `更新待ち`.
 - Stable v9.5.34 JP viewing-platform labels: **physical iPhone PASS**.
 - Stable v9.5.35 private-runtime foundation: **RC #311 / 36299105721 SUCCESS**.
-- Stable v9.5.36 integrated Personal Cockpit: **RC #319 / 36304630990 SUCCESS**; `MY` / `CONFIG` are integrated into the same Motorsport Hub Router. Physical MY layout/config validation remains pending.
+- Stable v9.5.36 integrated Personal Cockpit: **physical Medium / Small / Large visual + CONFIG evidence captured**.
+- Stable v9.5.37 Personal Cockpit maintenance: **RC #330 / 36308093798 SUCCESS**; fixes visible/total event count semantics and stale ACTIVE end-window handling. Offline MY physical validation remains pending.
 - Hero refresh recovery: scheduled Hero Active Refresh #124 and downstream Public Attribution #47 both **SUCCESS** on 2026-09-26.
 - Production surface: **12 categories + QA diagnostics**.
 - Installed production loader: **`scriptable-loader-v7.js`**.

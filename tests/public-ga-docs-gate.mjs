@@ -20,7 +20,7 @@ assert(scope.includes('not relicensed under MPL-2.0'),'license scope must exclud
 assert(scope.includes('ATTRIBUTION.md'),'license scope must point to third-party attribution');
 
 const readme=read('README.md');
-assert(readme.includes('v9.5.36'),'README must state current Stable v9.5.36');
+assert(readme.includes('v9.5.37'),'README must state current Stable v9.5.37');
 for(const p of ['INSTALL.md','SUPPORT.md','PRIVACY.md','GA_READINESS.md','GA_LAUNCH_CHECKLIST.md','LICENSE_DECISION.md','LICENSE_SCOPE.md','ATTRIBUTION.md'])assert(readme.includes(p),`README must link ${p}`);
 assert(readme.includes('Mozilla Public License 2.0 (MPL-2.0)'),'README must state approved software license');
 assert(readme.includes('hero-live/hero-channel/ATTRIBUTION.md'),'README must identify dynamic Hero attribution surface');
@@ -61,7 +61,7 @@ const launch=read('GA_LAUNCH_CHECKLIST.md');
 for(const token of ['Owner-only / personal-use direction selected','Public Broad GA intent withdrawn','Private transition gate'])assert(launch.includes(token),`distribution checklist missing ${token}`);
 
 const changelog=read('CHANGELOG.md');
-assert(changelog.includes('v9.5.36'),'changelog must include current Stable');
+assert(changelog.includes('v9.5.37'),'changelog must include current Stable');
 
 assert(!fs.existsSync(path.join(root,'scriptable')),'Club Pulse product tree must be absent from product-pure Motorsport Hub candidate');
 assert(!fs.existsSync(path.join(root,'.github/workflows/club-pulse-contract.yml')),'Club Pulse workflow must be absent from product-pure Motorsport Hub candidate');

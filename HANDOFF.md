@@ -9,8 +9,8 @@ Scope: title-local / iPhone Scriptable non-game product.
 - PUBLIC_DISTRIBUTION_DECISION: **NO**
 - BROAD_GA_STATUS: **WITHDRAWN**
 - REPOSITORY_PRIVATE_MIGRATION: **PENDING**
-- Current Stable: **v9.5.36 / sequence 14**
-- Stable sourceRef: `e6f92c73630da329c581d169b76f9d94e33378c8`
+- Stable publication target: **v9.5.37 / sequence 15**
+- Stable sourceRef target: `1d331a79bebf55579242be40969061f788bd5182`
 - Validation ref: `99afe7a4311eb3c9d3480728d685cd4151860bba`; RC #319 / `36304630990` SUCCESS
 
 The owner's latest instruction supersedes the earlier GitHub Broad GA approval. The product is not to be publicly distributed.
@@ -134,3 +134,19 @@ Stable v9.5.36 is published. Private repo migration remains paused by choice whi
   - this validates local fallback for the personal utility module/config path.
 - Offline MY widget itself: **PENDING**.
 - Large status: **VISUAL PASS / LOGIC FIX PENDING**.
+
+
+## v9.5.37 PERSONAL COCKPIT FIX CANDIDATE
+
+- sourceRef target: `1d331a79bebf55579242be40969061f788bd5182`
+- validation ref: `149b645d07e6e0b10339ce29d214e80992227987`
+- RC #330 / `36308093798`: SUCCESS
+- artifact digest: `sha256:e6093bc4cc7f25e8cd56db8abdc368dea3c3e5864695e127f005b7e43de06c49`
+- Router hash: `dabb3a3abe887611357b63d91fe6060bb976d065c3fd317504bdddb864803e8d`
+- fixes:
+  - Large event counter uses visible / total semantics when rows are capped;
+  - MY end-window logic supersedes stale cached ACTIVE state;
+  - WEC duration is inferred from race-name hours when available;
+  - ended events are filtered from MY.
+- 12-category module hashes: unchanged.
+- physical revalidation after promotion: Large → offline MY.
