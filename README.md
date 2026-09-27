@@ -5,12 +5,12 @@ Motorsport Hub is an iPhone home-screen motorsport widget system for [Scriptable
 ## Current status
 
 - Public Release Candidate: **approved**.
-- Current Stable: **v9.5.33 / sequence 11**.
-- Stable source: immutable sourceRef `95d85043045bd7942f9e72b960249649e637aee3`.
+- Current Stable: **v9.5.34 / sequence 12**.
+- Stable source: immutable sourceRef `edff3d301033ada18134429fb6f4c9016c6653f6`.
 - Stable v9.5.31 WRC/SUPER GT hardening: **SUPER GT Small user-confirmed physical iPhone PASS on 2026-09-25 07:46 JST**.
-- Stable v9.5.32 Dakar live-parser repair: **RC validated; live parser monitor 12/12 PASS; focused Dakar physical iPhone fresh-data confirmation pending**.
+- Stable v9.5.33 Dakar verification: **physical iPhone PASS on 2026-09-27**; QA production-equivalent diagnostic reported `R155 C80 P5 T80 G5 V1`, and Dakar Medium rendered fresh data without `更新待ち`.
+- Stable v9.5.34 JP viewing-platform labels: **RC #299 / 36285958234 SUCCESS**; Medium/Large visible-label physical iPhone validation remains pending.
 - Hero refresh recovery: scheduled Hero Active Refresh #124 and downstream Public Attribution #47 both **SUCCESS** on 2026-09-26.
-- Stable v9.5.33 diagnostics release: **RC validated; adds Dakar production-equivalent QA counters for physical-iPhone root-cause isolation; Dakar widget runtime is unchanged from v9.5.32**.
 - Production surface: **12 categories + QA diagnostics**.
 - Installed production loader: **`scriptable-loader-v7.js`**.
 - Software license: **Mozilla Public License 2.0 (MPL-2.0)**.
@@ -69,6 +69,7 @@ Circuit-racing categories generally provide:
 - Small: next/current event, countdown and venue/context;
 - Medium: event context plus top-three standings;
 - Large: event context, top five, `MORE STANDINGS`, and lower season/round context.
+- Verified Japan viewing rights: Medium/Large may show a compact `視聴 <platform>` label; Small intentionally does not. Unverified/stale rights fail closed and remain hidden.
 
 Dakar uses rally-raid-specific stage, route, SS distance and GAP semantics rather than forcing circuit-racing labels.
 
