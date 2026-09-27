@@ -1,60 +1,38 @@
-# Motorsport Hub — Final GA Launch Checklist
+# Motorsport Hub — Distribution Checklist
 
 Updated: 2026-09-27 JST
 
-Use this checklist only when preparing the actual broad public General Availability release. Stable publication does not itself authorize broad GA.
+## Current product direction
 
-## A. Distribution/legal
+- [x] Owner-only / personal-use direction selected.
+- [x] Public Broad GA intent withdrawn.
+- [x] Earlier GitHub Broad GA retained as historical evidence only.
+- [x] Exact Stable v9.5.34 remains technically validated for the owner's use.
+- [x] Physical iPhone validation remains PASS.
+- [x] QA `12/12 LIVE — データ経路OK`.
+- [x] Offline/LKG recovery PASS.
+- [x] Loader v7 copy-path PASS.
+- [x] Hero attribution evidence retained.
 
-- [x] Software license explicitly approved by owner: **MPL-2.0**.
-- [x] Club Pulse destination repository populated and verified before Motorsport Hub split/removal; see `CLUB_PULSE_MIGRATION.md`.
-- [x] Root `LICENSE` and `LICENSE_SCOPE.md` prepared for product-pure Motorsport Hub.
-- [x] Current `hero-live/hero-channel/ATTRIBUTION.md` revalidated at head `7bd8e3e4fcf616b90fbded4911ac0ec8000ad225` on 2026-09-27 JST; `channel.json` / attribution generation timestamp matches and the live attribution surface reports 12 credited pool assets. Recheck only if `hero-live` changes before GA.
-- [x] Public install path distinguishes software-license terms from third-party Hero attribution.
-- [x] No claim of endorsement by image creators/licensors.
+## Private transition gate
 
-## B. Exact release identity
+- [ ] design a private-compatible runtime/update source;
+- [ ] avoid embedding reusable GitHub credentials directly in source;
+- [ ] preserve immutable source/hash/byte verification;
+- [ ] preserve Loader/LKG offline recovery;
+- [ ] preserve viewing-rights fail-closed semantics;
+- [ ] validate private-path online refresh on physical iPhone;
+- [ ] validate private-path offline/LKG recovery;
+- [ ] only then change repository visibility to private.
 
-- [x] Exact final GA Stable selected after representative smoke: **v9.5.34 / sequence 12 / sourceRef `edff3d301033ada18134429fb6f4c9016c6653f6`**.
-- [x] Stable v9.5.34 source selected: `edff3d301033ada18134429fb6f4c9016c6653f6`.
-- [x] v9.5.34 Release Candidate CI: **#299 / 36285958234 SUCCESS**.
-- [x] Descriptor hashes/byte lengths taken from immutable RC artifact `motorsport-hub-release-45eb720a53438e2dbcd6e01be7529a90f4bea275`.
-- [x] Stable v9.5.33 Dakar fresh-data physical iPhone verification: **PASS**.
-- [x] Dakar 2027 viewing rights remain fail-closed / hidden while `UNVERIFIED`.
-- [x] Production Hero refresh recovered: Hero Active Refresh #124 SUCCESS; Public Attribution #47 SUCCESS.
+## Explicit non-goals
 
-## C. Physical iPhone smoke
+- [x] no public distribution;
+- [x] no App Store launch;
+- [x] no paid distribution;
+- [x] no external analytics;
+- [x] no public marketing launch.
 
-Run on the exact Stable intended for distribution:
+## Historical note
 
-- [x] canonical Loader v7 copy path — duplicated Scriptable script executed successfully on physical iPhone and reached `12/12 LIVE — データ経路OK` on exact Stable `edff3d301033`;
-- [x] QA diagnostics healthy — physical iPhone `12/12 LIVE — データ経路OK`, exact Stable source prefix `edff3d301033`;
-- [x] one Small widget;
-- [x] one Medium widget with expected verified viewing label;
-- [x] one Large widget with expected verified viewing label;
-- [x] Small viewing-label omission confirmed;
-- [x] Dakar viewing-label omission confirmed while UNVERIFIED;
-- [x] no header crowding/truncation/alignment/overflow regression;
-- [x] online refresh — all 12 category routes reported `LIVE` in physical QA;
-- [x] LKG/offline recovery — physical iPhone airplane-mode test rendered SUPER GT Medium from cached/LKG data with explicit `更新待ち`, verified viewing label preserved, standings/Hero/layout intact;
-- [x] no visible startup, routing or clipping blocker in the validated QA + Small/Medium/Large representative surfaces.
-
-Record physical-device evidence as user-confirmed evidence; do not represent it as GitHub-verifiable automation.
-
-## D. Public support surface
-
-- [x] `INSTALL.md` current.
-- [x] `SUPPORT.md` current.
-- [x] `PRIVACY.md` current.
-- [x] GitHub bug-report template active.
-- [x] Public README names the current Stable.
-- [ ] Optional observability export is not advertised as mandatory until its iPhone Share Sheet interaction has been physically exercised.
-
-## E. Final authorization
-
-- [x] Owner explicitly authorizes broad GA/public distribution for exact Stable **v9.5.34 / sequence 12 / `edff3d301033ada18134429fb6f4c9016c6653f6`** via the public GitHub repository `48wr9f4wgp-lab/motorsport-hub`.
-- [x] GA scope explicitly excludes Store submission, paid distribution, external analytics, paid hosting/service contracts and other separately protected actions; none are executed by this launch.
-
-## Current state
-
-Motorsport Hub **completed the representative exact-Stable v9.5.34 physical GA smoke and is Broad GA LIVE via the public GitHub repository**. Current Hero credits are revalidated and the JP viewing-label UI is physically PASS.
+The previous v9.5.34 GitHub Broad GA authorization was **WITHDRAWN by the owner later on 2026-09-27**. It is not a current release approval.
