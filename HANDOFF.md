@@ -89,3 +89,19 @@ Stable v9.5.36 is published. Private repo migration remains paused by choice whi
 - Stable v9.5.36 exposes `MY` / `CONFIG` through the existing Motorsport Hub Router; publication PR #72 is merged.
 - physical state: **PENDING**.
 - next device gate: MY Medium visual/density/content validation → CONFIG flow → MY Small → MY Large → offline MY.
+
+
+## PERSONAL COCKPIT PHYSICAL EVIDENCE — 2026-09-27
+
+- Stable: v9.5.36 / sequence 14
+- MY Medium: **PASS**
+  - cross-series rows visible;
+  - active/upcoming ordering visible;
+  - viewing platform / leader / cache age fit the Medium layout;
+  - no obvious clipping or overflow in the captured surface.
+- Personal Config flow: **PASS**
+  - launched from the same existing `Motorsport Hub` Scriptable;
+  - current summary showed `12カテゴリ / 14日`;
+  - controls visible: 表示カテゴリ・優先順 / 表示期間 / 表示項目 / 現在設定を見る / 初期設定へ戻す / 完了.
+- Separate user-installed Scriptable required: **NO**.
+- Remaining physical gates: MY Small / MY Large / offline MY.
