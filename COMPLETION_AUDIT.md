@@ -1,55 +1,62 @@
 # Motorsport Hub — Completion Audit
 
 Updated: 2026-09-27 JST
-Status: **v9.5.35 PRIVATE FOUNDATION RC PASS / STABLE PUBLICATION APPROVAL PENDING / OWNER-ONLY**
+Status: **v9.5.36 PERSONAL COCKPIT RC PASS / STABLE PUBLICATION APPROVAL PENDING / OWNER-ONLY**
 
-## Current controlling decision
+## Controlling decision
 
 - PRODUCT_INTENT: PERSONAL-ONLY / OWNER-ONLY
 - PUBLIC_DISTRIBUTION_DECISION: NO
 - previous GitHub Broad GA: WITHDRAWN / historical only
-- repository visibility: public only during safe private-runtime migration
+- repository visibility: public during optional private-runtime migration
 
 ## Verified owner-use baseline
 
-Stable v9.5.34 remains the physically proven baseline:
-- QA 12/12 LIVE;
-- Small/Medium/Large representative UI PASS;
-- JP viewing-platform v1 PASS;
+Stable v9.5.35 remains the current device baseline:
+- 12-category runtime verified;
+- QA 12/12 LIVE on prior exact-Stable smoke;
+- JP viewing-platform v1 physical PASS;
 - offline/LKG recovery PASS;
-- Loader v7 copy-path PASS.
+- Loader v7 remains canonical installed loader.
 
-## v9.5.35 private foundation candidate
+## v9.5.36 integrated Personal Cockpit candidate
 
-- sourceRef: `7bfd260947ca091376b4e7c033661ecfcb94ffed`
-- sequence target: **13**
-- validation ref: `b259908a986be695bc9a382249a6ccac85ab02c5`
-- RC #311 / `36299105721`: SUCCESS
-- immutable artifact digest: `sha256:d23a0d84d74835825351684fb0cd0d3e940fba431fc1faa5c66fa1f7e227da85`
-- Router: private-capable repository transport
-- Loader v8: Keychain-backed GitHub authentication
-- setup: secure token entry + connection test
-- category module hashes: unchanged from v9.5.34
-- visible racing UI/data behavior: unchanged
+- target Stable: **v9.5.36 / sequence 14**
+- sourceRef: `e6f92c73630da329c581d169b76f9d94e33378c8`
+- validation ref: `99afe7a4311eb3c9d3480728d685cd4151860bba`
+- RC #319 / `36304630990`: SUCCESS
+- artifact digest: `sha256:6eb2e60f34ba8401d21956a06050f5f1dd80d8df6026df8ce83d65f6d44a4fd8`
+- Router SHA-256: `c7668a2e969cae62aed23d57e0e66febbbafa13387508623b83fac4c521e3093`
+- Router bytes: **19833**
+- category module hashes: unchanged from v9.5.35
+- category manifest: unchanged
+- Loader v7 release contract: unchanged
 
-## Security model
+## Personal Cockpit contract
 
-The iPhone runtime token is not committed to source.
-Intended fine-grained permissions:
-- Contents: read
-- Actions: read
-- repository-scoped only
-- no write/admin permission
+User-facing Scriptable count remains one:
+
+- `MY` → MY RACE DAY
+- aliases: `RACEDAY`, `MYRACEDAY`
+- `CONFIG` → Personal Config utility
+- alias: `SETTINGS`
+- interactive config is selected by running the existing Motorsport Hub script in Scriptable
+
+Internal personal modules:
+- `motorsport-personal-cockpit.js`
+- `motorsport-personal-config.js`
+
+The Router pins their exact SHA-256 + UTF-8 byte length and only loads them from the immutable Stable sourceRef. MY RACE DAY itself reads existing local category/viewing caches and does not introduce a second live upstream implementation.
 
 ## Remaining hard gates
 
-1. explicit approval to publish Stable v9.5.35;
-2. store read-only token in Scriptable Keychain;
-3. physical authenticated online QA;
-4. physical offline/LKG recovery on Loader v8;
-5. only then change repository visibility to private;
-6. repeat online QA after privatization.
+1. explicit owner approval to publish Stable v9.5.36;
+2. physical MY Medium validation;
+3. physical CONFIG flow validation;
+4. physical MY Small validation;
+5. physical MY Large validation;
+6. offline MY validation after at least one successful online load.
 
 ## Decision
 
-Private-runtime engineering is automation-verified and ready for staged device validation. Repository privatization is not yet safe and is not executed by this candidate.
+Automation evidence is green and v9.5.36 is ready for Stable publication review. Personal Cockpit must not be called physically complete until the device gates pass.
