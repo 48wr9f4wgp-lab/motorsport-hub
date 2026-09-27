@@ -34,7 +34,7 @@ const ROUTES={
  QA:{file:'motorsport-diagnostics-v890.js',key:'diagnostics-v890',marker:'QA diagnostics'}
 };
 const PERSONAL_ROUTES={
- MY:{file:'motorsport-personal-cockpit.js',marker:'Personal Race Day Cockpit v1',sha256:'6943922b13df345e662a242da13b64d7140771581b0adaa86127f382f6b63c3e',bytes:10353},
+ MY:{file:'motorsport-personal-cockpit.js',marker:'Personal Race Day Cockpit v1',sha256:'3c1c4186294f238c4efab9d23b9179c9650e768fc1bc6fe4240b24bffefc23f4',bytes:11133},
  CONFIG:{file:'motorsport-personal-config.js',marker:'Personal Config v1',sha256:'b343050000940c550eecbbd96f0ee132bf7a0a0b991ecb277e4540664869b0ff',bytes:3812}
 };
 
