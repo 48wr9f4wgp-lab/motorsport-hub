@@ -69,8 +69,13 @@ Offline/LKG recovery is now **CLOSED / PASS**:
 - explicit `更新待ち` appeared as expected;
 - verified `視聴 J SPORTS` label, standings, Hero and layout remained intact.
 
-Remaining physical check:
-- canonical Loader v7 fresh-install/copy path.
+Loader v7 copy path is now **CLOSED / PASS**:
+- the canonical Scriptable script was duplicated on the physical iPhone;
+- the copied script executed successfully online;
+- QA reported `12/12 LIVE — データ経路OK`;
+- exact immutable Stable source prefix remained `edff3d301033`.
+
+The representative exact-Stable v9.5.34 physical GA smoke is therefore **COMPLETE / PASS**. This validates the supported copy/install path; it is not a destructive wipe of Scriptable's shared local storage.
 
 Physical-device evidence must be recorded as user-confirmed evidence.
 
@@ -113,8 +118,7 @@ v9.5.34 carries the JP viewing-rights snapshot verified on 2026-09-27. Rights ch
 
 Remaining hard path:
 
-1. close the remaining Loader v7 fresh-install/copy physical check;
-2. if `hero-live` changes before GA, revalidate credits again;
-3. obtain exact scoped owner authorization for the broad-GA distribution action/channel.
+1. if `hero-live` changes before GA, revalidate credits again;
+2. obtain exact scoped owner authorization for the broad-GA distribution action/channel.
 
 No Store submission, paid distribution, broad public launch, external analytics contract or later Stable publication is authorized by this document.
