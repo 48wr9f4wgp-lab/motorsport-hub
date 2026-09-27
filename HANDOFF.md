@@ -117,3 +117,20 @@ Stable v9.5.36 is published. Private repo migration remains paused by choice whi
   - visual hierarchy is clear and distinct from Medium.
 - Minor polish candidate: lower whitespace could support slightly larger text, but no change is required before Large validation.
 - Remaining physical gates: MY Large / offline MY.
+
+
+## PERSONAL COCKPIT LARGE / OFFLINE-CONFIG EVIDENCE — 2026-09-27
+
+- Stable: v9.5.36 / sequence 14
+- MY Large visual/layout: **PASS**
+  - six event rows fit without obvious clipping/overflow;
+  - hierarchy is clear across D1GP / WEC / NASCAR / WRC / FDJ / MotoGP;
+  - viewing platform / leader / cache age remain readable.
+- Logic issues found from physical evidence:
+  - header reported `8 EVENTS` while Large intentionally rendered only six rows;
+  - WEC `6 Hours of Fuji` still showed `開催中` after the expected six-hour finish because MY trusted cached `lifecycle=ACTIVE` before checking an event end.
+- Airplane-mode Personal Config: **PASS**
+  - CONFIG reopened while airplane mode was visibly active;
+  - this validates local fallback for the personal utility module/config path.
+- Offline MY widget itself: **PENDING**.
+- Large status: **VISUAL PASS / LOGIC FIX PENDING**.
