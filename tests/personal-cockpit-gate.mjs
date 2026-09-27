@@ -32,6 +32,6 @@ assert(cockpit.includes('motorsport-viewing-jp-'),'cockpit must consume existing
 assert(cockpit.includes('No external network requests')||doc.includes('no external network requests'),'cockpit must document local-cache-only behavior');
 assert(!/new Request\s*\(/.test(cockpit),'personal cockpit must not add live network requests');
 for(const token of ['renderSmall','renderMedium','renderLarge','MY RACE DAY'])assert(cockpit.includes(token),`cockpit rendering missing ${token}`);
-for(const token of ['owner-only sidecar','existing category caches','Small / Medium / Large'])assert(doc.includes(token),`personal cockpit doc missing ${token}`);
+for(const token of ['owner-only personal utility integrated','existing local category caches','Small / Medium / Large'])assert(doc.includes(token),`personal cockpit doc missing ${token}`);
 
 console.log('Motorsport Hub personal cockpit gate: PASS');

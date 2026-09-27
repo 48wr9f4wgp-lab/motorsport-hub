@@ -1,25 +1,61 @@
 # Motorsport Hub Personal Cockpit v1
 
-Scope: owner-only sidecar. It does not change the Stable Router or the 12 existing category widgets.
+Scope: owner-only personal utility integrated into the normal `Motorsport Hub` Router path.
 
-## Files
+## User-facing model
+
+Only one Scriptable installation is required:
+
+- Script name: `Motorsport Hub`
+- Widget Parameter `MY`: **MY RACE DAY**
+- Alias: `RACEDAY`, `MYRACEDAY`
+- Interactive settings: run `Motorsport Hub` inside Scriptable and choose **⚙ PERSONAL CONFIG**
+- Utility Parameter `CONFIG`: recognized, but a home-screen CONFIG widget only shows guidance because Alert-based settings must run inside Scriptable.
+
+The owner does **not** need to create separate `Motorsport Personal Config` or `Motorsport Race Day` scripts.
+
+## Internal personal modules
+
+The Router uses:
 
 - `motorsport-personal-config.js`
-  - stores local config in `motorsport-personal-config-v1.json`;
-  - lets the owner choose category order / visibility;
-  - sets the Race Day horizon;
-  - toggles viewing platform, leader and cache-age details.
-
 - `motorsport-personal-cockpit.js`
-  - reads the existing category caches already written by Motorsport Hub;
-  - reads the existing locally cached JP viewing-rights manifest;
-  - makes **no external network requests**;
-  - shows active and upcoming events across categories;
-  - supports Small / Medium / Large.
 
-## v1 data contract
+These are internal utility modules, not separate install targets.
 
-The cockpit treats each category module as the source of truth and only consumes its local cache. It does not duplicate standings parsers or introduce another upstream API.
+For the integrated release the Router pins each file by:
+- immutable Stable `sourceRef`;
+- exact SHA-256;
+- exact UTF-8 byte length;
+- required source marker;
+- JavaScript syntax validation.
+
+A validated copy is cached locally for offline reuse.
+
+## Personal Config
+
+Local config file:
+
+`motorsport-personal-config-v1.json`
+
+Controls:
+- category visibility / priority order;
+- Race Day horizon;
+- viewing-platform detail;
+- cached championship leader;
+- cache-age display.
+
+Default:
+- all 12 categories enabled;
+- canonical order;
+- 14-day horizon;
+- viewing platform ON;
+- leader ON;
+- cache age ON.
+
+## MY RACE DAY data model
+
+The cockpit consumes the existing local category caches already written by the normal Motorsport Hub categories.
 
 Normalized fields:
 - event name: `race` or `stage`;
@@ -29,22 +65,23 @@ Normalized fields:
 - leader: first cached ranking row;
 - viewing: existing verified local JP viewing-rights cache.
 
-## Default config
+The cockpit itself makes **no external network requests**.
 
-- all 12 categories enabled;
-- existing canonical category order;
-- 14-day horizon;
-- viewing platform ON;
-- leader ON;
-- cache age ON.
+Layouts: Small / Medium / Large.
 
-## Install / test
+If a category has no cache yet, run that ordinary category once. The cockpit intentionally fails quiet instead of introducing another standings/calendar parser.
 
-1. Create a Scriptable script named `Motorsport Personal Config` from `motorsport-personal-config.js`.
-2. Run it once and adjust category order if desired.
-3. Create a Scriptable script named `Motorsport Race Day` from `motorsport-personal-cockpit.js`.
-4. Run it in Scriptable.
-5. Add a Scriptable home-screen widget and select `Motorsport Race Day`.
-6. Test Medium first, then Small / Large.
+## Device validation
 
-If a category has no cache yet, run the existing Motorsport Hub category once. The cockpit intentionally fails quiet instead of making a second live-data implementation.
+After the integrated Router is promoted to Stable:
+
+1. keep the existing Scriptable `Motorsport Hub`;
+2. add a Medium Scriptable widget using the same script;
+3. set Parameter to `MY`;
+4. verify chronological cross-series events, viewing labels, leader text and cache age;
+5. run `Motorsport Hub` inside Scriptable, choose **⚙ PERSONAL CONFIG**, change the horizon or category order;
+6. confirm the same MY widget reflects the local config;
+7. validate Small, then Large;
+8. validate MY while offline to confirm the pinned personal module cache + data caches fail safely.
+
+Do not call Personal Cockpit complete until physical Medium / Small / Large evidence passes.

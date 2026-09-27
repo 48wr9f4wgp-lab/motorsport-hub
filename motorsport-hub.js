@@ -14,10 +14,10 @@ const SOURCE_REF=String(globalThis.__MH_SOURCE_REF||'main');
 const INTEGRITY=globalThis.__MH_RELEASE_INTEGRITY||null;
 const REPO_IO=globalThis.__MH_REPO_IO||null;
 const VIEWING_FILE='viewing-rights-jp.json',VIEWING_SHA256='f6f7e1d353ab1f2db3b3f5a1dd5b8db225910114bce4ebb8bbd9b5c89065e3b9',VIEWING_BYTES=4414;
-const labels=['F1','WEC','WRC','SUPER GT','MotoGP','FDJ','D1GP','SUPER FORMULA','INDYCAR','NASCAR Cup','GTWC Europe','Dakar Rally','QA診断'];
-const params=['F1','WEC','WRC','SUPERGT','MOTOGP','FDJ','D1GP','SUPERFORMULA','INDYCAR','NASCAR','GTWCEU','DAKAR','QA'];
+const labels=['F1','WEC','WRC','SUPER GT','MotoGP','FDJ','D1GP','SUPER FORMULA','INDYCAR','NASCAR Cup','GTWC Europe','Dakar Rally','QA診断','MY RACE DAY','⚙ PERSONAL CONFIG'];
+const params=['F1','WEC','WRC','SUPERGT','MOTOGP','FDJ','D1GP','SUPERFORMULA','INDYCAR','NASCAR','GTWCEU','DAKAR','QA','MY','CONFIG'];
 const norm=v=>String(v||'').trim().toUpperCase().replace(/[\s_-]+/g,'');
-const aliases={FORMULA1:'F1',FORMULADRIFTJAPAN:'FDJ',D1:'D1GP',D1GRANDPRIX:'D1GP',SF:'SUPERFORMULA',SUPERF:'SUPERFORMULA',INDY:'INDYCAR',NASCARCUP:'NASCAR',NASCARCUPSERIES:'NASCAR',CUP:'NASCAR',GTWC:'GTWCEU',GTWCEUROPE:'GTWCEU',GTWCEU:'GTWCEU',GTWORLDCHALLENGEEUROPE:'GTWCEU',DAKARRALLY:'DAKAR'};
+const aliases={FORMULA1:'F1',FORMULADRIFTJAPAN:'FDJ',D1:'D1GP',D1GRANDPRIX:'D1GP',SF:'SUPERFORMULA',SUPERF:'SUPERFORMULA',INDY:'INDYCAR',NASCARCUP:'NASCAR',NASCARCUPSERIES:'NASCAR',CUP:'NASCAR',GTWC:'GTWCEU',GTWCEUROPE:'GTWCEU',GTWCEU:'GTWCEU',GTWORLDCHALLENGEEUROPE:'GTWCEU',DAKARRALLY:'DAKAR',RACEDAY:'MY',MYRACEDAY:'MY',MINE:'MY',PERSONAL:'MY',SETTINGS:'CONFIG',SETTING:'CONFIG'};
 const ROUTES={
  F1:{file:'f1-widget-flat-v1000.js',key:'f1-flat-v1000',marker:'flattened F1 pilot module'},
  WEC:{file:'wec-widget-flat-v1000.js',key:'wec-flat-v1000',marker:'flattened WEC module'},
@@ -32,6 +32,10 @@ const ROUTES={
  GTWCEU:{file:'gtwc-europe-widget.js',key:'gtwceu-v930',marker:'GT World Challenge Europe module'},
  DAKAR:{file:'dakar-widget.js',key:'dakar-v950',marker:'DAKAR dedicated rally-raid module'},
  QA:{file:'motorsport-diagnostics-v890.js',key:'diagnostics-v890',marker:'QA diagnostics'}
+};
+const PERSONAL_ROUTES={
+ MY:{file:'motorsport-personal-cockpit.js',marker:'Personal Race Day Cockpit v1',sha256:'6943922b13df345e662a242da13b64d7140771581b0adaa86127f382f6b63c3e',bytes:10353},
+ CONFIG:{file:'motorsport-personal-config.js',marker:'Personal Config v1',sha256:'b343050000940c550eecbbd96f0ee132bf7a0a0b991ecb277e4540664869b0ff',bytes:3812}
 };
 
 const HERO_CHANNEL_SCHEMA=1,HERO_CHANNEL_BRANCH='hero-live',HERO_CHANNEL_TTL=15*60000,HERO_LARGE_CANVAS=1200,HERO_LARGE_FALLBACK_INSET=.96;
@@ -144,12 +148,25 @@ async function loadViewingRights(cat){
  try{const raw=await mhRepoText(SOURCE_REF,VIEWING_FILE,`https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/${SOURCE_REF}/${VIEWING_FILE}?v=${VIEWING_SHA256.slice(0,12)}`,8,{'Cache-Control':'no-cache','User-Agent':'MotorsportHub-ViewingRights/1'});if(utf8Bytes(raw).length!==VIEWING_BYTES||sha256Hex(raw)!==VIEWING_SHA256)return null;const manifest=JSON.parse(raw);if(!validViewingManifest(manifest))return null;try{vfm.writeString(vp,raw)}catch(_){}return selectViewing(manifest,cat)}catch(_){return null}
 }
 
+async function executePersonalRoute(kind){
+ const p=PERSONAL_ROUTES[kind];if(!p)return false;
+ const fm=FileManager.local(),rid=String(SOURCE_REF||'main').replace(/[^A-Za-z0-9.-]/g,'').slice(0,40),cache=fm.joinPath(fm.documentsDirectory(),`motorsport-hub-personal-${kind.toLowerCase()}-${rid}.js`);
+ const valid=code=>typeof code==='string'&&code.includes('Motorsport Hub')&&code.includes(p.marker)&&code.includes('Script.complete()')&&syntaxOK(code)&&utf8Bytes(code).length===Number(p.bytes)&&sha256Hex(code)===String(p.sha256).toLowerCase();
+ let code='';
+ if(globalThis.__MH_REMOTE_OFFLINE!==true){try{code=await mhRepoText(SOURCE_REF,p.file,`https://raw.githubusercontent.com/48wr9f4wgp-lab/motorsport-hub/${SOURCE_REF}/${p.file}?personal=${p.sha256.slice(0,12)}`,10,{'Cache-Control':'no-cache, no-store, max-age=0','User-Agent':'MotorsportHubPersonal/1'});if(!valid(code))throw Error('INVALID_PERSONAL_MODULE');try{fm.writeString(cache,code)}catch(_){}}catch(_){}}
+ if(!valid(code)){try{if(fm.fileExists(cache)){const c=fm.readString(cache);if(valid(c))code=c}}catch(_){}}
+ if(!valid(code))return false;
+ try{await eval(code);return true}catch(_){return false}
+}
+
 const rawParameter=String(args.widgetParameter||args.queryParameters?.mhCategory||'').trim();let selected=norm(rawParameter);selected=aliases[selected]||selected;
 globalThis.__MH_ROUTER_SCHEMA=ROUTER_SCHEMA;globalThis.__MH_ROUTER_MANIFEST=CATEGORY_MANIFEST;
 
 async function messageWidget(title,msg){const w=new ListWidget();w.backgroundColor=new Color('#080B10');w.setPadding(12,12,12,12);const a=w.addText(title);a.font=Font.boldSystemFont(14);a.textColor=Color.white();w.addSpacer(6);const b=w.addText(msg);b.font=Font.systemFont(10);b.textColor=new Color('#FFB84D');b.lineLimit=4;w.refreshAfterDate=new Date(Date.now()+5*60000);if(config.runsInWidget)Script.setWidget(w);else await w.presentSmall();Script.complete()}
 if(!config.runsInWidget&&!params.includes(selected)){const a=new Alert();a.title='Motorsport Hub';a.message='プレビューするカテゴリ';labels.forEach(x=>a.addAction(x));a.addCancelAction('キャンセル');const i=await a.presentSheet();if(i<0){Script.complete();return}selected=params[i]}
 if(!selected)selected='F1';
+if(selected==='CONFIG'&&config.runsInWidget){globalThis.__MH_ROUTER_BOOT_OK=true;await messageWidget('Personal Config','ScriptableでMotorsport Hubを開き、PERSONAL CONFIGを選択してください。');return}
+if(PERSONAL_ROUTES[selected]){globalThis.__MH_ROUTER_BOOT_OK=true;if(!(await executePersonalRoute(selected)))await messageWidget('Motorsport Hub',selected==='MY'?'MY RACE DAYを安全に読み込めません。':'Personal Configを安全に読み込めません。');return}
 if(!params.includes(selected)||!ROUTES[selected]){globalThis.__MH_ROUTER_BOOT_OK=true;await messageWidget('Motorsport Hub','Widget Parameterが不正です。設定値を確認してください。'+(rawParameter?`\n入力: ${rawParameter}`:''));return}
 
 const route=ROUTES[selected];
