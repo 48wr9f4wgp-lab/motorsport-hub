@@ -75,13 +75,17 @@ Stable v9.5.35 is published. Private repo migration remains paused by choice whi
 
 ## PERSONAL COCKPIT v1
 
-- implementation: sidecar only; Stable Router unchanged.
+- user-facing model: **one existing Scriptable only**.
+- Router utility Parameter `MY` = MY RACE DAY.
+- Router utility Parameter `CONFIG` = Personal Config; interactive editor is selected when running Motorsport Hub in Scriptable.
+- aliases: `RACEDAY`, `MYRACEDAY`, `SETTINGS`.
+- internal modules: `motorsport-personal-cockpit.js`, `motorsport-personal-config.js`.
+- personal modules are sourceRef-pinned and Router-verified by exact SHA-256 + UTF-8 bytes before execution.
 - config file: `motorsport-personal-config-v1.json` in Scriptable local documents.
-- config script: `motorsport-personal-config.js`.
-- cockpit script: `motorsport-personal-cockpit.js`.
 - data source: existing 12 category local caches.
 - viewing source: existing local verified JP viewing-rights cache.
-- network behavior: no new external requests.
+- cockpit network behavior: no new external requests.
 - layouts: Small / Medium / Large.
+- current Stable v9.5.35 does **not yet expose MY/CONFIG**; integration is a main candidate for the next Stable.
 - physical state: **PENDING**.
-- first device target: Medium visual/density/content validation.
+- first device target after next Stable promotion: Medium visual/density/content validation.
