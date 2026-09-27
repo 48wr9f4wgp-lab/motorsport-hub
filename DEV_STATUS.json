@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "phase": "Stable v9.5.34 / viewing feature device PASS / GA未承認",
+  "phase": "Stable v9.5.34 / representative GA smoke PASS / broad GA未承認",
   "checks": {
     "boot": "ok",
     "test": "ok",
@@ -10,8 +10,8 @@
     "performance": "warn",
     "release": "ok"
   },
-  "next": "残りGA smokeは1点: Loader v7 fresh-install/copy実機確認",
-  "note": "JP視聴プラットフォームv1はiPhone実機PASS。SUPER GT Medium/Largeで視聴 J SPORTS表示、Small非表示、Dakar Medium非表示、レイアウト回帰なし。Broad GAは別Gate。 Hero creditsはhero-live 7bd8e3e4fcfで2026-09-27再検証済み。 QA 12/12 LIVE、online refresh、exact Stable edff3d301033、代表UIの重大表示blockerなしを実機確認済み。 機内モードでSUPER GT Mediumが更新待ち付きで正常描画し、offline/LKG recovery PASS。",
+  "next": "次Gate: exact Stable v9.5.34のBroad GA/public distributionについてdestination/action scopeを明示承認",
+  "note": "JP視聴プラットフォームv1はiPhone実機PASS。SUPER GT Medium/Largeで視聴 J SPORTS表示、Small非表示、Dakar Medium非表示、レイアウト回帰なし。Broad GAは別Gate。 Hero creditsはhero-live 7bd8e3e4fcfで2026-09-27再検証済み。 QA 12/12 LIVE、online refresh、exact Stable edff3d301033、代表UIの重大表示blockerなしを実機確認済み。 機内モードでSUPER GT Mediumが更新待ち付きで正常描画し、offline/LKG recovery PASS。 Loader v7 copy-pathも複製Scriptableから12/12 LIVE・edff3d301033を実機確認し、代表GA smoke完走。",
   "updated_at": "2026-09-27",
   "stable": {
     "version": "9.5.34",
