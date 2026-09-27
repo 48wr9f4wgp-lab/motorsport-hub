@@ -1,25 +1,27 @@
 # Motorsport Hub — Final GA Launch Checklist
 
-Updated: 2026-09-26 JST
+Updated: 2026-09-27 JST
 
-Use this checklist only when preparing the actual broad public General Availability release. Completing repository work does not itself authorize public launch.
+Use this checklist only when preparing the actual broad public General Availability release. Stable publication does not itself authorize broad GA.
 
 ## A. Distribution/legal
 
 - [x] Software license explicitly approved by owner: **MPL-2.0**.
-- [x] Club Pulse destination repository populated and verified before Motorsport Hub split/removal merge; see `CLUB_PULSE_MIGRATION.md`.
+- [x] Club Pulse destination repository populated and verified before Motorsport Hub split/removal; see `CLUB_PULSE_MIGRATION.md`.
 - [x] Root `LICENSE` and `LICENSE_SCOPE.md` prepared for product-pure Motorsport Hub.
-- [x] Current `hero-live/hero-channel/ATTRIBUTION.md` exists and validates against the current live Hero pool at `57e0c7019b681239deba81627eddba6b6c622acf` (12 assets). Recheck if the pool changes.
+- [x] Current `hero-live/hero-channel/ATTRIBUTION.md` exists; recheck the live pool immediately before GA.
 - [x] Public install path distinguishes software-license terms from third-party Hero attribution.
 - [x] No claim of endorsement by image creators/licensors.
 
 ## B. Exact release identity
 
-- [ ] Exact final GA Stable remains undecided while Dakar physical diagnostics are in progress.
-- [x] Diagnostics Stable v9.5.33 RC is green: **#292 / 36280879979 SUCCESS**.
-- [x] v9.5.33 diagnostics descriptor hashes/byte lengths are taken from successful immutable RC package.
-- [x] Dakar season-aware rollover hardening is already included in Stable v9.5.31 (shipped in v9.5.30). Actual 2027 live parser behavior remains unverified.
-- [x] Production Hero refresh recovered: Hero Active Refresh #124 SUCCESS; Public Attribution #47 SUCCESS. Dakar parser repair live monitor is 12/12 PASS.
+- [ ] Exact final GA Stable remains provisional until **v9.5.34** physical viewing-label + representative smoke passes.
+- [x] Stable v9.5.34 source selected: `edff3d301033ada18134429fb6f4c9016c6653f6`.
+- [x] v9.5.34 Release Candidate CI: **#299 / 36285958234 SUCCESS**.
+- [x] Descriptor hashes/byte lengths taken from immutable RC artifact `motorsport-hub-release-45eb720a53438e2dbcd6e01be7529a90f4bea275`.
+- [x] Stable v9.5.33 Dakar fresh-data physical iPhone verification: **PASS**.
+- [x] Dakar 2027 viewing rights remain fail-closed / hidden while `UNVERIFIED`.
+- [x] Production Hero refresh recovered: Hero Active Refresh #124 SUCCESS; Public Attribution #47 SUCCESS.
 
 ## C. Physical iPhone smoke
 
@@ -28,10 +30,13 @@ Run on the exact Stable intended for distribution:
 - [ ] canonical Loader v7 fresh-install/copy path;
 - [ ] QA diagnostics healthy;
 - [ ] one Small widget;
-- [ ] one Medium widget;
-- [ ] one Large widget;
+- [ ] one Medium widget with expected verified viewing label;
+- [ ] one Large widget with expected verified viewing label;
+- [ ] Small viewing-label omission confirmed;
+- [ ] Dakar viewing-label omission confirmed while UNVERIFIED;
+- [ ] no header crowding/truncation/alignment/overflow regression;
 - [ ] online refresh;
-- [ ] LKG/offline recovery if the GA Stable changes runtime/Loader-sensitive behavior;
+- [ ] LKG/offline recovery if the GA Stable changes runtime-sensitive behavior;
 - [ ] no visible startup, routing or clipping blocker.
 
 Record physical-device evidence as user-confirmed evidence; do not represent it as GitHub-verifiable automation.
@@ -47,11 +52,9 @@ Record physical-device evidence as user-confirmed evidence; do not represent it 
 
 ## E. Final authorization
 
-- [ ] Owner explicitly authorizes broad GA/public distribution and names the intended distribution channel.
+- [ ] Owner explicitly authorizes broad GA/public distribution for the exact validated Stable and names the intended distribution channel/action.
 - [ ] Any Store submission, paid distribution, external analytics, paid hosting/service contract or marketing launch receives separate approval if applicable.
 
 ## Current state
 
-Motorsport Hub is technically a GA-capable candidate. The MPL-2.0/software-license decision is complete. **Broad GA is not authorized.**
-
-Club Pulse cutover and live attribution proof are complete. Remaining work: focused Dakar v9.5.32 iPhone confirmation, representative exact-Stable physical smoke, current Hero credit revalidation, and explicit GA authorization. The historical SUPER GT Small PASS does not complete the representative GA session.
+Motorsport Hub is technically a GA-capable candidate. Stable v9.5.34 is validated for publication, but its new visible viewing-label UI still requires physical iPhone evidence. Broad GA remains blocked until that exact-Stable smoke, current Hero-credit revalidation and scoped GA authorization are complete.
