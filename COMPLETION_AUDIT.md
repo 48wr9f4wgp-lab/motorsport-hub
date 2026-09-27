@@ -1,7 +1,7 @@
 # Motorsport Hub — Completion Audit
 
 Updated: 2026-09-27 JST
-Status: **v9.5.34 STABLE / VIEWING UI DEVICE PASS / GA SMOKE PENDING / GA NOT AUTHORIZED**
+Status: **v9.5.34 STABLE / REPRESENTATIVE GA SMOKE PASS / BROAD GA NOT AUTHORIZED**
 
 ## Baselines
 
@@ -60,11 +60,12 @@ Hero Active Refresh #124 and Public Attribution #47 are successful. Current live
 - Exact immutable source prefix on device: **`edff3d301033`**.
 - No visible startup/routing/clipping blocker in the representative Small/Medium/Large + QA evidence.
 - Stable v9.5.34 offline/LKG recovery: **PASS** in airplane mode; cached SUPER GT Medium rendered with expected `更新待ち`, verified viewing label/standings/Hero/layout intact.
-- Remaining exact-Stable GA smoke: **Loader v7 fresh-install/copy only**.
+- canonical Loader v7 copy path: **PASS** on physical iPhone; duplicated Scriptable script executed and reached `12/12 LIVE — データ経路OK` on exact Stable prefix `edff3d301033`.
+- representative exact-Stable v9.5.34 physical GA smoke: **COMPLETE / PASS**.
 
 ## Current decision
 
 No known reproducible P0 startup/routing/current-data blocker on the verified Stable baseline.
 v9.5.34 is automation-validated for Stable publication and the owner explicitly approved the current release path.
 The JP viewing-platform v1 feature is complete for its defined v9.5.34 scope after physical iPhone PASS.
-Broad GA/public distribution remains a separate protected action and is **NOT AUTHORIZED** for an exact distribution scope by this audit.
+All defined representative physical GA smoke checks for v9.5.34 are PASS. Broad GA/public distribution remains a separate protected action and is **NOT AUTHORIZED** for an exact distribution scope by this audit.
