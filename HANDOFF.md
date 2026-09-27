@@ -105,3 +105,15 @@ Stable v9.5.36 is published. Private repo migration remains paused by choice whi
   - controls visible: 表示カテゴリ・優先順 / 表示期間 / 表示項目 / 現在設定を見る / 初期設定へ戻す / 完了.
 - Separate user-installed Scriptable required: **NO**.
 - Remaining physical gates: MY Small / MY Large / offline MY.
+
+
+## PERSONAL COCKPIT SMALL PHYSICAL EVIDENCE — 2026-09-27
+
+- Stable: v9.5.36 / sequence 14
+- MY Small: **PASS**
+  - single highest-priority event surface rendered;
+  - category pill, event name, date, venue, state and viewing platform visible;
+  - no obvious clipping / overflow;
+  - visual hierarchy is clear and distinct from Medium.
+- Minor polish candidate: lower whitespace could support slightly larger text, but no change is required before Large validation.
+- Remaining physical gates: MY Large / offline MY.
