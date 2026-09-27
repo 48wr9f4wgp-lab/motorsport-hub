@@ -1,7 +1,7 @@
 # Motorsport Hub — Completion Audit
 
 Updated: 2026-09-27 JST
-Status: **v9.5.37 STABLE PUBLISHED / PERSONAL COCKPIT REVALIDATION PENDING / OWNER-ONLY**
+Status: **v9.5.37 STABLE / PERSONAL COCKPIT v1 COMPLETE / OWNER-ONLY**
 
 ## Controlling decision
 
@@ -46,9 +46,18 @@ Physical evidence exposed two logic issues:
 
 ## Remaining hard gates
 
-1. physical MY Large revalidation;
-2. offline MY widget validation.
+No remaining Personal Cockpit v1 physical gates.
 
 ## Decision
 
-Stable v9.5.37 is published via PR #78. Personal Cockpit must not be called fully verified until Large revalidation and offline MY pass.
+Stable v9.5.37 Personal Cockpit v1 is physically verified across Medium / CONFIG / Small / Large / offline MY.
+
+
+## Final v9.5.37 physical closeout — 2026-09-27
+
+- MY Large: PASS after v9.5.37 fix.
+- `6 / 7 EVENTS` visible/total semantics: PASS.
+- WEC Fuji stale-active row: absent as expected.
+- offline MY: PASS while airplane mode was visibly active.
+- F1 `Bahrain Grand Prix in Malaysia` at Sepang: externally verified as an official 2026 event, so no data defect is recorded.
+- Personal Cockpit v1: **COMPLETE / VERIFIED_BASELINE candidate**.
