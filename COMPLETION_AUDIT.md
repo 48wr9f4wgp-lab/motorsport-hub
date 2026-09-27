@@ -59,7 +59,8 @@ Hero Active Refresh #124 and Public Attribution #47 are successful. Current live
 - Stable v9.5.34 online refresh: **PASS across all 12 QA routes**.
 - Exact immutable source prefix on device: **`edff3d301033`**.
 - No visible startup/routing/clipping blocker in the representative Small/Medium/Large + QA evidence.
-- Remaining exact-Stable GA smoke: **Loader v7 fresh-install/copy + offline/LKG recovery only**.
+- Stable v9.5.34 offline/LKG recovery: **PASS** in airplane mode; cached SUPER GT Medium rendered with expected `更新待ち`, verified viewing label/standings/Hero/layout intact.
+- Remaining exact-Stable GA smoke: **Loader v7 fresh-install/copy only**.
 
 ## Current decision
 
