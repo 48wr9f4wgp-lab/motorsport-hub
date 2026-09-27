@@ -37,10 +37,12 @@ const FIXTURE=`<table><tr><th>P.</th><th>N°</th><th>Exp.</th><th>Pilote/Véhicu
  vm.createContext(ctx);await vm.runInContext(router,ctx,{timeout:5000});
  assert.equal(ctx.__TAP_ROUTED,true,'query-category route did not execute Dakar');
  const moduleRequests=requests.filter(x=>x.includes('/dakar-widget.js'));
+ const viewingRequests=requests.filter(x=>x.includes('/viewing-rights-jp.json'));
  const heroRequests=requests.filter(x=>x.includes('/hero-live/hero-channel/channel.json'));
  assert.equal(moduleRequests.length,1,'tap query should fetch exactly one Dakar module');
+ assert.equal(viewingRequests.length,1,'tap query should consult immutable JP viewing rights exactly once');
  assert.equal(heroRequests.length,1,'tap query should consult the shared Hero manifest exactly once');
- assert.equal(requests.length,2,'tap query should make only the Dakar module and Hero-manifest requests');
+ assert.equal(requests.length,3,'tap query should make only the Dakar module, viewing-rights, and Hero-manifest requests');
  assert.equal(complete,1);
 }
 
