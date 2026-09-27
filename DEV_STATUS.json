@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "phase": "Stable v9.5.36 / PERSONAL-ONLY / MY+CONFIG physical validation pending",
+  "phase": "Stable v9.5.36 / PERSONAL-ONLY / MY Medium + CONFIG physical PASS",
   "checks": {
     "boot": "ok",
     "test": "ok",
@@ -10,8 +10,8 @@
     "performance": "warn",
     "release": "ok"
   },
-  "next": "同じMotorsport HubでParameter MYのMedium→CONFIG→Small→Large→offlineを実機確認",
-  "note": "JP視聴プラットフォームv1はiPhone実機PASS。SUPER GT Medium/Largeで視聴 J SPORTS表示、Small非表示、Dakar Medium非表示、レイアウト回帰なし。Broad GAは別Gate。 Hero creditsはhero-live 7bd8e3e4fcfで2026-09-27再検証済み。 QA 12/12 LIVE、online refresh、exact Stable edff3d301033、代表UIの重大表示blockerなしを実機確認済み。 機内モードでSUPER GT Mediumが更新待ち付きで正常描画し、offline/LKG recovery PASS。 Loader v7 copy-pathも複製Scriptableから12/12 LIVE・edff3d301033を実機確認し、代表GA smoke完走。 2026-09-27 exact Stable v9.5.34をpublic GitHub repository経由でBroad GA承認・実行。Store/有料配布/外部analytics/契約は対象外。 Current controlling decision: public distribution withdrawn; owner-only personal use. Earlier GitHub Broad GA is historical only. v9.5.35 RC #311 PASS; private transport foundation ready. Publication approval is separate. Personal Config v1 + MY RACE DAY sidecar implemented on main-candidate path; Stable Router/runtime untouched. Sidecar install model superseded: MY and CONFIG are now integrated Router utility routes with pinned personal-module integrity. v9.5.36 RC #319 PASS; integrated single-script MY+CONFIG ready. Stable v9.5.36 publication completed via PR #72.",
+  "next": "MY Small→Large→offlineを実機確認",
+  "note": "JP視聴プラットフォームv1はiPhone実機PASS。SUPER GT Medium/Largeで視聴 J SPORTS表示、Small非表示、Dakar Medium非表示、レイアウト回帰なし。Broad GAは別Gate。 Hero creditsはhero-live 7bd8e3e4fcfで2026-09-27再検証済み。 QA 12/12 LIVE、online refresh、exact Stable edff3d301033、代表UIの重大表示blockerなしを実機確認済み。 機内モードでSUPER GT Mediumが更新待ち付きで正常描画し、offline/LKG recovery PASS。 Loader v7 copy-pathも複製Scriptableから12/12 LIVE・edff3d301033を実機確認し、代表GA smoke完走。 2026-09-27 exact Stable v9.5.34をpublic GitHub repository経由でBroad GA承認・実行。Store/有料配布/外部analytics/契約は対象外。 Current controlling decision: public distribution withdrawn; owner-only personal use. Earlier GitHub Broad GA is historical only. v9.5.35 RC #311 PASS; private transport foundation ready. Publication approval is separate. Personal Config v1 + MY RACE DAY sidecar implemented on main-candidate path; Stable Router/runtime untouched. Sidecar install model superseded: MY and CONFIG are now integrated Router utility routes with pinned personal-module integrity. v9.5.36 RC #319 PASS; integrated single-script MY+CONFIG ready. Stable v9.5.36 publication completed via PR #72. 2026-09-27 physical iPhone: MY Medium rendered cross-series events successfully; CONFIG picker opened from the same Motorsport Hub script with 12カテゴリ/14日 and all expected controls. CONFIG flow PASS.",
   "updated_at": "2026-09-27",
   "stable": {
     "version": "9.5.36",
@@ -58,11 +58,16 @@
     },
     "extra_user_installed_scripts": 0,
     "network_requests_from_cockpit": 0,
-    "physical_validation": "PENDING",
+    "physical_validation": "PARTIAL_PASS",
     "release_candidate": {
       "run": 319,
       "run_id": 36304630990,
       "releaseRef": "99afe7a4311eb3c9d3480728d685cd4151860bba"
-    }
+    },
+    "config_flow": "PASS",
+    "medium": "PASS",
+    "small": "PENDING",
+    "large": "PENDING",
+    "offline": "PENDING"
   }
 }
