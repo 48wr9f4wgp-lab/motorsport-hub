@@ -15,7 +15,7 @@ Use this checklist only when preparing the actual broad public General Availabil
 
 ## B. Exact release identity
 
-- [ ] Exact final GA Stable remains provisional until the **v9.5.34 representative GA smoke** passes.
+- [x] Exact final GA Stable selected after representative smoke: **v9.5.34 / sequence 12 / sourceRef `edff3d301033ada18134429fb6f4c9016c6653f6`**.
 - [x] Stable v9.5.34 source selected: `edff3d301033ada18134429fb6f4c9016c6653f6`.
 - [x] v9.5.34 Release Candidate CI: **#299 / 36285958234 SUCCESS**.
 - [x] Descriptor hashes/byte lengths taken from immutable RC artifact `motorsport-hub-release-45eb720a53438e2dbcd6e01be7529a90f4bea275`.
@@ -27,7 +27,7 @@ Use this checklist only when preparing the actual broad public General Availabil
 
 Run on the exact Stable intended for distribution:
 
-- [ ] canonical Loader v7 fresh-install/copy path;
+- [x] canonical Loader v7 copy path — duplicated Scriptable script executed successfully on physical iPhone and reached `12/12 LIVE — データ経路OK` on exact Stable `edff3d301033`;
 - [x] QA diagnostics healthy — physical iPhone `12/12 LIVE — データ経路OK`, exact Stable source prefix `edff3d301033`;
 - [x] one Small widget;
 - [x] one Medium widget with expected verified viewing label;
@@ -57,4 +57,4 @@ Record physical-device evidence as user-confirmed evidence; do not represent it 
 
 ## Current state
 
-Motorsport Hub is technically a GA-capable candidate. Stable v9.5.34 is validated and its JP viewing-label UI has physical iPhone PASS. Broad GA remains blocked until that exact-Stable smoke, current Hero-credit revalidation and scoped GA authorization are complete.
+Motorsport Hub **completed the representative exact-Stable v9.5.34 physical GA smoke**. Current Hero credits are revalidated and the JP viewing-label UI is physically PASS. The only remaining hard gate is exact scoped broad-GA/public-distribution authorization.
