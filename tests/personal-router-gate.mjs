@@ -29,14 +29,19 @@ class DateFormatter{constructor(){this.locale='';this.timeZone='';this.dateForma
 const Font={heavySystemFont(){},boldSystemFont(){},semiboldSystemFont(){},systemFont(){}};
 
 function makeFM(){
-  const files=new Map();
+  const files=new Map(),now=Date.now(),futureStart=new Date(now-3600000).toISOString(),futureEnd=new Date(now+3*3600000).toISOString(),wecStart=new Date(now-7*3600000).toISOString();
   files.set('/docs/motorsport-data-v1000-f1.json',JSON.stringify({
-    schemaVersion:1,category:'f1',season:2026,fetchedAt:Date.now(),
-    event:{race:'Test GP',start:'2026-10-01T09:00:00Z',end:'2026-10-01T13:00:00Z',circuit:'Test Circuit',lifecycle:'UPCOMING'},
-    data:{race:'Test GP',start:'2026-10-01T09:00:00Z',end:'2026-10-01T13:00:00Z',circuit:'Test Circuit',lifecycle:'UPCOMING',ranking:[{pos:1,name:'Test Driver',points:'100 pts'}]}
+    schemaVersion:1,category:'f1',season:2026,fetchedAt:now,
+    event:{race:'Test GP',start:futureStart,end:futureEnd,circuit:'Test Circuit',lifecycle:'ACTIVE'},
+    data:{race:'Test GP',start:futureStart,end:futureEnd,circuit:'Test Circuit',lifecycle:'ACTIVE',ranking:[{pos:1,name:'Test Driver',points:'100 pts'}]}
+  }));
+  files.set('/docs/motorsport-data-v1000-wec.json',JSON.stringify({
+    schemaVersion:1,category:'wec',season:2026,fetchedAt:now,
+    event:{race:'6 Hours of Fuji',date:wecStart,circuit:'Fuji Speedway',lifecycle:'ACTIVE'},
+    data:{race:'6 Hours of Fuji',date:wecStart,circuit:'Fuji Speedway',lifecycle:'ACTIVE',ranking:[{pos:1,name:'STALE WEC LEADER',points:'100 pts'}]}
   }));
   files.set('/docs/motorsport-viewing-jp-f6f7e1d353ab.json',JSON.stringify({
-    region:'JP',categories:{F1:{status:'VERIFIED',label:'TEST TV',validUntil:'2026-12-31T14:59:59Z'}}
+    region:'JP',categories:{F1:{status:'VERIFIED',label:'TEST TV',validUntil:'2099-12-31T14:59:59Z'},WEC:{status:'VERIFIED',label:'OLD TV',validUntil:'2099-12-31T14:59:59Z'}}
   }));
   return{
     files,
@@ -86,6 +91,8 @@ async function run(parameter){
   assert(text.includes('Test GP'),'MY cached event missing');
   assert(text.includes('視聴 TEST TV'),'MY viewing label missing');
   assert(text.includes('1位 Test Driver'),'MY leader missing');
+  assert(!text.includes('6 Hours of Fuji'),'ended six-hour WEC event must be filtered even if cached lifecycle is ACTIVE');
+  assert(!text.includes('STALE WEC LEADER'),'ended WEC leader must not leak into MY');
 }
 {
   const r=await run('RACEDAY');

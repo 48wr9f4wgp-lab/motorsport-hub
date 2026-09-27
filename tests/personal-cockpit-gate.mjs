@@ -31,7 +31,11 @@ for(const token of [
 assert(cockpit.includes('motorsport-viewing-jp-'),'cockpit must consume existing viewing-rights cache');
 assert(cockpit.includes('No external network requests')||doc.includes('no external network requests'),'cockpit must document local-cache-only behavior');
 assert(!/new Request\s*\(/.test(cockpit),'personal cockpit must not add live network requests');
-for(const token of ['renderSmall','renderMedium','renderLarge','MY RACE DAY'])assert(cockpit.includes(token),`cockpit rendering missing ${token}`);
+for(const token of ['renderSmall','renderMedium','renderLarge','MY RACE DAY','expectedEnd','countLabel'])assert(cockpit.includes(token),`cockpit rendering missing ${token}`);
 for(const token of ['owner-only personal utility integrated','existing local category caches','Small / Medium / Large'])assert(doc.includes(token),`personal cockpit doc missing ${token}`);
 
 console.log('Motorsport Hub personal cockpit gate: PASS');
+
+assert(cockpit.includes("if(e.key==='WEC')"),'WEC expected-duration guard missing');
+assert(cockpit.includes("return scoped;"),'ended events must not fall back into Race Day rows');
+assert(cockpit.includes("shown<events.length?`${shown} / ${events.length} EVENTS`"),'Large visible/total count label missing');
