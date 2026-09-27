@@ -50,9 +50,8 @@ The Router pins their exact SHA-256 + UTF-8 byte length and only loads them from
 
 ## Remaining hard gates
 
-1. physical MY Small validation;
-2. physical MY Large validation;
-3. offline MY validation after at least one successful online load.
+1. physical MY Large validation;
+2. offline MY validation after at least one successful online load.
 
 ## Decision
 
@@ -66,3 +65,11 @@ Automation evidence is green and Stable v9.5.36 is published via PR #72. Persona
 - Current config summary: 12カテゴリ / 14日.
 - No obvious Medium clipping/overflow observed.
 - Personal Cockpit remains PARTIAL PASS until Small / Large / offline checks complete.
+
+
+## MY Small physical evidence — 2026-09-27
+
+- PASS on physical iPhone.
+- Single-event glanceable layout works as intended.
+- No obvious clipping/overflow observed.
+- Remaining Personal Cockpit gates: Large + offline.
