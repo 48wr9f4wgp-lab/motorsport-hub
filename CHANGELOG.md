@@ -1,5 +1,14 @@
 # Changelog
 
+## v9.5.33 — Dakar physical-device diagnostics
+
+- Stable sequence: **11**.
+- Stable sourceRef: `95d85043045bd7942f9e72b960249649e637aee3`.
+- QA DAKAR row now runs a production-equivalent parser over the exact rankings response and reports `R/C/P/T/G/V` counters.
+- Purpose is root-cause isolation only; `dakar-widget.js` is byte-identical to v9.5.32.
+- Release Candidate validation: **#292 / 36280879979 SUCCESS**.
+- Physical iPhone diagnostic capture is required immediately after promotion.
+
 ## v9.5.32 — Stable Dakar live parser repair
 
 - Stable sequence: **10**.

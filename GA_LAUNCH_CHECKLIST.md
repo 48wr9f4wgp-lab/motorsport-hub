@@ -15,9 +15,9 @@ Use this checklist only when preparing the actual broad public General Availabil
 
 ## B. Exact release identity
 
-- [x] Exact Stable candidate chosen: **v9.5.32 / sequence 10 / sourceRef `273c582da42b02d1bcb5aa805bf7e2c77626a4a8`**.
-- [x] Release Candidate CI for that source is green: **#288 / 36253970101 SUCCESS**.
-- [x] Stable descriptor hashes/byte lengths taken from successful immutable RC package and publication CI-gated.
+- [ ] Exact final GA Stable remains undecided while Dakar physical diagnostics are in progress.
+- [x] Diagnostics Stable v9.5.33 RC is green: **#292 / 36280879979 SUCCESS**.
+- [x] v9.5.33 diagnostics descriptor hashes/byte lengths are taken from successful immutable RC package.
 - [x] Dakar season-aware rollover hardening is already included in Stable v9.5.31 (shipped in v9.5.30). Actual 2027 live parser behavior remains unverified.
 - [x] Production Hero refresh recovered: Hero Active Refresh #124 SUCCESS; Public Attribution #47 SUCCESS. Dakar parser repair live monitor is 12/12 PASS.
 
