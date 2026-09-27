@@ -1,7 +1,7 @@
 # Motorsport Hub — Completion Audit
 
 Updated: 2026-09-27 JST
-Status: **v9.5.34 RC PASS / STABLE PUBLICATION APPROVED / VIEWING UI DEVICE PASS PENDING / GA NOT AUTHORIZED**
+Status: **v9.5.34 STABLE / VIEWING UI DEVICE PASS / GA SMOKE PENDING / GA NOT AUTHORIZED**
 
 ## Baselines
 
@@ -50,13 +50,16 @@ Hero Active Refresh #124 and Public Attribution #47 are successful. Current live
 - Stable v9.5.31 SUPER GT Small: physical iPhone PASS.
 - Stable v9.5.30 WEC/Dakar display fixes: scoped physical PASS.
 - Stable v9.5.33 Dakar fresh-data/diagnostic path: physical iPhone PASS.
-- Stable v9.5.34 Medium/Large viewing-label render: **PENDING**.
-- Stable v9.5.34 Small omission and Dakar viewing-label omission: **PENDING physical confirmation**.
+- Stable v9.5.34 SUPER GT Medium verified label render: **PASS**.
+- Stable v9.5.34 SUPER GT Large verified label render: **PASS**.
+- Stable v9.5.34 SUPER GT Small viewing-label omission: **PASS**.
+- Stable v9.5.34 Dakar Medium viewing-label omission while `UNVERIFIED`: **PASS**.
+- No visible viewing-label header crowding, truncation, standings misalignment or new vertical overflow in the validated cases.
 - Final representative exact-Stable GA smoke: **PENDING**.
 
 ## Current decision
 
 No known reproducible P0 startup/routing/current-data blocker on the verified Stable baseline.
 v9.5.34 is automation-validated for Stable publication and the owner explicitly approved the current release path.
-The new visible viewing-label UI remains incomplete until physical iPhone validation passes.
+The JP viewing-platform v1 feature is complete for its defined v9.5.34 scope after physical iPhone PASS.
 Broad GA/public distribution remains a separate protected action and is **NOT AUTHORIZED** for an exact distribution scope by this audit.
