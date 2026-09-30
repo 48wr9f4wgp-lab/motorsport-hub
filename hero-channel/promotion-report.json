@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-30T05:41:45.883Z",
+  "generatedAt": "2026-09-30T12:45:40.074Z",
   "thresholds": {
     "minScore": 0.72,
     "minDetection": 0.55,
@@ -16,19 +16,14 @@
     "rotationMinAgeHours": 48,
     "rotationReuseCooldownHours": 48
   },
-  "promoted": [
+  "promoted": [],
+  "promotionModes": {},
+  "poolUpdated": [
     "F1",
     "SUPERFORMULA",
     "WEC",
     "WRC"
   ],
-  "promotionModes": {
-    "F1": "POOL_ROTATION",
-    "SUPERFORMULA": "POOL_ROTATION",
-    "WEC": "POOL_ROTATION",
-    "WRC": "POOL_ROTATION"
-  },
-  "poolUpdated": [],
   "suppressed": [],
   "updatedCategories": [
     "F1",
