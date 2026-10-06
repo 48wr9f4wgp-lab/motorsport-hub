@@ -1,6 +1,6 @@
 # Motorsport Hub — Live Hero Attribution
 
-Generated from `hero-live/hero-channel/channel.json` at 2026-10-04T12:31:14.355Z.
+Generated from `hero-live/hero-channel/channel.json` at 2026-10-06T06:31:09.271Z.
 
 This file is generated from the currently publishable Hero pool. It is the human-readable attribution surface for dynamic Hero imagery and should travel with public distribution links.
 
@@ -10,14 +10,14 @@ The software license for Motorsport Hub is separate from the image licenses list
 
 ## F1
 
-### Current live — File:2025 Japan GP - McLaren - Oscar Piastri - FP1.jpg
+### Approved pool — File:2025 Japan GP - McLaren - Oscar Piastri - FP1.jpg
 
 - Author: Liauzh
 - License: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
 - Source: <https://commons.wikimedia.org/wiki/File:2025_Japan_GP_-_McLaren_-_Oscar_Piastri_-_FP1.jpg>
 - Modifications: crop/resize and presentation treatment as described above.
 
-### Approved pool — File:2025 Japan GP - Ferrari - Lewis Hamilton - FP1.jpg
+### Current live — File:2025 Japan GP - Ferrari - Lewis Hamilton - FP1.jpg
 
 - Author: Liauzh
 - License: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
@@ -42,14 +42,14 @@ The software license for Motorsport Hub is separate from the image licenses list
 
 ## SUPERFORMULA
 
-### Current live — File:Super Formula Round 5 Suzuka Post-Race 2026 - 1.jpg
+### Approved pool — File:Super Formula Round 5 Suzuka Post-Race 2026 - 1.jpg
 
 - Author: BWard 1997
 - License: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
 - Source: <https://commons.wikimedia.org/wiki/File:Super_Formula_Round_5_Suzuka_Post-Race_2026_-_1.jpg>
 - Modifications: crop/resize and presentation treatment as described above.
 
-### Approved pool — File:Igor Fraga Super Formula Round 5 Suzuka Post-Race 2026.jpg
+### Current live — File:Igor Fraga Super Formula Round 5 Suzuka Post-Race 2026.jpg
 
 - Author: BWard 1997
 - License: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
@@ -58,14 +58,14 @@ The software license for Motorsport Hub is separate from the image licenses list
 
 ## WEC
 
-### Current live — File:24 Heures du Mans 2026 Hypercar No. 94 Peugeot 9X8 (left side).jpg
+### Approved pool — File:24 Heures du Mans 2026 Hypercar No. 94 Peugeot 9X8 (left side).jpg
 
 - Author: T GOUREAU
 - License: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
 - Source: <https://commons.wikimedia.org/wiki/File:24_Heures_du_Mans_2026_Hypercar_No._94_Peugeot_9X8_(left_side).jpg>
 - Modifications: crop/resize and presentation treatment as described above.
 
-### Approved pool — File:24 Heures du Mans 2026 Hypercar No. 51 Ferrari 499P (back).jpg
+### Current live — File:24 Heures du Mans 2026 Hypercar No. 51 Ferrari 499P (back).jpg
 
 - Author: T GOUREAU
 - License: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
@@ -88,14 +88,14 @@ The software license for Motorsport Hub is separate from the image licenses list
 
 ## WRC
 
-### Current live — File:FordWRC.jpg
+### Approved pool — File:FordWRC.jpg
 
 - Author: AnDr0 Gr0zNy
 - License: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
 - Source: <https://commons.wikimedia.org/wiki/File:FordWRC.jpg>
 - Modifications: crop/resize and presentation treatment as described above.
 
-### Approved pool — File:Ford Puma WRC.jpg
+### Current live — File:Ford Puma WRC.jpg
 
 - Author: Geonich
 - License: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
