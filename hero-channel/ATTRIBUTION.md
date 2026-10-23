@@ -1,6 +1,6 @@
 # Motorsport Hub — Live Hero Attribution
 
-Generated from `hero-live/hero-channel/channel.json` at 2026-10-21T21:49:28.306Z.
+Generated from `hero-live/hero-channel/channel.json` at 2026-10-23T11:49:02.281Z.
 
 This file is generated from the currently publishable Hero pool. It is the human-readable attribution surface for dynamic Hero imagery and should travel with public distribution links.
 
@@ -10,11 +10,18 @@ The software license for Motorsport Hub is separate from the image licenses list
 
 ## F1
 
-### Current live — File:2025 Japan GP - McLaren - Oscar Piastri - FP1.jpg
+### Approved pool — File:2025 Japan GP - McLaren - Oscar Piastri - FP1.jpg
 
 - Author: Liauzh
 - License: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
 - Source: <https://commons.wikimedia.org/wiki/File:2025_Japan_GP_-_McLaren_-_Oscar_Piastri_-_FP1.jpg>
+- Modifications: crop/resize and presentation treatment as described above.
+
+### Current live — File:2026-08-21 Motorsport, Formel 1, Großer Preis der Niederlande 2026 STP 2241.jpg
+
+- Author: Steffen Prößdorf
+- License: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
+- Source: <https://commons.wikimedia.org/wiki/File:2026-08-21_Motorsport%2C_Formel_1%2C_Gro%C3%9Fer_Preis_der_Niederlande_2026_STP_2241.jpg>
 - Modifications: crop/resize and presentation treatment as described above.
 
 ### Approved pool — File:2025 Japan GP - Ferrari - Lewis Hamilton - FP1.jpg
@@ -104,4 +111,4 @@ The software license for Motorsport Hub is separate from the image licenses list
 
 ---
 
-Total credited Hero pool assets: **12**.
+Total credited Hero pool assets: **13**.

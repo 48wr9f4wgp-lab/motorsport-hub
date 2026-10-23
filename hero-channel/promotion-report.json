@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-21T21:49:28.306Z",
+  "generatedAt": "2026-10-23T11:49:02.281Z",
   "thresholds": {
     "minScore": 0.72,
     "minDetection": 0.55,
@@ -16,20 +16,16 @@
     "rotationMinAgeHours": 48,
     "rotationReuseCooldownHours": 48
   },
-  "promoted": [],
-  "promotionModes": {},
-  "poolUpdated": [
-    "F1",
-    "SUPERFORMULA",
-    "WEC",
-    "WRC"
+  "promoted": [
+    "F1"
   ],
+  "promotionModes": {
+    "F1": "QUALITY_UPGRADE"
+  },
+  "poolUpdated": [],
   "suppressed": [],
   "updatedCategories": [
-    "F1",
-    "SUPERFORMULA",
-    "WEC",
-    "WRC"
+    "F1"
   ],
   "categories": {
     "WEC": {
@@ -47,11 +43,11 @@
       "rotationMode": "POOL_ROTATION"
     },
     "F1": {
-      "assetId": "auto-7a14e267162f-2025-Japan-GP---McLaren---Oscar-Piastri---FP1.jpg",
-      "qualityScore": 0.8884,
-      "poolSize": 3,
-      "sourceTitle": "File:2025 Japan GP - McLaren - Oscar Piastri - FP1.jpg",
-      "rotationMode": "POOL_ROTATION"
+      "assetId": "auto-647721ad8a37-2026-08-21-Motorsport-Formel-1-Gro-er-Preis-der-Nied",
+      "qualityScore": 0.923,
+      "poolSize": 4,
+      "sourceTitle": "File:2026-08-21 Motorsport, Formel 1, Großer Preis der Niederlande 2026 STP 2241.jpg",
+      "rotationMode": "QUALITY_UPGRADE"
     },
     "SUPERFORMULA": {
       "assetId": "auto-707eb5c3387a-Super-Formula-Round-5-Suzuka-Post-Race-2026---1.jpg",
