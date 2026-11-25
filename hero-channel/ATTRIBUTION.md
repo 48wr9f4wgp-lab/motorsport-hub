@@ -1,6 +1,6 @@
 # Motorsport Hub — Live Hero Attribution
 
-Generated from `hero-live/hero-channel/channel.json` at 2026-10-23T11:49:02.281Z.
+Generated from `hero-live/hero-channel/channel.json` at 2026-11-25T08:48:53.803Z.
 
 This file is generated from the currently publishable Hero pool. It is the human-readable attribution surface for dynamic Hero imagery and should travel with public distribution links.
 
@@ -10,32 +10,18 @@ The software license for Motorsport Hub is separate from the image licenses list
 
 ## F1
 
-### Approved pool — File:2025 Japan GP - McLaren - Oscar Piastri - FP1.jpg
-
-- Author: Liauzh
-- License: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
-- Source: <https://commons.wikimedia.org/wiki/File:2025_Japan_GP_-_McLaren_-_Oscar_Piastri_-_FP1.jpg>
-- Modifications: crop/resize and presentation treatment as described above.
-
-### Current live — File:2026-08-21 Motorsport, Formel 1, Großer Preis der Niederlande 2026 STP 2241.jpg
+### Approved pool — File:2026-08-21 Motorsport, Formel 1, Großer Preis der Niederlande 2026 STP 2241.jpg
 
 - Author: Steffen Prößdorf
 - License: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
 - Source: <https://commons.wikimedia.org/wiki/File:2026-08-21_Motorsport%2C_Formel_1%2C_Gro%C3%9Fer_Preis_der_Niederlande_2026_STP_2241.jpg>
 - Modifications: crop/resize and presentation treatment as described above.
 
-### Approved pool — File:2025 Japan GP - Ferrari - Lewis Hamilton - FP1.jpg
+### Current live — File:UofC Delta.png
 
-- Author: Liauzh
-- License: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
-- Source: <https://commons.wikimedia.org/wiki/File:2025_Japan_GP_-_Ferrari_-_Lewis_Hamilton_-_FP1.jpg>
-- Modifications: crop/resize and presentation treatment as described above.
-
-### Approved pool — File:Lando Norris Mclaren F1 (55383927449).jpg
-
-- Author: Jason Puddephatt
-- License: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
-- Source: <https://commons.wikimedia.org/wiki/File:Lando_Norris_Mclaren_F1_(55383927449).jpg>
+- Author: NyarOmninode
+- License: [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)
+- Source: <https://commons.wikimedia.org/wiki/File:UofC_Delta.png>
 - Modifications: crop/resize and presentation treatment as described above.
 
 ## NASCAR
@@ -49,14 +35,14 @@ The software license for Motorsport Hub is separate from the image licenses list
 
 ## SUPERFORMULA
 
-### Current live — File:Super Formula Round 5 Suzuka Post-Race 2026 - 1.jpg
+### Approved pool — File:Super Formula Round 5 Suzuka Post-Race 2026 - 1.jpg
 
 - Author: BWard 1997
 - License: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
 - Source: <https://commons.wikimedia.org/wiki/File:Super_Formula_Round_5_Suzuka_Post-Race_2026_-_1.jpg>
 - Modifications: crop/resize and presentation treatment as described above.
 
-### Approved pool — File:Igor Fraga Super Formula Round 5 Suzuka Post-Race 2026.jpg
+### Current live — File:Igor Fraga Super Formula Round 5 Suzuka Post-Race 2026.jpg
 
 - Author: BWard 1997
 - License: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
@@ -65,14 +51,14 @@ The software license for Motorsport Hub is separate from the image licenses list
 
 ## WEC
 
-### Current live — File:24 Heures du Mans 2026 Hypercar No. 94 Peugeot 9X8 (left side).jpg
+### Approved pool — File:24 Heures du Mans 2026 Hypercar No. 94 Peugeot 9X8 (left side).jpg
 
 - Author: T GOUREAU
 - License: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
 - Source: <https://commons.wikimedia.org/wiki/File:24_Heures_du_Mans_2026_Hypercar_No._94_Peugeot_9X8_(left_side).jpg>
 - Modifications: crop/resize and presentation treatment as described above.
 
-### Approved pool — File:24 Heures du Mans 2026 Hypercar No. 51 Ferrari 499P (back).jpg
+### Current live — File:24 Heures du Mans 2026 Hypercar No. 51 Ferrari 499P (back).jpg
 
 - Author: T GOUREAU
 - License: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
@@ -95,14 +81,14 @@ The software license for Motorsport Hub is separate from the image licenses list
 
 ## WRC
 
-### Current live — File:FordWRC.jpg
+### Approved pool — File:FordWRC.jpg
 
 - Author: AnDr0 Gr0zNy
 - License: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
 - Source: <https://commons.wikimedia.org/wiki/File:FordWRC.jpg>
 - Modifications: crop/resize and presentation treatment as described above.
 
-### Approved pool — File:Ford Puma WRC.jpg
+### Current live — File:Ford Puma WRC.jpg
 
 - Author: Geonich
 - License: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
@@ -111,4 +97,4 @@ The software license for Motorsport Hub is separate from the image licenses list
 
 ---
 
-Total credited Hero pool assets: **13**.
+Total credited Hero pool assets: **11**.
