@@ -1,6 +1,6 @@
 # Motorsport Hub — Live Hero Attribution
 
-Generated from `hero-live/hero-channel/channel.json` at 2026-11-25T08:48:53.803Z.
+Generated from `hero-live/hero-channel/channel.json` at 2026-11-25T21:50:23.251Z.
 
 This file is generated from the currently publishable Hero pool. It is the human-readable attribution surface for dynamic Hero imagery and should travel with public distribution links.
 
@@ -10,18 +10,18 @@ The software license for Motorsport Hub is separate from the image licenses list
 
 ## F1
 
-### Approved pool — File:2026-08-21 Motorsport, Formel 1, Großer Preis der Niederlande 2026 STP 2241.jpg
-
-- Author: Steffen Prößdorf
-- License: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
-- Source: <https://commons.wikimedia.org/wiki/File:2026-08-21_Motorsport%2C_Formel_1%2C_Gro%C3%9Fer_Preis_der_Niederlande_2026_STP_2241.jpg>
-- Modifications: crop/resize and presentation treatment as described above.
-
 ### Current live — File:UofC Delta.png
 
 - Author: NyarOmninode
 - License: [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)
 - Source: <https://commons.wikimedia.org/wiki/File:UofC_Delta.png>
+- Modifications: crop/resize and presentation treatment as described above.
+
+### Approved pool — File:2026-08-21 Motorsport, Formel 1, Großer Preis der Niederlande 2026 STP 2241.jpg
+
+- Author: Steffen Prößdorf
+- License: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
+- Source: <https://commons.wikimedia.org/wiki/File:2026-08-21_Motorsport%2C_Formel_1%2C_Gro%C3%9Fer_Preis_der_Niederlande_2026_STP_2241.jpg>
 - Modifications: crop/resize and presentation treatment as described above.
 
 ## NASCAR
@@ -35,13 +35,6 @@ The software license for Motorsport Hub is separate from the image licenses list
 
 ## SUPERFORMULA
 
-### Approved pool — File:Super Formula Round 5 Suzuka Post-Race 2026 - 1.jpg
-
-- Author: BWard 1997
-- License: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
-- Source: <https://commons.wikimedia.org/wiki/File:Super_Formula_Round_5_Suzuka_Post-Race_2026_-_1.jpg>
-- Modifications: crop/resize and presentation treatment as described above.
-
 ### Current live — File:Igor Fraga Super Formula Round 5 Suzuka Post-Race 2026.jpg
 
 - Author: BWard 1997
@@ -49,20 +42,27 @@ The software license for Motorsport Hub is separate from the image licenses list
 - Source: <https://commons.wikimedia.org/wiki/File:Igor_Fraga_Super_Formula_Round_5_Suzuka_Post-Race_2026.jpg>
 - Modifications: crop/resize and presentation treatment as described above.
 
-## WEC
+### Approved pool — File:Super Formula Round 5 Suzuka Post-Race 2026 - 1.jpg
 
-### Approved pool — File:24 Heures du Mans 2026 Hypercar No. 94 Peugeot 9X8 (left side).jpg
-
-- Author: T GOUREAU
-- License: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
-- Source: <https://commons.wikimedia.org/wiki/File:24_Heures_du_Mans_2026_Hypercar_No._94_Peugeot_9X8_(left_side).jpg>
+- Author: BWard 1997
+- License: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
+- Source: <https://commons.wikimedia.org/wiki/File:Super_Formula_Round_5_Suzuka_Post-Race_2026_-_1.jpg>
 - Modifications: crop/resize and presentation treatment as described above.
+
+## WEC
 
 ### Current live — File:24 Heures du Mans 2026 Hypercar No. 51 Ferrari 499P (back).jpg
 
 - Author: T GOUREAU
 - License: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
 - Source: <https://commons.wikimedia.org/wiki/File:24_Heures_du_Mans_2026_Hypercar_No._51_Ferrari_499P_(back).jpg>
+- Modifications: crop/resize and presentation treatment as described above.
+
+### Approved pool — File:24 Heures du Mans 2026 Hypercar No. 94 Peugeot 9X8 (left side).jpg
+
+- Author: T GOUREAU
+- License: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
+- Source: <https://commons.wikimedia.org/wiki/File:24_Heures_du_Mans_2026_Hypercar_No._94_Peugeot_9X8_(left_side).jpg>
 - Modifications: crop/resize and presentation treatment as described above.
 
 ### Approved pool — File:24 Heures du Mans 2026 Hypercar No. 38 Cadillac V-Series.R (night).jpg
@@ -81,18 +81,18 @@ The software license for Motorsport Hub is separate from the image licenses list
 
 ## WRC
 
-### Approved pool — File:FordWRC.jpg
-
-- Author: AnDr0 Gr0zNy
-- License: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
-- Source: <https://commons.wikimedia.org/wiki/File:FordWRC.jpg>
-- Modifications: crop/resize and presentation treatment as described above.
-
 ### Current live — File:Ford Puma WRC.jpg
 
 - Author: Geonich
 - License: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
 - Source: <https://commons.wikimedia.org/wiki/File:Ford_Puma_WRC.jpg>
+- Modifications: crop/resize and presentation treatment as described above.
+
+### Approved pool — File:FordWRC.jpg
+
+- Author: AnDr0 Gr0zNy
+- License: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
+- Source: <https://commons.wikimedia.org/wiki/File:FordWRC.jpg>
 - Modifications: crop/resize and presentation treatment as described above.
 
 ---
