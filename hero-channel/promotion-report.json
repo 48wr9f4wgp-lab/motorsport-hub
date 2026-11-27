@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-25T21:50:23.251Z",
+  "generatedAt": "2026-11-27T21:27:03.957Z",
   "thresholds": {
     "minScore": 0.72,
     "minDetection": 0.55,
@@ -16,14 +16,19 @@
     "rotationMinAgeHours": 48,
     "rotationReuseCooldownHours": 48
   },
-  "promoted": [],
-  "promotionModes": {},
-  "poolUpdated": [
+  "promoted": [
     "F1",
     "SUPERFORMULA",
     "WEC",
     "WRC"
   ],
+  "promotionModes": {
+    "F1": "POOL_ROTATION",
+    "SUPERFORMULA": "POOL_ROTATION",
+    "WEC": "POOL_ROTATION",
+    "WRC": "POOL_ROTATION"
+  },
+  "poolUpdated": [],
   "suppressed": [],
   "updatedCategories": [
     "F1",
@@ -33,31 +38,31 @@
   ],
   "categories": {
     "WEC": {
-      "assetId": "auto-28736576071f-24-Heures-du-Mans-2026-Hypercar-No.-51-Ferrari-499P-",
-      "qualityScore": 0.9319,
+      "assetId": "auto-a177615d7def-24-Heures-du-Mans-2026-Hypercar-No.-94-Peugeot-9X8-l",
+      "qualityScore": 0.9242,
       "poolSize": 4,
-      "sourceTitle": "File:24 Heures du Mans 2026 Hypercar No. 51 Ferrari 499P (back).jpg",
+      "sourceTitle": "File:24 Heures du Mans 2026 Hypercar No. 94 Peugeot 9X8 (left side).jpg",
       "rotationMode": "POOL_ROTATION"
     },
     "WRC": {
-      "assetId": "auto-eab23333e862-Ford-Puma-WRC.jpg",
-      "qualityScore": 0.9574,
+      "assetId": "auto-42ed14b4d3ab-FordWRC.jpg",
+      "qualityScore": 0.951,
       "poolSize": 2,
-      "sourceTitle": "File:Ford Puma WRC.jpg",
+      "sourceTitle": "File:FordWRC.jpg",
       "rotationMode": "POOL_ROTATION"
     },
     "F1": {
-      "assetId": "auto-1dc19f8ce1e3-UofC-Delta.png",
-      "qualityScore": 0.9449,
+      "assetId": "auto-647721ad8a37-2026-08-21-Motorsport-Formel-1-Gro-er-Preis-der-Nied",
+      "qualityScore": 0.923,
       "poolSize": 2,
-      "sourceTitle": "File:UofC Delta.png",
-      "rotationMode": "QUALITY_UPGRADE"
+      "sourceTitle": "File:2026-08-21 Motorsport, Formel 1, Großer Preis der Niederlande 2026 STP 2241.jpg",
+      "rotationMode": "POOL_ROTATION"
     },
     "SUPERFORMULA": {
-      "assetId": "auto-cf12e6198f65-Igor-Fraga-Super-Formula-Round-5-Suzuka-Post-Race-20",
-      "qualityScore": 0.8882,
+      "assetId": "auto-707eb5c3387a-Super-Formula-Round-5-Suzuka-Post-Race-2026---1.jpg",
+      "qualityScore": 0.887,
       "poolSize": 2,
-      "sourceTitle": "File:Igor Fraga Super Formula Round 5 Suzuka Post-Race 2026.jpg",
+      "sourceTitle": "File:Super Formula Round 5 Suzuka Post-Race 2026 - 1.jpg",
       "rotationMode": "POOL_ROTATION"
     },
     "NASCAR": {
