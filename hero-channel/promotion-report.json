@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-27T21:27:03.957Z",
+  "generatedAt": "2026-11-28T08:00:59.501Z",
   "thresholds": {
     "minScore": 0.72,
     "minDetection": 0.55,
@@ -18,20 +18,21 @@
   },
   "promoted": [
     "F1",
+    "INDYCAR"
+  ],
+  "promotionModes": {
+    "F1": "QUALITY_UPGRADE",
+    "INDYCAR": "INITIAL"
+  },
+  "poolUpdated": [
     "SUPERFORMULA",
     "WEC",
     "WRC"
   ],
-  "promotionModes": {
-    "F1": "POOL_ROTATION",
-    "SUPERFORMULA": "POOL_ROTATION",
-    "WEC": "POOL_ROTATION",
-    "WRC": "POOL_ROTATION"
-  },
-  "poolUpdated": [],
   "suppressed": [],
   "updatedCategories": [
     "F1",
+    "INDYCAR",
     "SUPERFORMULA",
     "WEC",
     "WRC"
@@ -52,11 +53,11 @@
       "rotationMode": "POOL_ROTATION"
     },
     "F1": {
-      "assetId": "auto-647721ad8a37-2026-08-21-Motorsport-Formel-1-Gro-er-Preis-der-Nied",
-      "qualityScore": 0.923,
+      "assetId": "auto-1dc19f8ce1e3-UofC-Delta.png",
+      "qualityScore": 0.9449,
       "poolSize": 2,
-      "sourceTitle": "File:2026-08-21 Motorsport, Formel 1, Großer Preis der Niederlande 2026 STP 2241.jpg",
-      "rotationMode": "POOL_ROTATION"
+      "sourceTitle": "File:UofC Delta.png",
+      "rotationMode": "QUALITY_UPGRADE"
     },
     "SUPERFORMULA": {
       "assetId": "auto-707eb5c3387a-Super-Formula-Round-5-Suzuka-Post-Race-2026---1.jpg",
@@ -70,6 +71,13 @@
       "qualityScore": 0.912,
       "poolSize": 1,
       "sourceTitle": "File:Denny Hamlin 11 Las Vegas 2025.jpg",
+      "rotationMode": "INITIAL"
+    },
+    "INDYCAR": {
+      "assetId": "auto-a1143e76a185-Rounds-Rocket-Indy-Car-1949-55672178955-.jpg",
+      "qualityScore": 0.9175,
+      "poolSize": 1,
+      "sourceTitle": "File:Rounds Rocket Indy Car (1949) (55672178955).jpg",
       "rotationMode": "INITIAL"
     }
   }
